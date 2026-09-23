@@ -29,7 +29,7 @@ export default function LoginPage() {
       if (!user) return;
       const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single();
       const dest = profile?.role === 'coordenador' ? '/coordenador' : profile?.role === 'moderador' ? '/moderador' : next;
-      router.push(dest);
+      router.push(dest as any);
       router.refresh();
     });
   };
