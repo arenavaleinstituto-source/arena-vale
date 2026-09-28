@@ -1,33 +1,52 @@
-'use client';
-
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function HomePage() {
-  const router = useRouter();
-
-  useEffect(() => {
-    router.push('/login');
-  }, [router]);
-
   return (
-    <div style={{
+    <main style={{
       minHeight: '100vh',
+      background: '#0c1f4a',
+      color: 'white',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      background: '#0c1f4a',
-      color: 'white',
-      fontFamily: 'system-ui, sans-serif'
+      fontFamily: 'system-ui, sans-serif',
+      padding: '20px'
     }}>
-      <div style={{ textAlign: 'center' }}>
-        <h1 style={{ fontSize: '32px', fontWeight: 900, marginBottom: '10px' }}>
+      <div style={{ textAlign: 'center', maxWidth: '500px' }}>
+        <h1 style={{
+          fontSize: '56px',
+          fontWeight: 900,
+          margin: '0 0 12px 0',
+          letterSpacing: '4px'
+        }}>
           ARENA VALE
         </h1>
-        <p style={{ color: '#d4a849', letterSpacing: '4px', fontSize: '14px' }}>
-          CARREGANDO...
+        <p style={{
+          color: '#d4a849',
+          fontSize: '14px',
+          letterSpacing: '6px',
+          margin: '0 0 40px 0',
+          fontWeight: 600
+        }}>
+          SPORTS
         </p>
+        <Link
+          href="/login"
+          style={{
+            display: 'inline-block',
+            background: '#d4a849',
+            color: '#0c1f4a',
+            padding: '16px 40px',
+            borderRadius: '999px',
+            fontWeight: 800,
+            textDecoration: 'none',
+            fontSize: '16px',
+            letterSpacing: '2px'
+          }}
+        >
+          ENTRAR →
+        </Link>
       </div>
-    </div>
+    </main>
   );
 }
