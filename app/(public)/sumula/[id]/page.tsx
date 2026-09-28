@@ -1,37 +1,21 @@
-import { Shield } from '@/components/shield';
-
-export default async function SumulaPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
-
+export default function SumulaPage({ params }: { params: { id: string } }) {
   return (
-    <main className="min-h-screen bg-[var(--bg)] text-white pt-24 pb-12">
-      <div className="container max-w-3xl">
-        <div className="text-center mb-8">
-          <div className="flex justify-center mb-4">
-            <Shield size={80} />
-          </div>
-          <h1 className="font-serif text-3xl font-extrabold mb-2">Súmula #{id}</h1>
-          <p className="text-[var(--text-dim)]">Arena Vale Sports</p>
-        </div>
-
-        <div className="bg-[var(--surface)] border border-[var(--primary)]/20 rounded-2xl p-8 text-center">
-          <div className="text-6xl mb-4">📄</div>
-          <h2 className="font-serif text-xl font-bold mb-2">Súmula em processamento</h2>
-          <p className="text-[var(--text-dim)] text-sm mb-6">
+    <main style={{ minHeight: '100vh', background: '#08163a', color: 'white', padding: '100px 20px' }}>
+      <div style={{ maxWidth: '600px', margin: '0 auto', textAlign: 'center' }}>
+        <div style={{ fontSize: '80px', marginBottom: '20px' }}>📄</div>
+        <h1 style={{ fontFamily: 'serif', fontSize: '32px', fontWeight: 900, marginBottom: '10px' }}>
+          Súmula #{params.id}
+        </h1>
+        <p style={{ color: '#b6c4dc', marginBottom: '30px' }}>Arena Vale Sports</p>
+        <div style={{ background: '#1a3370', border: '1px solid rgba(212,168,73,0.3)', borderRadius: '12px', padding: '30px' }}>
+          <h2 style={{ fontSize: '20px', fontWeight: 700, marginBottom: '10px' }}>Súmula em processamento</h2>
+          <p style={{ color: '#b6c4dc', fontSize: '14px' }}>
             Esta súmula será preenchida pelo moderador do time após o jogo.
-            <br />Acesse o painel do coordenador para cadastrar a súmula.
           </p>
-          <a
-            href="/"
-            className="inline-block bg-[var(--primary)] text-[#0a1530] font-bold px-6 py-3 rounded-full hover:bg-[var(--primary-light)] transition"
-          >
-            ← Voltar para a home
-          </a>
         </div>
+        <a href="/" style={{ display: 'inline-block', marginTop: '24px', background: '#d4a849', color: '#0a1530', padding: '12px 24px', borderRadius: '999px', fontWeight: 700, textDecoration: 'none' }}>
+          ← Voltar para a home
+        </a>
       </div>
     </main>
   );
