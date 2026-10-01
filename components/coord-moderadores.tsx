@@ -9,6 +9,9 @@ export function CoordModeradores() {
   const [moderadores, setModeradores] = useState<any[]>([]);
   const [times, setTimes] = useState<any[]>([]);
   const [perfis, setPerfis] = useState<any[]>([]);
+  const [campeonatos, setCampeonatos] = useState<any[]>([]);
+const [campeonatoId, setCampeonatoId] = useState('');
+
   const [profileId, setProfileId] = useState('');
   const [timeId, setTimeId] = useState('');
   const [username, setUsername] = useState('');
@@ -35,6 +38,11 @@ export function CoordModeradores() {
       .from('profiles')
       .select('id, full_name, email, role')
       .order('full_name');
+const { data: campeonatosData } = await supabase
+  .from('campeonatos')
+  .select('id, nome, ano')
+  .order('ano', { ascending: false });
+
 
     setModeradores(mods || []);
     setTimes(timesData || []);
@@ -53,7 +61,7 @@ export function CoordModeradores() {
   }
 
   async function adicionar() {
-    if (!profileId || !timeId || !username || !password) {
+  if (!profileId || !timeId || !campeonatoId || !username || !password) {
       setMensagem('Preencha todos os campos.');
       return;
     }
@@ -67,7 +75,7 @@ export function CoordModeradores() {
       .from('time_moderadores')
       .insert({
         profile_id: profileId,
-        time_id: timeId,
+        time_id: timeId, campeonato_id: campeonatoId,
         username: username.trim(),
         password_hash: passwordHash,
       });
@@ -77,7 +85,8 @@ export function CoordModeradores() {
     } else {
       setMensagem('Moderador adicionado.');
       setProfileId('');
-      setTimeId('');
+      setTimeId(''); 
+      setCampeonatoId('');
       setUsername('');
       setPassword('');
       await carregar();
@@ -122,6 +131,19 @@ export function CoordModeradores() {
               </option>
             ))}
           </select>
+<select
+  value={campeonatoId}
+  onChange={(e) => setCampeonatoId(e.target.value)}
+  className="px-3 py-3 rounded-[10px] bg-[rgba(8,22,58,0.6)] border border-white/10"
+>
+  <option value="">Selecione o campeonato</option>
+
+  {campeonatos.map((campeonato) => (
+    <option key={campeonato.id} value={campeonato.id}>
+      {campeonato.nome} — {campeonato.ano}
+    </option>
+  ))}
+</select>
 
           <select
             value={timeId}
