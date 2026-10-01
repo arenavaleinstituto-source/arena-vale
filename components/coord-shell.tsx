@@ -6,7 +6,7 @@ import type { Profile, Inscricao, Patrocinador } from '@/lib/supabase/types';
 import { CoordSumulas } from './coord-sumulas';
 import { CoordModeradores } from './coord-moderadores';
 import { CoordConfig } from './coord-config';
-import { CoordConfig } from './coord-config';
+import { CoordJogos } from './coord-jogos';
 
 type Stats = {
   inscricoes_pendentes: number;
