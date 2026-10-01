@@ -219,16 +219,13 @@ return (
             </div>
           ))}
         </div>
-      </div>
     )}
-{tab === 'sumulas' && (
-  <CoordSumulas userId={user.id} />
+{tab === 'moderadores' && (
+  <CoordModeradores />
 )}
 
-{(tab === 'moderadores' || tab === 'config') && (
-  <div className="panel text-center py-12 text-[var(--text-mute)]">
-    Em construção
-  </div>
+{tab === 'sumulas' && (
+  <CoordSumulas userId={user.id} />
 )}
     {/* MODAL Adicionar */}
     {showAddModal && (
