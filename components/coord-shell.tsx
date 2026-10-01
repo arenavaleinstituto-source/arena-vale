@@ -29,6 +29,7 @@ const TABS = [
   { id: 'sumulas',        label: '📄 Súmulas' },
   { id: 'patrocinadores', label: '🤝 Patrocinadores' },
   { id: 'config',         label: '⚙️ Config' },
+  { id: 'jogos',          label: '⚽ Jogos e Placar' },
 ];
 
 export function CoordShell({ user, stats: initialStats, inscricoes: initialInsc, patrocinadores: initialPat }: Props) {
@@ -182,7 +183,7 @@ return (
         ))}
       </div>
     )}
-
+    
     {tab === 'inscricoes' && (
       <div className="panel">
         <h3 className="text-[11px] tracking-widest text-[var(--text-mute)] uppercase font-bold mb-4">Times aguardando aprovação · {inscricoes.length}</h3>
