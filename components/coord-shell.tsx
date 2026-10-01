@@ -230,9 +230,8 @@ return (
   <CoordSumulas userId={user.id} />
 )}
 {tab === 'config' && (
-  <div className="panel text-center py-12 text-[var(--text-mute)]">
-    Configurações em construção
-  </div>
+  <CoordConfig />
+)}
 )}{/* MODAL Adicionar */}{showAddModal && (  <div    className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 grid place-items-center p-4"    onClick={() => setShowAddModal(false)}  >
         <div className="bg-gradient-to-br from-[var(--surface-2)] to-[var(--bg)] border border-[var(--primary)]/30 rounded-2xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl" onClick={e => e.stopPropagation()}>
           <div className="flex justify-between items-center mb-5">
