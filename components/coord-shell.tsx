@@ -3,6 +3,7 @@ import { useState, useTransition, useRef } from 'react';
 import { Shield } from './shield';
 import { createClient } from '@/lib/supabase/client';
 import type { Profile, Inscricao, Patrocinador } from '@/lib/supabase/types';
+import { CoordSumulas } from './coord-sumulas';
 
 type Stats = {
   inscricoes_pendentes: number;
@@ -219,11 +220,15 @@ return (
         </div>
       </div>
     )}
+{tab === 'sumulas' && (
+  <CoordSumulas userId={user.id} />
+)}
 
-    {(tab === 'moderadores' || tab === 'sumulas' || tab === 'config') && (
-      <div className="panel text-center py-12 text-[var(--text-mute)]">Em construção — ver <code>app/(coord)/coordenador/{tab}/page.tsx</code></div>
-    )}
-
+{(tab === 'moderadores' || tab === 'config') && (
+  <div className="panel text-center py-12 text-[var(--text-mute)]">
+    Em construção
+  </div>
+)}
     {/* MODAL Adicionar */}
     {showAddModal && (
       <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 grid place-items-center p-4" onClick={() => setShowAddModal(false)}>
