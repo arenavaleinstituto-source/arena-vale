@@ -4,6 +4,7 @@ import { Shield } from './shield';
 import { createClient } from '@/lib/supabase/client';
 import type { Profile, Inscricao, Patrocinador } from '@/lib/supabase/types';
 import { CoordSumulas } from './coord-sumulas';
+import { CoordModeradores } from './coord-moderadores';
 
 type Stats = {
   inscricoes_pendentes: number;
