@@ -183,7 +183,9 @@ return (
         ))}
       </div>
     )}
-    
+    {tab === 'jogos' && (
+  <CoordJogos />
+)}
     {tab === 'inscricoes' && (
       <div className="panel">
         <h3 className="text-[11px] tracking-widest text-[var(--text-mute)] uppercase font-bold mb-4">Times aguardando aprovação · {inscricoes.length}</h3>
