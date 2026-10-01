@@ -213,7 +213,8 @@ const { data: campeonatosData } = await supabase
 
                 <small className="text-[var(--text-mute)]">
                   @{moderador.username} ·{' '}
-                  {moderador.times?.nome || 'Sem time'}
+                 {moderador.times?.nome || 'Sem time'} ·{' '}
+                 {moderador.campeonatos?.nome || 'Sem campeonato'}
                 </small>
               </div>
 
