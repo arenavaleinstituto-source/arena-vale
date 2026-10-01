@@ -10,8 +10,7 @@ export function CoordModeradores() {
   const [times, setTimes] = useState<any[]>([]);
   const [perfis, setPerfis] = useState<any[]>([]);
   const [campeonatos, setCampeonatos] = useState<any[]>([]);
-const [campeonatoId, setCampeonatoId] = useState('');
-
+  const [campeonatoId, setCampeonatoId] = useState('');
   const [profileId, setProfileId] = useState('');
   const [timeId, setTimeId] = useState('');
   const [username, setUsername] = useState('');
