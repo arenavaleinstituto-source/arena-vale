@@ -5,7 +5,7 @@ import { Nav } from '@/components/nav';
 
 export default async function ModeradorPage() {
   const supabase = await createClient();
-  const { data: { user } } = await user?.id ? await supabase.auth.getUser() : { data: { user: null } };
+  const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/login?next=/moderador');
 
   const { data: profile } = await supabase.from('profiles').select('*').eq('id', user.id).single();
