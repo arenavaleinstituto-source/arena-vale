@@ -219,7 +219,8 @@ return (
             </div>
           ))}
         </div>
-    )}
+      </div>
+)}
 {tab === 'moderadores' && (
   <CoordModeradores />
 )}
