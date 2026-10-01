@@ -25,7 +25,7 @@ export function CoordModeradores() {
   async function carregar() {
     const { data: mods } = await supabase
       .from('time_moderadores')
-      .select('*, profiles(id, full_name, email), times(id, nome)')
+      .select('*, profiles(id, full_name, email), times(id, nome), campeonatos(id, nome, ano)')
       .order('appointed_at', { ascending: false });
 
     const { data: timesData } = await supabase
