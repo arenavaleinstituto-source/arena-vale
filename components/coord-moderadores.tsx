@@ -47,6 +47,7 @@ const { data: campeonatosData } = await supabase
     setModeradores(mods || []);
     setTimes(timesData || []);
     setPerfis(perfisData || []);
+    setCampeonatos(campeonatosData || []);
   }
 
   async function hashSenha(texto: string) {
