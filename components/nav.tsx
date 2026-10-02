@@ -29,6 +29,7 @@ export function Nav() {
 
           <Link href="/#cadastro" className="btn-primary">Inscrever Time</Link>
         </div>
+          </div>
     </header>
   );
 }
