@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import { Shield } from './shield';
+import { PortalMenu } from './portal-menu';
+
 
 export function Nav() {
   return (
@@ -23,8 +25,8 @@ export function Nav() {
           <Link href="/#classificacao" className="hover:text-[var(--primary)] transition">Classificação</Link>
         </nav>
         <div className="flex gap-2 items-center">
-         <Link href="/login" className="btn-outline">
-  🔐 Portal da equipe
+         <PortalMenu />
+
 </Link>
 
           <Link href="/#cadastro" className="btn-primary">Inscrever Time</Link>
