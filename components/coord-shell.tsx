@@ -8,6 +8,8 @@ import { CoordModeradores } from './coord-moderadores';
 import { CoordCapitaes } from './coord-capitaes';
 import { CoordConfig } from './coord-config';
 import { CoordJogos } from './coord-jogos';
+import { CoordDestaques } from './coord-destaques';
+
 
 type Stats = {
   inscricoes_pendentes: number;
@@ -32,6 +34,8 @@ const TABS = [
   { id: 'patrocinadores', label: '🤝 Patrocinadores' },
   { id: 'config',         label: '⚙️ Config' },
   { id: 'jogos',          label: '⚽ Jogos e Placar' },
+  { id: 'destaques', label: '⭐ Destaques' },
+
 ];
 
 export function CoordShell({ user, stats: initialStats, inscricoes: initialInsc, patrocinadores: initialPat }: Props) {
@@ -216,6 +220,9 @@ return (
     )}
     {tab === 'jogos' && (
   <CoordJogos />
+)}
+    {tab === 'destaques' && (
+  <CoordDestaques userId={user.id} />
 )}
     {tab === 'inscricoes' && (
       <div className="panel">
