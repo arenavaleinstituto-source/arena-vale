@@ -231,7 +231,9 @@ return (
 {tab === 'moderadores' && (
   <CoordModeradores />
 )}
-
+{tab === 'capitaes' && (
+  <CoordCapitaes />
+)}
 {tab === 'sumulas' && (
   <CoordSumulas userId={user.id} />
 )}
