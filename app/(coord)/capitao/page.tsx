@@ -162,7 +162,6 @@ export default async function CapitaoPage() {
   </section>
 </div>
         
-        </div>
         <section className="panel mt-6">
           <h2 className="font-serif text-xl font-bold mb-5">
             ⚽ Jogos do meu time
