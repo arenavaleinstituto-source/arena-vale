@@ -23,7 +23,11 @@ export function Nav() {
           <Link href="/#classificacao" className="hover:text-[var(--primary)] transition">Classificação</Link>
         </nav>
         <div className="flex gap-2 items-center">
-          <Link href="/login" className="btn-ghost">🔐 Coordenador</Link>
+          <Link href="/login" className="btn-ghost">🔐
+            <a href="/login" className="btn-outline">
+  🔐 Portal da equipe
+</a>
+</Link>
           <Link href="/#cadastro" className="btn-primary">Inscrever Time</Link>
         </div>
       </div>
