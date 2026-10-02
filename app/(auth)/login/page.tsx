@@ -27,7 +27,19 @@ function LoginForm() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
       const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single();
-      const dest = profile?.role === 'coordenador' ? '/coordenador' : profile?.role === 'moderador' ? '/moderador' : next;
+      const { data: capitao } = await supabase
+  .from('time_capitaes')
+  .select('id')
+  .eq('profile_id', user.id)
+  .maybeSingle();
+    const dest =
+  profile?.role === 'coordenador'
+    ? '/coordenador'
+    : profile?.role === 'moderador'
+      ? '/moderador'
+      : capitao
+        ? '/capitao'
+        : next;
       router.push(dest as any);
       router.refresh();
     });
