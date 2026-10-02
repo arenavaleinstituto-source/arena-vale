@@ -53,7 +53,7 @@ function LoginForm() {
           <Shield size={72} />
         </div>
         <h1 className="font-serif text-2xl font-extrabold text-center mb-2">Acesso restrito</h1>
-        <p className="text-center text-[var(--text-dim)] text-sm mb-7">Coordenadores e moderadores de time.</p>
+        <p className="text-center text-[var(--text-dim)] text-sm mb-7">Coordenadores, moderadores e capitães de time.</p>
         <form onSubmit={handleLogin} className="flex flex-col gap-3.5">
           {error && <div className="bg-[rgba(255,59,59,0.12)] border border-[rgba(255,59,59,0.3)] text-[#ff8a8a] text-sm p-2.5 rounded-lg text-center">{error}</div>}
           <div>
