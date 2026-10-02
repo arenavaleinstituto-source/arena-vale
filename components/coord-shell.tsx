@@ -168,7 +168,27 @@ return (
 
     {/* Visão */}
     {tab === 'visao' && (
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+  <>
+    <div className="flex justify-between items-center mb-5 flex-wrap gap-3">
+      <div>
+        <span className="eyebrow">🏠 Página Inicial</span>
+        <h2 className="font-serif text-xl font-bold mt-1">
+          Arena Vale Sports
+        </h2>
+      </div>
+
+      <a
+        href="https://0zjmezlsxvwtj.space.minimax.io"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="btn-primary"
+      >
+        🌐 Abrir site
+      </a>
+    </div>
+
+    <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+
         {[
           { icone: '⏳', label: 'Pendentes', value: stats.inscricoes_pendentes },
           { icone: '👥', label: 'Times', value: stats.total_times },
