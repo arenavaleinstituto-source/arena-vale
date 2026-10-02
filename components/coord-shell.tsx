@@ -204,6 +204,7 @@ return (
           </div>
         ))}
       </div>
+    </>
     )}
     {tab === 'jogos' && (
   <CoordJogos />
