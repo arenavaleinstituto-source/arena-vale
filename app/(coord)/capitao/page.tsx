@@ -108,40 +108,61 @@ export default async function CapitaoPage() {
             Bem-vindo, {profile?.full_name}.
           </p>
         </div>
+<CapitaoElenco
+  timeId={capitao.time_id}
+  jogadoresIniciais={jogadores || []}
+/>
 
-        <div className="grid lg:grid-cols-2 gap-6">
-          <section className="panel">
-            <h2 className="font-serif text-xl font-bold mb-5">
-              👥 Elenco do time
-            </h2>
+<div className="mt-6">
+  <section className="panel">
+    <h2 className="font-serif text-xl font-bold mb-5">
+      📊 Minha classificação
+    </h2>
 
-            {(!jogadores || jogadores.length === 0) && (
-              <p className="text-[var(--text-mute)]">
-                Nenhum jogador cadastrado.
-              </p>
-            )}
+    {classificacao.length === 0 && (
+      <p className="text-[var(--text-mute)]">
+        Ainda não há classificação disponível.
+      </p>
+    )}
 
-            <div className="grid gap-3">
-              {jogadores?.map((jogador: any) => (
-                <div
-                  key={jogador.id}
-                  className="flex items-center justify-between border-b border-white/10 pb-3"
-                >
-                  <div>
-                    <strong>{jogador.nome}</strong>
+    {classificacao.map((item: any) => (
+      <div
+        key={`${item.campeonato_id}-${item.time_id}`}
+        className="grid grid-cols-4 gap-3 text-center"
+      >
+        <div>
+          <strong className="block text-2xl">
+            {item.pontos || 0}
+          </strong>
+          <small className="text-[var(--text-mute)]">Pontos</small>
+        </div>
 
-                    <p className="text-xs text-[var(--text-mute)]">
-                      {jogador.posicao || 'Posição não informada'}
-                    </p>
-                  </div>
+        <div>
+          <strong className="block text-2xl">
+            {item.jogos || 0}
+          </strong>
+          <small className="text-[var(--text-mute)]">Jogos</small>
+        </div>
 
-                  <span className="text-xl font-bold">
-                    {jogador.numero_camisa || '—'}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </section>
+        <div>
+          <strong className="block text-2xl">
+            {item.vitorias || 0}
+          </strong>
+          <small className="text-[var(--text-mute)]">Vitórias</small>
+        </div>
+
+        <div>
+          <strong className="block text-2xl">
+            {item.gols_pro || 0}
+          </strong>
+          <small className="text-[var(--text-mute)]">Gols</small>
+        </div>
+      </div>
+    ))}
+  </section>
+</div>
+
+        
 
           <section className="panel">
             <h2 className="font-serif text-xl font-bold mb-5">
