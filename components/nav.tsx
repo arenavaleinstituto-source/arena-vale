@@ -27,8 +27,6 @@ export function Nav() {
         <div className="flex gap-2 items-center">
          <PortalMenu />
 
-</Link>
-
           <Link href="/#cadastro" className="btn-primary">Inscrever Time</Link>
         </div>
       </div>
