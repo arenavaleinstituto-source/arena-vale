@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { Nav } from '@/components/nav';
+import { CapitaoElenco } from '@/components/capitao-elenco';
 
 export default async function CapitaoPage() {
   const supabase = await createClient();
