@@ -24,7 +24,7 @@ interface Props {
 }
 
 const TABS = [
-  { id: 'visao',          label: '📊 Visão Geral' },
+  { id: 'visao', label: '🏠 Página Inicial' },
   { id: 'inscricoes',     label: '📝 Inscrições' },
   { id: 'moderadores',    label: '🛡️ Moderadores' },
   { id: 'capitaes',       label: '👑 Capitães' },
