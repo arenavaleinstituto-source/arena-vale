@@ -62,9 +62,6 @@ export default async function ModeradorPage() {
       visitante:times!time_visitante_id(nome)
     `)
     .eq('campeonato_id', teamLink.campeonato_id)
-    .or(
-      `time_casa_id.eq.${teamLink.time_id},time_visitante_id.eq.${teamLink.time_id}`
-    )
     .order('data', { ascending: true });
 
   return (
