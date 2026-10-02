@@ -27,6 +27,7 @@ const TABS = [
   { id: 'visao',          label: '📊 Visão Geral' },
   { id: 'inscricoes',     label: '📝 Inscrições' },
   { id: 'moderadores',    label: '🛡️ Moderadores' },
+  { id: 'capitaes',       label: '👑 Capitães' },
   { id: 'sumulas',        label: '📄 Súmulas' },
   { id: 'patrocinadores', label: '🤝 Patrocinadores' },
   { id: 'config',         label: '⚙️ Config' },
