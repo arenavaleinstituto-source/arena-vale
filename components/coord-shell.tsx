@@ -179,10 +179,8 @@ return (
         href="https://0zjmezlsxvwtj.space.minimax.io"
         target="_blank"
         rel="noopener noreferrer"
-        className="btn-primary"
-      >
-        🌐 Abrir site
-      </a>
+        className="btn-primary" >
+        🌐 Abrir site </a>
     </div>
 
     <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
