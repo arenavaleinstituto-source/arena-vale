@@ -161,65 +161,8 @@ export default async function CapitaoPage() {
     ))}
   </section>
 </div>
-
         
-
-          <section className="panel">
-            <h2 className="font-serif text-xl font-bold mb-5">
-              📊 Minha classificação
-            </h2>
-
-            {classificacao.length === 0 && (
-              <p className="text-[var(--text-mute)]">
-                Ainda não há classificação disponível.
-              </p>
-            )}
-
-            {classificacao.map((item: any) => (
-              <div
-                key={`${item.campeonato_id}-${item.time_id}`}
-                className="grid grid-cols-4 gap-3 text-center"
-              >
-                <div>
-                  <strong className="block text-2xl">
-                    {item.pontos || 0}
-                  </strong>
-                  <small className="text-[var(--text-mute)]">
-                    Pontos
-                  </small>
-                </div>
-
-                <div>
-                  <strong className="block text-2xl">
-                    {item.jogos || 0}
-                  </strong>
-                  <small className="text-[var(--text-mute)]">
-                    Jogos
-                  </small>
-                </div>
-
-                <div>
-                  <strong className="block text-2xl">
-                    {item.vitorias || 0}
-                  </strong>
-                  <small className="text-[var(--text-mute)]">
-                    Vitórias
-                  </small>
-                </div>
-
-                <div>
-                  <strong className="block text-2xl">
-                    {item.gols_pro || 0}
-                  </strong>
-                  <small className="text-[var(--text-mute)]">
-                    Gols
-                  </small>
-                </div>
-              </div>
-            ))}
-          </section>
         </div>
-
         <section className="panel mt-6">
           <h2 className="font-serif text-xl font-bold mb-5">
             ⚽ Jogos do meu time
