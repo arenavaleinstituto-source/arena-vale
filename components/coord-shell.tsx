@@ -158,11 +158,32 @@ return (
 
     {/* Tabs */}
     <div className="flex gap-1 border-b border-white/10 mb-7 overflow-x-auto">
-      {TABS.map(t => (
-        <button key={t.id} onClick={() => setTab(t.id)}
-          className={`px-4 py-3 text-sm font-semibold border-b-2 transition whitespace-nowrap ${tab === t.id ? 'text-[var(--primary)] border-[var(--primary)]' : 'text-[var(--text-dim)] border-transparent hover:text-white'}`}>
-          {t.label}
-        </button>
+      {TABS.map(t =>
+  t.id === 'site' ? (
+    <a
+      key={t.id}
+      href="https://0zjmezlsxvwtj.space.minimax.io/"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="px-4 py-3 text-sm font-semibold border-b-2 border-transparent text-[var(--text-dim)] hover:text-white whitespace-nowrap"
+    >
+      {t.label}
+    </a>
+  ) : (
+    <button
+      key={t.id}
+      onClick={() => setTab(t.id)}
+      className={`px-4 py-3 text-sm font-semibold border-b-2 transition whitespace-nowrap ${
+        tab === t.id
+          ? 'text-[var(--primary)] border-[var(--primary)]'
+          : 'text-[var(--text-dim)] border-transparent hover:text-white'
+      }`}
+    >
+      {t.label}
+    </button>
+  )
+)}
+
       ))}
     </div>
 
