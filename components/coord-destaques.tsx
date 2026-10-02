@@ -1,7 +1,8 @@
 'use client';
 
-import { createClient } from '@/lib/supabase/client';
 import { useEffect, useRef, useState } from 'react';
+import { createClient } from '@/lib/supabase/client';
+
 
 
 export function CoordDestaques({ userId }: { userId: string }) {
@@ -104,9 +105,9 @@ export function CoordDestaques({ userId }: { userId: string }) {
     setMensagem('Destaque excluído.');
   }
 
-  useState(() => {
-    carregar();
-  });
+  useEffect(() => {
+  carregar();
+}, []);
 
   return (
     <div className="grid gap-6">
