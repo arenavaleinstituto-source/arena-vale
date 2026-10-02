@@ -169,12 +169,11 @@ return (
     {/* Visão */}
     {tab === 'visao' && (
   <>
-    <div className="flex justify-between items-center mb-5 flex-wrap gap-3">
-      <div>
-        <span className="eyebrow">🏠 Página Inicial</span>
-        <h2 className="font-serif text-xl font-bold mt-1">
-          Arena Vale Sports
-        </h2>
+    <div>
+  <h2 className="font-serif text-xl font-bold mt-1">
+    Arena Vale Sports
+  </h2>
+</div>
       </div>
 
       <a
