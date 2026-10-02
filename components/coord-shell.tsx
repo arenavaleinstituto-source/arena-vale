@@ -174,7 +174,6 @@ return (
     Arena Vale Sports
   </h2>
 </div>
-      </div>
 
       <a
         href="https://0zjmezlsxvwtj.space.minimax.io"
