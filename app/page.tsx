@@ -73,8 +73,8 @@ export default async function HomePage() {
                 <a href="#campeonatos" className="btn-outline text-base px-7 py-3.5 bg-black/20 backdrop-blur-sm">Ver campeonatos</a>
               </div>
               <div className="flex flex-wrap gap-3 text-xs font-semibold text-[var(--text-dim)]">
-                <span className="glass-chip">🔴 ${jogosAoVivo.length} jogos ao vivo</span>
-                <span className="glass-chip">🏆 ${lista.length} campeonatos</span>
+                <span className="glass-chip">🔴 {jogosAoVivo.length} jogos ao vivo</span>
+                <span className="glass-chip">🏆 {lista.length} campeonatos</span>
                 <span className="glass-chip">⚽ Futebol do Vale</span>
               </div>
             </div>
@@ -103,7 +103,7 @@ export default async function HomePage() {
             </header>
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {lista.slice(0, 4).map((c: any, i: number) => (
-                <article key={i} className="sport-card group" style={{ backgroundImage: `url("${c.image || sportImages.hero}")` }}>
+                <article key={i} className="sport-card group" style={{ backgroundImage: `url("${c.image || [sportImages.hero, sportImages.stadium, sportImages.crowd, sportImages.team][i]}")` }}>
                   <div className="sport-card-overlay" />
                   <div className="sport-card-content">
                     <span className="sport-card-kicker">{c.status === 'fase_grupos' ? 'FASE DE GRUPOS' : 'EM ANDAMENTO'}</span>
