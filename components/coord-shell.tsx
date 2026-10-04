@@ -166,7 +166,7 @@ return (
   t.id === 'site' ? (
     <a
       key={t.id}
-      href="https://0zjmezlsxvwtj.space.minimax.io/"
+      href="https://arena-vale.vercel.app/"
       target="_blank"
       rel="noopener noreferrer"
       className="px-4 py-3 text-sm font-semibold border-b-2 border-transparent text-[var(--text-dim)] hover:text-white whitespace-nowrap"
