@@ -161,6 +161,106 @@ export default async function HomePage() {
         </section>
 
         {/* CTA */}
+        {/* ATLETAS EM DESTAQUE */}
+<section id="destaques" className="py-24">
+  <div className="container">
+    <header className="mb-12">
+      <span className="eyebrow">Destaques do mês</span>
+      <h2 className="heading">
+        Atletas <span className="accent">em destaque</span>
+      </h2>
+      <p className="text-[var(--text-dim)] mt-3">
+        Os talentos que brilharam nas quadras, campos e arenas do Vale.
+      </p>
+    </header>
+
+    {destaques.length === 0 ? (
+      <p className="text-[var(--text-mute)]">
+        Nenhum atleta em destaque cadastrado.
+      </p>
+    ) : (
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        {destaques.map((destaque: any) => (
+          <article key={destaque.id} className="panel overflow-hidden">
+            <img
+              src={destaque.foto_url}
+              alt={destaque.atleta_nome}
+              className="w-full h-64 object-cover rounded-xl"
+            />
+
+            <div className="pt-4">
+              <span className="text-xs uppercase tracking-widest text-[var(--primary)]">
+                Atleta em destaque
+              </span>
+
+              <h3 className="font-serif text-xl font-bold mt-2">
+                {destaque.atleta_nome}
+              </h3>
+
+              <p className="text-sm text-[var(--text-dim)] mt-1">
+                {destaque.time_nome}
+              </p>
+
+              <p className="text-xs text-[var(--text-mute)] mt-2">
+                {destaque.campeonato_nome}
+              </p>
+            </div>
+          </article>
+        ))}
+      </div>
+    )}
+  </div>
+</section>
+
+{/* PATROCINADORES */}
+<section id="patrocinadores" className="py-24 bg-[rgba(16,42,94,0.45)]">
+  <div className="container">
+    <header className="mb-12">
+      <span className="eyebrow">Apoio</span>
+      <h2 className="heading">
+        Nossos <span className="accent">patrocinadores</span>
+      </h2>
+    </header>
+
+    {patrocinadores.length === 0 ? (
+      <p className="text-[var(--text-mute)]">
+        Nenhum patrocinador cadastrado.
+      </p>
+    ) : (
+      <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+        {patrocinadores.map((patrocinador: any) => (
+          <article key={patrocinador.id} className="panel text-center">
+            <div className="h-28 grid place-items-center rounded-xl border border-white/10 bg-white/5 overflow-hidden">
+              {patrocinador.logo_url ? (
+                <img
+                  src={patrocinador.logo_url}
+                  alt={patrocinador.nome}
+                  className="max-h-full max-w-full object-contain p-4"
+                />
+              ) : (
+                <span className="font-serif text-xl font-bold text-[var(--primary)]">
+                  {patrocinador.logo_initials ||
+                    patrocinador.nome.slice(0, 3)}
+                </span>
+              )}
+            </div>
+
+            <h3 className="font-bold mt-4">
+              {patrocinador.nome}
+            </h3>
+
+            {patrocinador.categoria && (
+              <p className="text-xs text-[var(--text-mute)] mt-1">
+                {patrocinador.categoria}
+              </p>
+            )}
+          </article>
+        ))}
+      </div>
+    )}
+  </div>
+</section>
+
         <section id="cadastro" className="py-24 bg-gradient-to-br from-[rgba(245,215,110,0.10)] via-transparent to-[rgba(120,160,255,0.08)] border-y border-[var(--primary)]/20">
           <div className="container">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
