@@ -18,10 +18,13 @@ export default async function HomePage() {
   let patrocinadores: any[] = [];
 
   try {
-    [campeonatos, jogos] = await Promise.all([
-      getCampeonatos().catch(() => []),
-      getJogos({ status: 'ao_vivo' }).catch(() => []),
-    ]);
+    [campeonatos, jogos, destaques, patrocinadores] = await Promise.all([
+  getCampeonatos().catch(() => []),
+  getJogos({ status: 'ao_vivo' }).catch(() => []),
+  getAtletasDestaque().catch(() => []),
+  getPatrocinadores().catch(() => []),
+]);
+
   } catch {}
 
   // Demo data para quando ainda não há dados no DB
