@@ -41,35 +41,3 @@ body {
   .heading { @apply font-serif text-4xl md:text-5xl font-extrabold leading-tight; }
   .accent { @apply bg-gradient-to-br from-[#ffe48f] to-[#c9a338] bg-clip-text text-transparent; }
 }
-
-
-/* Acabamento moderno — preserva integralmente o desenho original */
-@layer components {
-  .panel {
-    box-shadow: 0 10px 28px rgba(0,0,0,.14);
-    transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
-  }
-  .panel:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 16px 36px rgba(0,0,0,.20);
-  }
-  .btn-primary {
-    box-shadow: 0 8px 22px rgba(201,163,56,.18);
-    transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
-  }
-  .btn-primary:hover {
-    transform: translateY(-1px);
-    filter: brightness(1.04);
-    box-shadow: 0 11px 28px rgba(201,163,56,.25);
-  }
-  .btn-outline {
-    transition: transform .2s ease, border-color .2s ease, background-color .2s ease, color .2s ease;
-  }
-  .btn-outline:hover {
-    background: rgba(245,215,110,.05);
-    transform: translateY(-1px);
-  }
-  .eyebrow {
-    box-shadow: inset 0 0 18px rgba(245,215,110,.025);
-  }
-}
