@@ -81,6 +81,20 @@ export async function getPatrocinadores(onlyActive = true) {
   if (error) throw error;
   return data as Patrocinador[];
 }
+export async function getAtletasDestaque() {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from('atletas_destaque')
+    .select('*')
+    .eq('ativo', true)
+    .order('ordem', { ascending: true })
+    .order('created_at', { ascending: false });
+
+  if (error) throw error;
+
+  return data || [];
+}
 
 export async function createPatrocinador(input: Omit<Patrocinador, 'id' | 'created_at' | 'updated_at' | 'created_by'>) {
   const supabase = await createClient();
