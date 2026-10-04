@@ -1,7 +1,6 @@
 // Landing pública (Server Component)
 import { Nav } from '@/components/nav';
 import { Shield } from '@/components/shield';
-import { ShieldLarge } from '@/components/shield';
 import {
   getAtletasDestaque,
   getCampeonatos,
@@ -9,9 +8,7 @@ import {
   getPatrocinadores,
 } from '@/lib/supabase/queries';
 
-
 export default async function HomePage() {
-  // Tenta carregar dados reais; se Supabase não estiver configurado ainda, fallback para demo
   let campeonatos: any[] = [];
   let jogos: any[] = [];
   let destaques: any[] = [];
@@ -19,20 +16,18 @@ export default async function HomePage() {
 
   try {
     [campeonatos, jogos, destaques, patrocinadores] = await Promise.all([
-  getCampeonatos().catch(() => []),
-  getJogos({ status: 'ao_vivo' }).catch(() => []),
-  getAtletasDestaque().catch(() => []),
-  getPatrocinadores().catch(() => []),
-]);
-
+      getCampeonatos().catch(() => []),
+      getJogos({ status: 'ao_vivo' }).catch(() => []),
+      getAtletasDestaque().catch(() => []),
+      getPatrocinadores().catch(() => []),
+    ]);
   } catch {}
 
-  // Demo data para quando ainda não há dados no DB
   const demoCampeonatos = [
-    { nome: 'Taça Arena Vale 2026', times: '32 · 78', status: 'em_andamento' },
-    { nome: 'Copa Vale 2026', times: '16 · 32', status: 'em_andamento' },
-    { nome: 'Master Cup 2026', times: '12 · 24', status: 'fase_grupos' },
-    { nome: 'Arena Vale Sub-20', times: '10 · 20', status: 'em_andamento' },
+    { nome: 'Taça Arena Vale 2026', times: '32 times · 78 jogos', status: 'em_andamento' },
+    { nome: 'Copa Vale 2026', times: '16 times · 32 jogos', status: 'em_andamento' },
+    { nome: 'Master Cup 2026', times: '12 times · 24 jogos', status: 'fase_grupos' },
+    { nome: 'Arena Vale Sub-20', times: '10 times · 20 jogos', status: 'em_andamento' },
   ];
   const demoJogos = [
     { id: '1', time_casa: { sigla: 'VR', nome: 'Vila Real FC', escudo_cor: '#a83232' }, time_visitante: { sigla: 'UF', nome: 'União FC', escudo_cor: '#1f7a3a' }, placar_casa: 2, placar_visitante: 1 },
@@ -46,244 +41,206 @@ export default async function HomePage() {
   return (
     <>
       <Nav />
-      <main className="pt-[78px]">
-        {/* HERO */}
-        <section id="topo" className="relative py-32 overflow-hidden">
-          <div className="container relative z-10">
-            <div className="grid lg:grid-cols-2 gap-12 items-center">
+      <main>
+        <section id="topo" className="hero relative overflow-hidden">
+          <div className="hero-lines" />
+          <div className="container relative z-10 py-24 md:py-32">
+            <div className="grid lg:grid-cols-[1.08fr_.92fr] gap-14 items-center">
               <div>
-                <span className="eyebrow">📍 Vale do Paraíba · SP · Temporada 2026</span>
-                <h1 className="heading mb-6">
+                <div className="eyebrow"><span className="live-dot" /> Vale do Paraíba · Temporada 2026</div>
+                <h1 className="hero-title">
                   A CASA DO<br />
                   <span className="accent">FUTEBOL</span> DO VALE.
                 </h1>
-                <p className="text-lg text-[var(--text-dim)] max-w-md mb-9">
-                  Plataforma completa de gestão de campeonatos de futebol. Acompanhe jogos ao vivo,
-                  estatísticas em tempo real, classificação e tudo que o seu time precisa.
+                <p className="hero-copy">
+                  Campeonatos, jogos ao vivo, resultados, estatísticas e os grandes talentos do futebol do Vale — tudo em um só lugar.
                 </p>
-                <div className="flex gap-3 flex-wrap mb-6">
+                <div className="flex gap-3 flex-wrap mb-7">
                   <a href="#aovivo" className="btn-primary text-base px-7 py-3.5">▶ Acompanhar Ao Vivo</a>
                   <a href="#cadastro" className="btn-outline text-base px-7 py-3.5">Inscrever meu time</a>
                 </div>
-                <p className="text-sm text-[var(--text-dim)] flex items-center gap-2">
-                  <span className="inline-block w-2.5 h-2.5 rounded-full bg-[var(--live)] animate-pulse" />
-                  <strong className="text-[var(--text)]">{jogosAoVivo.length} jogos rolando agora</strong> · 1.245 usuários assistindo
-                </p>
+                <div className="flex flex-wrap gap-x-7 gap-y-2 text-sm text-[var(--text-dim)]">
+                  <span><strong className="text-[var(--text)]">{jogosAoVivo.length}</strong> jogos ao vivo</span>
+                  <span><strong className="text-[var(--text)]">32</strong> times ativos</span>
+                  <span><strong className="text-[var(--text)]">18k+</strong> visualizações</span>
+                </div>
               </div>
-              <div className="flex flex-col items-center gap-7">
-                <Shield size={220} />
-                <div className="grid grid-cols-2 gap-3 w-full max-w-md">
-                  {[
-                    { label: 'Receita', value: 'R$ 24.780', trend: '↑ 16.6%' },
-                    { label: 'Times', value: '32', trend: '↑ 12.5%' },
-                    { label: 'Jogos', value: '78', trend: '↑ 7.3%' },
-                    { label: 'Views', value: '18.432', trend: '↑ 15.2%' },
-                  ].map(s => (
-                    <div key={s.label} className="panel hover:border-[var(--primary)] transition-all">
-                      <div className="text-[10px] tracking-widest text-[var(--text-mute)] uppercase font-bold">{s.label}</div>
-                      <div className="font-serif text-2xl font-black mt-1">{s.value}</div>
-                      <div className="text-xs text-[#5fdb95] mt-0.5">{s.trend}</div>
-                    </div>
-                  ))}
+
+              <div className="hero-visual">
+                <div className="hero-glow" />
+                <div className="logo-orbit orbit-one" />
+                <div className="logo-orbit orbit-two" />
+                <div className="hero-logo"><Shield size={250} /></div>
+                <div className="floating-card floating-card-top">
+                  <span className="mini-live"><span className="live-dot" /> AO VIVO</span>
+                  <strong>{jogosAoVivo[0]?.placar_casa ?? 2} <small>×</small> {jogosAoVivo[0]?.placar_visitante ?? 1}</strong>
+                  <span>Vila Real FC · União FC</span>
+                </div>
+                <div className="floating-card floating-card-bottom">
+                  <span>PLATAFORMA 2026</span>
+                  <strong>78 <small>jogos</small></strong>
+                  <em>↑ 7,3% nesta temporada</em>
                 </div>
               </div>
             </div>
           </div>
+          <div className="hero-bottom-fade" />
         </section>
 
-        {/* CAMPEONATOS */}
-        <section id="campeonatos" className="py-24">
+        <section id="campeonatos" className="section">
           <div className="container">
-            <header className="flex justify-between items-end mb-12">
+            <header className="section-head">
               <div>
                 <span className="eyebrow">Em disputa</span>
                 <h2 className="heading">Campeonatos <span className="accent">em andamento</span></h2>
+                <p className="section-copy">Acompanhe a temporada e fique por dentro de cada rodada.</p>
               </div>
-              <a href="#" className="btn-outline">Ver todos</a>
+              <a href="#aovivo" className="btn-outline hidden sm:inline-flex">Ver jogos</a>
             </header>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
               {lista.slice(0, 4).map((c: any, i: number) => (
-                <div key={i} className="aspect-[3/4] rounded-[14px] relative overflow-hidden border border-white/10 hover:border-[var(--primary)] transition cursor-pointer"
-                  style={{ background: `linear-gradient(135deg, var(--bg-alt) 0%, #08163a 100%)` }}>
-                  <div className="absolute bottom-0 inset-x-0 p-5 bg-gradient-to-t from-[#08163a] to-transparent">
-                    <div className="font-serif font-extrabold text-base mb-1">{c.nome}</div>
-                    <div className="text-[11px] text-[var(--text-dim)] tracking-wider mb-2">{c.times || '0 TIMES'}</div>
-                    <span className={`text-[10px] font-bold tracking-wider px-2.5 py-1 rounded-full ${c.status === 'fase_grupos' ? 'bg-[rgba(245,215,110,0.15)] text-[var(--primary)]' : 'bg-[rgba(95,219,149,0.15)] text-[#5fdb95]'}`}>
-                      {c.status === 'fase_grupos' ? 'FASE DE GRUPOS' : 'EM ANDAMENTO'}
-                    </span>
+                <article key={i} className="champ-card group">
+                  <div className="champ-number">0{i + 1}</div>
+                  <div className="field-pattern" />
+                  <div className="champ-content">
+                    <span className="status-pill">{c.status === 'fase_grupos' ? 'FASE DE GRUPOS' : 'EM ANDAMENTO'}</span>
+                    <h3>{c.nome}</h3>
+                    <p>{c.times || '0 TIMES'}</p>
+                    <span className="card-arrow">↗</span>
                   </div>
-                </div>
+                </article>
               ))}
             </div>
           </div>
         </section>
 
-        {/* AO VIVO */}
-        <section id="aovivo" className="py-24 bg-[rgba(16,42,94,0.45)]">
+        <section id="aovivo" className="section live-section">
           <div className="container">
-            <header className="flex justify-between items-end mb-12">
+            <header className="section-head">
               <div>
-                <span className="eyebrow animate-pulse-live">🔴 AO VIVO</span>
-                <h2 className="heading">Rolando <span className="accent">agora</span></h2>
+                <span className="eyebrow live-eyebrow"><span className="live-dot" /> AO VIVO AGORA</span>
+                <h2 className="heading">O jogo <span className="accent">acontece aqui.</span></h2>
+                <p className="section-copy">Placar, tempo de jogo e audiência em tempo real.</p>
               </div>
-              <a href="#" className="btn-primary">▶ Ver todos ao vivo</a>
+              <a href="#aovivo" className="btn-primary hidden sm:inline-flex">▶ Ver todos</a>
             </header>
             <div className="grid md:grid-cols-3 gap-5">
               {jogosAoVivo.map((j: any, i: number) => (
-                <div key={i} className="panel relative before:content-[''] before:absolute before:top-0 before:inset-x-0 before:h-[3px] before:bg-gradient-to-r before:from-[var(--live)] before:to-transparent">
-                  <div className="flex justify-between items-center mb-4 text-[11px]">
-                    <span className="bg-[var(--live)] text-white font-extrabold px-2 py-0.5 rounded animate-blink">AO VIVO</span>
-                    <span className="text-[var(--primary)] font-serif font-bold">{['2º TEMPO · 65:23', '1º TEMPO · 32:10', '1º TEMPO · 15:45'][i]}</span>
+                <article key={i} className="live-card">
+                  <div className="live-card-top">
+                    <span className="live-badge"><span className="live-dot" /> AO VIVO</span>
+                    <span className="match-time">{['2º TEMPO · 65:23', '1º TEMPO · 32:10', '1º TEMPO · 15:45'][i]}</span>
                   </div>
-                  <div className="grid grid-cols-[1fr_auto_1fr] gap-3 items-center mb-4">
-                    <div className="flex flex-col items-end gap-2">
-                      <div className="w-12 h-12 rounded-full grid place-items-center text-white font-extrabold text-sm" style={{ background: j.time_casa.escudo_cor }}>{j.time_casa.sigla}</div>
-                      <strong className="text-sm">{j.time_casa.nome}</strong>
+                  <div className="teams">
+                    <div className="team">
+                      <div className="team-badge" style={{ background: j.time_casa.escudo_cor }}>{j.time_casa.sigla}</div>
+                      <strong>{j.time_casa.nome}</strong>
                     </div>
-                    <div className="flex items-center gap-2 font-serif font-black text-4xl">
-                      <span>{j.placar_casa}</span>
-                      <span className="text-[var(--text-mute)] text-2xl font-normal">×</span>
-                      <span>{j.placar_visitante}</span>
+                    <div className="score">
+                      <b>{j.placar_casa}</b><span>×</span><b>{j.placar_visitante}</b>
                     </div>
-                    <div className="flex flex-col items-start gap-2">
-                      <div className="w-12 h-12 rounded-full grid place-items-center text-white font-extrabold text-sm" style={{ background: j.time_visitante.escudo_cor }}>{j.time_visitante.sigla}</div>
-                      <strong className="text-sm">{j.time_visitante.nome}</strong>
+                    <div className="team">
+                      <div className="team-badge" style={{ background: j.time_visitante.escudo_cor }}>{j.time_visitante.sigla}</div>
+                      <strong>{j.time_visitante.nome}</strong>
                     </div>
                   </div>
-                  <div className="flex justify-between text-[11px] text-[var(--text-mute)] pt-3 border-t border-white/5">
+                  <div className="match-meta">
                     <span>📍 {['Estádio Municipal', 'Arena Vale', 'CT Vale'][i]}</span>
-                    <span>👁 {[3842, 1503, 982][i]} assistindo</span>
+                    <span>👁 {[3842, 1503, 982][i].toLocaleString('pt-BR')}</span>
                   </div>
-                </div>
+                </article>
               ))}
             </div>
           </div>
         </section>
 
-        {/* CTA */}
-        {/* ATLETAS EM DESTAQUE */}
-<section id="destaques" className="py-24">
-  <div className="container">
-    <header className="mb-12">
-      <span className="eyebrow">Destaques do mês</span>
-      <h2 className="heading">
-        Atletas <span className="accent">em destaque</span>
-      </h2>
-      <p className="text-[var(--text-dim)] mt-3">
-        Os talentos que brilharam nas quadras, campos e arenas do Vale.
-      </p>
-    </header>
-
-    {destaques.length === 0 ? (
-      <p className="text-[var(--text-mute)]">
-        Nenhum atleta em destaque cadastrado.
-      </p>
-    ) : (
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-        {destaques.map((destaque: any) => (
-          <article key={destaque.id} className="panel overflow-hidden">
-            <img
-              src={destaque.foto_url}
-              alt={destaque.atleta_nome}
-              className="w-full h-64 object-cover rounded-xl"
-            />
-
-            <div className="pt-4">
-              <span className="text-xs uppercase tracking-widest text-[var(--primary)]">
-                Atleta em destaque
-              </span>
-
-              <h3 className="font-serif text-xl font-bold mt-2">
-                {destaque.atleta_nome}
-              </h3>
-
-              <p className="text-sm text-[var(--text-dim)] mt-1">
-                {destaque.time_nome}
-              </p>
-
-              <p className="text-xs text-[var(--text-mute)] mt-2">
-                {destaque.campeonato_nome}
-              </p>
-            </div>
-          </article>
-        ))}
-      </div>
-    )}
-  </div>
-</section>
-
-{/* PATROCINADORES */}
-<section id="patrocinadores" className="py-24 bg-[rgba(16,42,94,0.45)]">
-  <div className="container">
-    <header className="mb-12">
-      <span className="eyebrow">Apoio</span>
-      <h2 className="heading">
-        Nossos <span className="accent">patrocinadores</span>
-      </h2>
-    </header>
-
-    {patrocinadores.length === 0 ? (
-      <p className="text-[var(--text-mute)]">
-        Nenhum patrocinador cadastrado.
-      </p>
-    ) : (
-      <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-        {patrocinadores.map((patrocinador: any) => (
-          <article key={patrocinador.id} className="panel text-center">
-            <div className="h-28 grid place-items-center rounded-xl border border-white/10 bg-white/5 overflow-hidden">
-              {patrocinador.logo_url ? (
-                <img
-                  src={patrocinador.logo_url}
-                  alt={patrocinador.nome}
-                  className="max-h-full max-w-full object-contain p-4"
-                />
-              ) : (
-                <span className="font-serif text-xl font-bold text-[var(--primary)]">
-                  {patrocinador.logo_initials ||
-                    patrocinador.nome.slice(0, 3)}
-                </span>
-              )}
-            </div>
-
-            <h3 className="font-bold mt-4">
-              {patrocinador.nome}
-            </h3>
-
-            {patrocinador.categoria && (
-              <p className="text-xs text-[var(--text-mute)] mt-1">
-                {patrocinador.categoria}
-              </p>
-            )}
-          </article>
-        ))}
-      </div>
-    )}
-  </div>
-</section>
-
-        <section id="cadastro" className="py-24 bg-gradient-to-br from-[rgba(245,215,110,0.10)] via-transparent to-[rgba(120,160,255,0.08)] border-y border-[var(--primary)]/20">
+        <section id="destaques" className="section">
           <div className="container">
-            <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <header className="section-head">
               <div>
-                <span className="eyebrow">Entre em campo</span>
-                <h2 className="heading mb-3">Pronto para entrar na arena?</h2>
-                <p className="text-[var(--text-dim)] text-base">
-                  Inscreva seu time ou cadastre seu campeonato. Nossa equipe entra em contato em até 24h.
-                </p>
+                <span className="eyebrow">Destaques do mês</span>
+                <h2 className="heading">Atletas <span className="accent">em destaque</span></h2>
+                <p className="section-copy">Os talentos que estão fazendo a diferença nos campos do Vale.</p>
               </div>
-              <form className="grid grid-cols-2 gap-3" action="/api/inscricoes" method="POST">
-                <input className="col-span-2 px-4 py-3.5 rounded-[10px] bg-[var(--surface)] border border-white/10 focus:border-[var(--primary)] outline-none" type="text" name="nome" placeholder="Seu nome" required />
-                <input className="col-span-2 px-4 py-3.5 rounded-[10px] bg-[var(--surface)] border border-white/10 focus:border-[var(--primary)] outline-none" type="email" name="email" placeholder="E-mail" required />
-                <input className="col-span-2 px-4 py-3.5 rounded-[10px] bg-[var(--surface)] border border-white/10 focus:border-[var(--primary)] outline-none" type="tel" name="phone" placeholder="WhatsApp" required />
-                <button type="submit" className="btn-primary text-base py-3.5 col-span-2">Quero participar</button>
+            </header>
+            {destaques.length === 0 ? (
+              <div className="empty-state">Nenhum atleta em destaque cadastrado.</div>
+            ) : (
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                {destaques.map((destaque: any) => (
+                  <article key={destaque.id} className="athlete-card group">
+                    <div className="athlete-photo">
+                      <img src={destaque.foto_url} alt={destaque.atleta_nome} />
+                      <div className="athlete-overlay" />
+                      <span>DESTAQUE</span>
+                    </div>
+                    <div className="athlete-info">
+                      <h3>{destaque.atleta_nome}</h3>
+                      <p>{destaque.time_nome}</p>
+                      <small>{destaque.campeonato_nome}</small>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+
+        <section id="patrocinadores" className="section sponsors-section">
+          <div className="container">
+            <header className="section-head">
+              <div>
+                <span className="eyebrow">Quem acredita</span>
+                <h2 className="heading">Nossos <span className="accent">patrocinadores</span></h2>
+              </div>
+            </header>
+            {patrocinadores.length === 0 ? (
+              <div className="empty-state">Nenhum patrocinador cadastrado.</div>
+            ) : (
+              <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {patrocinadores.map((patrocinador: any) => (
+                  <article key={patrocinador.id} className="sponsor-card">
+                    <div className="sponsor-logo">
+                      {patrocinador.logo_url ? (
+                        <img src={patrocinador.logo_url} alt={patrocinador.nome} />
+                      ) : (
+                        <span>{patrocinador.logo_initials || patrocinador.nome.slice(0, 3)}</span>
+                      )}
+                    </div>
+                    <div>
+                      <h3>{patrocinador.nome}</h3>
+                      {patrocinador.categoria && <p>{patrocinador.categoria}</p>}
+                    </div>
+                  </article>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+
+        <section id="cadastro" className="signup-section">
+          <div className="container">
+            <div className="signup-box">
+              <div className="signup-copy">
+                <span className="eyebrow">Entre em campo</span>
+                <h2 className="heading">Seu time merece<br /><span className="accent">estar na Arena.</span></h2>
+                <p>Inscreva seu time ou cadastre seu campeonato. Nossa equipe entra em contato em até 24h.</p>
+                <div className="signup-points"><span>✓ Gestão de campeonatos</span><span>✓ Placar em tempo real</span><span>✓ Visibilidade para atletas</span></div>
+              </div>
+              <form className="signup-form" action="/api/inscricoes" method="POST">
+                <input type="text" name="nome" placeholder="Seu nome" required />
+                <input type="email" name="email" placeholder="E-mail" required />
+                <input type="tel" name="phone" placeholder="WhatsApp" required />
+                <button type="submit" className="btn-primary text-base py-3.5">Quero participar →</button>
               </form>
             </div>
           </div>
         </section>
 
-        <footer className="bg-[#08163a] border-t border-white/5 py-14">
-          <div className="container text-center text-xs text-[var(--text-mute)]">
-            © 2026 Arena Vale Sports · Feito com 💙💛 no Vale do Paraíba
+        <footer className="footer">
+          <div className="container footer-inner">
+            <div className="flex items-center gap-3"><Shield size={42} /><div><strong>ARENA <span>VALE</span></strong><small>SPORTS</small></div></div>
+            <p>© 2026 Arena Vale Sports · Feito com 💙💛 no Vale do Paraíba</p>
           </div>
         </footer>
       </main>
