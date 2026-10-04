@@ -2,12 +2,21 @@
 import { Nav } from '@/components/nav';
 import { Shield } from '@/components/shield';
 import { ShieldLarge } from '@/components/shield';
-import { getCampeonatos, getJogos } from '@/lib/supabase/queries';
+import {
+  getAtletasDestaque,
+  getCampeonatos,
+  getJogos,
+  getPatrocinadores,
+} from '@/lib/supabase/queries';
+
 
 export default async function HomePage() {
   // Tenta carregar dados reais; se Supabase não estiver configurado ainda, fallback para demo
   let campeonatos: any[] = [];
   let jogos: any[] = [];
+  let destaques: any[] = [];
+  let patrocinadores: any[] = [];
+
   try {
     [campeonatos, jogos] = await Promise.all([
       getCampeonatos().catch(() => []),
