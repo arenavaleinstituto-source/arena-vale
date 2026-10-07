@@ -20,9 +20,9 @@ export default function PublicPage() {
       <header className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-6 py-6">
         <a href="#topo" className="flex items-center gap-4">
           <img 
-            src="/arena-logo-dark.jpg" 
-            alt="Emblema Arena Vale" 
-            className="h-12 w-auto sm:h-16 object-contain rounded-lg"
+            src="https://dhu8izvlu5fgy.space.minimax.io/logo-header.png" 
+            alt="Arena Vale Sports" 
+            className="h-12 w-auto sm:h-16 object-contain"
           />
           <span className="font-black tracking-[.08em] text-2xl sm:text-4xl leading-tight text-white whitespace-nowrap">
             COMPLEXO ESPORTIVO ARENA VALE
@@ -129,7 +129,7 @@ export default function PublicPage() {
                 <span>{c[9]} — {c[10]}</span>
               </div>
             </article>
-          ))}/arena-logo-dark/arena-logo-dark
+          ))}
         </div>
       </section>
 
