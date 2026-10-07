@@ -44,10 +44,10 @@ export default function PublicPage() {
         />
         <div className="absolute inset-0 bg-gradient-to-r from-[#071426]/95 via-[#071426]/75 to-[#071426]/25" />
         <div className="relative max-w-2xl">
-          <h1 className="text-6xl font-black uppercase leading-[.9] sm:text-8xl">
-            <span className="text-[#d4a849]">ALÉM DO<br/>PLACAR,</span><br/>
-            <span className="text-white">CONTAMOS<br/>HISTÓRIAS!</span>
-          </h1>
+          <h1 className="font-extrabold uppercase leading-tight tracking-tight text-3xl md:text-5xl lg:text-6xl">
+  <span className="block text-[#D4A346]">ALÉM DO PLACAR,</span>
+  <span className="block text-white">CONTAMOS HISTÓRIAS!</span>
+</h1>
           <p className="mt-7 max-w-xl text-lg text-[#a8b4cc]">
             Acompanhe partidas, equipas e campeonatos com informação, emoção e a identidade oficial da Arena Vale Sports.
           </p>
