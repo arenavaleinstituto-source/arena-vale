@@ -1,66 +1,54 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/server';
+
+const CATEGORIAS = ['Sub-9','Sub-10','Sub-11','Sub-12','Sub-13','Sub-14','Sub-15','Sub-16','Sub-17','Sub-18','Sub-19','Sub-20'];
 
 export async function POST(req: Request) {
   try {
-    const contentType = req.headers.get('content-type') ?? '';
-
-    const body = contentType.includes('application/json')
-      ? await req.json()
-      : Object.fromEntries((await req.formData()).entries());
-
-    const timeId = String(body.time_id ?? '').trim();
-    const campeonatoId = String(body.campeonato_id ?? '').trim();
-
-    if (!timeId || !campeonatoId) {
-      return NextResponse.json(
-        {
-          ok: false,
-          error: 'Informe time_id e campeonato_id.',
-        },
-        { status: 400 }
-      );
+    const form = await req.formData();
+    const categoria = String(form.get('categoria') ?? '').trim();
+    const atletas = JSON.parse(String(form.get('atletas') ?? '[]'));
+    if (!CATEGORIAS.includes(categoria) || !Array.isArray(atletas) || atletas.length === 0) {
+      return NextResponse.json({ ok: false, error: 'Informe uma categoria válida e pelo menos um atleta.' }, { status: 400 });
     }
-
-    const supabase = await createClient();
-
-    const { data, error } = await supabase
-      .from('inscricoes')
-      .insert({
-        time_id: timeId,
-        campeonato_id: campeonatoId,
-        categoria: String(body.categoria ?? 'Adulto'),
-        status: 'pendente',
-      })
-      .select()
-      .single();
-
-    if (error) {
-      throw error;
+    if (String(form.get('autorizacao_responsavel')) !== 'true') {
+      return NextResponse.json({ ok: false, error: 'A autorização do responsável é obrigatória.' }, { status: 400 });
     }
-
-    if (!contentType.includes('application/json')) {
-      return NextResponse.redirect(
-        new URL('/?inscricao=sucesso#cadastro', req.url)
-      );
+    const admin = createAdminClient();
+    const paths: string[] = [];
+    const atletasComFotos = [];
+    const requestId = crypto.randomUUID();
+    for (let index = 0; index < atletas.length; index++) {
+      const atleta = atletas[index];
+      const foto = form.get(`foto_${index}`);
+      let foto_path = null;
+      if (foto instanceof File && foto.size > 0) {
+        const ext = foto.name.split('.').pop()?.toLowerCase() || 'jpg';
+        foto_path = `${requestId}/${index}.${ext}`;
+        const upload = await admin.storage.from('atletas-privado').upload(foto_path, Buffer.from(await foto.arrayBuffer()), { contentType: foto.type || 'image/jpeg', upsert: false });
+        if (upload.error) throw upload.error;
+        paths.push(foto_path);
+      }
+      atletasComFotos.push({ ...atleta, foto_path });
     }
-
-    return NextResponse.json({
-      ok: true,
-      data,
-    });
+    const { data, error } = await admin.from('solicitacoes_inscricao').insert({
+      equipe_nome: String(form.get('equipe_nome') ?? '').trim(),
+      equipe_sigla: String(form.get('equipe_sigla') ?? '').trim() || null,
+      cidade: String(form.get('cidade') ?? '').trim() || null,
+      responsavel_nome: String(form.get('responsavel_nome') ?? '').trim(),
+      responsavel_cpf: String(form.get('responsavel_cpf') ?? '').trim(),
+      responsavel_email: String(form.get('responsavel_email') ?? '').trim(),
+      responsavel_telefone: String(form.get('responsavel_telefone') ?? '').trim(),
+      categoria,
+      campeonato_id: String(form.get('campeonato_id') ?? '').trim() || null,
+      atletas: atletasComFotos,
+      fotos_paths: paths,
+      autorizacao_responsavel: true,
+      status: 'pendente'
+    }).select().single();
+    if (error) throw error;
+    return NextResponse.json({ ok: true, data });
   } catch (error) {
-    const message =
-      error instanceof Error
-        ? error.message
-        : 'Erro ao criar inscrição.';
-
-    return NextResponse.json(
-      {
-        ok: false,
-        error: message,
-      },
-      { status: 400 }
-    );
+    return NextResponse.json({ ok: false, error: error instanceof Error ? error.message : 'Não foi possível enviar a inscrição.' }, { status: 400 });
   }
 }
