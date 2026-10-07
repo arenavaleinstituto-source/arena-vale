@@ -1,234 +1,69 @@
-'use client';
-
-import React from 'react';
-
-const championships = [
-  ['🏆', 'EM ANDAMENTO', 'COPA ARENA VALE 2026', 'PRINCIPAL COMPETIÇÃO DA TEMPORADA · PONTOS CORRIDOS + MATA-MATA', '12', '66', 'R$ 15k', 'FASE DE GRUPOS', '62%', '12/03/2026', '20/12/2026'],
-  ['⚽', 'EM ANDAMENTO', 'LIGA BLUMENAU 2026', 'CAMPEONATO REGIONAL DE PONTOS CORRIDOS · 4 TURNOS', '10', '90', 'R$ 8k', 'TURNO 2', '45%', '05/02/2026', '30/11/2026'],
-  ['🥇', 'FASE DE GRUPOS', 'SUPERCOPA VALE 2026', 'TORNEIO ELIMINATÓRIO DOS CAMPEÕES REGIONAIS', '8', '15', 'R$ 20k', 'GRUPOS', '80%', '22/04/2026', '15/11/2026'],
-  ['🌟', 'INSCRIÇÕES ABERTAS', 'TORNEIO DE INVERNO 2026', 'CATEGORIA SUB-17 E SUB-15 · FORMATO ELIMINATÓRIO EM JOGO ÚNICO', '16', '—', 'R$ 5k', 'INSCRIÇÕES', '12/16', '15/07/2026', '30/09/2026'],
-  ['🔥', 'EM BREVE', 'COPA VERÃO 2027', 'ABERTURA DA TEMPORADA 2027 · PRÉ-INSCRIÇÃO EM DEZEMBRO', '16', '—', 'R$ 12k', 'AGUARDANDO', '0%', '10/01/2027', '20/03/2027'],
-  ['🏅', 'FINALIZADO', 'COPA INAUGURAÇÃO 2025', 'TORNEIO DE ABERTURA DA ARENA VALE · CAMPEÃO: FÊNIX CLUB', '8', '14', 'R$ 6k', 'ENCERRADO', '100%', '15/08/2025', '12/12/2025']
-];
-
-const games = [
-  ['PRÓXIMA', 'HOJE · 19:30', 'FÊNIX CLUB', 'VALE UNITED', 'QUADRA 01'],
-  ['PRÓXIMA', 'HOJE · 20:30', 'ARENA FC', 'BLUMENAU 7', 'QUADRA 02'],
-  ['AGENDADA', 'AMANHÃ · 18:00', 'ESTRELA AZUL', 'LIONS SC', 'QUADRA 01']
-];
-
-const PublicPage = () => {
-  return (
-    <div id="topo" className="min-h-screen bg-[#0a1830] text-white">
-      {/* Cabeçalho */}
-      <header className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-6 py-6">
-        <a href="#topo" className="flex items-center gap-4">
-          <img 
-            src="https://dhu8izvlu5fgy.space.minimax.io/logo-header.png" 
-            alt="" 
-            className="h-12 w-auto sm:h-16 object-contain"
-          />
-          <span className="font-black tracking-[.08em] text-2xl sm:text-4xl leading-tight text-white whitespace-nowrap">
-            COMPLEXO ESPORTIVO ARENA VALE
-          </span>
-        </a>
-        <div className="flex gap-2 text-xs font-bold">
-          <a href="/login" className="rounded-full bg-[#d4a849] px-6 py-3 text-[#0a1530] transition hover:opacity-90">
-            PAINEL
-          </a>
-        </div>
-      </header>
-
-      {/* Hero */}
-      <section className="relative mx-auto min-h-[590px] max-w-7xl overflow-hidden rounded-[2rem] px-6 py-28 lg:px-14">
-        <img 
-          src="/foto-pro-site-1.png" 
-          alt="" 
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#071426]/95 via-[#071426]/75 to-[#071426]/25" />
-        <div className="relative max-w-2xl">
-          <h1 className="text-6xl font-black uppercase leading-[.9] sm:text-8xl">
-            <span className="text-[#d4a849]">ALÉM DO<br/>PLACAR,</span><br/>
-            <span className="text-white">CONTAMOS<br/>HISTÓRIAS!</span>
-          </h1>
-          <p className="mt-7 max-w-xl text-lg text-[#a8b4cc]">
-            Acompanhe partidas, equipas e campeonatos com informação, emoção e a identidade oficial da Arena Vale Sports.
-          </p>
-        </div>
-      </section>
-
-      {/* Destaque Único */}
-      <section className="bg-[#0c1f4a] px-6 py-16">
-        <div className="mx-auto max-w-7xl">
-          <h2 className="text-4xl font-black uppercase leading-tight text-white sm:text-5xl">
-            OS TALENTOS QUE BRILHARAM NAS QUADRAS, CAMPOS E ARENAS DO VALE
-          </h2>
-
-          <div className="relative mt-10 overflow-hidden rounded-[2.5rem] border border-white/15 bg-[#071426] shadow-2xl">
-            <img
-              src="/foto-pro-site-1.png"
-              alt=""
-              className="absolute inset-0 h-full w-full object-cover object-center brightness-90 transition duration-700 hover:scale-105"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#071426] via-[#071426]/75 to-transparent sm:bg-gradient-to-r sm:from-[#071426]/95 sm:via-[#071426]/70 sm:to-transparent" />
-            <div className="relative z-10 flex min-h-[380px] flex-col justify-end p-8 sm:min-h-[440px] sm:max-w-2xl sm:p-14">
-              <span className="inline-flex items-center gap-2 self-start rounded-full bg-[#d4a849]/20 px-3.5 py-1 text-xs font-black uppercase tracking-wider text-[#d4a849] backdrop-blur-md">
-                ⭐ GALERIA OFICIAL
-              </span>
-              <h3 className="mt-4 text-3xl font-black uppercase leading-tight text-white sm:text-5xl">
-                CONHEÇA TODOS OS <br />
-                <span className="text-[#d4a849]">ATLETAS DESTAQUE</span>
-              </h3>
-              <p className="mt-4 text-sm leading-relaxed text-[#cad5ea] sm:text-base">
-                Acompanhe as revelações, artilheiros, melhores em campo e os grandes talentos que fazem a história da Arena Vale Sports.
-              </p>
-              <div className="mt-8 flex flex-wrap items-center gap-4">
-                <a
-                  href="/coordenador/atletasdestaques"
-                  className="rounded-full bg-[#d4a849] px-7 py-3.5 text-xs font-black uppercase tracking-wider text-[#071426] shadow-lg transition hover:bg-[#e0b75a] hover:scale-105"
-                >
-                  Ver Todos os Destaques →
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Indicadores Rápidos */}
-      <section className="mx-auto grid max-w-7xl grid-cols-3 gap-4 px-6 py-14 text-center">
-        <div>
-          <b className="text-5xl text-[#d4a849]">03</b>
-          <p className="mt-2 text-xs font-bold tracking-[.2em] text-[#a8b4cc]">JOGOS HOJE</p>
-        </div>
-        <div>
-          <b className="text-5xl text-[#d4a849]">12</b>
-          <p className="mt-2 text-xs font-bold tracking-[.2em] text-[#a8b4cc]">EQUIPAS ATIVAS</p>
-        </div>
-        <div>
-          <b className="text-5xl text-[#d4a849]">184</b>
-          <p className="mt-2 text-xs font-bold tracking-[.2em] text-[#a8b4cc]">ATLETAS</p>
-        </div>
-      </section>
-
-      {/* Campeonatos */}
-      <section id="torneios" className="mx-auto max-w-7xl px-6 py-14">
-        <div className="flex items-end justify-between gap-4">
-          <div>
-            <p className="text-sm font-bold tracking-[.25em] text-[#d4a849]">CAMPEONATOS</p>
-            <h2 className="mt-3 text-4xl font-black uppercase">TORNEIOS EM DISPUTA</h2>
-          </div>
-          <a href="#torneios" className="hidden rounded-full border border-[#d4a849] px-4 py-2 text-sm text-[#d4a849] md:block">
-            VER TODOS &gt;
-          </a>
-        </div>
-        <div className="mt-9 grid gap-5 md:grid-cols-2">
-          {championships.map((c) => (
-            <article key={c[2]} className="rounded-3xl border border-white/10 bg-[#0e2148] p-6">
-              <div className="flex justify-between">
-                <span className="text-3xl">{c[0]}</span>
-                <span className="text-xs font-bold text-[#d4a849]">{c[1]}</span>
-              </div>
-              <h3 className="mt-5 text-2xl font-black">{c[2]}</h3>
-              <p className="mt-2 min-h-10 text-sm text-[#a8b4cc]">{c[3]}</p>
-              <div className="mt-6 grid grid-cols-3 gap-2 border-y border-white/10 py-4 text-center">
-                <span><b className="block text-2xl">{c[4]}</b><small>EQUIPAS</small></span>
-                <span><b className="block text-2xl">{c[5]}</b><small>JOGOS</small></span>
-                <span><b className="block text-2xl text-[#d4a849]">{c[6]}</b><small>PREMIAÇÃO</small></span>
-              </div>
-              <div className="mt-4 flex justify-between text-xs text-[#a8b4cc]">
-                <span>{c[7]} · {c[8]}</span>
-                <span>{c[9]} — {c[10]}</span>
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      {/* Agenda Desportiva */}
-      <section id="agenda" className="mx-auto max-w-7xl px-6 py-14">
-        <div className="flex items-end justify-between">
-          <div>
-            <p className="text-sm font-bold tracking-[.25em] text-[#d4a849]">AGENDA DESPORTIVA</p>
-            <h2 className="mt-3 text-4xl font-black uppercase">PRÓXIMAS PARTIDAS</h2>
-          </div>
-          <a href="#agenda" className="rounded-full border border-[#d4a849] px-4 py-2 text-sm text-[#d4a849]">
-            VER TODAS &gt;
-          </a>
-        </div>
-        <div className="mt-9 grid gap-4 md:grid-cols-3">
-          {games.map((g) => (
-            <article key={g[2]} className="rounded-3xl border border-white/10 bg-[#0e2148] p-6">
-              <span className="text-xs font-bold text-[#d4a849]">{g[0]}</span>
-              <p className="mt-3 text-sm text-[#a8b4cc]">{g[1]}</p>
-              <div className="mt-5 flex items-center justify-between text-center">
-                <b>{g[2]}<small className="mt-1 block text-xs text-[#a8b4cc]">MANDANTE</small></b>
-                <span className="text-[#d4a849]">VS</span>
-                <b>{g[3]}<small className="mt-1 block text-xs text-[#a8b4cc]">VISITANTE</small></b>
-              </div>
-              <p className="mt-5 border-t border-white/10 pt-4 text-sm text-[#a8b4cc]">📍 {g[4]}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      {/* Apresentação da Aplicação Oficial */}
-      <section className="bg-[#0c1f4a] px-6 py-16">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-12 lg:flex-row">
-          <div className="max-w-xl">
-            <p className="text-sm font-bold tracking-[.25em] text-[#d4a849]">APLICAÇÃO OFICIAL</p>
-            <h2 className="mt-3 text-4xl font-black uppercase sm:text-5xl">
-              LEVE A ARENA VALE NO SEU BOLSO
-            </h2>
-            <p className="mt-5 text-lg text-[#a8b4cc]">
-              Acompanhe torneios, resultados em tempo real, fichas técnicas de atletas e toda a emoção das quadras diretamente no seu smartphone.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-4">
-              <span className="rounded-full bg-[#d4a849] px-6 py-3 font-bold text-[#0a1530]">
-                Disponível em breve
-              </span>
-            </div>
-          </div>
-          <div className="w-full max-w-xs sm:max-w-sm">
-            <img 
-              src="/imagem-app-mockup.jpg" 
-              alt="" 
-              className="w-full h-auto rounded-[2.5rem] shadow-2xl border border-white/15"
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Patrocinadores */}
-      <section className="mx-auto max-w-7xl px-6 py-14">
-        <p className="text-sm font-bold tracking-[.25em] text-[#d4a849]">PATROCINADORES</p>
-        <h2 className="mt-3 text-4xl font-black uppercase">QUEM APOIA O ARENA VALE SPORTS</h2>
-        <p className="mt-3 text-[#a8b4cc]">EMPRESAS E ENTIDADES QUE TORNAM O DESPORTO DO VALE POSSÍVEL</p>
-        <div className="mt-8 grid gap-4 sm:grid-cols-3 md:grid-cols-6">
-          <div className="rounded-2xl border border-white/10 bg-white p-5 text-center text-[#0a1830]">
-            <b className="text-2xl">AC</b>
-            <small className="mt-2 block">ACADESF</small>
-          </div>
-          {[1, 2, 3, 4, 5].map((n) => (
-            <div key={n} className="rounded-2xl border border-dashed border-[#a8b4cc] p-5 text-center text-[#a8b4cc]">
-              <b className="text-2xl">+</b>
-              <small className="mt-2 block">Espaço disponível</small>
-            </div>
-          ))}
-        </div>
-        <a href="https://wa.me/5547988444404" className="mt-8 inline-block text-[#d4a849]">
-          💼 Quer ser patrocinador? Entre em contacto pelo WhatsApp (47) 9 8844-4404
-        </a>
-      </section>
-
-      {/* TV Arena Vale */}
-      <section className="bg-[#0c1f4a] px-6 py-16">
-        <div className="mx-auto max-w-7xl">
-          <p className="text-sm font-bold tracking-[.25em] text-[#d4a849]">TV ARENA VALE</p>
-          <h2 className="mt-3 text-4xl font-black uppercase">VÍDEOS RECENTES E TRANSMISSÕES</h2>
-          <p className="mt-3 max-w-2xl text-[#a8b4cc]">
-            ACOMPANHE OS MELHORES MOMENTOS, ENTREVISTAS E AS PARTIDAS TRANSMITIDAS PELA ARENA VALE SPORTS
-          </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <a href="
+17:52:37.209 Running build in Washington, D.C., USA (East) – iad1
+17:52:37.211 Build machine configuration: 2 cores, 8 GB
+17:52:37.314 Cloning github.com/arenavaleinstituto-source/arena-vale (Branch: main, Commit: e1236e3)
+17:52:37.315 Skipping build cache, deployment was triggered without cache.
+17:52:37.688 Cloning completed: 374.000ms
+17:52:38.387 Running "vercel build"
+17:52:38.399 Vercel CLI 62.1.0
+17:52:38.688 Installing dependencies...
+17:53:10.228 npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+17:53:10.937 npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
+17:53:11.532 npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
+17:53:11.543 npm warn deprecated @humanwhocodes/object-schema@2.0.3: Use @eslint/object-schema instead
+17:53:11.613 npm warn deprecated @humanwhocodes/config-array@0.13.0: Use @eslint/config-array instead
+17:53:12.121 npm warn deprecated glob@7.2.3: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+17:53:12.632 npm warn deprecated glob@10.3.10: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+17:53:13.235 npm warn deprecated tar@7.4.3: Old versions of tar are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+17:53:13.532 npm warn deprecated recharts@2.15.4: 1.x and 2.x branches are no longer active. Bump to Recharts v3 to receive latest features and bugfixes. See https://github.com/recharts/recharts/wiki/3.0-migration-guide
+17:53:13.737 npm warn deprecated eslint@8.57.1: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+17:53:16.967 npm warn deprecated next@14.2.15: This version has a security vulnerability. Please upgrade to a patched version. See https://nextjs.org/blog/security-update-2025-12-11 for more details.
+17:53:18.155 
+17:53:18.155 added 536 packages in 39s
+17:53:18.155 
+17:53:18.155 167 packages are looking for funding
+17:53:18.156   run `npm fund` for details
+17:53:18.156 npm warn install-scripts 3 packages have install scripts not yet covered by allowScripts:
+17:53:18.156 npm warn install-scripts   supabase@1.226.4 (postinstall: node scripts/postinstall.js)
+17:53:18.157 npm warn install-scripts   unrs-resolver@1.12.2 (postinstall: node postinstall.js)
+17:53:18.157 npm warn install-scripts   esbuild@0.28.2 (postinstall: node install.js)
+17:53:18.157 npm warn install-scripts
+17:53:18.157 npm warn install-scripts Run `npm install-scripts ls` to review, or `npm install-scripts approve <pkg>` to allow.
+17:53:18.210 Detected Next.js version: 14.2.15
+17:53:18.220 Running "npm run build"
+17:53:18.324 
+17:53:18.324 > arena-vale-sports-app@1.0.0 build
+17:53:18.324 > next build
+17:53:18.324 
+17:53:18.957 Attention: Next.js now collects completely anonymous telemetry regarding usage.
+17:53:18.957 This information is used to shape Next.js' roadmap and prioritize features.
+17:53:18.957 You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+17:53:18.958 https://nextjs.org/telemetry
+17:53:18.958 
+17:53:19.011   ▲ Next.js 14.2.15
+17:53:19.011 
+17:53:19.029    Creating an optimized production build ...
+17:53:24.525 Failed to compile.
+17:53:24.526 
+17:53:24.528 ./app/page.tsx
+17:53:24.528 Error: 
+17:53:24.528   x Unexpected token `main`. Expected jsx identifier
+17:53:24.528     ,-[/vercel/path0/app/page.tsx:17:1]
+17:53:24.528  17 | 
+17:53:24.528  18 | export default function PublicPage() {
+17:53:24.528  19 |   return (
+17:53:24.528  20 |     <main id="topo" className="min-h-screen bg-[#0a1830] text-white">
+17:53:24.528     :      ^^^^
+17:53:24.528  21 |       {/* Cabeçalho */}
+17:53:24.528  22 |       <header className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-6 py-6">
+17:53:24.528  23 |         <a href="#topo" className="flex items-center gap-4">
+17:53:24.528     `----
+17:53:24.528 
+17:53:24.528 Caused by:
+17:53:24.528     Syntax Error
+17:53:24.528 
+17:53:24.528 Import trace for requested module:
+17:53:24.529 ./app/page.tsx
+17:53:24.529 
+17:53:24.549 
+17:53:24.549 > Build failed because of webpack errors
+17:53:24.609 Error: Command "npm run build" exited with 1
