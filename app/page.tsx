@@ -5,16 +5,13 @@ export default function PublicPage(){
   return (
     <main id="topo" className="min-h-screen bg-[#0a1830] text-white">
       <header className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 py-6">
-        <a href="#topo" className="font-black leading-tight tracking-[.08em] block">
-          <span className="text-white text-xl sm:text-2xl block">COMPLEXO ESPORTIVO</span>
-          <span className="text-[#d4a849] text-xl sm:text-2xl block">ARENA VALE</span>
+        <a href="#topo" className="font-black tracking-[.08em] text-3xl sm:text-5xl leading-tight whitespace-nowrap">
+          <span className="text-white">COMPLEXO ESPORTIVO </span>
+          <span className="text-[#d4a849]">ARENA VALE</span>
         </a>
         <div className="flex gap-2 text-xs font-bold">
-          <a href="/login" className="rounded-full bg-[#d4a849] px-4 py-3 text-[#0a1530]">
+          <a href="/login" className="rounded-full bg-[#d4a849] px-5 py-3 text-[#0a1530]">
             PAINEL
-          </a>
-          <a href="/coordenador" className="rounded-full border border-[#a8b4cc] px-4 py-3">
-            SAIR
           </a>
         </div>
       </header>
@@ -23,7 +20,11 @@ export default function PublicPage(){
         <img src="/foto-pro-site-1.jpg" alt="Atletas Arena Vale" className="absolute inset-0 h-full w-full object-cover"/>
         <div className="absolute inset-0 bg-gradient-to-r from-[#071426]/95 via-[#071426]/75 to-[#071426]/20"/>
         <div className="relative max-w-2xl">
-          <h1 className="text-6xl font-black uppercase leading-[.9] sm:text-8xl">ALÉM DO PLACAR,<br/><span className="text-[#d4a849]">CONTAMOS</span><br/>HISTÓRIAS!</h1>
+          <h1 className="text-6xl font-black uppercase leading-[.9] sm:text-8xl">
+            ALÉM DO PLACAR,<br/>
+            <span className="text-[#d4a849]">CONTAMOS</span><br/>
+            <span className="text-[#d4a849]">HISTÓRIAS!</span>
+          </h1>
           <p className="mt-7 max-w-xl text-lg text-[#a8b4cc]">Acompanhe partidas, equipes e campeonatos com informação, emoção e a identidade oficial da Arena Vale Sports.</p>
         </div>
       </section>
