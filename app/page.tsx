@@ -32,42 +32,24 @@ export default function PublicPage() {
 
     <main id="topo" className="min-h-screen bg-[#0a1830] text-white">
 
-      {/* Cabeçalho */}
-
-      <header className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-6 py-6">
-
-        <a href="#topo" className="flex items-center gap-4">
-
-          <img 
-
-            src="https://dhu8izvlu5fgy.space.minimax.io/logo-header.png" 
-
-            alt="Arena Vale Sports" 
-
-            className="h-12 w-auto sm:h-16 object-contain"
-
-          />
-
-          <span className="font-black tracking-[.08em] text-2xl sm:text-4xl leading-tight text-white whitespace-nowrap">
-
-            COMPLEXO ESPORTIVO ARENA VALE
-
-          </span>
-
-        </a>
-
-        <div className="flex gap-2 text-xs font-bold">
-
-          <a href="/login" className="rounded-full bg-[#d4a849] px-6 py-3 text-[#0a1530] transition hover:opacity-90">
-
-            PAINEL
-
-          </a>
-
+      {/* Hero */}
+      <section className="relative mx-auto min-h-[640px] lg:min-h-[720px] max-w-7xl overflow-hidden rounded-[2rem] px-6 py-12 lg:px-14 flex flex-col justify-end">
+        <img 
+          src="/foto-pro-site-1.png" 
+          alt="Atletas Arena Vale" 
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#071426]/95 via-[#071426]/70 to-[#071426]/20" />
+        <div className="relative z-10 max-w-3xl pb-4">
+          <h1 className="font-black uppercase tracking-tight leading-[0.95] text-4xl sm:text-6xl md:text-7xl lg:text-8xl drop-shadow-lg">
+            <span className="block text-[#D4A346]">ALÉM DO PLACAR,</span>
+            <span className="block text-white">CONTAMOS HISTÓRIAS!</span>
+          </h1>
+          <p className="mt-6 max-w-xl text-lg md:text-xl text-[#cad5ea] font-medium drop-shadow">
+            Acompanhe partidas, equipas e campeonatos com informação, emoção e a identidade oficial da Arena Vale Sports.
+          </p>
         </div>
-
-      </header>
-
+      </section>
 
       {/* Hero */}
 
