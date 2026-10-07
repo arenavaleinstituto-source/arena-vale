@@ -129,7 +129,7 @@ export default function PublicPage() {
                 <span>{c[9]} — {c[10]}</span>
               </div>
             </article>
-          ))}/arena-logo-dark
+          ))}/arena-logo-dark/arena-logo-dark
         </div>
       </section>
 
