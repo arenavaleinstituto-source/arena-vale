@@ -1,21 +1,23 @@
 export default function PublicPage() {
+  const cards = [
+    ['🏆', 'EM ANDAMENTO', 'Copa Arena Vale 2026', '12 equipes  •  66 jogos  •  R$ 15 mil'],
+    ['🔥', 'INSCRIÇÕES ABERTAS', 'Torneio de Inverno 2026', '16 vagas  •  Categorias Sub-17 e Sub-15'],
+    ['🌟', 'EM BREVE', 'Copa Verão 2027', 'Abertura da próxima temporada'],
+  ];
   return (
-    <main className="min-h-screen bg-[var(--bg)] px-6 py-24 text-center">
-      <div className="mx-auto max-w-5xl">
-        <p className="eyebrow">Arena Vale Sports</p>
-        <h1 className="heading mt-4">A CASA DO <span className="accent">FUTEBOL</span> DO VALE.</h1>
-        <p className="mx-auto mt-6 max-w-2xl text-[var(--text-dim)]">Acompanhe campeonatos, jogos, equipes e atletas do Vale do Paraíba.</p>
-        <div className="mt-8 flex flex-wrap justify-center gap-3">
-          <a href="/login?next=/coordenador" className="btn-primary">Coordenação</a>
-          <a href="/moderador" className="btn-outline">Moderador</a>
-          <a href="/capitao" className="btn-outline">Capitão</a>
-        </div>
-        <div className="mx-auto mt-16 grid max-w-4xl gap-5 md:grid-cols-3">
-          <div className="panel"><div className="text-4xl">🏆</div><h2 className="mt-4 font-serif text-xl font-bold">Campeonatos</h2><p className="mt-2 text-sm text-[var(--text-dim)]">Torneios e competições do Vale.</p></div>
-          <div className="panel"><div className="text-4xl">⚽</div><h2 className="mt-4 font-serif text-xl font-bold">Jogos ao vivo</h2><p className="mt-2 text-sm text-[var(--text-dim)]">Resultados e agenda esportiva.</p></div>
-          <div className="panel"><div className="text-4xl">⭐</div><h2 className="mt-4 font-serif text-xl font-bold">Atletas em destaque</h2><p className="mt-2 text-sm text-[var(--text-dim)]">Os talentos que brilham no Vale.</p></div>
-        </div>
-      </div>
+    <main className="min-h-screen bg-[var(--bg)] text-white">
+      <header className="mx-auto flex max-w-7xl items-center justify-between px-6 py-6 lg:px-10">
+        <a href="/" className="font-bold tracking-[0.2em]">ARENA VALE<br /><small className="text-xs text-[var(--accent)]">SPORTS</small></a>
+        <nav className="flex items-center gap-3"><a href="#campeonatos" className="rounded-full bg-[var(--accent)] px-5 py-3 text-sm font-bold text-black">CAMPEONATOS</a><a href="/inscricao" className="rounded-full border border-white/40 px-5 py-3 text-sm font-bold">INSCREVER TIME</a><a href="/coordenador" className="rounded-xl border border-white/20 px-4 py-3">☰</a></nav>
+      </header>
+      <section className="mx-auto grid max-w-7xl gap-12 px-6 pb-24 pt-16 lg:grid-cols-2 lg:px-10 lg:pt-28">
+        <div><p className="mb-5 text-sm font-bold tracking-[0.28em] text-[var(--accent)]">ARENA VALE SPORTS</p><h1 className="text-6xl font-black uppercase leading-[0.95] sm:text-8xl">ALÉM DO PLACAR,<br /><span className="text-[var(--accent)]">CONTAMOS</span><br />HISTÓRIAS.</h1><p className="mt-7 max-w-xl text-lg leading-8 text-[var(--text-dim)]">Acompanhe partidas, equipes e campeonatos com informação, emoção e a identidade oficial da Arena Vale Sports.</p><div className="mt-9 flex flex-wrap gap-3"><a href="#agenda" className="rounded-full bg-[var(--accent)] px-7 py-4 font-bold text-black">VER AGENDA →</a><a href="#campeonatos" className="rounded-full border border-white/50 px-7 py-4 font-bold">EXPLORAR TORNEIOS</a></div></div>
+        <div className="rounded-[2rem] border border-white/10 bg-white/[0.04] p-8"><p className="text-sm font-bold tracking-[0.25em] text-[var(--text-dim)]">A CASA DO FUTEBOL DO VALE</p><div className="mt-32 grid grid-cols-3 gap-3"><div className="rounded-2xl bg-white p-4 text-black"><strong className="text-3xl">03</strong><small className="block text-xs font-bold">JOGOS HOJE</small></div><div className="rounded-2xl bg-white p-4 text-black"><strong className="text-3xl">12</strong><small className="block text-xs font-bold">EQUIPES ATIVAS</small></div><div className="rounded-2xl bg-[var(--accent)] p-4 text-black"><strong className="text-3xl">184</strong><small className="block text-xs font-bold">ATLETAS</small></div></div></div>
+      </section>
+      <section className="mx-auto max-w-7xl px-6 py-16 lg:px-10"><p className="text-sm font-bold tracking-[0.28em] text-[var(--accent)]">DESTAQUES DO MÊS</p><h2 className="mt-3 text-4xl font-black uppercase">QUEM BRILHOU NAS ARENAS</h2><div className="mt-8 grid gap-5 md:grid-cols-3"><article className="rounded-3xl bg-white p-6 text-black"><span className="text-xs font-black text-slate-500">FUNDADOR</span><h3 className="mt-12 text-2xl font-black">Maurício Miranda</h3><p className="text-sm text-slate-500">Arena Vale Sports</p></article><article className="rounded-3xl bg-white p-6 text-black"><span className="text-xs font-black text-slate-500">FUTEBOL</span><h3 className="mt-12 text-2xl font-black">João Santos</h3><p className="text-sm text-slate-500">Amigos FC</p></article><article className="rounded-3xl bg-white p-6 text-black"><span className="text-xs font-black text-slate-500">VÔLEI</span><h3 className="mt-12 text-2xl font-black">Ana Oliveira</h3><p className="text-sm text-slate-500">Resenha FC</p></article></div></section>
+      <section id="campeonatos" className="mx-auto max-w-7xl px-6 py-16 lg:px-10"><p className="text-sm font-bold tracking-[0.28em] text-[var(--accent)]">CAMPEONATOS</p><h2 className="mt-3 text-4xl font-black uppercase">TORNEIOS EM DISPUTA</h2><div className="mt-8 grid gap-5 lg:grid-cols-3">{cards.map(([icone, status, nome, info]) => <article key={nome} className="rounded-3xl border border-white/10 bg-white/[0.06] p-6"><span className="text-3xl">{icone}</span><span className="float-right rounded-full bg-[var(--accent)] px-3 py-1 text-xs font-black text-black">{status}</span><h3 className="mt-8 text-2xl font-black uppercase">{nome}</h3><p className="mt-2 text-[var(--text-dim)]">{info}</p></article>)}</div></section>
+      <section id="agenda" className="mx-auto max-w-7xl px-6 py-16 lg:px-10"><div className="rounded-[2rem] bg-[var(--accent)] p-8 text-black sm:p-12"><p className="text-sm font-black tracking-[0.28em]">AGENDA ESPORTIVA</p><h2 className="mt-3 text-5xl font-black uppercase">PRÓXIMAS PARTIDAS</h2><div className="mt-8 grid gap-3 sm:grid-cols-3"><div className="rounded-2xl bg-white p-5"><small className="font-bold text-slate-500">HOJE · 19:30</small><p className="mt-4 font-black">FÊNIX CLUB VS VALE UNITED</p><small className="text-slate-500">QUADRA 01</small></div><div className="rounded-2xl bg-white p-5"><small className="font-bold text-slate-500">HOJE · 20:30</small><p className="mt-4 font-black">ARENA FC VS BLUMENAU 7</p><small className="text-slate-500">QUADRA 02</small></div><div className="rounded-2xl bg-white p-5"><small className="font-bold text-slate-500">AMANHÃ · 18:00</small><p className="mt-4 font-black">ESTRELA AZUL VS LIONS SC</p><small className="text-slate-500">QUADRA 01</small></div></div></div></section>
+      <footer className="mx-auto flex max-w-7xl flex-wrap justify-between gap-4 px-6 py-10 text-sm text-[var(--text-dim)] lg:px-10"><span className="font-bold text-white">ARENA VALE SPORTS</span><span>BLUMENAU · SANTA CATARINA</span><a href="/inscricao" className="text-[var(--accent)]">Fale conosco e inscreva seu time →</a></footer>
     </main>
   );
 }
