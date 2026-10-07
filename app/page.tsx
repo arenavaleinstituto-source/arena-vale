@@ -54,31 +54,40 @@ export default function PublicPage() {
         </div>
       </section>
 
-      {/* Atletas em Destaque */}
+      {/* Atletas em Destaque - Card Único */}
       <section className="bg-[#0c1f4a] px-6 py-16">
         <div className="mx-auto max-w-7xl">
           <p className="text-sm font-bold tracking-[.25em] text-[#d4a849]">DESTAQUES DO MÊS</p>
-          <h2 className="mt-3 text-4xl font-black uppercase">ATLETAS EM DESTAQUE</h2>
-          <p className="mt-3 text-[#a8b4cc]">OS TALENTOS QUE BRILHARAM NAS QUADRAS, CAMPOS E ARENAS DO VALE</p>
-          <div className="mt-9 grid gap-5 md:grid-cols-3">
-            {[
-              ['atleta-1.png', 'FUNDADOR', 'Maurício Miranda', 'ARENA VALE SPORTS'],
-              ['atleta-2.png', 'FUTEBOL', 'João Santos', 'AMIGOS FC'],
-              ['atleta-3.png', 'VÔLEI', 'Ana Oliveira', 'RESENHA FC']
-            ].map(([img, cat, name, team]) => (
-              <article key={name} className="overflow-hidden rounded-3xl border border-white/10 bg-[#10275a]">
-                <img 
-                  src={'https://0zjmezlsxvwtj.space.minimax.io/' + img} 
-                  alt={name} 
-                  className="h-48 w-full object-cover"
-                />
-                <div className="p-6">
-                  <span className="text-[#d4a849]">⭐ {cat}</span>
-                  <h3 className="mt-4 text-2xl font-black">{name}</h3>
-                  <p className="text-[#a8b4cc]">{team}</p>
-                </div>
-              </article>
-            ))}
+          <h2 className="mt-3 text-4xl font-black uppercase text-white">ATLETAS EM DESTAQUE</h2>
+          <p className="mt-2 text-[#a8b4cc]">OS TALENTOS QUE BRILHARAM NAS QUADRAS, CAMPOS E ARENAS DO VALE</p>
+
+          <div className="relative mt-10 overflow-hidden rounded-[2.5rem] border border-white/15 bg-[#071426] shadow-2xl">
+            <img
+              src="/foto-pro-site-1.png"
+              alt="Atletas em Destaque Arena Vale"
+              className="absolute inset-0 h-full w-full object-cover object-center brightness-90 transition duration-700 hover:scale-105"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#071426] via-[#071426]/75 to-transparent sm:bg-gradient-to-r sm:from-[#071426]/95 sm:via-[#071426]/70 sm:to-transparent" />
+            <div className="relative z-10 flex min-h-[380px] flex-col justify-end p-8 sm:min-h-[440px] sm:max-w-2xl sm:p-14">
+              <span className="inline-flex items-center gap-2 self-start rounded-full bg-[#d4a849]/20 px-3.5 py-1 text-xs font-black uppercase tracking-wider text-[#d4a849] backdrop-blur-md">
+                ⭐ GALERIA OFICIAL
+              </span>
+              <h3 className="mt-4 text-3xl font-black uppercase leading-tight text-white sm:text-5xl">
+                CONHEÇA TODOS OS <br />
+                <span className="text-[#d4a849]">ATLETAS DESTAQUE</span>
+              </h3>
+              <p className="mt-4 text-sm leading-relaxed text-[#cad5ea] sm:text-base">
+                Acompanhe as revelações, artilheiros, melhores em campo e os grandes talentos que fazem a história da Arena Vale Sports.
+              </p>
+              <div className="mt-8 flex flex-wrap items-center gap-4">
+                <a
+                  href="/coordenador/atletasdestaques"
+                  className="rounded-full bg-[#d4a849] px-7 py-3.5 text-xs font-black uppercase tracking-wider text-[#071426] shadow-lg transition hover:bg-[#e0b75a] hover:scale-105"
+                >
+                  Ver Todos os Destaques →
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </section>
