@@ -54,12 +54,12 @@ export default function PublicPage() {
         </div>
       </section>
 
-      {/* Atletas em Destaque - Card Único */}
+      {/* Título e Destaque Único */}
       <section className="bg-[#0c1f4a] px-6 py-16">
         <div className="mx-auto max-w-7xl">
-          <p className="text-sm font-bold tracking-[.25em] text-[#d4a849]">DESTAQUES DO MÊS</p>
-          <h2 className="mt-3 text-4xl font-black uppercase text-white">ATLETAS EM DESTAQUE</h2>
-          <p className="mt-2 text-[#a8b4cc]">OS TALENTOS QUE BRILHARAM NAS QUADRAS, CAMPOS E ARENAS DO VALE</p>
+          <h2 className="text-4xl font-black uppercase leading-tight text-white sm:text-5xl">
+            OS TALENTOS QUE BRILHARAM NAS QUADRAS, CAMPOS E ARENAS DO VALE
+          </h2>
 
           <div className="relative mt-10 overflow-hidden rounded-[2.5rem] border border-white/15 bg-[#071426] shadow-2xl">
             <img
@@ -227,45 +227,4 @@ export default function PublicPage() {
             ACOMPANHE OS MELHORES MOMENTOS, ENTREVISTAS E AS PARTIDAS TRANSMITIDAS PELA ARENA VALE SPORTS
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <a href="https://www.youtube.com/shorts/sY8Dpv7KIho" className="rounded-full bg-[#d4a849] px-6 py-4 font-bold text-[#0a1530]">
-              TRANSMISSÃO AO VIVO
-            </a>
-            <a href="https://www.youtube.com/@TVArenaVale" className="rounded-full border border-[#a8b4cc] px-6 py-4 font-bold">
-              VER CANAL
-            </a>
-          </div>
-          <p className="mt-8 text-sm text-[#d4a849]">
-            📺 VÍDEO EM DESTAQUE: YOUTUBE.COM/SHORTS/SY8Dpv7KIho · O COORDENADOR PODE TROCAR ESTE VÍDEO A QUALQUER MOMENTO PELO PAINEL.
-          </p>
-          <div className="mt-12 rounded-3xl border border-white/10 bg-[#0a1830] p-8">
-            <p className="font-bold tracking-[.2em]">CHAT DA TRANSMISSÃO</p>
-            <h3 className="mt-2 text-2xl font-black uppercase">COMENTE COM A TORCIDA</h3>
-            <p className="mt-4 text-[#a8b4cc]">0 MENSAGENS · 4 ESPECTADORES · ATUALIZAÇÃO AO VIVO</p>
-            <p className="mt-5 text-[#a8b4cc]">SEJA O PRIMEIRO A COMENTAR DURANTE A TRANSMISSÃO.</p>
-            <button className="mt-5 rounded-full bg-[#d4a849] px-6 py-3 font-bold text-[#0a1530]">
-              ENVIAR
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* Rodapé */}
-      <footer className="mx-auto max-w-7xl px-6 py-12">
-        <h2 className="text-3xl font-black">ALÉM DO PLACAR, CONTAMOS HISTÓRIAS!</h2>
-        <p className="mt-3 text-[#a8b4cc]">BLUMENAU · SANTA CATARINA</p>
-        <div className="mt-6 flex flex-wrap gap-3">
-          <a href="https://wa.me/5547988444404" className="rounded-full bg-[#25d366] px-4 py-3 font-bold">
-            Fale connosco no WhatsApp
-          </a>
-          <a href="https://www.youtube.com/@TVArenaVale" className="rounded-full bg-[#f00] px-4 py-3 font-bold">
-            Canal TV Arena Vale
-          </a>
-          <a href="/login" className="rounded-full border border-[#a8b4cc] px-4 py-3">
-            PORTAL
-          </a>
-        </div>
-        <p className="mt-10 text-xs text-[#a8b4cc]">Created by MiniMax Agent</p>
-      </footer>
-    </main>
-  );
-}
+            <a href="
