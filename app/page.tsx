@@ -5,9 +5,8 @@ export default function PublicPage(){
   return (
     <main id="topo" className="min-h-screen bg-[#0a1830] text-white">
       <header className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 py-6">
-        <a href="#topo" className="font-black tracking-[.08em] text-3xl sm:text-5xl leading-tight whitespace-nowrap">
-          <span className="text-white">COMPLEXO ESPORTIVO </span>
-          <span className="text-[#d4a849]">ARENA VALE</span>
+        <a href="#topo" className="font-black tracking-[.08em] text-3xl sm:text-5xl leading-tight whitespace-nowrap text-white">
+          COMPLEXO ESPORTIVO ARENA VALE
         </a>
         <div className="flex gap-2 text-xs font-bold">
           <a href="/login" className="rounded-full bg-[#d4a849] px-5 py-3 text-[#0a1530]">
@@ -21,9 +20,8 @@ export default function PublicPage(){
         <div className="absolute inset-0 bg-gradient-to-r from-[#071426]/95 via-[#071426]/75 to-[#071426]/20"/>
         <div className="relative max-w-2xl">
           <h1 className="text-6xl font-black uppercase leading-[.9] sm:text-8xl">
-            ALÉM DO PLACAR,<br/>
-            <span className="text-[#d4a849]">CONTAMOS</span><br/>
-            <span className="text-[#d4a849]">HISTÓRIAS!</span>
+            <span className="text-[#d4a849]">ALÉM DO<br/>PLACAR,</span><br/>
+            <span className="text-white">CONTAMOS<br/>HISTÓRIAS!</span>
           </h1>
           <p className="mt-7 max-w-xl text-lg text-[#a8b4cc]">Acompanhe partidas, equipes e campeonatos com informação, emoção e a identidade oficial da Arena Vale Sports.</p>
         </div>
@@ -83,73 +81,4 @@ export default function PublicPage(){
         </div>
       </section>
 
-      <section id="agenda" className="mx-auto max-w-7xl px-6 py-14">
-        <div className="flex items-end justify-between">
-          <div>
-            <p className="text-sm font-bold tracking-[.25em] text-[#d4a849]">AGENDA ESPORTIVA</p>
-            <h2 className="mt-3 text-4xl font-black uppercase">PRÓXIMAS PARTIDAS</h2>
-          </div>
-          <a href="#agenda" className="rounded-full border border-[#d4a849] px-4 py-2 text-sm text-[#d4a849]">VER TODAS &gt;</a>
-        </div>
-        <div className="mt-9 grid gap-4 md:grid-cols-3">
-          {games.map(g=>(
-            <article key={g[2]} className="rounded-3xl border border-white/10 bg-[#0e2148] p-6">
-              <span className="text-xs font-bold text-[#d4a849]">{g[0]}</span>
-              <p className="mt-3 text-sm text-[#a8b4cc]">{g[1]}</p>
-              <div className="mt-5 flex items-center justify-between text-center">
-                <b>{g[2]}<small className="mt-1 block text-xs text-[#a8b4cc]">MANDANTE</small></b>
-                <span className="text-[#d4a849]">VS</span>
-                <b>{g[3]}<small className="mt-1 block text-xs text-[#a8b4cc]">VISITANTE</small></b>
-              </div>
-              <p className="mt-5 border-t border-white/10 pt-4 text-sm text-[#a8b4cc]">📍 {g[4]}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-7xl px-6 py-14">
-        <p className="text-sm font-bold tracking-[.25em] text-[#d4a849]">PATROCINADORES</p>
-        <h2 className="mt-3 text-4xl font-black uppercase">QUEM APOIA O ARENA VALE SPORTS</h2>
-        <p className="mt-3 text-[#a8b4cc]">EMPRESAS E ENTIDADES QUE TORNAM O FUTEBOL DO VALE POSSÍVEL</p>
-        <div className="mt-8 grid gap-4 sm:grid-cols-3 md:grid-cols-6">
-          <div className="rounded-2xl border border-white/10 bg-white p-5 text-center text-[#0a1830]"><b className="text-2xl">AC</b><small className="mt-2 block">ACADESF</small></div>
-          {[1,2,3,4,5].map(n=>(
-            <div key={n} className="rounded-2xl border border-dashed border-[#a8b4cc] p-5 text-center text-[#a8b4cc]"><b className="text-2xl">+</b><small className="mt-2 block">Espaço disponível</small></div>
-          ))}
-        </div>
-        <a href="https://wa.me/5547988444404" className="mt-8 inline-block text-[#d4a849]">💼 Quer ser patrocinador? Entre em contato pelo WhatsApp (47) 9 8844-4404</a>
-      </section>
-
-      <section className="bg-[#0c1f4a] px-6 py-16">
-        <div className="mx-auto max-w-7xl">
-          <p className="text-sm font-bold tracking-[.25em] text-[#d4a849]">TV ARENA VALE</p>
-          <h2 className="mt-3 text-4xl font-black uppercase">VÍDEOS RECENTES E TRANSMISSÕES</h2>
-          <p className="mt-3 max-w-2xl text-[#a8b4cc]">ACOMPANHE OS MELHORES MOMENTOS, ENTREVISTAS E AS PARTIDAS TRANSMITIDAS PELA ARENA VALE SPORTS</p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <a href="https://www.youtube.com/shorts/sY8Dpv7KIho" className="rounded-full bg-[#d4a849] px-6 py-4 font-bold text-[#0a1530]">TRANSMISSÃO AO VIVO</a>
-            <a href="https://www.youtube.com/@TVArenaVale" className="rounded-full border border-[#a8b4cc] px-6 py-4 font-bold">VER CANAL</a>
-          </div>
-          <p className="mt-8 text-sm text-[#d4a849]">📺 VÍDEO EM DESTAQUE: YOUTUBE.COM/SHORTS/SY8Dpv7KIho · O COORDENADOR PODE TROCAR ESTE VÍDEO A QUALQUER MOMENTO PELO PAINEL.</p>
-          <div className="mt-12 rounded-3xl border border-white/10 bg-[#0a1830] p-8">
-            <p className="font-bold tracking-[.2em]">CHAT DA TRANSMISSÃO</p>
-            <h3 className="mt-2 text-2xl font-black uppercase">COMENTE COM A TORCIDA</h3>
-            <p className="mt-4 text-[#a8b4cc]">0 MENSAGENS · 4 ESPECTADORES · ATUALIZAÇÃO AO VIVO</p>
-            <p className="mt-5 text-[#a8b4cc]">SEJA O PRIMEIRO A COMENTAR DURANTE A TRANSMISSÃO.</p>
-            <button className="mt-5 rounded-full bg-[#d4a849] px-6 py-3 font-bold text-[#0a1530]">ENVIAR</button>
-          </div>
-        </div>
-      </section>
-
-      <footer className="mx-auto max-w-7xl px-6 py-12">
-        <h2 className="text-3xl font-black">ALÉM DO PLACAR, CONTAMOS HISTÓRIAS!</h2>
-        <p className="mt-3 text-[#a8b4cc]">BLUMENAU · SANTA CATARINA</p>
-        <div className="mt-6 flex flex-wrap gap-3">
-          <a href="https://wa.me/5547988444404" className="rounded-full bg-[#25d366] px-4 py-3 font-bold">Fale conosco no WhatsApp</a>
-          <a href="https://www.youtube.com/@TVArenaVale" className="rounded-full bg-[#f00] px-4 py-3 font-bold">Canal TV Arena Vale</a>
-          <a href="/coordenador" className="rounded-full border border-[#a8b4cc] px-4 py-3">PORTAL</a>
-        </div>
-        <p className="mt-10 text-xs text-[#a8b4cc]">Created by MiniMax Agent</p>
-      </footer>
-    </main>
-  );
-}
+      <section id="agenda" className="mx-auto max-w-7xl px-6 py-14
