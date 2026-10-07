@@ -5,7 +5,11 @@ export default function PublicPage(){
   return (
     <main id="topo" className="min-h-screen bg-[#0a1830] text-white">
       <header className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 py-6">
-        <a href="#topo" className="font-black tracking-[.2em]">ARENA VALE<br/><small className="text-xs text-[#d4a849]">SPORTS</small></a>
+        <a href="#topo" className="font-black tracking-[.2em] leading-tight block">
+          <span className="text-white">COMPLEXO ESPORTIVO</span>
+          <br />
+          <span className="text-xs text-[#d4a849] tracking-[.25em]">ARENA VALE</span>
+        </a>
         <div className="flex items-center gap-5">
           <p className="text-3xl font-black leading-none tracking-[.08em] text-[#d4a849] text-right">
             COMPLEXO ESPORTIVO<br/>ARENA VALE
@@ -29,135 +33,4 @@ export default function PublicPage(){
             <img src="/arena-logo-transparent.png" alt="Logo Arena Vale" className="h-24 w-auto object-contain"/>
           </div>
           <h1 className="text-6xl font-black uppercase leading-[.9] sm:text-8xl">ALÉM DO PLACAR,<br/><span className="text-[#d4a849]">CONTAMOS</span><br/>HISTÓRIAS!</h1>
-          <p className="mt-7 max-w-xl text-lg text-[#a8b4cc]">Acompanhe partidas, equipes e campeonatos com informação, emoção e a identidade oficial da Arena Vale Sports.</p>
-          <div className="mt-9 flex flex-wrap gap-3">
-            <a href="#agenda" className="rounded-full bg-[#d4a849] px-6 py-4 font-bold text-[#0a1530]">VER AGENDA →</a>
-            <a href="#torneios" className="rounded-full border border-[#a8b4cc] px-6 py-4 font-bold">EXPLORAR TORNEIOS</a>
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-[#0c1f4a] px-6 py-16">
-        <div className="mx-auto max-w-7xl">
-          <p className="text-sm font-bold tracking-[.25em] text-[#d4a849]">DESTAQUES DO MÊS</p>
-          <h2 className="mt-3 text-4xl font-black uppercase">ATLETAS EM DESTAQUE</h2>
-          <p className="mt-3 text-[#a8b4cc]">OS TALENTOS QUE BRILHARAM NAS QUADRAS, CAMPOS E ARENAS DO VALE</p>
-          <div className="mt-9 grid gap-5 md:grid-cols-3">
-            {[['atleta-1.png','FUNDADOR','Maurício Miranda','ARENA VALE SPORTS'],['atleta-2.png','FUTEBOL','João Santos','AMIGOS FC'],['atleta-3.png','VÔLEI','Ana Oliveira','RESENHA FC']].map(([img,cat,name,team])=>(
-              <article key={name} className="overflow-hidden rounded-3xl border border-white/10 bg-[#10275a]">
-                <img src={'https://0zjmezlsxvwtj.space.minimax.io/'+img} alt={name} className="h-48 w-full object-cover"/>
-                <div className="p-6">
-                  <span className="text-[#d4a849]">⭐ {cat}</span>
-                  <h3 className="mt-4 text-2xl font-black">{name}</h3>
-                  <p className="text-[#a8b4cc]">{team}</p>
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="mx-auto grid max-w-7xl grid-cols-3 gap-4 px-6 py-14 text-center">
-        <div><b className="text-5xl text-[#d4a849]">03</b><p className="mt-2 text-xs font-bold tracking-[.2em] text-[#a8b4cc]">JOGOS HOJE</p></div>
-        <div><b className="text-5xl text-[#d4a849]">12</b><p className="mt-2 text-xs font-bold tracking-[.2em] text-[#a8b4cc]">EQUIPES ATIVAS</p></div>
-        <div><b className="text-5xl text-[#d4a849]">184</b><p className="mt-2 text-xs font-bold tracking-[.2em] text-[#a8b4cc]">ATLETAS</p></div>
-      </section>
-
-      <section id="torneios" className="mx-auto max-w-7xl px-6 py-14">
-        <div className="flex items-end justify-between gap-4">
-          <div>
-            <p className="text-sm font-bold tracking-[.25em] text-[#d4a849]">CAMPEONATOS</p>
-            <h2 className="mt-3 text-4xl font-black uppercase">TORNEIOS EM DISPUTA</h2>
-          </div>
-          <a href="#torneios" className="hidden rounded-full border border-[#d4a849] px-4 py-2 text-sm text-[#d4a849] md:block">VER TODOS &gt;</a>
-        </div>
-        <div className="mt-9 grid gap-5 md:grid-cols-2">
-          {championships.map(c=>(
-            <article key={c[2]} className="rounded-3xl border border-white/10 bg-[#0e2148] p-6">
-              <div className="flex justify-between"><span className="text-3xl">{c[0]}</span><span className="text-xs font-bold text-[#d4a849]">{c[1]}</span></div>
-              <h3 className="mt-5 text-2xl font-black">{c[2]}</h3>
-              <p className="mt-2 min-h-10 text-sm text-[#a8b4cc]">{c[3]}</p>
-              <div className="mt-6 grid grid-cols-3 gap-2 border-y border-white/10 py-4 text-center">
-                <span><b className="block text-2xl">{c[4]}</b><small>EQUIPES</small></span>
-                <span><b className="block text-2xl">{c[5]}</b><small>JOGOS</small></span>
-                <span><b className="block text-2xl text-[#d4a849]">{c[6]}</b><small>PREMIAÇÃO</small></span>
-              </div>
-              <div className="mt-4 flex justify-between text-xs text-[#a8b4cc]">
-                <span>{c[7]} · {c[8]}</span>
-                <span>{c[9]} — {c[10]}</span>
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section id="agenda" className="mx-auto max-w-7xl px-6 py-14">
-        <div className="flex items-end justify-between">
-          <div>
-            <p className="text-sm font-bold tracking-[.25em] text-[#d4a849]">AGENDA ESPORTIVA</p>
-            <h2 className="mt-3 text-4xl font-black uppercase">PRÓXIMAS PARTIDAS</h2>
-          </div>
-          <a href="#agenda" className="rounded-full border border-[#d4a849] px-4 py-2 text-sm text-[#d4a849]">VER TODAS &gt;</a>
-        </div>
-        <div className="mt-9 grid gap-4 md:grid-cols-3">
-          {games.map(g=>(
-            <article key={g[2]} className="rounded-3xl border border-white/10 bg-[#0e2148] p-6">
-              <span className="text-xs font-bold text-[#d4a849]">{g[0]}</span>
-              <p className="mt-3 text-sm text-[#a8b4cc]">{g[1]}</p>
-              <div className="mt-5 flex items-center justify-between text-center">
-                <b>{g[2]}<small className="mt-1 block text-xs text-[#a8b4cc]">MANDANTE</small></b>
-                <span className="text-[#d4a849]">VS</span>
-                <b>{g[3]}<small className="mt-1 block text-xs text-[#a8b4cc]">VISITANTE</small></b>
-              </div>
-              <p className="mt-5 border-t border-white/10 pt-4 text-sm text-[#a8b4cc]">📍 {g[4]}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-7xl px-6 py-14">
-        <p className="text-sm font-bold tracking-[.25em] text-[#d4a849]">PATROCINADORES</p>
-        <h2 className="mt-3 text-4xl font-black uppercase">QUEM APOIA O ARENA VALE SPORTS</h2>
-        <p className="mt-3 text-[#a8b4cc]">EMPRESAS E ENTIDADES QUE TORNAM O FUTEBOL DO VALE POSSÍVEL</p>
-        <div className="mt-8 grid gap-4 sm:grid-cols-3 md:grid-cols-6">
-          <div className="rounded-2xl border border-white/10 bg-white p-5 text-center text-[#0a1830]"><b className="text-2xl">AC</b><small className="mt-2 block">ACADESF</small></div>
-          {[1,2,3,4,5].map(n=>(
-            <div key={n} className="rounded-2xl border border-dashed border-[#a8b4cc] p-5 text-center text-[#a8b4cc]"><b className="text-2xl">+</b><small className="mt-2 block">Espaço disponível</small></div>
-          ))}
-        </div>
-        <a href="https://wa.me/5547988444404" className="mt-8 inline-block text-[#d4a849]">💼 Quer ser patrocinador? Entre em contato pelo WhatsApp (47) 9 8844-4404</a>
-      </section>
-
-      <section className="bg-[#0c1f4a] px-6 py-16">
-        <div className="mx-auto max-w-7xl">
-          <p className="text-sm font-bold tracking-[.25em] text-[#d4a849]">TV ARENA VALE</p>
-          <h2 className="mt-3 text-4xl font-black uppercase">VÍDEOS RECENTES E TRANSMISSÕES</h2>
-          <p className="mt-3 max-w-2xl text-[#a8b4cc]">ACOMPANHE OS MELHORES MOMENTOS, ENTREVISTAS E AS PARTIDAS TRANSMITIDAS PELA ARENA VALE SPORTS</p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <a href="https://www.youtube.com/shorts/sY8Dpv7KIho" className="rounded-full bg-[#d4a849] px-6 py-4 font-bold text-[#0a1530]">TRANSMISSÃO AO VIVO</a>
-            <a href="https://www.youtube.com/@TVArenaVale" className="rounded-full border border-[#a8b4cc] px-6 py-4 font-bold">VER CANAL</a>
-          </div>
-          <p className="mt-8 text-sm text-[#d4a849]">📺 VÍDEO EM DESTAQUE: YOUTUBE.COM/SHORTS/SY8Dpv7KIho · O COORDENADOR PODE TROCAR ESTE VÍDEO A QUALQUER MOMENTO PELO PAINEL.</p>
-          <div className="mt-12 rounded-3xl border border-white/10 bg-[#0a1830] p-8">
-            <p className="font-bold tracking-[.2em]">CHAT DA TRANSMISSÃO</p>
-            <h3 className="mt-2 text-2xl font-black uppercase">COMENTE COM A TORCIDA</h3>
-            <p className="mt-4 text-[#a8b4cc]">0 MENSAGENS · 4 ESPECTADORES · ATUALIZAÇÃO AO VIVO</p>
-            <p className="mt-5 text-[#a8b4cc]">SEJA O PRIMEIRO A COMENTAR DURANTE A TRANSMISSÃO.</p>
-            <button className="mt-5 rounded-full bg-[#d4a849] px-6 py-3 font-bold text-[#0a1530]">ENVIAR</button>
-          </div>
-        </div>
-      </section>
-
-      <footer className="mx-auto max-w-7xl px-6 py-12">
-        <h2 className="text-3xl font-black">ALÉM DO PLACAR, CONTAMOS HISTÓRIAS!</h2>
-        <p className="mt-3 text-[#a8b4cc]">BLUMENAU · SANTA CATARINA</p>
-        <div className="mt-6 flex flex-wrap gap-3">
-          <a href="https://wa.me/5547988444404" className="rounded-full bg-[#25d366] px-4 py-3 font-bold">Fale conosco no WhatsApp</a>
-          <a href="https://www.youtube.com/@TVArenaVale" className="rounded-full bg-[#f00] px-4 py-3 font-bold">Canal TV Arena Vale</a>
-          <a href="/coordenador" className="rounded-full border border-[#a8b4cc] px-4 py-3">PORTAL</a>
-        </div>
-        <p className="mt-10 text-xs text-[#a8b4cc]">Created by MiniMax Agent</p>
-      </footer>
-    </main>
-  );
-}
+          <p
