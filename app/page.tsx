@@ -1,7 +1,3 @@
-'use client';
-
-import React from 'react';
-
 const championships = [
   ['🏆', 'EM ANDAMENTO', 'COPA ARENA VALE 2026', 'PRINCIPAL COMPETIÇÃO DA TEMPORADA · PONTOS CORRIDOS + MATA-MATA', '12', '66', 'R$ 15k', 'FASE DE GRUPOS', '62%', '12/03/2026', '20/12/2026'],
   ['⚽', 'EM ANDAMENTO', 'LIGA BLUMENAU 2026', 'CAMPEONATO REGIONAL DE PONTOS CORRIDOS · 4 TURNOS', '10', '90', 'R$ 8k', 'TURNO 2', '45%', '05/02/2026', '30/11/2026'],
@@ -17,15 +13,15 @@ const games = [
   ['AGENDADA', 'AMANHÃ · 18:00', 'ESTRELA AZUL', 'LIONS SC', 'QUADRA 01']
 ];
 
-const PublicPage = () => {
+export default function PublicPage() {
   return (
-    <div id="topo" className="min-h-screen bg-[#0a1830] text-white">
+    <main id="topo" className="min-h-screen bg-[#0a1830] text-white">
       {/* Cabeçalho */}
       <header className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-6 py-6">
         <a href="#topo" className="flex items-center gap-4">
           <img 
             src="https://dhu8izvlu5fgy.space.minimax.io/logo-header.png" 
-            alt="" 
+            alt="Arena Vale Sports" 
             className="h-12 w-auto sm:h-16 object-contain"
           />
           <span className="font-black tracking-[.08em] text-2xl sm:text-4xl leading-tight text-white whitespace-nowrap">
@@ -43,7 +39,7 @@ const PublicPage = () => {
       <section className="relative mx-auto min-h-[590px] max-w-7xl overflow-hidden rounded-[2rem] px-6 py-28 lg:px-14">
         <img 
           src="/foto-pro-site-1.png" 
-          alt="" 
+          alt="Atletas Arena Vale" 
           className="absolute inset-0 h-full w-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-[#071426]/95 via-[#071426]/75 to-[#071426]/25" />
@@ -58,17 +54,17 @@ const PublicPage = () => {
         </div>
       </section>
 
-      {/* Destaque Único */}
+      {/* Atletas em Destaque - Card Único */}
       <section className="bg-[#0c1f4a] px-6 py-16">
         <div className="mx-auto max-w-7xl">
-          <h2 className="text-4xl font-black uppercase leading-tight text-white sm:text-5xl">
-            OS TALENTOS QUE BRILHARAM NAS QUADRAS, CAMPOS E ARENAS DO VALE
-          </h2>
+          <p className="text-sm font-bold tracking-[.25em] text-[#d4a849]">DESTAQUES DO MÊS</p>
+          <h2 className="mt-3 text-4xl font-black uppercase text-white">ATLETAS EM DESTAQUE</h2>
+          <p className="mt-2 text-[#a8b4cc]">OS TALENTOS QUE BRILHARAM NAS QUADRAS, CAMPOS E ARENAS DO VALE</p>
 
           <div className="relative mt-10 overflow-hidden rounded-[2.5rem] border border-white/15 bg-[#071426] shadow-2xl">
             <img
               src="/foto-pro-site-1.png"
-              alt=""
+              alt="Atletas em Destaque Arena Vale"
               className="absolute inset-0 h-full w-full object-cover object-center brightness-90 transition duration-700 hover:scale-105"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#071426] via-[#071426]/75 to-transparent sm:bg-gradient-to-r sm:from-[#071426]/95 sm:via-[#071426]/70 sm:to-transparent" />
@@ -124,7 +120,7 @@ const PublicPage = () => {
           </a>
         </div>
         <div className="mt-9 grid gap-5 md:grid-cols-2">
-          {championships.map((c) => (
+          {championships.map(c => (
             <article key={c[2]} className="rounded-3xl border border-white/10 bg-[#0e2148] p-6">
               <div className="flex justify-between">
                 <span className="text-3xl">{c[0]}</span>
@@ -158,7 +154,7 @@ const PublicPage = () => {
           </a>
         </div>
         <div className="mt-9 grid gap-4 md:grid-cols-3">
-          {games.map((g) => (
+          {games.map(g => (
             <article key={g[2]} className="rounded-3xl border border-white/10 bg-[#0e2148] p-6">
               <span className="text-xs font-bold text-[#d4a849]">{g[0]}</span>
               <p className="mt-3 text-sm text-[#a8b4cc]">{g[1]}</p>
@@ -193,7 +189,7 @@ const PublicPage = () => {
           <div className="w-full max-w-xs sm:max-w-sm">
             <img 
               src="/imagem-app-mockup.jpg" 
-              alt="" 
+              alt="Aplicação Móvel Arena Vale Sports" 
               className="w-full h-auto rounded-[2.5rem] shadow-2xl border border-white/15"
             />
           </div>
@@ -210,7 +206,7 @@ const PublicPage = () => {
             <b className="text-2xl">AC</b>
             <small className="mt-2 block">ACADESF</small>
           </div>
-          {[1, 2, 3, 4, 5].map((n) => (
+          {[1, 2, 3, 4, 5].map(n => (
             <div key={n} className="rounded-2xl border border-dashed border-[#a8b4cc] p-5 text-center text-[#a8b4cc]">
               <b className="text-2xl">+</b>
               <small className="mt-2 block">Espaço disponível</small>
@@ -231,4 +227,45 @@ const PublicPage = () => {
             ACOMPANHE OS MELHORES MOMENTOS, ENTREVISTAS E AS PARTIDAS TRANSMITIDAS PELA ARENA VALE SPORTS
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <a href="
+            <a href="https://www.youtube.com/shorts/sY8Dpv7KIho" className="rounded-full bg-[#d4a849] px-6 py-4 font-bold text-[#0a1530]">
+              TRANSMISSÃO AO VIVO
+            </a>
+            <a href="https://www.youtube.com/@TVArenaVale" className="rounded-full border border-[#a8b4cc] px-6 py-4 font-bold">
+              VER CANAL
+            </a>
+          </div>
+          <p className="mt-8 text-sm text-[#d4a849]">
+            📺 VÍDEO EM DESTAQUE: YOUTUBE.COM/SHORTS/SY8Dpv7KIho · O COORDENADOR PODE TROCAR ESTE VÍDEO A QUALQUER MOMENTO PELO PAINEL.
+          </p>
+          <div className="mt-12 rounded-3xl border border-white/10 bg-[#0a1830] p-8">
+            <p className="font-bold tracking-[.2em]">CHAT DA TRANSMISSÃO</p>
+            <h3 className="mt-2 text-2xl font-black uppercase">COMENTE COM A TORCIDA</h3>
+            <p className="mt-4 text-[#a8b4cc]">0 MENSAGENS · 4 ESPECTADORES · ATUALIZAÇÃO AO VIVO</p>
+            <p className="mt-5 text-[#a8b4cc]">SEJA O PRIMEIRO A COMENTAR DURANTE A TRANSMISSÃO.</p>
+            <button className="mt-5 rounded-full bg-[#d4a849] px-6 py-3 font-bold text-[#0a1530]">
+              ENVIAR
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* Rodapé */}
+      <footer className="mx-auto max-w-7xl px-6 py-12">
+        <h2 className="text-3xl font-black">ALÉM DO PLACAR, CONTAMOS HISTÓRIAS!</h2>
+        <p className="mt-3 text-[#a8b4cc]">BLUMENAU · SANTA CATARINA</p>
+        <div className="mt-6 flex flex-wrap gap-3">
+          <a href="https://wa.me/5547988444404" className="rounded-full bg-[#25d366] px-4 py-3 font-bold">
+            Fale connosco no WhatsApp
+          </a>
+          <a href="https://www.youtube.com/@TVArenaVale" className="rounded-full bg-[#f00] px-4 py-3 font-bold">
+            Canal TV Arena Vale
+          </a>
+          <a href="/login" className="rounded-full border border-[#a8b4cc] px-4 py-3">
+            PORTAL
+          </a>
+        </div>
+        <p className="mt-10 text-xs text-[#a8b4cc]">Created by MiniMax Agent</p>
+      </footer>
+    </main>
+  );
+}
