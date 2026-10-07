@@ -38,7 +38,7 @@ export default function PublicPage() {
       {/* Hero */}
       <section className="relative mx-auto min-h-[590px] max-w-7xl overflow-hidden rounded-[2rem] px-6 py-28 lg:px-14">
         <img 
-          src="/foto-pro-site-1.jpg" 
+          src="/foto-pro-site-1.png" 
           alt="Atletas Arena Vale" 
           className="absolute inset-0 h-full w-full object-cover"
         />
