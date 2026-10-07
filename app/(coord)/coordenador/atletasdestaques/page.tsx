@@ -7,6 +7,7 @@ interface Atleta {
   nome: string;
   categoria: string;
   equipe: string;
+  campeonato: string;
   imagem: string;
 }
 
@@ -16,6 +17,7 @@ const ATLETAS_PADRAO: Atleta[] = [
     nome: 'Maurício Miranda',
     categoria: 'FUNDADOR',
     equipe: 'ARENA VALE SPORTS',
+    campeonato: 'COPA ARENA VALE 2026',
     imagem: 'https://0zjmezlsxvwtj.space.minimax.io/atleta-1.png'
   },
   {
@@ -23,6 +25,7 @@ const ATLETAS_PADRAO: Atleta[] = [
     nome: 'João Santos',
     categoria: 'FUTEBOL',
     equipe: 'AMIGOS FC',
+    campeonato: 'LIGA BLUMENAU 2026',
     imagem: 'https://0zjmezlsxvwtj.space.minimax.io/atleta-2.png'
   },
   {
@@ -30,6 +33,7 @@ const ATLETAS_PADRAO: Atleta[] = [
     nome: 'Ana Oliveira',
     categoria: 'VÔLEI',
     equipe: 'RESENHA FC',
+    campeonato: 'SUPERCOPA VALE 2026',
     imagem: 'https://0zjmezlsxvwtj.space.minimax.io/atleta-3.png'
   }
 ];
@@ -39,6 +43,7 @@ export default function GestaoAtletasCoordenador() {
   const [nome, setNome] = useState('');
   const [categoria, setCategoria] = useState('');
   const [equipe, setEquipe] = useState('');
+  const [campeonato, setCampeonato] = useState('');
   const [imagemPreview, setImagemPreview] = useState('');
   const [urlImagem, setUrlImagem] = useState('');
 
@@ -76,8 +81,8 @@ export default function GestaoAtletasCoordenador() {
     e.preventDefault();
     const fotoFinal = imagemPreview || urlImagem;
 
-    if (!nome.trim() || !categoria.trim() || !equipe.trim() || !fotoFinal) {
-      alert('Preencha todos os campos e adicione a foto do atleta.');
+    if (!nome.trim() || !categoria.trim() || !equipe.trim() || !campeonato.trim() || !fotoFinal) {
+      alert('Preencha todos os campos (incluindo o campeonato) e adicione a foto do atleta.');
       return;
     }
 
@@ -86,6 +91,7 @@ export default function GestaoAtletasCoordenador() {
       nome,
       categoria: categoria.toUpperCase(),
       equipe,
+      campeonato,
       imagem: fotoFinal
     };
 
@@ -95,6 +101,7 @@ export default function GestaoAtletasCoordenador() {
     setNome('');
     setCategoria('');
     setEquipe('');
+    setCampeonato('');
     setImagemPreview('');
     setUrlImagem('');
   };
@@ -109,7 +116,7 @@ export default function GestaoAtletasCoordenador() {
   return (
     <div className="min-h-screen bg-[#071426] p-6 text-white sm:p-10">
       <div className="mx-auto max-w-7xl">
-        {/* Topo do Módulo */}
+        {/* Topo */}
         <div className="mb-8 flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-6">
           <div>
             <div className="flex items-center gap-2">
@@ -118,7 +125,7 @@ export default function GestaoAtletasCoordenador() {
               </span>
             </div>
             <h1 className="mt-2 text-3xl font-black uppercase text-white">Gerenciar Atletas em Destaque</h1>
-            <p className="text-sm text-[#a8b4cc]">Adicione e remova os atletas exibidos na vitrine oficial.</p>
+            <p className="text-sm text-[#a8b4cc]">Adicione e remova atletas, equipes, modalidades e campeonatos.</p>
           </div>
           <a
             href="/coordenador"
@@ -128,11 +135,11 @@ export default function GestaoAtletasCoordenador() {
           </a>
         </div>
 
-        {/* Formulário de Cadastro Exclusivo do Coordenador */}
+        {/* Formulário de Cadastro com Campo Campeonato */}
         <section className="mb-12 rounded-3xl border border-white/10 bg-[#0e2148] p-6 sm:p-8">
           <h2 className="text-xl font-black uppercase text-[#d4a849]">Novo Atleta Destaque</h2>
 
-          <form onSubmit={handleAdicionar} className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <form onSubmit={handleAdicionar} className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             <div>
               <label className="mb-1.5 block text-xs font-bold text-[#a8b4cc]">NOME COMPLETO</label>
               <input
@@ -169,7 +176,20 @@ export default function GestaoAtletasCoordenador() {
               />
             </div>
 
-            <div className="sm:col-span-2 lg:col-span-2">
+            <div>
+              <label className="mb-1.5 block text-xs font-bold text-[#a8b4cc]">CAMPEONATO</label>
+              <input
+                type="text"
+                placeholder="Ex: COPA ARENA VALE 2026"
+                value={campeonato}
+                onChange={(e) => setCampeonato(e.target.value)}
+                className="w-full rounded-xl border border-white/10 bg-[#071426] px-4 py-3 text-sm text-white outline-none focus:border-[#d4a849]"
+                required
+              />
+            </div>
+
+            {/* Upload ou Link da Foto */}
+            <div className="sm:col-span-2 lg:col-span-3">
               <label className="mb-1.5 block text-xs font-bold text-[#a8b4cc]">FOTO DO ATLETA (UPLOAD OU LINK)</label>
               <div className="grid gap-3 sm:grid-cols-2">
                 <input
@@ -202,26 +222,36 @@ export default function GestaoAtletasCoordenador() {
           </form>
         </section>
 
-        {/* Lista com opção de exclusão */}
+        {/* Galeria de Atletas com Campeonato */}
         <section>
           <h2 className="mb-6 text-2xl font-black uppercase">Atletas Cadastrados ({atletas.length})</h2>
           <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {atletas.map((atleta) => (
               <article
                 key={atleta.id}
-                className="overflow-hidden rounded-3xl border border-white/10 bg-[#10275a] shadow-lg"
+                className="flex flex-col justify-between overflow-hidden rounded-3xl border border-white/10 bg-[#10275a] shadow-lg transition hover:border-[#d4a849]/50"
               >
-                <div className="h-56 w-full bg-[#071426]">
-                  <img src={atleta.imagem} alt={atleta.nome} className="h-full w-full object-cover" />
+                <div>
+                  <div className="h-56 w-full bg-[#071426]">
+                    <img src={atleta.imagem} alt={atleta.nome} className="h-full w-full object-cover" />
+                  </div>
+                  <div className="p-5">
+                    <span className="text-xs font-bold text-[#d4a849]">⭐ {atleta.categoria}</span>
+                    <h3 className="mt-2 text-xl font-black leading-tight text-white">{atleta.nome}</h3>
+                    <p className="mt-1 text-sm font-semibold text-[#a8b4cc]">{atleta.equipe}</p>
+                    
+                    {/* Exibição do Campeonato */}
+                    <div className="mt-3 flex items-center gap-1.5 rounded-lg bg-[#071426]/60 px-2.5 py-1.5 text-xs text-[#d4a849]">
+                      <span>🏆</span>
+                      <span className="truncate font-semibold">{atleta.campeonato || 'Campeonato Geral'}</span>
+                    </div>
+                  </div>
                 </div>
-                <div className="p-5">
-                  <span className="text-xs font-bold text-[#d4a849]">⭐ {atleta.categoria}</span>
-                  <h3 className="mt-2 text-xl font-black leading-tight text-white">{atleta.nome}</h3>
-                  <p className="mt-1 text-sm text-[#a8b4cc]">{atleta.equipe}</p>
 
+                <div className="p-5 pt-0">
                   <button
                     onClick={() => handleExcluir(atleta.id)}
-                    className="mt-5 w-full rounded-xl border border-red-500/30 bg-red-500/10 py-2.5 text-xs font-bold text-red-400 transition hover:bg-red-500 hover:text-white"
+                    className="mt-3 w-full rounded-xl border border-red-500/30 bg-red-500/10 py-2.5 text-xs font-bold text-red-400 transition hover:bg-red-500 hover:text-white"
                   >
                     🗑️ Excluir Atleta
                   </button>
