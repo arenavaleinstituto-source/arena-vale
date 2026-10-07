@@ -1,12 +1,11 @@
 import Link from 'next/link';
 import { Shield } from './shield';
-import { PortalMenu } from './portal-menu';
-
 
 export function Nav() {
   return (
     <header className="fixed top-0 inset-x-0 z-50 bg-[rgba(12,31,74,0.78)] backdrop-blur-md border-b border-transparent">
       <div className="container flex items-center justify-between h-[78px]">
+        {/* Lado Esquerdo: Identidade Visual */}
         <Link href="/" className="flex items-center gap-3">
           <Shield size={44} />
           <div className="flex flex-col leading-none">
@@ -18,18 +17,24 @@ export function Nav() {
             </small>
           </div>
         </Link>
-        <nav className="hidden md:flex gap-7 text-sm text-[var(--text-dim)]">
-          <Link href="/#campeonatos" className="hover:text-[var(--primary)] transition">Campeonatos</Link>
-          <Link href="/#aovivo" className="hover:text-[var(--primary)] transition">Ao Vivo</Link>
-          <Link href="/#estatisticas" className="hover:text-[var(--primary)] transition">Estatísticas</Link>
-          <Link href="/#classificacao" className="hover:text-[var(--primary)] transition">Classificação</Link>
-        </nav>
-        <div className="flex gap-2 items-center">
-         <PortalMenu />
 
-          <Link href="/#cadastro" className="btn-primary">Inscrever Time</Link>
+        {/* Lado Direito: Apenas Campeonatos e Atletas Destaque */}
+        <div className="flex gap-4 items-center">
+          <Link 
+            href="/#campeonatos" 
+            className="text-sm text-[var(--text-dim)] hover:text-[var(--primary)] transition"
+          >
+            Campeonatos
+          </Link>
+
+          <Link 
+            href="/coordenador/atletasdestaques" 
+            className="btn-primary flex items-center gap-2 text-xs font-bold"
+          >
+            ⭐ Atletas Destaque
+          </Link>
         </div>
-          </div>
+      </div>
     </header>
   );
 }
