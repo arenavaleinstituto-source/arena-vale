@@ -5,7 +5,6 @@ export function Nav() {
   return (
     <header className="fixed top-0 inset-x-0 z-50 bg-[rgba(12,31,74,0.78)] backdrop-blur-md border-b border-transparent">
       <div className="container flex items-center justify-between h-[78px]">
-        {/* Lado Esquerdo: Identidade Visual */}
         <Link href="/" className="flex items-center gap-3">
           <Shield size={44} />
           <div className="flex flex-col leading-none">
@@ -18,7 +17,7 @@ export function Nav() {
           </div>
         </Link>
 
-        {/* Lado Direito: Apenas Campeonatos e Atletas Destaque */}
+        {/* Apenas link público de Campeonatos */}
         <div className="flex gap-4 items-center">
           <Link 
             href="/#campeonatos" 
@@ -28,10 +27,10 @@ export function Nav() {
           </Link>
 
           <Link 
-            href="/coordenador/atletasdestaques" 
-            className="btn-primary flex items-center gap-2 text-xs font-bold"
+            href="/login" 
+            className="rounded-full bg-[#d4a849] px-5 py-2 text-xs font-bold text-[#0a1530] transition hover:opacity-90"
           >
-            ⭐ Atletas Destaque
+            Portal
           </Link>
         </div>
       </div>
