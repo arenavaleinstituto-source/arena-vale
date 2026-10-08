@@ -16,15 +16,14 @@ const games = [
 export default function PublicPage() {
   return (
     <div id="topo" className="min-h-screen bg-[#0a1830] text-white">
-      {/* 1. Cabeçalho com texto aumentado */}
       <header className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-6 py-6">
         <a href="#topo" className="flex items-center gap-4">
           <img 
             src="https://dhu8izvlu5fgy.space.minimax.io/logo-header.png" 
             alt="Arena Vale Sports" 
-            className="h-14 w-auto sm:h-20 object-contain"
+            className="h-12 w-auto sm:h-16 object-contain"
           />
-          <span className="font-black tracking-[.06em] text-2xl sm:text-4xl md:text-5xl leading-tight text-white whitespace-nowrap">
+          <span className="font-black tracking-[.08em] text-2xl sm:text-4xl leading-tight text-white whitespace-nowrap">
             COMPLEXO ESPORTIVO ARENA VALE
           </span>
         </a>
@@ -35,30 +34,31 @@ export default function PublicPage() {
         </div>
       </header>
 
-      {/* 2. Hero com texto no canto inferior em exatamente duas linhas */}
-      <section className="relative mx-auto min-h-[640px] max-w-7xl overflow-hidden rounded-[2rem] px-6 py-10 lg:px-14 flex flex-col justify-end">
+      <section className="relative mx-auto min-h-[590px] max-w-7xl overflow-hidden rounded-[2rem] px-6 py-28 lg:px-14">
         <img 
           src="/foto-pro-site-1.png" 
           alt="" 
           className="absolute inset-0 h-full w-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#071426] via-[#071426]/75 to-transparent sm:bg-gradient-to-r sm:from-[#071426]/95 sm:via-[#071426]/60 sm:to-transparent" />
-        
-        <div className="relative z-10 max-w-4xl pb-2">
-          <h1 className="font-black uppercase tracking-tight leading-[0.95] text-4xl sm:text-6xl md:text-7xl lg:text-8xl">
-            <span className="block text-[#d4a849] whitespace-nowrap">ALÉM DO PLACAR,</span>
-            <span className="block text-white whitespace-nowrap">CONTAMOS HISTÓRIAS!</span>
+        <div className="absolute inset-0 bg-gradient-to-r from-[#071426]/95 via-[#071426]/75 to-[#071426]/25" />
+        <div className="relative max-w-2xl">
+          <h1 className="font-extrabold uppercase leading-tight tracking-tight text-3xl md:text-5xl lg:text-6xl">
+            <span className="block text-[#D4A346]">ALÉM DO PLACAR,</span>
+            <span className="block text-white">CONTAMOS HISTÓRIAS!</span>
           </h1>
-          <p className="mt-4 max-w-2xl text-base sm:text-xl text-[#a8b4cc] leading-relaxed">
+          <p className="mt-7 max-w-xl text-lg text-[#a8b4cc]">
             Acompanhe partidas, equipas e campeonatos com informação, emoção e a identidade oficial da Arena Vale Sports.
           </p>
         </div>
       </section>
 
-      {/* 3. Secção de Atletas em Destaque */}
-      <section className="bg-[#0c1f4a] px-6 py-12">
+      <section className="bg-[#0c1f4a] px-6 py-16">
         <div className="mx-auto max-w-7xl">
-          <div className="relative overflow-hidden rounded-[2.5rem] border border-white/15 bg-[#071426] shadow-2xl">
+          <h2 className="text-4xl font-black uppercase leading-tight text-white sm:text-5xl">
+            OS TALENTOS QUE BRILHARAM NAS QUADRAS, CAMPOS E ARENAS DO VALE
+          </h2>
+
+          <div className="relative mt-10 overflow-hidden rounded-[2.5rem] border border-white/15 bg-[#071426] shadow-2xl">
             <img
               src="/foto-pro-site-1.png"
               alt=""
@@ -78,10 +78,10 @@ export default function PublicPage() {
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-4">
                 <a
-                  href="/coordenador/atletasdestaques"
+                  href="/login"
                   className="rounded-full bg-[#d4a849] px-7 py-3.5 text-xs font-black uppercase tracking-wider text-[#071426] shadow-lg transition hover:bg-[#e0b75a] hover:scale-105"
                 >
-                  Ver Todos os Destaques →
+                  Aceder ao Painel →
                 </a>
               </div>
             </div>
@@ -89,7 +89,6 @@ export default function PublicPage() {
         </div>
       </section>
 
-      {/* Indicadores Rápidos */}
       <section className="mx-auto grid max-w-7xl grid-cols-3 gap-4 px-6 py-14 text-center">
         <div>
           <b className="text-5xl text-[#d4a849]">03</b>
@@ -105,7 +104,6 @@ export default function PublicPage() {
         </div>
       </section>
 
-      {/* Campeonatos */}
       <section id="torneios" className="mx-auto max-w-7xl px-6 py-14">
         <div className="flex items-end justify-between gap-4">
           <div>
@@ -139,7 +137,6 @@ export default function PublicPage() {
         </div>
       </section>
 
-      {/* Agenda Desportiva */}
       <section id="agenda" className="mx-auto max-w-7xl px-6 py-14">
         <div className="flex items-end justify-between">
           <div>
@@ -166,7 +163,6 @@ export default function PublicPage() {
         </div>
       </section>
 
-      {/* Apresentação da Aplicação Oficial */}
       <section className="bg-[#0c1f4a] px-6 py-16">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-12 lg:flex-row">
           <div className="max-w-xl">
@@ -193,7 +189,6 @@ export default function PublicPage() {
         </div>
       </section>
 
-      {/* Patrocinadores */}
       <section className="mx-auto max-w-7xl px-6 py-14">
         <p className="text-sm font-bold tracking-[.25em] text-[#d4a849]">PATROCINADORES</p>
         <h2 className="mt-3 text-4xl font-black uppercase">QUEM APOIA O ARENA VALE SPORTS</h2>
@@ -215,7 +210,6 @@ export default function PublicPage() {
         </a>
       </section>
 
-      {/* TV Arena Vale */}
       <section className="bg-[#0c1f4a] px-6 py-16">
         <div className="mx-auto max-w-7xl">
           <p className="text-sm font-bold tracking-[.25em] text-[#d4a849]">TV ARENA VALE</p>
@@ -246,7 +240,6 @@ export default function PublicPage() {
         </div>
       </section>
 
-      {/* Rodapé */}
       <footer className="mx-auto max-w-7xl px-6 py-12">
         <h2 className="text-3xl font-black">ALÉM DO PLACAR, CONTAMOS HISTÓRIAS!</h2>
         <p className="mt-3 text-[#a8b4cc]">BLUMENAU · SANTA CATARINA</p>
