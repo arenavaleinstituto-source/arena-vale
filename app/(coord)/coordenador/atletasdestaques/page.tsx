@@ -43,14 +43,14 @@ export default function GaleriaAtletasDestaques() {
   return (
     <div className="min-h-screen bg-[#071426] p-6 text-white sm:p-10">
       <div className="mx-auto max-w-7xl">
-        {/* Cabeçalho da Galeria com texto e subtítulo aumentados */}
+        {/* Cabeçalho da Galeria com texto e subtítulo em caixa alta */}
         <div className="mb-12 flex flex-wrap items-center justify-between gap-6 border-b border-white/10 pb-8">
           <div>
             <h1 className="text-4xl font-black uppercase tracking-tight text-white sm:text-6xl md:text-7xl leading-none">
               ATLETAS EM DESTAQUE
             </h1>
-            <p className="mt-4 text-xl sm:text-2xl md:text-3xl text-[#a8b4cc] font-semibold leading-relaxed">
-              Os talentos que brilharam nas quadras, campos e arenas do Vale.
+            <p className="mt-4 text-xl sm:text-2xl md:text-3xl text-[#a8b4cc] font-semibold uppercase tracking-wide leading-relaxed">
+              OS TALENTOS QUE BRILHARAM NAS QUADRAS, CAMPOS E ARENAS DO VALE.
             </p>
           </div>
           <Link
