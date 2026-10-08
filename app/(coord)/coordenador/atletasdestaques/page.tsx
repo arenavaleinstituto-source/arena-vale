@@ -19,7 +19,7 @@ const ATLETAS_PADRAO: Atleta[] = [
     categoria: 'FUNDADOR',
     equipe: 'ARENA VALE SPORTS',
     campeonato: 'COPA ARENA VALE 2026',
-    imagem: 'https://0zjmezlsxvwtj.space.minimax.io/atleta-1.png'
+    imagem: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=600&q=80'
   },
   {
     id: '2',
@@ -27,7 +27,7 @@ const ATLETAS_PADRAO: Atleta[] = [
     categoria: 'FUTEBOL',
     equipe: 'AMIGOS FC',
     campeonato: 'LIGA BLUMENAU 2026',
-    imagem: 'https://0zjmezlsxvwtj.space.minimax.io/atleta-2.png'
+    imagem: 'https://images.unsplash.com/photo-1517466787929-bc90951d0974?auto=format&fit=crop&w=600&q=80'
   },
   {
     id: '3',
@@ -35,7 +35,7 @@ const ATLETAS_PADRAO: Atleta[] = [
     categoria: 'VÔLEI',
     equipe: 'RESENHA FC',
     campeonato: 'SUPERCOPA VALE 2026',
-    imagem: 'https://0zjmezlsxvwtj.space.minimax.io/atleta-3.png'
+    imagem: 'https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?auto=format&fit=crop&w=600&q=80'
   }
 ];
 
@@ -49,7 +49,7 @@ export default function GerenciarAtletasDestaques() {
   const [urlImagem, setUrlImagem] = useState('');
 
   useEffect(() => {
-    const salvos = localStorage.getItem('arena_vale_atletas');
+    const salvos = typeof window !== 'undefined' ? localStorage.getItem('arena_vale_atletas') : null;
     if (salvos) {
       try {
         setAtletas(JSON.parse(salvos));
@@ -63,7 +63,9 @@ export default function GerenciarAtletasDestaques() {
 
   const salvarLista = (novaLista: Atleta[]) => {
     setAtletas(novaLista);
-    localStorage.setItem('arena_vale_atletas', JSON.stringify(novaLista));
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('arena_vale_atletas', JSON.stringify(novaLista));
+    }
   };
 
   const handleUploadArquivo = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -83,16 +85,16 @@ export default function GerenciarAtletasDestaques() {
     const fotoFinal = imagemPreview || urlImagem;
 
     if (!nome.trim() || !categoria.trim() || !equipe.trim() || !campeonato.trim() || !fotoFinal) {
-      alert('Preencha todos os campos e adicione a foto do atleta.');
+      alert('Preencha todos os campos e adicione uma foto.');
       return;
     }
 
     const novoAtleta: Atleta = {
       id: Date.now().toString(),
-      nome,
-      categoria: categoria.toUpperCase(),
-      equipe,
-      campeonato,
+      nome: nome.trim(),
+      categoria: categoria.trim().toUpperCase(),
+      equipe: equipe.trim(),
+      campeonato: campeonato.trim(),
       imagem: fotoFinal
     };
 
@@ -108,7 +110,7 @@ export default function GerenciarAtletasDestaques() {
   };
 
   const handleExcluir = (id: string) => {
-    if (confirm('Deseja realmente excluir este atleta em destaque?')) {
+    if (confirm('Deseja remover este atleta dos destaques?')) {
       const atualizados = atletas.filter((a) => a.id !== id);
       salvarLista(atualizados);
     }
@@ -117,6 +119,7 @@ export default function GerenciarAtletasDestaques() {
   return (
     <div className="min-h-screen bg-[#071426] p-6 text-white sm:p-10">
       <div className="mx-auto max-w-7xl">
+        {/* Topo / Título */}
         <div className="mb-8 flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-6">
           <div>
             <span className="inline-flex items-center gap-1.5 rounded-md bg-[#d4a849]/20 px-3 py-1 text-xs font-bold uppercase tracking-wider text-[#d4a849]">
@@ -137,6 +140,7 @@ export default function GerenciarAtletasDestaques() {
           </Link>
         </div>
 
+        {/* Bloco: Novo Atleta Destaque */}
         <section className="mb-12 rounded-[2rem] border border-white/10 bg-[#0e2148] p-6 sm:p-10 shadow-2xl">
           <h2 className="text-xl font-black uppercase tracking-wide text-[#d4a849]">
             NOVO ATLETA DESTAQUE
@@ -234,6 +238,7 @@ export default function GerenciarAtletasDestaques() {
           </form>
         </section>
 
+        {/* Bloco: Atletas Cadastrados */}
         <section>
           <h2 className="mb-8 text-2xl font-black uppercase text-white">
             ATLETAS CADASTRADOS ({atletas.length})
