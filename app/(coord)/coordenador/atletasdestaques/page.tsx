@@ -47,7 +47,7 @@ export default function GaleriaAtletasDestaques() {
         <div className="mb-10 flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-6">
           <div>
             <h1 className="text-3xl font-black uppercase tracking-wide text-white sm:text-4xl">
-              ATLETAS EM DESTAQUE ({ATLETAS_DESTAQUE.length})
+              ATLETAS EM DESTAQUE
             </h1>
             <p className="mt-1 text-sm text-[#a8b4cc]">
               Os talentos que brilharam nas quadras, campos e arenas do Vale.
