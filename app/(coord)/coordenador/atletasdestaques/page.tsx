@@ -43,19 +43,19 @@ export default function GaleriaAtletasDestaques() {
   return (
     <div className="min-h-screen bg-[#071426] p-6 text-white sm:p-10">
       <div className="mx-auto max-w-7xl">
-        {/* Cabeçalho da Galeria */}
-        <div className="mb-10 flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-6">
+        {/* Cabeçalho da Galeria com texto aumentado */}
+        <div className="mb-12 flex flex-wrap items-center justify-between gap-6 border-b border-white/10 pb-8">
           <div>
-            <h1 className="text-3xl font-black uppercase tracking-wide text-white sm:text-4xl">
+            <h1 className="text-4xl font-black uppercase tracking-tight text-white sm:text-6xl md:text-7xl leading-none">
               ATLETAS EM DESTAQUE
             </h1>
-            <p className="mt-1 text-sm text-[#a8b4cc]">
+            <p className="mt-3 text-base sm:text-xl text-[#a8b4cc] font-medium">
               Os talentos que brilharam nas quadras, campos e arenas do Vale.
             </p>
           </div>
           <Link
             href="/"
-            className="rounded-full border border-white/20 bg-white/5 px-6 py-2.5 text-xs font-bold text-white transition hover:bg-white/10"
+            className="rounded-full border border-white/20 bg-white/5 px-6 py-3 text-xs font-bold text-white transition hover:bg-white/10 hover:border-white/40"
           >
             ← Voltar ao Início
           </Link>
