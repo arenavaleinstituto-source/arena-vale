@@ -85,7 +85,7 @@ export default function GerenciarAtletasDestaques() {
     const fotoFinal = imagemPreview || urlImagem;
 
     if (!nome.trim() || !categoria.trim() || !equipe.trim() || !campeonato.trim() || !fotoFinal) {
-      alert('Preencha todos os campos e adicione uma foto.');
+      alert('Preencha todos os campos e adicione a imagem do atleta.');
       return;
     }
 
@@ -110,7 +110,7 @@ export default function GerenciarAtletasDestaques() {
   };
 
   const handleExcluir = (id: string) => {
-    if (confirm('Deseja remover este atleta dos destaques?')) {
+    if (confirm('Deseja realmente excluir este atleta em destaque?')) {
       const atualizados = atletas.filter((a) => a.id !== id);
       salvarLista(atualizados);
     }
@@ -119,7 +119,7 @@ export default function GerenciarAtletasDestaques() {
   return (
     <div className="min-h-screen bg-[#071426] p-6 text-white sm:p-10">
       <div className="mx-auto max-w-7xl">
-        {/* Topo / Título */}
+        {/* Topo */}
         <div className="mb-8 flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-6">
           <div>
             <span className="inline-flex items-center gap-1.5 rounded-md bg-[#d4a849]/20 px-3 py-1 text-xs font-bold uppercase tracking-wider text-[#d4a849]">
@@ -133,14 +133,14 @@ export default function GerenciarAtletasDestaques() {
             </p>
           </div>
           <Link
-            href="/coordenador"
+            href="/"
             className="rounded-full border border-white/20 bg-white/5 px-6 py-2.5 text-xs font-bold text-white transition hover:bg-white/10"
           >
-            ← Voltar ao Painel
+            ← Voltar ao Início
           </Link>
         </div>
 
-        {/* Bloco: Novo Atleta Destaque */}
+        {/* Formulário Novo Atleta */}
         <section className="mb-12 rounded-[2rem] border border-white/10 bg-[#0e2148] p-6 sm:p-10 shadow-2xl">
           <h2 className="text-xl font-black uppercase tracking-wide text-[#d4a849]">
             NOVO ATLETA DESTAQUE
@@ -238,7 +238,7 @@ export default function GerenciarAtletasDestaques() {
           </form>
         </section>
 
-        {/* Bloco: Atletas Cadastrados */}
+        {/* Lista de Atletas */}
         <section>
           <h2 className="mb-8 text-2xl font-black uppercase text-white">
             ATLETAS CADASTRADOS ({atletas.length})
