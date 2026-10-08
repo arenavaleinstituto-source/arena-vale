@@ -26,7 +26,7 @@ export default function PublicPage() {
           <span className="font-black tracking-[.06em] text-2xl sm:text-4xl md:text-5xl leading-tight text-white whitespace-nowrap">
             COMPLEXO ESPORTIVO ARENA VALE
           </span>
-        </a>
+            </a>
         <div className="flex gap-2 text-xs font-bold">
           <a href="/login" className="rounded-full bg-[#d4a849] px-6 py-3 text-[#0a1530] transition hover:opacity-90">
             PAINEL
