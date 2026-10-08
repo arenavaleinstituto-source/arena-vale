@@ -55,7 +55,7 @@ export default function PublicPage() {
         </div>
       </section>
 
-      {/* 3. Secção de Atletas em Destaque */}
+      {/* 3. Secção de Atletas em Destaque com o botão atualizado para "GALERIA OFICIAL" */}
       <section className="bg-[#0c1f4a] px-6 py-12">
         <div className="mx-auto max-w-7xl">
           <div className="relative overflow-hidden rounded-[2.5rem] border border-white/15 bg-[#071426] shadow-2xl">
@@ -81,7 +81,7 @@ export default function PublicPage() {
                   href="/coordenador/atletasdestaques"
                   className="rounded-full bg-[#d4a849] px-7 py-3.5 text-xs font-black uppercase tracking-wider text-[#071426] shadow-lg transition hover:bg-[#e0b75a] hover:scale-105"
                 >
-                  Ver Todos os Destaques →
+                  GALERIA OFICIAL →
                 </a>
               </div>
             </div>
