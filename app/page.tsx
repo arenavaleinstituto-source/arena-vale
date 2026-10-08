@@ -72,11 +72,11 @@ export default function PublicPage() {
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-4">
                 <a
-                  href="/coordenador/atletasdestaques"
-                  className="rounded-full bg-[#d4a849] px-7 py-3.5 text-xs font-black uppercase tracking-wider text-[#071426] shadow-lg transition hover:bg-[#e0b75a] hover:scale-105"
-                >
-                  GALERIA OFICIAL →
-                </a>
+  href="/coordenador/atletasdestaques"
+  className="rounded-full bg-[#d4a849] px-7 py-3.5 text-xs font-black uppercase tracking-wider text-[#071426] shadow-lg transition hover:bg-[#e0b75a] hover:scale-105"
+>
+  GALERIA OFICIAL →
+</a>
               </div>
             </div>
           </div>
