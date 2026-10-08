@@ -63,7 +63,7 @@ export default function PublicPage() {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#071426] via-[#071426]/75 to-transparent sm:bg-gradient-to-r sm:from-[#071426]/95 sm:via-[#071426]/70 sm:to-transparent" />
             <div className="relative z-10 flex min-h-[380px] flex-col justify-end p-8 sm:min-h-[440px] sm:max-w-2xl sm:p-14">
-              <h3 className="text-3xl font-black uppercase leading-tight text-white sm:text-5xl">
+              <h3 className="mt-4 text-3xl font-black uppercase leading-tight text-white sm:text-5xl">
                 CONHEÇA TODOS OS <br />
                 <span className="text-[#d4a849]">ATLETAS DESTAQUE</span>
               </h3>
