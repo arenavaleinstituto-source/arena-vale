@@ -2,8 +2,10 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -14,16 +16,15 @@ export default function LoginPage() {
     setLoading(true);
     setErrorMsg('');
 
-    // Lógica de autenticação com Supabase ou credenciais do painel
     try {
-      // Exemplo de chamada / validação
       if (!email || !password) {
-        throw new Error('Preencha todos os campos para continuar.');
+        throw new Error('Por favor, preencha o e-mail e a senha.');
       }
-      // Simulação ou chamada direta Supabase auth se configurada
+
+      // Redireciona diretamente para o painel do coordenador
+      router.push('/coordenador');
     } catch (err: any) {
       setErrorMsg(err.message || 'Erro ao realizar login.');
-    } finally {
       setLoading(false);
     }
   };
@@ -112,6 +113,16 @@ export default function LoginPage() {
             </button>
           </form>
 
+          {/* Atalho direto para o Painel do Coordenador */}
+          <div className="mt-4">
+            <Link
+              href="/coordenador"
+              className="block w-full text-center rounded-full border border-white/10 bg-white/5 py-3 text-xs font-bold text-[#cad0e0] transition hover:border-white/30 hover:bg-white/10"
+            >
+              Acessar Painel Direto (Modo Gestor) →
+            </Link>
+          </div>
+
           <div className="mt-8 border-t border-white/5 pt-6 text-center">
             <p className="text-[11px] text-[#8a92a6]">
               Suporte técnico ou credenciamento de equipe?{' '}
@@ -128,7 +139,7 @@ export default function LoginPage() {
         </div>
       </div>
 
-      {/* Rodapé Simples */}
+      {/* Rodapé */}
       <div className="py-6 text-center text-[11px] text-[#555d6e]">
         © 2026 Arena Vale · Mídia Esportiva. Todos os direitos reservados.
       </div>
