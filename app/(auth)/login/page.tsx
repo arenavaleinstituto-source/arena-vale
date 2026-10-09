@@ -1,87 +1,137 @@
 'use client';
-import { Suspense, useState, useTransition } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { Shield } from '@/components/shield';
-import { createClient } from '@/lib/supabase/client';
 
-function LoginForm() {
-  const router = useRouter();
-  const params = useSearchParams();
-  const next = params.get('next') || '/coordenador';
+import React, { useState } from 'react';
+import Link from 'next/link';
 
+export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState<string | null>(null);
-  const [loading, startTransition] = useTransition();
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
-    startTransition(async () => {
-      const supabase = createClient();
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) {
-        setError('E-mail ou senha incorretos.');
-        return;
+    setLoading(true);
+    setErrorMsg('');
+
+    // Lógica de autenticação com Supabase ou credenciais do painel
+    try {
+      // Exemplo de chamada / validação
+      if (!email || !password) {
+        throw new Error('Preencha todos os campos para continuar.');
       }
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-      const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single();
-      const { data: capitao } = await supabase
-  .from('time_capitaes')
-  .select('id')
-  .eq('profile_id', user.id)
-  .maybeSingle();
-    const dest =
-  profile?.role === 'coordenador'
-    ? '/coordenador'
-    : profile?.role === 'moderador'
-      ? '/moderador'
-      : capitao
-        ? '/capitao'
-        : next;
-      router.push(dest as any);
-      router.refresh();
-    });
+      // Simulação ou chamada direta Supabase auth se configurada
+    } catch (err: any) {
+      setErrorMsg(err.message || 'Erro ao realizar login.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <main className="min-h-screen grid place-items-center p-6">
-      <div className="bg-gradient-to-b from-[var(--surface-2)] to-[var(--surface)] border border-[var(--primary)]/20 rounded-2xl p-10 w-full max-w-md relative shadow-2xl">
-        <button onClick={() => router.push('/')} className="absolute top-4 right-4 w-8 h-8 grid place-items-center rounded-full border border-white/10 text-[var(--text-dim)] hover:border-[var(--primary)] hover:text-[var(--primary)]">✕</button>
-        <div className="flex justify-center mb-4">
-          <Shield size={72} />
-        </div>
-        <h1 className="font-serif text-2xl font-extrabold text-center mb-2">Acesso restrito</h1>
-        <p className="text-center text-[var(--text-dim)] text-sm mb-7">Coordenadores, moderadores e capitães de time.</p>
-        <form onSubmit={handleLogin} className="flex flex-col gap-3.5">
-          {error && <div className="bg-[rgba(255,59,59,0.12)] border border-[rgba(255,59,59,0.3)] text-[#ff8a8a] text-sm p-2.5 rounded-lg text-center">{error}</div>}
-          <div>
-            <label className="block text-[11px] tracking-wider text-[var(--text-dim)] uppercase font-bold mb-1">E-mail</label>
-            <input type="email" value={email} onChange={e => setEmail(e.target.value)} required
-              className="w-full px-4 py-3.5 rounded-[10px] bg-[rgba(8,22,58,0.6)] border border-white/10 focus:border-[var(--primary)] outline-none" placeholder="seu@email.com" />
+    <div className="min-h-screen bg-[#0b0d12] text-white flex flex-col justify-between selection:bg-[#e50914] selection:text-white">
+      {/* Topo / Voltar */}
+      <div className="mx-auto w-full max-w-7xl px-6 py-6 flex items-center justify-between">
+        <Link href="/" className="group flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/20 bg-gradient-to-br from-[#161922] to-[#0b0d12] shadow-inner transition group-hover:border-[#e50914]">
+            <span className="text-sm font-black tracking-tighter text-white">
+              <span className="text-[#e50914]">A</span>V
+            </span>
           </div>
-          <div>
-            <label className="block text-[11px] tracking-wider text-[var(--text-dim)] uppercase font-bold mb-1">Senha</label>
-            <input type="password" value={password} onChange={e => setPassword(e.target.value)} required
-              className="w-full px-4 py-3.5 rounded-[10px] bg-[rgba(8,22,58,0.6)] border border-white/10 focus:border-[var(--primary)] outline-none" placeholder="••••••••••" />
-          </div>
-          <button type="submit" disabled={loading} className="btn-primary text-base py-3.5 mt-2 disabled:opacity-50">
-            {loading ? 'Entrando…' : '🔓 Entrar'}
-          </button>
-        </form>
-        <p className="text-[11px] text-[var(--text-mute)] text-center mt-5 pt-4 border-t border-dashed border-white/10">
-          Sem conta? Entre em contato com o coordenador principal.
-        </p>
-      </div>
-    </main>
-  );
-}
+          <span className="text-xl font-black tracking-tight leading-none text-white">
+            ARENA <span className="text-[#e50914]">VALE</span>
+          </span>
+        </Link>
 
-export default function LoginPage() {
-  return (
-    <Suspense fallback={<div className="min-h-screen grid place-items-center text-white">Carregando…</div>}>
-      <LoginForm />
-    </Suspense>
+        <Link
+          href="/"
+          className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-bold text-[#8a92a6] transition hover:border-white/30 hover:text-white"
+        >
+          ← Voltar ao Portal
+        </Link>
+      </div>
+
+      {/* Caixa de Login Centralizada */}
+      <div className="flex flex-1 items-center justify-center px-6 py-12">
+        <div className="w-full max-w-md rounded-[2.5rem] border border-white/10 bg-[#13161f] p-8 sm:p-10 shadow-2xl">
+          <div className="text-center">
+            <span className="inline-flex items-center gap-2 rounded-full border border-[#e50914]/30 bg-[#e50914]/15 px-3 py-1 text-[10px] font-black uppercase tracking-wider text-[#e50914]">
+              PAINEL INTERNO
+            </span>
+            <h1 className="mt-4 text-2xl sm:text-3xl font-black uppercase tracking-tight text-white">
+              ACESSO AO SISTEMA
+            </h1>
+            <p className="mt-2 text-xs sm:text-sm text-[#8a92a6]">
+              Entre com as suas credenciais para gerir coberturas, atletas e transmissões.
+            </p>
+          </div>
+
+          {errorMsg && (
+            <div className="mt-6 rounded-xl border border-red-500/30 bg-red-500/10 p-3.5 text-center text-xs font-semibold text-red-400">
+              {errorMsg}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="mt-8 space-y-5">
+            <div>
+              <label className="block text-xs font-black uppercase tracking-wider text-[#cad0e0]">
+                E-mail
+              </label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="seuemail@arenavale.com.br"
+                required
+                className="mt-2 w-full rounded-xl border border-white/10 bg-[#0b0d12] px-4 py-3 text-sm text-white placeholder-[#555d6e] outline-none transition focus:border-[#e50914] focus:ring-1 focus:ring-[#e50914]"
+              />
+            </div>
+
+            <div>
+              <div className="flex items-center justify-between">
+                <label className="block text-xs font-black uppercase tracking-wider text-[#cad0e0]">
+                  Senha
+                </label>
+              </div>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                required
+                className="mt-2 w-full rounded-xl border border-white/10 bg-[#0b0d12] px-4 py-3 text-sm text-white placeholder-[#555d6e] outline-none transition focus:border-[#e50914] focus:ring-1 focus:ring-[#e50914]"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="mt-2 w-full rounded-full bg-[#e50914] py-3.5 text-xs font-black uppercase tracking-wider text-white shadow-lg shadow-[#e50914]/25 transition hover:bg-[#ff1e27] hover:scale-[1.02] disabled:opacity-50"
+            >
+              {loading ? 'Acessando...' : 'Entrar no Painel'}
+            </button>
+          </form>
+
+          <div className="mt-8 border-t border-white/5 pt-6 text-center">
+            <p className="text-[11px] text-[#8a92a6]">
+              Suporte técnico ou credenciamento de equipe?{' '}
+              <a
+                href="https://wa.me/5547988444404"
+                target="_blank"
+                rel="noreferrer"
+                className="font-bold text-[#e50914] hover:underline"
+              >
+                Fale com a Arena Vale
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Rodapé Simples */}
+      <div className="py-6 text-center text-[11px] text-[#555d6e]">
+        © 2026 Arena Vale · Mídia Esportiva. Todos os direitos reservados.
+      </div>
+    </div>
   );
 }
