@@ -10,7 +10,7 @@ export default function CoordenadorDashboardPage() {
       <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0b0d12]/95 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-3.5">
-            {/* GATILHO MASTER NO LOGO [AV] */}
+            {/* GATILHO RESTRITO NO LOGÓTIPO [AV] */}
             <button
               type="button"
               onClick={() => {
@@ -61,7 +61,7 @@ export default function CoordenadorDashboardPage() {
           </p>
         </div>
 
-        {/* MÓDULOS DE OPERAÇÃO DO SITE */}
+        {/* MÓDULOS DE OPERAÇÃO DO PORTAL */}
         <div className="grid gap-6 sm:grid-cols-2">
           <div className="flex flex-col justify-between rounded-[2rem] border border-[#e50914]/40 bg-[#161a24] p-8 shadow-xl">
             <div>
@@ -109,7 +109,7 @@ export default function CoordenadorDashboardPage() {
         </div>
       </main>
 
-      {/* 3. MODAL COM AS DUAS DIVISÕES CLARAS */}
+      {/* 3. MODAL DE GESTÃO (SEM EXIBIÇÃO DE DICAS DE PALAVRA-PASSE OU CREDENCIAIS) */}
       <dialog
         id="dialog-proprietario"
         className="backdrop:bg-black/85 rounded-[2.5rem] border border-white/15 bg-[#13161f] p-6 sm:p-8 text-white max-w-lg w-full shadow-2xl m-auto"
@@ -139,42 +139,59 @@ export default function CoordenadorDashboardPage() {
           onSubmit={(e) => {
             e.preventDefault();
             const form = e.currentTarget;
+            const emailProp = (form.elements.namedItem('emailProp') as HTMLInputElement).value;
             const chave = (form.elements.namedItem('chave') as HTMLInputElement).value;
             const nome = (form.elements.namedItem('nome') as HTMLInputElement).value;
             const email = (form.elements.namedItem('email') as HTMLInputElement).value;
 
-            if (chave.trim().toUpperCase() === 'VINIGUTO2020') {
-              alert('Coordenador "' + nome + '" (' + email + ') credenciado com sucesso!');
+            // Validação estrita do Proprietário sem expor dados
+            const emailValido = emailProp.trim().toLowerCase() === 'pmmiranda2017@gmail.com';
+            const chaveValida = chave.trim().toUpperCase() === 'VINIGUTO2020';
+
+            if (emailValido && chaveValida) {
+              alert('Coordenador "' + nome + '" credenciado com sucesso no sistema!');
               form.reset();
               const dialog = document.getElementById('dialog-proprietario') as HTMLDialogElement | null;
               if (dialog) dialog.close();
             } else {
-              alert('Chave Mestra do Proprietário incorreta! Digite VINIGUTO2020');
+              alert('Credenciais inválidas. Verifique o e-mail do proprietário e a palavra-passe.');
             }
           }}
           className="space-y-6"
         >
           {/* SEÇÃO 1: AUTORIZAÇÃO DO PROPRIETÁRIO */}
-          <div className="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-4">
-            <div className="flex items-center gap-2 mb-2">
+          <div className="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-4 space-y-3">
+            <div className="flex items-center gap-2">
               <span className="text-sm">👑</span>
               <span className="text-xs font-black uppercase tracking-wider text-amber-300">
                 1. Autorização do Proprietário
               </span>
             </div>
-            <p className="text-[11px] text-[#8a92a6] mb-3">
-              Informe a chave do proprietário para autorizar este cadastro:
-            </p>
-            <input
-              name="chave"
-              type="password"
-              required
-              placeholder="Digite VINIGUTO2020"
-              className="w-full rounded-xl border border-amber-500/40 bg-[#0b0d12] px-3.5 py-2 text-xs uppercase text-white outline-none focus:border-amber-400"
-            />
+            
+            <div>
+              <label className="block text-[11px] font-bold uppercase text-[#cad0e0]">E-mail do Proprietário</label>
+              <input
+                name="emailProp"
+                type="email"
+                required
+                placeholder="Insira o seu e-mail"
+                className="mt-1 w-full rounded-xl border border-amber-500/40 bg-[#0b0d12] px-3.5 py-2 text-xs text-white outline-none focus:border-amber-400"
+              />
+            </div>
+
+            <div>
+              <label className="block text-[11px] font-bold uppercase text-[#cad0e0]">Palavra-passe Mestra</label>
+              <input
+                name="chave"
+                type="password"
+                required
+                placeholder="••••••••"
+                className="mt-1 w-full rounded-xl border border-amber-500/40 bg-[#0b0d12] px-3.5 py-2 text-xs text-white outline-none focus:border-amber-400"
+              />
+            </div>
           </div>
 
-          {/* SEÇÃO 2: DADOS DO COORDENADOR */}
+          {/* SEÇÃO 2: DADOS DO NOVO COORDENADOR */}
           <div className="rounded-2xl border border-white/10 bg-[#0b0d12]/50 p-4 space-y-3.5">
             <div className="flex items-center gap-2 pb-1 border-b border-white/5">
               <span className="text-sm">👤</span>
@@ -189,7 +206,7 @@ export default function CoordenadorDashboardPage() {
                 name="nome"
                 type="text"
                 required
-                placeholder="Ex: Carlos Silva"
+                placeholder="Nome do coordenador"
                 className="mt-1 w-full rounded-xl border border-white/10 bg-[#0b0d12] px-3.5 py-2 text-xs text-white outline-none focus:border-[#e50914]"
               />
             </div>
@@ -205,23 +222,23 @@ export default function CoordenadorDashboardPage() {
             </div>
 
             <div>
-              <label className="block text-[11px] font-bold uppercase text-[#cad0e0]">E-mail de Login</label>
+              <label className="block text-[11px] font-bold uppercase text-[#cad0e0]">E-mail de Acesso</label>
               <input
                 name="email"
                 type="email"
                 required
-                placeholder="coordenador@arenavale.com"
+                placeholder="E-mail de login do coordenador"
                 className="mt-1 w-full rounded-xl border border-white/10 bg-[#0b0d12] px-3.5 py-2 text-xs text-white outline-none focus:border-[#e50914]"
               />
             </div>
 
             <div>
-              <label className="block text-[11px] font-bold uppercase text-[#cad0e0]">Senha de Acesso</label>
+              <label className="block text-[11px] font-bold uppercase text-[#cad0e0]">Palavra-passe de Acesso</label>
               <input
                 name="senhaCoord"
                 type="password"
                 required
-                placeholder="Defina a senha para este coordenador"
+                placeholder="••••••••"
                 className="mt-1 w-full rounded-xl border border-white/10 bg-[#0b0d12] px-3.5 py-2 text-xs text-white outline-none focus:border-[#e50914]"
               />
             </div>
