@@ -1,3 +1,8 @@
+'use client';
+
+import React from 'react';
+import Link from 'next/link';
+
 export default function CoordenadorDashboardPage() {
   return (
     <div className="min-h-screen bg-[#0b0d12] text-white flex flex-col justify-between selection:bg-[#e50914] selection:text-white">
@@ -12,7 +17,7 @@ export default function CoordenadorDashboardPage() {
                 const senha = window.prompt('Digite a senha de Proprietário:');
                 if (senha && senha.toUpperCase() === 'VINIGUTO2020') {
                   const nome = window.prompt('Nome do novo coordenador:');
-                  if (nome) alert('Coordenador ' + nome + ' cadastrado!');
+                  if (nome) alert('Coordenador ' + nome + ' cadastrado com sucesso!');
                 } else if (senha) {
                   alert('Senha incorreta!');
                 }
@@ -24,24 +29,24 @@ export default function CoordenadorDashboardPage() {
                 <span className="text-[#e50914]">A</span>V
               </span>
             </button>
-            <a href="/" className="text-xl sm:text-2xl font-black tracking-tight leading-none text-white">
+            <Link href="/" className="text-xl sm:text-2xl font-black tracking-tight leading-none text-white">
               ARENA <span className="text-[#e50914]">VALE</span>
-            </a>
+            </Link>
           </div>
 
           <div className="flex items-center gap-2">
-            <a
+            <Link
               href="/"
               className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-xs font-bold text-[#cad0e0] transition hover:border-white/40 hover:text-white"
             >
               Ver Site ↗
-            </a>
-            <a
+            </Link>
+            <Link
               href="/login"
               className="rounded-full border border-red-500/20 bg-red-500/10 px-4 py-2 text-xs font-bold text-red-400 transition hover:bg-red-500/20 hover:text-red-300"
             >
               Sair
-            </a>
+            </Link>
           </div>
         </div>
       </header>
@@ -134,5 +139,4 @@ export default function CoordenadorDashboardPage() {
               <h3 className="mt-4 text-2xl font-black uppercase tracking-tight text-white">ATLETAS EM DESTAQUE</h3>
               <p className="mt-2 text-sm text-[#8a92a6] leading-relaxed">Aprovação editorial, fotos e perfil de novos talentos.</p>
             </div>
-            <div className="mt-8 border-t border-white/5 pt-5">
-              <a href="/coordenador/atletasdestaques" className="inline-flex items-center rounded-full bg-[#e50914] px-6 py-3 text-xs font-black uppercase tracking-wider text-white shadow-lg shadow-[#e50914]/30 hover:bg-[#ff1e27]">Acessar Galeria →
+            <div className="mt-8 border-
