@@ -139,4 +139,57 @@ export default function CoordenadorDashboardPage() {
               <h3 className="mt-4 text-2xl font-black uppercase tracking-tight text-white">ATLETAS EM DESTAQUE</h3>
               <p className="mt-2 text-sm text-[#8a92a6] leading-relaxed">Aprovação editorial, fotos e perfil de novos talentos.</p>
             </div>
-            <div className="mt-8 border-
+            <div className="mt-8 border-t border-white/5 pt-5">
+              <Link href="/coordenador/atletasdestaques" className="inline-flex items-center rounded-full bg-[#e50914] px-6 py-3 text-xs font-black uppercase tracking-wider text-white shadow-lg shadow-[#e50914]/30 hover:bg-[#ff1e27]">Acessar Galeria →</Link>
+            </div>
+          </div>
+
+          <div className="flex flex-col justify-between rounded-[2rem] border border-white/10 bg-[#13161f] p-8 shadow-xl">
+            <div>
+              <span className="text-[11px] font-black uppercase tracking-wider text-[#e50914]">TV ARENA</span>
+              <h3 className="mt-4 text-2xl font-black uppercase tracking-tight text-white">TRANSMISSÕES AO VIVO</h3>
+              <p className="mt-2 text-sm text-[#8a92a6] leading-relaxed">Manutenção do player, YouTube e placares ao vivo.</p>
+            </div>
+            <div className="mt-8 border-t border-white/5 pt-5">
+              <Link href="/#aovivo" className="inline-flex items-center rounded-full border border-white/15 bg-white/5 px-6 py-3 text-xs font-black uppercase tracking-wider text-[#cad0e0] hover:text-white">Configurar Jogos →</Link>
+            </div>
+          </div>
+
+          <div className="flex flex-col justify-between rounded-[2rem] border border-white/10 bg-[#13161f] p-8 shadow-xl">
+            <div>
+              <span className="text-[11px] font-black uppercase tracking-wider text-[#e50914]">CADASTROS</span>
+              <h3 className="mt-4 text-2xl font-black uppercase tracking-tight text-white">SOLICITAÇÕES DE INSCRIÇÃO</h3>
+              <p className="mt-2 text-sm text-[#8a92a6] leading-relaxed">Acompanhamento de novos atletas cadastrados no formulário.</p>
+            </div>
+            <div className="mt-8 border-t border-white/5 pt-5">
+              <Link href="/inscricao" className="inline-flex items-center rounded-full border border-white/15 bg-white/5 px-6 py-3 text-xs font-black uppercase tracking-wider text-[#cad0e0] hover:text-white">Ver Solicitações →</Link>
+            </div>
+          </div>
+
+          <div className="flex flex-col justify-between rounded-[2rem] border border-white/10 bg-[#13161f] p-8 shadow-xl">
+            <div>
+              <span className="text-[11px] font-black uppercase tracking-wider text-[#e50914]">COMPETIÇÕES</span>
+              <h3 className="mt-4 text-2xl font-black uppercase tracking-tight text-white">CAMPEONATOS & TABELAS</h3>
+              <p className="mt-2 text-sm text-[#8a92a6] leading-relaxed">Estruturação de torneios regionais, fases e datas.</p>
+            </div>
+            <div className="mt-8 border-t border-white/5 pt-5">
+              <Link href="/#campeonatos" className="inline-flex items-center rounded-full border border-white/15 bg-white/5 px-6 py-3 text-xs font-black uppercase tracking-wider text-[#cad0e0] hover:text-white">Gerir Torneios →</Link>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      {/* 3. RODAPÉ */}
+      <footer className="border-t border-white/10 bg-[#07080b] px-6 py-8">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 sm:flex-row text-xs text-[#8a92a6]">
+          <div>© 2026 Arena Vale · Sistema de Gestão Interna</div>
+          <div className="flex items-center gap-4">
+            <Link href="/" className="hover:text-white">Portal</Link>
+            <Link href="/coordenador/atletasdestaques" className="hover:text-white">Galeria de Atletas</Link>
+            <Link href="/login" className="hover:text-white">Sair</Link>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}
