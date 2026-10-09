@@ -35,16 +35,8 @@ export default function HomePage() {
     <div id="topo" className="min-h-screen bg-[#0b0d12] text-white selection:bg-[#e50914] selection:text-white">
       <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0b0d12]/95 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <Link href="/" className="group flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/20 bg-gradient-to-br from-[#161922] to-[#0b0d12] shadow-inner transition group-hover:border-[#e50914]">
-              <span className="font-black tracking-tighter text-white">
-                <span className="text-[#e50914]">A</span>V
-              </span>
-            </div>
-            {/* LOGO FRAME AV + MARCA */}
           <Link href="/" className="group flex items-center gap-3.5">
             <div className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl border border-white/20 bg-gradient-to-br from-[#161922] to-[#0b0d12] shadow-inner transition group-hover:border-[#e50914]">
-              {/* Símbolo AV em Frame */}
               <span className="text-base sm:text-lg font-black tracking-tighter text-white">
                 <span className="text-[#e50914]">A</span>V
               </span>
@@ -53,6 +45,13 @@ export default function HomePage() {
               ARENA <span className="text-[#e50914]">VALE</span>
             </span>
           </Link>
+
+          <nav className="hidden items-center gap-7 text-xs font-bold uppercase tracking-wider text-[#a0a8be] lg:flex">
+            <Link href="#inicio" className="text-white transition hover:text-[#e50914]">
+              Início
+            </Link>
+            <Link href="#aovivo" className="flex items-center gap-1.5 text-white transition hover:text-[#e50914]">
+              <span className="h-2 w-2 rounded-full bg-[#e50914] animate-pulse" />
               Ao Vivo
             </Link>
             <Link href="#noticias" className="transition hover:text-white">
