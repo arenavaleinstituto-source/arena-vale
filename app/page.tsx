@@ -41,22 +41,18 @@ export default function HomePage() {
                 <span className="text-[#e50914]">A</span>V
               </span>
             </div>
-            <div className="flex flex-col">
-              <span className="text-xl font-black tracking-tight leading-none text-white sm:text-2xl">
-                ARENA <span className="text-[#e50914]">VALE</span>
-              </span>
-              <span className="text-[10px] font-bold tracking-[0.25em] text-[#8a92a6] uppercase mt-0.5">
-                Mídia Esportiva
+            {/* LOGO FRAME AV + MARCA */}
+          <Link href="/" className="group flex items-center gap-3.5">
+            <div className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl border border-white/20 bg-gradient-to-br from-[#161922] to-[#0b0d12] shadow-inner transition group-hover:border-[#e50914]">
+              {/* Símbolo AV em Frame */}
+              <span className="text-base sm:text-lg font-black tracking-tighter text-white">
+                <span className="text-[#e50914]">A</span>V
               </span>
             </div>
+            <span className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight leading-none text-white">
+              ARENA <span className="text-[#e50914]">VALE</span>
+            </span>
           </Link>
-
-          <nav className="hidden items-center gap-7 text-xs font-bold uppercase tracking-wider text-[#a0a8be] lg:flex">
-            <Link href="#inicio" className="text-white transition hover:text-[#e50914]">
-              Início
-            </Link>
-            <Link href="#aovivo" className="flex items-center gap-1.5 text-white transition hover:text-[#e50914]">
-              <span className="h-2 w-2 rounded-full bg-[#e50914] animate-pulse" />
               Ao Vivo
             </Link>
             <Link href="#noticias" className="transition hover:text-white">
