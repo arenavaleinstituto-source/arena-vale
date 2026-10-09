@@ -97,18 +97,18 @@ export default function AtletasDestaquesPage() {
 
       {/* 2. ÁREA PRINCIPAL */}
       <main className="mx-auto w-full max-w-7xl px-6 py-10 flex-1">
-        {/* Banner do Topo */}
+        {/* Banner do Topo com as novas frases */}
         <div className="rounded-[2.5rem] border border-white/10 bg-gradient-to-br from-[#161a24] to-[#0b0d12] p-8 sm:p-12 shadow-2xl mb-10">
           <div className="max-w-2xl">
             <span className="text-xs font-black uppercase tracking-[0.25em] text-[#e50914]">
-              COBERTURA DE TALENTOS
+              ACOMPANHE NOSSOS TALENTOS
             </span>
             <h1 className="mt-3 text-3xl font-black uppercase sm:text-5xl leading-tight text-white">
               ATLETAS EM <br />
               <span className="text-[#e50914]">DESTAQUE</span>
             </h1>
-            <p className="mt-4 text-sm sm:text-base text-[#cad0e0] leading-relaxed">
-              Acompanhe as revelações, artilheiros e protagonistas das principais competições da região.
+            <p className="mt-4 text-sm sm:text-base font-bold uppercase tracking-wider text-[#cad0e0] leading-relaxed">
+              ALÉM DO PLACAR, CONTAMOS HISTÓRIAS.
             </p>
           </div>
 
@@ -138,7 +138,6 @@ export default function AtletasDestaquesPage() {
               key={atleta.id}
               className="group overflow-hidden rounded-[2rem] border border-white/10 bg-[#13161f] shadow-xl transition hover:border-[#e50914]/50 flex flex-col justify-between"
             >
-              {/* Imagem com Overlay */}
               <div className="relative aspect-[4/5] w-full overflow-hidden bg-[#0b0d12]">
                 <img
                   src={atleta.imagem}
@@ -156,7 +155,6 @@ export default function AtletasDestaquesPage() {
                 </span>
               </div>
 
-              {/* Informações */}
               <div className="p-6 pt-2">
                 <span className="text-[10px] font-black tracking-wider text-[#e50914] uppercase">
                   {atleta.destaque}
