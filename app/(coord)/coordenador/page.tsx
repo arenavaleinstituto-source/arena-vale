@@ -4,20 +4,27 @@ import React from 'react';
 import Link from 'next/link';
 
 export default function CoordenadorDashboardPage() {
+  const modulos = [
+    { titulo: 'ATLETAS EM DESTAQUE', subtitulo: 'Aprovação editorial, fotos e perfil de novos talentos.', tag: 'EDITORIAL', link: '/coordenador/atletasdestaques', botao: 'Acessar Galeria →', destaque: true },
+    { titulo: 'TRANSMISSÕES AO VIVO', subtitulo: 'Manutenção do player, YouTube e placares ao vivo.', tag: 'TV ARENA', link: '/#aovivo', botao: 'Configurar Jogos →', destaque: false },
+    { titulo: 'SOLICITAÇÕES DE INSCRIÇÃO', subtitulo: 'Acompanhamento de novos atletas cadastrados no formulário.', tag: 'CADASTROS', link: '/inscricao', botao: 'Ver Solicitações →', destaque: false },
+    { titulo: 'CAMPEONATOS & TABELAS', subtitulo: 'Estruturação de torneios regionais, fases e datas.', tag: 'COMPETIÇÕES', link: '/#campeonatos', botao: 'Gerir Torneios →', destaque: false }
+  ];
+
   return (
     <div className="min-h-screen bg-[#0b0d12] text-white flex flex-col justify-between selection:bg-[#e50914] selection:text-white">
       {/* 1. CABEÇALHO */}
       <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0b0d12]/95 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-3.5">
-            {/* GATILHO MASTER NO LOGO [AV] */}
+            {/* GATILHO DISCRETO NO LOGO [AV] PARA O PROPRIETÁRIO */}
             <button
               type="button"
               onClick={() => {
                 const dialog = document.getElementById('dialog-proprietario') as HTMLDialogElement | null;
                 if (dialog) dialog.showModal();
               }}
-              title="Acesso Seguro"
+              title="Arena Vale"
               className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/20 bg-gradient-to-br from-[#161922] to-[#0b0d12] shadow-inner transition hover:border-[#e50914] cursor-pointer"
             >
               <span className="text-sm font-black tracking-tighter text-white">
@@ -48,135 +55,62 @@ export default function CoordenadorDashboardPage() {
 
       {/* 2. ÁREA CENTRAL */}
       <main className="mx-auto w-full max-w-7xl px-6 py-10 flex-1">
+        {/* Banner do Painel */}
         <div className="rounded-[2.5rem] border border-white/10 bg-[#161a24] p-8 sm:p-12 shadow-2xl mb-10">
           <span className="text-xs font-black uppercase tracking-[0.25em] text-[#e50914]">
-            PAINEL ADMINISTRATIVO
+            PAINEL DO COORDENADOR
           </span>
           <h1 className="mt-3 text-3xl font-black uppercase sm:text-5xl leading-tight text-white">
             CENTRAL DE CONTROLE <br />
             <span className="text-[#e50914]">ARENA VALE</span>
           </h1>
           <p className="mt-4 text-sm sm:text-base text-[#cad0e0] leading-relaxed max-w-2xl">
-            Gestão executiva da coordenação geral, atletas, equipas, transmissões e tabelas da temporada.
+            Área operacional exclusiva para manutenção editorial, moderação de inscritos, acompanhamento de partidas e tabelas de competições.
           </p>
         </div>
 
-        {/* 3 COORDENADORES */}
-        <section className="mb-12">
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <span className="text-xs font-black uppercase tracking-wider text-[#e50914]">
-                ALTA GESTÃO (3 VAGAS)
-              </span>
-              <h2 className="text-xl sm:text-2xl font-black uppercase text-white mt-1">
-                Coordenadores Oficiais
-              </h2>
-            </div>
-            <span className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-[11px] font-bold text-[#8a92a6]">
-              3 / 3 Ocupadas
-            </span>
-          </div>
-
-          <div className="grid gap-6 md:grid-cols-3">
-            <div className="flex flex-col justify-between rounded-[2rem] border border-white/10 bg-[#13161f] p-6 shadow-xl">
-              <div>
-                <div className="flex items-center justify-between pb-3 border-b border-white/5">
-                  <span className="rounded-full bg-[#e50914]/15 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-[#e50914]">COORDENADOR 1</span>
-                  <span className="text-[10px] font-black text-emerald-400">● ATIVO</span>
-                </div>
-                <h3 className="mt-4 text-base font-black uppercase text-white">Coordenação Arena Vale</h3>
-                <p className="text-[11px] font-bold text-[#e50914] mt-0.5 uppercase tracking-wider">COORDENADOR GERAL</p>
-                <div className="mt-4 space-y-1 text-xs text-[#8a92a6]">
-                  <p className="truncate">✉ arenavale2026@gmail.com</p>
-                  <p>📱 (47) 98844-4404</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex flex-col justify-between rounded-[2rem] border border-white/10 bg-[#13161f] p-6 shadow-xl">
-              <div>
-                <div className="flex items-center justify-between pb-3 border-b border-white/5">
-                  <span className="rounded-full bg-[#e50914]/15 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-[#e50914]">COORDENADOR 2</span>
-                  <span className="text-[10px] font-black text-emerald-400">● ATIVO</span>
-                </div>
-                <h3 className="mt-4 text-base font-black uppercase text-white">Gestão de Campeonatos</h3>
-                <p className="text-[11px] font-bold text-[#e50914] mt-0.5 uppercase tracking-wider">COORD. COMPETIÇÕES</p>
-                <div className="mt-4 space-y-1 text-xs text-[#8a92a6]">
-                  <p className="truncate">✉ competicoes@arenavale.com.br</p>
-                  <p>📱 (47) 98844-4404</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex flex-col justify-between rounded-[2rem] border border-white/10 bg-[#13161f] p-6 shadow-xl">
-              <div>
-                <div className="flex items-center justify-between pb-3 border-b border-white/5">
-                  <span className="rounded-full bg-[#e50914]/15 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-[#e50914]">COORDENADOR 3</span>
-                  <span className="text-[10px] font-black text-emerald-400">● ATIVO</span>
-                </div>
-                <h3 className="mt-4 text-base font-black uppercase text-white">Mídia & TV Arena Vale</h3>
-                <p className="text-[11px] font-bold text-[#e50914] mt-0.5 uppercase tracking-wider">COORD. COMUNICAÇÃO</p>
-                <div className="mt-4 space-y-1 text-xs text-[#8a92a6]">
-                  <p className="truncate">✉ imprensa@arenavale.com.br</p>
-                  <p>📱 (47) 98844-4404</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* MÓDULOS DE MANUTENÇÃO */}
+        {/* MÓDULOS DE OPERAÇÃO DO SITE */}
         <div className="grid gap-6 sm:grid-cols-2">
-          <div className="flex flex-col justify-between rounded-[2rem] border border-[#e50914]/40 bg-[#161a24] p-8 shadow-xl">
-            <div>
-              <span className="text-[11px] font-black uppercase tracking-wider text-[#e50914]">EDITORIAL</span>
-              <h3 className="mt-4 text-2xl font-black uppercase tracking-tight text-white">ATLETAS EM DESTAQUE</h3>
-              <p className="mt-2 text-sm text-[#8a92a6] leading-relaxed">Aprovação editorial, fotos e perfil de novos talentos.</p>
-            </div>
-            <div className="mt-8 border-t border-white/5 pt-5">
-              <Link href="/coordenador/atletasdestaques" className="inline-flex items-center rounded-full bg-[#e50914] px-6 py-3 text-xs font-black uppercase tracking-wider text-white shadow-lg shadow-[#e50914]/30 hover:bg-[#ff1e27]">Acessar Galeria →</Link>
-            </div>
-          </div>
+          {modulos.map((m, idx) => (
+            <div
+              key={idx}
+              className={`flex flex-col justify-between rounded-[2rem] border p-8 shadow-xl transition hover:border-[#e50914]/50 ${
+                m.destaque ? 'border-[#e50914]/40 bg-[#161a24]' : 'border-white/10 bg-[#13161f]'
+              }`}
+            >
+              <div>
+                <span className="text-[11px] font-black uppercase tracking-wider text-[#e50914]">
+                  {m.tag}
+                </span>
+                <h3 className="mt-4 text-2xl font-black uppercase tracking-tight text-white">
+                  {m.titulo}
+                </h3>
+                <p className="mt-2 text-sm text-[#8a92a6] leading-relaxed">
+                  {m.subtitulo}
+                </p>
+              </div>
 
-          <div className="flex flex-col justify-between rounded-[2rem] border border-white/10 bg-[#13161f] p-8 shadow-xl">
-            <div>
-              <span className="text-[11px] font-black uppercase tracking-wider text-[#e50914]">TV ARENA</span>
-              <h3 className="mt-4 text-2xl font-black uppercase tracking-tight text-white">TRANSMISSÕES AO VIVO</h3>
-              <p className="mt-2 text-sm text-[#8a92a6] leading-relaxed">Manutenção do player, YouTube e placares ao vivo.</p>
+              <div className="mt-8 border-t border-white/5 pt-5">
+                <Link
+                  href={m.link}
+                  className={`inline-flex items-center rounded-full px-6 py-3 text-xs font-black uppercase tracking-wider transition ${
+                    m.destaque
+                      ? 'bg-[#e50914] text-white shadow-lg shadow-[#e50914]/30 hover:bg-[#ff1e27]'
+                      : 'border border-white/15 bg-white/5 text-[#cad0e0] hover:text-white'
+                  }`}
+                >
+                  {m.botao}
+                </Link>
+              </div>
             </div>
-            <div className="mt-8 border-t border-white/5 pt-5">
-              <Link href="/#aovivo" className="inline-flex items-center rounded-full border border-white/15 bg-white/5 px-6 py-3 text-xs font-black uppercase tracking-wider text-[#cad0e0] hover:text-white">Configurar Jogos →</Link>
-            </div>
-          </div>
-
-          <div className="flex flex-col justify-between rounded-[2rem] border border-white/10 bg-[#13161f] p-8 shadow-xl">
-            <div>
-              <span className="text-[11px] font-black uppercase tracking-wider text-[#e50914]">CADASTROS</span>
-              <h3 className="mt-4 text-2xl font-black uppercase tracking-tight text-white">SOLICITAÇÕES DE INSCRIÇÃO</h3>
-              <p className="mt-2 text-sm text-[#8a92a6] leading-relaxed">Acompanhamento de novos atletas cadastrados no formulário.</p>
-            </div>
-            <div className="mt-8 border-t border-white/5 pt-5">
-              <Link href="/inscricao" className="inline-flex items-center rounded-full border border-white/15 bg-white/5 px-6 py-3 text-xs font-black uppercase tracking-wider text-[#cad0e0] hover:text-white">Ver Solicitações →</Link>
-            </div>
-          </div>
-
-          <div className="flex flex-col justify-between rounded-[2rem] border border-white/10 bg-[#13161f] p-8 shadow-xl">
-            <div>
-              <span className="text-[11px] font-black uppercase tracking-wider text-[#e50914]">COMPETIÇÕES</span>
-              <h3 className="mt-4 text-2xl font-black uppercase tracking-tight text-white">CAMPEONATOS & TABELAS</h3>
-              <p className="mt-2 text-sm text-[#8a92a6] leading-relaxed">Estruturação de torneios regionais, fases e datas.</p>
-            </div>
-            <div className="mt-8 border-t border-white/5 pt-5">
-              <Link href="/#campeonatos" className="inline-flex items-center rounded-full border border-white/15 bg-white/5 px-6 py-3 text-xs font-black uppercase tracking-wider text-[#cad0e0] hover:text-white">Gerir Torneios →</Link>
-            </div>
-          </div>
+          ))}
         </div>
       </main>
 
-      {/* 3. MODAL NATIVO (IMPOSSÍVEL DE SER BLOQUEADO PELO NAVEGADOR) */}
+      {/* 3. MODAL EXCLUSIVO DO PROPRIETÁRIO */}
       <dialog
         id="dialog-proprietario"
-        className="backdrop:bg-black/80 rounded-[2.5rem] border border-white/15 bg-[#13161f] p-8 text-white max-w-md w-full shadow-2xl m-auto"
+        className="backdrop:bg-black/85 rounded-[2.5rem] border border-white/15 bg-[#13161f] p-8 text-white max-w-md w-full shadow-2xl m-auto"
       >
         <div className="flex items-center justify-between border-b border-white/10 pb-4">
           <h3 className="text-lg font-black uppercase tracking-wider text-white">
