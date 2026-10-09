@@ -81,7 +81,7 @@ const news = [
 
 export default function HomePage() {
   return (
-    <div id="topo" className="min-h-screen bg-[#0b0d12] text-white selection:bg-[#e50914] selection:text-white">
+    <div id="topo" className="min-h-screen bg-[#0b0d12] text-white">
       <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0b0d12]/95 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <Link href="/" className="group flex items-center gap-3.5">
@@ -353,4 +353,6 @@ export default function HomePage() {
               alt="Atletas em Destaque"
               className="absolute inset-0 h-full w-full object-cover object-center brightness-60 transition duration-700 hover:scale-105"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0b0d12] via-[#0b0d12]/80 to-transparent sm:bg-gradient-to-
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0b0d12] via-[#0b0d12]/80 to-transparent sm:bg-gradient-to-r sm:from-[#0b0d12]/95 sm:via-[#0b0d12]/70 sm:to-transparent" />
+            
+            <div className="relative z-10 flex min-h-[380px] flex-col justify-end p-8 sm:min-h
