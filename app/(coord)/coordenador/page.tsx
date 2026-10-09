@@ -1,30 +1,18 @@
 export default function CoordenadorDashboardPage() {
-  const coordenadores = [
-    { cargo: 'COORDENADOR GERAL', nome: 'Coordenação Arena Vale', email: 'arenavale2026@gmail.com', tel: '(47) 98844-4404' },
-    { cargo: 'COORD. COMPETIÇÕES', nome: 'Gestão de Campeonatos', email: 'competicoes@arenavale.com.br', tel: '(47) 98844-4404' },
-    { cargo: 'COORD. COMUNICAÇÃO', nome: 'Mídia & TV Arena Vale', email: 'imprensa@arenavale.com.br', tel: '(47) 98844-4404' }
-  ];
-
-  const modulos = [
-    { titulo: 'ATLETAS EM DESTAQUE', subtitulo: 'Aprovação editorial, fotos e perfil de novos talentos.', tag: 'EDITORIAL', link: '/coordenador/atletasdestaques', botao: 'Acessar Galeria →', destaque: true },
-    { titulo: 'TRANSMISSÕES AO VIVO', subtitulo: 'Manutenção do player, YouTube e placares ao vivo.', tag: 'TV ARENA', link: '/#aovivo', botao: 'Configurar Jogos →', destaque: false },
-    { titulo: 'SOLICITAÇÕES DE INSCRIÇÃO', subtitulo: 'Acompanhamento de novos atletas cadastrados no formulário.', tag: 'CADASTROS', link: '/inscricao', botao: 'Ver Solicitações →', destaque: false },
-    { titulo: 'CAMPEONATOS & TABELAS', subtitulo: 'Estruturação de torneios regionais, fases e datas.', tag: 'COMPETIÇÕES', link: '/#campeonatos', botao: 'Gerir Torneios →', destaque: false }
-  ];
-
   return (
     <div className="min-h-screen bg-[#0b0d12] text-white flex flex-col justify-between selection:bg-[#e50914] selection:text-white">
       {/* 1. CABEÇALHO */}
       <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0b0d12]/95 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-3.5">
-            <a
-              href="#proprietario"
+            {/* GATILHO MASTER DO PROPRIETÁRIO */}
+            <button
+              type="button"
               onClick={() => {
                 const senha = window.prompt('Digite a senha de Proprietário:');
                 if (senha && senha.toUpperCase() === 'VINIGUTO2020') {
                   const nome = window.prompt('Nome do novo coordenador:');
-                  if (nome) alert('Coordenador ' + nome + ' cadastrado com sucesso!');
+                  if (nome) alert('Coordenador ' + nome + ' cadastrado!');
                 } else if (senha) {
                   alert('Senha incorreta!');
                 }
@@ -35,7 +23,7 @@ export default function CoordenadorDashboardPage() {
               <span className="text-sm font-black tracking-tighter text-white">
                 <span className="text-[#e50914]">A</span>V
               </span>
-            </a>
+            </button>
             <a href="/" className="text-xl sm:text-2xl font-black tracking-tight leading-none text-white">
               ARENA <span className="text-[#e50914]">VALE</span>
             </a>
@@ -91,14 +79,60 @@ export default function CoordenadorDashboardPage() {
           </div>
 
           <div className="grid gap-6 md:grid-cols-3">
-            {coordenadores.map((coord, idx) => (
-              <div
-                key={idx}
-                className="flex flex-col justify-between rounded-[2rem] border border-white/10 bg-[#13161f] p-6 shadow-xl"
-              >
-                <div>
-                  <div className="flex items-center justify-between pb-3 border-b border-white/5">
-                    <span className="rounded-full bg-[#e50914]/15 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-[#e50914]">
-                      COORDENADOR {idx + 1}
-                    </span>
-                    <span className="text-[10px] font-black text-emerald-40
+            <div className="flex flex-col justify-between rounded-[2rem] border border-white/10 bg-[#13161f] p-6 shadow-xl">
+              <div>
+                <div className="flex items-center justify-between pb-3 border-b border-white/5">
+                  <span className="rounded-full bg-[#e50914]/15 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-[#e50914]">COORDENADOR 1</span>
+                  <span className="text-[10px] font-black text-emerald-400">● ATIVO</span>
+                </div>
+                <h3 className="mt-4 text-base font-black uppercase text-white">Coordenação Arena Vale</h3>
+                <p className="text-[11px] font-bold text-[#e50914] mt-0.5 uppercase tracking-wider">COORDENADOR GERAL</p>
+                <div className="mt-4 space-y-1 text-xs text-[#8a92a6]">
+                  <p className="truncate">✉ arenavale2026@gmail.com</p>
+                  <p>📱 (47) 98844-4404</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-col justify-between rounded-[2rem] border border-white/10 bg-[#13161f] p-6 shadow-xl">
+              <div>
+                <div className="flex items-center justify-between pb-3 border-b border-white/5">
+                  <span className="rounded-full bg-[#e50914]/15 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-[#e50914]">COORDENADOR 2</span>
+                  <span className="text-[10px] font-black text-emerald-400">● ATIVO</span>
+                </div>
+                <h3 className="mt-4 text-base font-black uppercase text-white">Gestão de Campeonatos</h3>
+                <p className="text-[11px] font-bold text-[#e50914] mt-0.5 uppercase tracking-wider">COORD. COMPETIÇÕES</p>
+                <div className="mt-4 space-y-1 text-xs text-[#8a92a6]">
+                  <p className="truncate">✉ competicoes@arenavale.com.br</p>
+                  <p>📱 (47) 98844-4404</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-col justify-between rounded-[2rem] border border-white/10 bg-[#13161f] p-6 shadow-xl">
+              <div>
+                <div className="flex items-center justify-between pb-3 border-b border-white/5">
+                  <span className="rounded-full bg-[#e50914]/15 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-[#e50914]">COORDENADOR 3</span>
+                  <span className="text-[10px] font-black text-emerald-400">● ATIVO</span>
+                </div>
+                <h3 className="mt-4 text-base font-black uppercase text-white">Mídia & TV Arena Vale</h3>
+                <p className="text-[11px] font-bold text-[#e50914] mt-0.5 uppercase tracking-wider">COORD. COMUNICAÇÃO</p>
+                <div className="mt-4 space-y-1 text-xs text-[#8a92a6]">
+                  <p className="truncate">✉ imprensa@arenavale.com.br</p>
+                  <p>📱 (47) 98844-4404</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* MÓDULOS DE MANUTENÇÃO */}
+        <div className="grid gap-6 sm:grid-cols-2">
+          <div className="flex flex-col justify-between rounded-[2rem] border border-[#e50914]/40 bg-[#161a24] p-8 shadow-xl">
+            <div>
+              <span className="text-[11px] font-black uppercase tracking-wider text-[#e50914]">EDITORIAL</span>
+              <h3 className="mt-4 text-2xl font-black uppercase tracking-tight text-white">ATLETAS EM DESTAQUE</h3>
+              <p className="mt-2 text-sm text-[#8a92a6] leading-relaxed">Aprovação editorial, fotos e perfil de novos talentos.</p>
+            </div>
+            <div className="mt-8 border-t border-white/5 pt-5">
+              <a href="/coordenador/atletasdestaques" className="inline-flex items-center rounded-full bg-[#e50914] px-6 py-3 text-xs font-black uppercase tracking-wider text-white shadow-lg shadow-[#e50914]/30 hover:bg-[#ff1e27]">Acessar Galeria →
