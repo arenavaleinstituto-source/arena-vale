@@ -44,7 +44,7 @@ const campeonatos = [
     id: 'basquete',
     nome: 'Basquetebol Open',
     fase: 'Classificatórias',
-    logo: '/LOGO BASKETE.png',
+    logo: '/LOGO%20BASKETE.png',
     sigla: 'BO',
     patrocinadores: [
       { nome: 'Patrocinador Master', cota: 'Master do Torneio' },
@@ -256,21 +256,13 @@ export default function HomePage() {
         <div className="rounded-[2.5rem] border border-white/10 bg-[#13161f] p-8 sm:p-12 shadow-2xl">
           <div className="flex flex-col md:flex-row items-center justify-between gap-8 pb-8 border-b border-white/10">
             <div className="flex flex-col sm:flex-row items-center sm:items-start gap-8 w-full md:w-auto text-center sm:text-left">
+              {/* CAIXA 3X MAIOR COM A LOGO FIXA */}
               <div className="relative flex h-52 w-52 sm:h-64 sm:w-64 shrink-0 items-center justify-center overflow-hidden rounded-3xl border border-white/20 bg-gradient-to-br from-[#1c1417] via-[#13161f] to-[#0b0d12] shadow-2xl p-4">
                 <img
                   src={ativo.logo}
                   alt={ativo.nome}
                   className="h-full w-full object-contain transition duration-500 hover:scale-105"
-                  onError={(e) => {
-                    e.currentTarget.style.display = 'none';
-                    const fallback = e.currentTarget.parentElement?.querySelector('.logo-camp-fallback') as HTMLElement;
-                    if (fallback) fallback.style.display = 'flex';
-                  }}
                 />
-                <div className="logo-camp-fallback absolute inset-0 flex flex-col items-center justify-center text-center p-4" style={{ display: 'none' }}>
-                  <span className="text-4xl sm:text-5xl font-black text-[#e50914]">{ativo.sigla}</span>
-                  <span className="text-xs font-bold text-[#8a92a6] uppercase tracking-widest mt-2">LOGO OFICIAL</span>
-                </div>
               </div>
 
               <div className="flex flex-col justify-center">
@@ -382,15 +374,4 @@ export default function HomePage() {
             <Link href="#aovivo" className="hover:text-white">Ao Vivo</Link>
             <Link href="#agenda" className="hover:text-white">Agenda</Link>
             <Link href="#campeonatos" className="hover:text-white">Campeonatos</Link>
-            <Link href="/coordenador/atletasdestaques" className="hover:text-white">Atletas Destaques</Link>
-            <Link href="#projetosocial" className="hover:text-white">Projeto Social</Link>
-            <a href="https://wa.me/5547988444404" target="_blank" rel="noreferrer" className="hover:text-white">Comercial</a>
-          </div>
-        </div>
-        <div className="mx-auto max-w-7xl pt-8 mt-8 border-t border-white/5 text-center text-[11px] text-[#555d6e]">
-          © 2026 Arena Vale · Mídia Esportiva. Todos os direitos reservados.
-        </div>
-      </footer>
-    </main>
-  );
-}
+            <Link href="/
