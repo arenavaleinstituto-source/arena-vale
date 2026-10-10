@@ -15,11 +15,56 @@ const noticias = [
   { titulo: 'FORMAÇÃO E NOVOS TALENTOS', descricao: 'Conheça os jovens que estão se destacando nas categorias de base.', categoria: 'ARENA BASE', tag: 'HISTÓRIAS' }
 ];
 
+const campeonatos = [
+  {
+    id: 'futsal',
+    nome: 'Futsal Regional',
+    fase: 'Fase de Grupos',
+    patrocinadores: [
+      { nome: 'Patrocinador Master', cota: 'Master do Torneio' },
+      { nome: 'Empresa Parceira', cota: 'Apoio Oficial' },
+      { nome: 'Espaço Disponível', cota: 'Cota Aberta' }
+    ]
+  },
+  {
+    id: 'volei',
+    nome: 'Voleibol Vale Cup',
+    fase: 'Oitavos de Final',
+    patrocinadores: [
+      { nome: 'Patrocinador Master', cota: 'Master do Torneio' },
+      { nome: 'Marca Regional', cota: 'Apoio Oficial' },
+      { nome: 'Espaço Disponível', cota: 'Cota Aberta' }
+    ]
+  },
+  {
+    id: 'basquete',
+    nome: 'Basquetebol Open',
+    fase: 'Classificatórias',
+    patrocinadores: [
+      { nome: 'Patrocinador Master', cota: 'Master do Torneio' },
+      { nome: 'Apoiador Local', cota: 'Apoio Oficial' },
+      { nome: 'Espaço Disponível', cota: 'Cota Aberta' }
+    ]
+  },
+  {
+    id: 'fut7',
+    nome: 'Futebol 7 Intermunicipal',
+    fase: 'Semifinais',
+    patrocinadores: [
+      { nome: 'Patrocinador Master', cota: 'Master do Torneio' },
+      { nome: 'Parceiro Esportivo', cota: 'Apoio Oficial' },
+      { nome: 'Espaço Disponível', cota: 'Cota Aberta' }
+    ]
+  }
+];
+
 export default function HomePage() {
   const [menuPainelAberto, setMenuPainelAberto] = useState(false);
+  const [campeonatoSelecionado, setCampeonatoSelecionado] = useState(0);
 
   return (
     <main id="topo" className="min-h-screen bg-[#0b0d12] text-white selection:bg-[#e50914] selection:text-white">
+      {/* 1. CABEÇALHO */}
       <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0b0d12]/95 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 py-3.5">
           <div className="flex items-center">
@@ -77,6 +122,7 @@ export default function HomePage() {
         </div>
       </header>
 
+      {/* 2. HERO PRINCIPAL */}
       <section id="inicio" className="relative mx-auto max-w-7xl px-6 pt-8 pb-12">
         <div className="relative min-h-[580px] overflow-hidden rounded-[2.5rem] border border-white/10 bg-[#13161f] shadow-2xl flex flex-col justify-end p-8 sm:p-14">
           <img src="/foto-pro-site-1.png" alt="Arena Vale" className="absolute inset-0 h-full w-full object-cover object-center brightness-60 contrast-110" />
@@ -105,6 +151,7 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* 3. TRANSMISSÕES AO VIVO */}
       <section id="aovivo" className="border-t border-white/5 bg-[#10131a] px-6 py-14">
         <div className="mx-auto max-w-7xl">
           <div className="flex flex-wrap items-end justify-between gap-4">
@@ -145,6 +192,7 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* 4. NOTÍCIAS */}
       <section id="noticias" className="mx-auto max-w-7xl px-6 py-16">
         <div className="mb-8"><p className="text-xs font-black tracking-[0.25em] text-[#e50914] uppercase">AGORA NA ARENA</p><h2 className="mt-2 text-3xl font-black uppercase tracking-tight sm:text-4xl">CONTEÚDO & COBERTURA</h2></div>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -161,6 +209,7 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* 5. ATLETAS EM DESTAQUE */}
       <section className="bg-[#10131a] px-6 py-14">
         <div className="mx-auto max-w-7xl">
           <div className="relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-[#13161f] shadow-2xl">
@@ -178,19 +227,80 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* 6. CAMPEONATOS E ESPAÇO PARA PATROCINADORES DE CADA TORNEIO */}
       <section id="campeonatos" className="mx-auto max-w-7xl px-6 py-16">
-        <div className="mb-8"><p className="text-xs font-black tracking-[0.25em] text-[#e50914] uppercase">COMPETIÇÕES OFICIAIS</p><h2 className="mt-2 text-3xl font-black uppercase tracking-tight sm:text-4xl">CAMPEONATOS REGIONAIS</h2></div>
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {[{ nome: 'Futsal Regional', fase: 'Fase de Grupos' }, { nome: 'Voleibol Vale Cup', fase: 'Oitavos de Final' }, { nome: 'Basquetebol Open', fase: 'Classificatórias' }, { nome: 'Futebol 7 Intermunicipal', fase: 'Semifinais' }].map((m, idx) => (
-            <div key={idx} className="rounded-[2rem] border border-white/10 bg-[#13161f] p-6 shadow-xl">
-              <span className="rounded-full bg-[#e50914]/15 px-2.5 py-0.5 text-[10px] font-black uppercase text-[#e50914]">EM ANDAMENTO</span>
-              <h3 className="mt-4 text-lg font-black uppercase text-white">{m.nome}</h3>
-              <p className="text-xs text-emerald-400 font-bold mt-1">{m.fase}</p>
-            </div>
+        <div className="mb-8">
+          <p className="text-xs font-black tracking-[0.25em] text-[#e50914] uppercase">COMPETIÇÕES OFICIAIS</p>
+          <h2 className="mt-2 text-3xl font-black uppercase tracking-tight sm:text-4xl">CAMPEONATOS & PATROCÍNIOS</h2>
+        </div>
+
+        {/* BOTOES DE CADA CAMPEONATO */}
+        <div className="flex flex-wrap gap-3 mb-8">
+          {campeonatos.map((c, index) => (
+            <button
+              key={c.id}
+              type="button"
+              onClick={() => setCampeonatoSelecionado(index)}
+              className={`rounded-full px-5 py-2.5 text-xs font-black uppercase tracking-wider transition ${
+                campeonatoSelecionado === index
+                  ? 'bg-[#e50914] text-white shadow-lg shadow-[#e50914]/30'
+                  : 'border border-white/15 bg-white/5 text-[#cad0e0] hover:text-white'
+              }`}
+            >
+              {c.nome}
+            </button>
           ))}
+        </div>
+
+        {/* CARD DO CAMPEONATO ATIVO E SEUS PATROCINADORES */}
+        <div className="rounded-[2.5rem] border border-white/10 bg-[#13161f] p-8 sm:p-10 shadow-2xl">
+          <div className="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-white/10">
+            <div>
+              <span className="rounded-full bg-[#e50914]/15 px-3 py-1 text-[11px] font-black uppercase tracking-wider text-[#e50914]">
+                EM ANDAMENTO
+              </span>
+              <h3 className="mt-3 text-2xl sm:text-3xl font-black uppercase text-white">
+                {campeonatos[campeonatoSelecionado].nome}
+              </h3>
+              <p className="text-xs text-emerald-400 font-bold mt-1">
+                Fase Atual: {campeonatos[campeonatoSelecionado].fase}
+              </p>
+            </div>
+            <a
+              href="https://wa.me/5547988444404"
+              target="_blank"
+              rel="noreferrer"
+              className="rounded-full border border-[#e50914]/40 bg-[#e50914]/15 px-5 py-2 text-xs font-black uppercase tracking-wider text-[#ff1e27] hover:bg-[#e50914] hover:text-white transition"
+            >
+              Patrocinar este Campeonato ↗
+            </a>
+          </div>
+
+          {/* GRELHA DE PATROCÍNIOS DO CAMPEONATO */}
+          <div className="mt-6">
+            <p className="text-xs font-black uppercase tracking-widest text-[#8a92a6] mb-4">
+              MARCAS PARCEIRAS DESTE TORNEIO
+            </p>
+            <div className="grid gap-4 sm:grid-cols-3">
+              {campeonatos[campeonatoSelecionado].patrocinadores.map((p, idx) => (
+                <div
+                  key={idx}
+                  className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-white/15 bg-[#0b0d12]/60 p-6 text-center hover:border-[#e50914]/50 transition"
+                >
+                  <span className="text-xs font-black uppercase tracking-wider text-white">
+                    {p.nome}
+                  </span>
+                  <span className="text-[10px] font-bold text-[#8a92a6] mt-1">
+                    {p.cota}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
+      {/* 7. PROJETO SOCIAL */}
       <section id="projetosocial" className="border-t border-white/5 bg-[#10131a] px-6 py-16">
         <div className="mx-auto max-w-7xl">
           <div className="rounded-[2.5rem] border border-white/10 bg-[#161a24] p-8 sm:p-14 shadow-2xl">
@@ -204,19 +314,46 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* 8. ESPAÇO DE PATROCÍNIOS GERAIS (ABA PRINCIPAL) & OPORTUNIDADE COMERCIAL */}
       <section className="mx-auto max-w-7xl px-6 py-16">
         <div className="rounded-[2.5rem] border border-white/10 bg-gradient-to-br from-[#161a24] to-[#0b0d12] p-8 sm:p-14 shadow-2xl">
-          <div className="max-w-2xl">
+          <div className="max-w-3xl">
             <span className="text-xs font-black uppercase tracking-[0.25em] text-[#e50914]">OPORTUNIDADE COMERCIAL</span>
-            <h2 className="mt-3 text-3xl font-black uppercase sm:text-5xl leading-tight">COLOQUE SUA MARCA NO <br /><span className="text-[#e50914]">PALCO DO ESPORTE.</span></h2>
-            <p className="mt-4 text-base text-[#cad0e0] leading-relaxed">A Arena Vale aproxima marcas de uma audiência que vive o esporte todos os dias. Presença antes, durante e depois do jogo através de transmissões, placar, melhores momentos e mídias digitais.</p>
+            <h2 className="mt-3 text-3xl font-black uppercase sm:text-5xl leading-tight">
+              COLOQUE SUA MARCA NO <br />
+              <span className="text-[#e50914]">PALCO DO ESPORTE.</span>
+            </h2>
+            <p className="mt-4 text-base text-[#cad0e0] leading-relaxed">
+              A Arena Vale aproxima marcas de uma audiência que vive o esporte todos os dias. Presença antes, durante e depois do jogo através de transmissões, placar, melhores momentos e mídias digitais.
+            </p>
             <div className="mt-8 flex flex-wrap gap-4">
-              <a href="https://wa.me/5547988444404" target="_blank" rel="noreferrer" className="rounded-full bg-[#e50914] px-8 py-3.5 text-xs font-black uppercase tracking-wider text-white shadow-lg shadow-[#e50914]/25 transition hover:bg-[#ff1e27]">💼 Falar com a Equipe Comercial</a>
+              <a href="https://wa.me/5547988444404" target="_blank" rel="noreferrer" className="rounded-full bg-[#e50914] px-8 py-3.5 text-xs font-black uppercase tracking-wider text-white shadow-lg shadow-[#e50914]/25 transition hover:bg-[#ff1e27]">
+                💼 Falar com a Equipe Comercial
+              </a>
+            </div>
+          </div>
+
+          {/* PAINEL DE MARCAS E PATROCINADORES DA PLATAFORMA PRINCIPAL */}
+          <div className="mt-12 pt-8 border-t border-white/10">
+            <p className="text-xs font-black uppercase tracking-widest text-[#8a92a6] mb-6">
+              PATROCINADORES OFICIAIS DA PLATAFORMA ARENA VALE
+            </p>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              {['COTA MASTER 01', 'COTA MASTER 02', 'APOIO INSTITUCIONAL', 'PARCEIRO DE TRANSMISSÃO'].map((cota, i) => (
+                <div
+                  key={i}
+                  className="flex min-h-[90px] flex-col items-center justify-center rounded-2xl border border-dashed border-white/20 bg-white/[0.02] p-4 text-center hover:border-[#e50914] transition"
+                >
+                  <span className="text-xs font-black uppercase tracking-wider text-white">Sua Marca Aqui</span>
+                  <span className="text-[10px] font-bold text-[#8a92a6] mt-1">{cota}</span>
+                </div>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
+      {/* 9. RODAPÉ */}
       <footer className="border-t border-white/10 bg-[#07080b] px-6 py-12">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 sm:flex-row text-xs text-[#8a92a6]">
           <div>
