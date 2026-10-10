@@ -55,8 +55,8 @@ const noticias = [
 export default function HomePage() {
   const [menuPainelAberto, setMenuPainelAberto] = useState(false);
 
-  return <>
-    <main className="min-h-screen bg-[#0b0d12] text-white selection:bg-[#e50914] selection:text-white">
+  return (
+    <div id="topo" className="min-h-screen bg-[#0b0d12] text-white selection:bg-[#e50914] selection:text-white">
       {/* 1. CABEÇALHO */}
       <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0b0d12]/95 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
@@ -64,7 +64,7 @@ export default function HomePage() {
             <Link
               href="/proprietario"
               title="Acesso Seguro"
-              className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl border border-white/20 bg-gradient-to-br from-[#161922] to-[#0b0d12] shadow-inner transition hover:border-[#e50914]"
+              className="flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl border border-white/20 bg-gradient-to-br from-[#161922] to-[#0b0d12] shadow-inner transition hover:border-[#e50914] cursor-pointer"
             >
               <span className="text-base sm:text-lg font-black tracking-tighter text-white">
                 <span className="text-[#e50914]">A</span>V
@@ -92,15 +92,3 @@ export default function HomePage() {
             </Link>
             <Link href="/coordenador/atletasdestaques" className="transition hover:text-white">
               Histórias
-            </Link>
-            <Link href="/inscricao" className="transition hover:text-white">
-              Inscrição
-            </Link>
-          </nav>
-
-          <div className="flex items-center gap-3">
-            <a
-              href="https://wa.me/5547988444404"
-              target="_blank"
-              rel="noreferrer"
-              className="rounded-full bg-[#e50914] px-5 py-2.5 text-xs font-black uppercase tracking-wider text-white
