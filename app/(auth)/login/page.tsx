@@ -87,7 +87,7 @@ export default function LoginPage() {
               Autenticação Oficial
             </h1>
             <p className="mt-2 text-xs text-[#8a92a6]">
-              Acesso exclusivo para o Proprietário, Coordenadores, Moderadores e Capitães credenciados.
+              Acesso exclusivo para os Coordenadores, Moderadores e Capitães credenciados.
             </p>
           </div>
 
