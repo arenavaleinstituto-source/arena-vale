@@ -19,12 +19,13 @@ export default function HomePage() {
 
   return (
     <div id="topo" className="min-h-screen bg-[#0b0d12] text-white selection:bg-[#e50914] selection:text-white">
+      {/* 1. CABEÇALHO */}
       <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0b0d12]/95 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 py-3.5">
           <div className="flex items-center gap-3">
             <Link href="/proprietario" title="Acesso Seguro" className="flex items-center gap-2.5 transition hover:opacity-90">
               <img
-                src="/logo.png"
+                src="/logo nova.png"
                 alt="Arena Vale Sports"
                 className="h-11 w-auto max-w-[150px] object-contain"
                 onError={(e) => {
@@ -85,6 +86,7 @@ export default function HomePage() {
         </div>
       </header>
 
+      {/* 2. HERO PRINCIPAL */}
       <section id="inicio" className="relative mx-auto max-w-7xl px-6 pt-8 pb-12">
         <div className="relative min-h-[580px] overflow-hidden rounded-[2.5rem] border border-white/10 bg-[#13161f] shadow-2xl flex flex-col justify-end p-8 sm:p-14">
           <img src="/foto-pro-site-1.png" alt="Arena Vale" className="absolute inset-0 h-full w-full object-cover object-center brightness-60 contrast-110" />
@@ -113,6 +115,7 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* 3. TRANSMISSÕES AO VIVO */}
       <section id="aovivo" className="border-t border-white/5 bg-[#10131a] px-6 py-14">
         <div className="mx-auto max-w-7xl">
           <div className="flex flex-wrap items-end justify-between gap-4">
@@ -153,6 +156,7 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* 4. NOTÍCIAS */}
       <section id="noticias" className="mx-auto max-w-7xl px-6 py-16">
         <div className="mb-8"><p className="text-xs font-black tracking-[0.25em] text-[#e50914] uppercase">AGORA NA ARENA</p><h2 className="mt-2 text-3xl font-black uppercase tracking-tight sm:text-4xl">CONTEÚDO & COBERTURA</h2></div>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -169,6 +173,7 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* 5. ATLETAS EM DESTAQUE */}
       <section className="bg-[#10131a] px-6 py-14">
         <div className="mx-auto max-w-7xl">
           <div className="relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-[#13161f] shadow-2xl">
@@ -186,6 +191,7 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* 6. CAMPEONATOS & PROJETO SOCIAL */}
       <section id="campeonatos" className="mx-auto max-w-7xl px-6 py-16">
         <div className="mb-8"><p className="text-xs font-black tracking-[0.25em] text-[#e50914] uppercase">COMPETIÇÕES OFICIAIS</p><h2 className="mt-2 text-3xl font-black uppercase tracking-tight sm:text-4xl">CAMPEONATOS REGIONAIS</h2></div>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -212,6 +218,7 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* 7. COMERCIAL */}
       <section className="mx-auto max-w-7xl px-6 py-16">
         <div className="rounded-[2.5rem] border border-white/10 bg-gradient-to-br from-[#161a24] to-[#0b0d12] p-8 sm:p-14 shadow-2xl">
           <div className="max-w-2xl">
@@ -225,6 +232,7 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* 8. RODAPÉ */}
       <footer className="border-t border-white/10 bg-[#07080b] px-6 py-12">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 sm:flex-row text-xs text-[#8a92a6]">
           <div>
