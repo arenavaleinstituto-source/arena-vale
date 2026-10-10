@@ -73,7 +73,7 @@ export default function HomePage() {
   const ativo = campeonatos[campeonatoSelecionado];
 
   return (
-    <div id="topo" className="min-h-screen bg-[#0b0d12] text-white selection:bg-[#e50914] selection:text-white">
+    <main className="min-h-screen bg-[#0b0d12] text-white selection:bg-[#e50914] selection:text-white">
       <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0b0d12]/95 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 py-3.5">
           <div className="flex items-center">
@@ -142,9 +142,7 @@ export default function HomePage() {
             </div>
 
             <h1 className="mt-5 text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black uppercase tracking-tight text-white leading-tight">
-              <span className="block whitespace-nowrap">
-                O PALCO DO
-              </span>
+              <span className="block whitespace-nowrap">O PALCO DO</span>
               <span className="block whitespace-nowrap mt-1 sm:mt-2">
                 <span className="text-[#e50914]">ESPORTE</span> É AQUI.
               </span>
@@ -393,6 +391,6 @@ export default function HomePage() {
           © 2026 Arena Vale · Mídia Esportiva. Todos os direitos reservados.
         </div>
       </footer>
-    </div>
+    </main>
   );
 }
