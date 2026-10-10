@@ -1,144 +1,119 @@
 'use client';
 
 import React, { useState } from 'react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState('');
-  const [senha, setSenha] = useState('');
-  const [erro, setErro] = useState('');
-  const [carregando, setCarregando] = useState(false);
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setErro('');
-    setCarregando(true);
+    setError('');
+    setLoading(true);
 
-    const emailLimpo = email.trim().toLowerCase();
-    const senhaLimpa = senha.trim();
+    try {
+      if (!email || !password) {
+        throw new Error('Preencha todos os campos obrigatórios.');
+      }
 
-    if (emailLimpo === 'pmmiranda2017@gmail.com' && senhaLimpa === 'VINIGUTO2020') {
-      router.push('/proprietario');
-      return;
+      const emailLimpo = email.toLowerCase().trim();
+
+      // Roteamento por Perfil de Acesso
+      if (emailLimpo.includes('proprietario') || emailLimpo.includes('admin')) {
+        router.push('/proprietario');
+      } else if (emailLimpo.includes('coordenador') || emailLimpo.includes('coord')) {
+        router.push('/coordenador');
+      } else {
+        router.push('/coordenador/atletasdestaques');
+      }
+    } catch (err: any) {
+      setError(err.message || 'Falha na autenticação. Verifique suas credenciais.');
+    } finally {
+      setLoading(false);
     }
-
-    if (
-      (emailLimpo === 'arenavale2026@gmail.com' ||
-        emailLimpo === 'competicoes@arenavale.com.br' ||
-        emailLimpo === 'imprensa@arenavale.com.br') &&
-      senhaLimpa.length >= 4
-    ) {
-      router.push('/coordenador');
-      return;
-    }
-
-    if (emailLimpo.includes('moderador') || emailLimpo.includes('mesa')) {
-      router.push('/moderador');
-      return;
-    }
-
-    if (emailLimpo.includes('capitao')) {
-      router.push('/capitao');
-      return;
-    }
-
-    setTimeout(() => {
-      setCarregando(false);
-      setErro('Credenciais inválidas. Verifique o seu e-mail e palavra-passe.');
-    }, 400);
   };
 
   return (
     <div className="min-h-screen bg-[#0b0d12] text-white flex flex-col justify-between selection:bg-[#e50914] selection:text-white">
-      <header className="border-b border-white/10 bg-[#0b0d12]/95 backdrop-blur-md px-6 py-4">
-        <div className="mx-auto flex max-w-7xl items-center justify-between">
-          <div className="flex items-center gap-3.5">
-            <Link
-              href="/"
-              className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/20 bg-gradient-to-br from-[#161922] to-[#0b0d12] shadow-inner transition hover:border-[#e50914]"
-            >
-              <span className="text-sm font-black tracking-tighter text-white">
-                <span className="text-[#e50914]">A</span>V
-              </span>
-            </Link>
-            <Link href="/" className="text-xl sm:text-2xl font-black tracking-tight leading-none text-white">
-              ARENA <span className="text-[#e50914]">VALE</span>
-            </Link>
-          </div>
-
-          <Link
-            href="/"
-            className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-xs font-bold text-[#cad0e0] transition hover:border-white/40 hover:text-white"
-          >
-            ← Voltar ao Portal
-          </Link>
-        </div>
+      <header className="w-full border-b border-white/10 bg-[#0b0d12]/95 px-6 py-4 flex items-center justify-between">
+        <Link href="/" className="flex items-center gap-2">
+          <img src="/logo 02.png" alt="Arena Vale" className="h-12 w-auto object-contain" />
+        </Link>
+        <Link
+          href="/"
+          className="rounded-full border border-white/20 bg-white/5 px-4 py-2 text-xs font-bold text-[#a0a8be] hover:text-white transition"
+        >
+          ← Voltar ao Portal
+        </Link>
       </header>
 
-      <main className="flex-1 flex items-center justify-center px-6 py-12">
-        <div className="w-full max-w-md rounded-[2.5rem] border border-white/15 bg-[#13161f] p-8 sm:p-10 shadow-2xl">
-          <div className="text-center pb-6 border-b border-white/10">
-            <span className="inline-block rounded-full bg-[#e50914]/15 border border-[#e50914]/30 px-3.5 py-1 text-[11px] font-black uppercase tracking-widest text-[#e50914]">
-              ÁREA RESTRITA
+      <main className="flex-1 flex items-center justify-center px-4 py-12">
+        <div className="w-full max-w-md rounded-[2.5rem] border border-white/10 bg-[#13161f] p-8 sm:p-10 shadow-2xl">
+          <div className="text-center mb-8">
+            <span className="rounded-full bg-[#e50914]/15 px-3.5 py-1 text-[11px] font-black uppercase tracking-wider text-[#e50914]">
+              Área Restrita
             </span>
-            <h1 className="mt-3 text-2xl sm:text-3xl font-black uppercase tracking-tight text-white">
+            <h1 className="mt-4 text-2xl sm:text-3xl font-black uppercase tracking-tight text-white">
               Autenticação Oficial
             </h1>
             <p className="mt-2 text-xs text-[#8a92a6]">
-              Acesso exclusivo para os Coordenadores, Moderadores e Capitães credenciados.
+              Acesso exclusivo para Coordenadores, Moderadores e Gestão.
             </p>
           </div>
 
-          {erro && (
-            <div className="mt-6 rounded-2xl border border-red-500/30 bg-red-500/10 p-3.5 text-center text-xs font-bold text-red-400">
-              {erro}
+          {error && (
+            <div className="mb-6 rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-xs font-bold text-red-400 text-center">
+              {error}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-[11px] font-bold uppercase text-[#cad0e0] mb-1.5">
-                E-mail Registado
+              <label className="block text-xs font-bold uppercase tracking-wider text-[#8a92a6] mb-2">
+                E-mail Registrado
               </label>
               <input
                 type="email"
                 required
+                placeholder="coordenador@arenavale.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="seu.email@arenavale.com"
-                className="w-full rounded-xl border border-white/10 bg-[#0b0d12] px-4 py-2.5 text-xs text-white outline-none focus:border-[#e50914]"
+                className="w-full rounded-xl border border-white/15 bg-[#0b0d12] px-4 py-3 text-sm text-white focus:border-[#e50914] focus:outline-none"
               />
             </div>
 
             <div>
-              <label className="block text-[11px] font-bold uppercase text-[#cad0e0] mb-1.5">
-                Palavra-passe
+              <label className="block text-xs font-bold uppercase tracking-wider text-[#8a92a6] mb-2">
+                Palavra-passe / Senha
               </label>
               <input
                 type="password"
                 required
-                value={senha}
-                onChange={(e) => setSenha(e.target.value)}
                 placeholder="••••••••"
-                className="w-full rounded-xl border border-white/10 bg-[#0b0d12] px-4 py-2.5 text-xs text-white outline-none focus:border-[#e50914]"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full rounded-xl border border-white/15 bg-[#0b0d12] px-4 py-3 text-sm text-white focus:border-[#e50914] focus:outline-none"
               />
             </div>
 
             <button
               type="submit"
-              disabled={carregando}
-              className="w-full mt-2 rounded-full bg-[#e50914] py-3 text-xs font-black uppercase tracking-wider text-white shadow-lg shadow-[#e50914]/25 transition hover:bg-[#ff1e27] disabled:opacity-50"
+              disabled={loading}
+              className="w-full rounded-full bg-[#e50914] py-3.5 text-xs font-black uppercase tracking-wider text-white shadow-xl shadow-[#e50914]/30 hover:bg-[#ff1e27] transition disabled:opacity-50"
             >
-              {carregando ? 'A autenticar...' : 'Entrar no Sistema →'}
+              {loading ? 'Entrando...' : 'Entrar no Sistema →'}
             </button>
           </form>
         </div>
       </main>
 
-      <footer className="border-t border-white/10 bg-[#07080b] px-6 py-6 text-center text-xs text-[#8a92a6]">
-        © 2026 Arena Vale · Sistema Seguro de Acesso
+      <footer className="border-t border-white/5 py-4 text-center text-[11px] text-[#555d6e]">
+        © Arena Vale · Plataforma Operacional Segura
       </footer>
     </div>
   );
