@@ -19,7 +19,7 @@ export default function HomePage() {
 
   return (
     <div id="topo" className="min-h-screen bg-[#0b0d12] text-white selection:bg-[#e50914] selection:text-white">
-      {/* 1. CABEÇALHO HORIZONTAL ALINHADO */}
+      {/* 1. CABEÇALHO */}
       <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0b0d12]/95 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 py-4">
           <div className="flex items-center gap-3">
@@ -31,7 +31,6 @@ export default function HomePage() {
             </Link>
           </div>
 
-          {/* MENU 100% HORIZONTAL SEM QUEBRA DE LINHA */}
           <nav className="hidden xl:flex items-center gap-5 text-[11px] font-bold uppercase tracking-wider text-[#a0a8be]">
             <Link href="#inicio" className="text-white hover:text-[#e50914] whitespace-nowrap transition">Início</Link>
             <Link href="#aovivo" className="flex items-center gap-1.5 text-white hover:text-[#e50914] whitespace-nowrap transition">
@@ -83,10 +82,17 @@ export default function HomePage() {
             <div className="inline-flex items-center gap-2 rounded-full border border-[#e50914]/40 bg-[#e50914]/20 px-3.5 py-1 text-xs font-black uppercase tracking-wider text-white backdrop-blur-md">
               <span className="h-2 w-2 rounded-full bg-[#e50914] animate-ping" /> COBERTURA & TRANSMISSÃO OFICIAL
             </div>
-            <h1 className="mt-5 text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black uppercase tracking-tight text-white leading-none">
-              <span className="block whitespace-nowrap">O PALCO DO <span className="text-[#e50914]">ESPORTE</span></span>
-              <span className="block whitespace-nowrap mt-2">É AQUI.</span>
+
+            {/* FRASE PRINCIPAL COM A NOVA DIVISÃO DE LINHAS */}
+            <h1 className="mt-5 text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black uppercase tracking-tight text-white leading-tight">
+              <span className="block whitespace-nowrap">
+                O PALCO DO
+              </span>
+              <span className="block whitespace-nowrap mt-1 sm:mt-2">
+                <span className="text-[#e50914]">ESPORTE</span> É AQUI.
+              </span>
             </h1>
+
             <p className="mt-5 max-w-2xl text-base sm:text-xl text-[#cad0e0] leading-relaxed">Transmissões ao vivo, coberturas, análises e as grandes histórias de quem vive o jogo dentro e fora de quadra.</p>
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <a href="#aovivo" className="flex items-center gap-2 rounded-full bg-[#e50914] px-8 py-4 text-xs font-black uppercase tracking-wider text-white shadow-xl shadow-[#e50914]/30 transition hover:bg-[#ff1e27] hover:scale-105"><span>▶</span> ASSISTIR AO VIVO</a>
@@ -193,7 +199,7 @@ export default function HomePage() {
             <h2 className="mt-3 text-3xl font-black uppercase sm:text-5xl leading-tight">PROJETO SOCIAL <br /><span className="text-[#e50914]">ARENA VALE</span></h2>
             <p className="mt-4 max-w-2xl text-base text-[#cad0e0] leading-relaxed">O desporto como ferramenta de transformação. Incentivo e suporte contínuo para jovens talentos das comunidades do Vale.</p>
             <div className="mt-8 flex flex-wrap gap-4">
-              <a href="https://wa.me/5547988444404" target="_blank" rel="noreferrer" className="rounded-full bg-[#e50914] px-8 py-3.5 text-xs font-black uppercase tracking-wider text-white shadow-lg shadow-[#e50914]/25 transition hover:bg-[#ff1e27]">🤝 Apoiar o Projeto Social</a>
+              <a href="https://wa.me/5547988444404" target="_blank" rel="noreferrer" className="rounded-full bg-[#e50914] px-8 py-3.5 text-xs font-black uppercase tracking-wider text-white shadow-lg shadow-[#e50914]/25 transition hover:bg-[#ff1e27]">💼 Apoiar o Projeto Social</a>
             </div>
           </div>
         </div>
