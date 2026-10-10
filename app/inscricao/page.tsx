@@ -3,305 +3,235 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 
-export default function InscricaoPage() {
-  const [nome, setNome] = useState('');
-  const [dataNascimento, setDataNascimento] = useState('');
-  const [modalidade, setModalidade] = useState('Futsal');
-  const [posicao, setPosicao] = useState('');
-  const [telefone, setTelefone] = useState('');
-  const [cidade, setCidade] = useState('');
-  const [bio, setBio] = useState('');
-  const [foto, setFoto] = useState<File | null>(null);
-  const [fotoPreview, setFotoPreview] = useState<string | null>(null);
-  const [enviando, setEnviando] = useState(false);
-  const [sucesso, setSucesso] = useState(false);
-  const [erro, setErro] = useState('');
+interface Atleta {
+  id: number;
+  nome: string;
+  numero: string;
+  documento: string;
+  posicao: string;
+}
 
-  const handleFotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      setFoto(file);
-      setFotoPreview(URL.createObjectURL(file));
-    }
+export default function FichaInscricaoPage() {
+  const [nomeTime, setNomeTime] = useState('');
+  const [modalidade, setModalidade] = useState('Futsal Regional');
+  const [cidade, setCidade] = useState('');
+  const [capitaoNome, setCapitaoNome] = useState('');
+  const [capitaoWhats, setCapitaoWhats] = useState('');
+  const [sucesso, setSucesso] = useState(false);
+
+  const [atletas, setAtletas] = useState<Atleta[]>([
+    { id: 1, nome: '', numero: '', documento: '', posicao: '' },
+    { id: 2, nome: '', numero: '', documento: '', posicao: '' },
+    { id: 3, nome: '', numero: '', documento: '', posicao: '' },
+    { id: 4, nome: '', numero: '', documento: '', posicao: '' },
+    { id: 5, nome: '', numero: '', documento: '', posicao: '' }
+  ]);
+
+  const adicionarAtleta = () => {
+    setAtletas((prev) => [
+      ...prev,
+      { id: Date.now(), nome: '', numero: '', documento: '', posicao: '' }
+    ]);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const removerAtleta = (id: number) => {
+    if (atletas.length <= 1) return;
+    setAtletas((prev) => prev.filter((a) => a.id !== id));
+  };
+
+  const atualizarAtleta = (id: number, campo: keyof Atleta, valor: string) => {
+    setAtletas((prev) =>
+      prev.map((a) => (a.id === id ? { ...a, [campo]: valor } : a))
+    );
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setEnviando(true);
-    setErro('');
 
-    try {
-      if (!nome || !posicao || !telefone) {
-        throw new Error('Por favor, preencha todos os campos obrigatórios.');
-      }
+    // Mensagem formatada para o WhatsApp da organização
+    const atletasPreenchidos = atletas.filter((a) => a.nome.trim() !== '');
+    let texto = `*FICHA DE INSCRIÇÃO OFICIAL - ARENA VALE*%0A%0A`;
+    texto += `*Equipe:* ${nomeTime}%0A`;
+    texto += `*Modalidade / Torneio:* ${modalidade}%0A`;
+    texto += `*Cidade/Região:* ${cidade}%0A`;
+    texto += `*Capitão Responsável:* ${capitaoNome}%0A`;
+    texto += `*WhatsApp Capitão:* ${capitaoWhats}%0A%0A`;
+    texto += `*ELENCO DE ATLETAS (${atletasPreenchidos.length} inscritos):*%0A`;
 
-      // Simulação de submissão da candidatura (ou ligação Supabase se configurada)
-      await new Promise((resolve) => setTimeout(resolve, 1200));
-      setSucesso(true);
-    } catch (err: any) {
-      setErro(err.message || 'Ocorreu um erro ao submeter a inscrição.');
-    } finally {
-      setEnviando(false);
-    }
+    atletasPreenchidos.forEach((a, index) => {
+      texto += `${index + 1}. ${a.nome} | Camisa: ${a.numero || 'S/N'} | Pos: ${a.posicao || '-'} | Doc: ${a.documento || '-'}%0A`;
+    });
+
+    setSucesso(true);
+
+    // Abre o WhatsApp com a lista pronta
+    const linkZap = `https://wa.me/5547988444404?text=${texto}`;
+    window.open(linkZap, '_blank');
   };
 
   return (
-    <div className="min-h-screen bg-[#0b0d12] text-white flex flex-col justify-between selection:bg-[#e50914] selection:text-white">
-      {/* 1. CABEÇALHO */}
+    <div className="min-h-screen bg-[#0b0d12] text-white selection:bg-[#e50914] selection:text-white pb-20">
+      {/* CABEÇALHO */}
       <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0b0d12]/95 backdrop-blur-md">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <Link href="/" className="group flex items-center gap-3.5">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/20 bg-gradient-to-br from-[#161922] to-[#0b0d12] shadow-inner transition group-hover:border-[#e50914]">
-              <span className="text-sm font-black tracking-tighter text-white">
-                <span className="text-[#e50914]">A</span>V
-              </span>
-            </div>
-            <span className="text-xl sm:text-2xl font-black tracking-tight leading-none text-white">
-              ARENA <span className="text-[#e50914]">VALE</span>
-            </span>
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 py-4">
+          <Link href="/" className="flex items-center gap-2">
+            <img src="/logo 02.png" alt="Arena Vale" className="h-12 w-auto object-contain" />
           </Link>
-
           <Link
             href="/"
-            className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-xs font-bold text-[#cad0e0] transition hover:border-white/40 hover:text-white"
+            className="rounded-full border border-white/20 bg-white/5 px-5 py-2 text-xs font-bold text-[#a0a8be] hover:text-white transition"
           >
-            ← Voltar ao Portal
+            ← Voltar ao Início
           </Link>
         </div>
       </header>
 
-      {/* 2. ÁREA CENTRAL */}
-      <main className="mx-auto w-full max-w-4xl px-6 py-12 flex-1">
-        {/* Banner de Apresentação */}
-        <div className="rounded-[2.5rem] border border-white/10 bg-gradient-to-br from-[#161a24] to-[#0b0d12] p-8 sm:p-12 shadow-2xl mb-10">
-          <span className="inline-flex items-center gap-2 rounded-full border border-[#e50914]/30 bg-[#e50914]/15 px-3.5 py-1 text-[11px] font-black uppercase tracking-wider text-[#e50914]">
-            FAÇA PARTE DA PLATAFORMA
+      <main className="mx-auto max-w-4xl px-4 sm:px-6 pt-10">
+        {/* TÍTULO */}
+        <div className="text-center sm:text-left mb-10">
+          <span className="rounded-full bg-[#e50914]/15 px-4 py-1.5 text-xs font-black uppercase tracking-wider text-[#e50914]">
+            Área do Capitão
           </span>
-          <h1 className="mt-4 text-3xl font-black uppercase sm:text-5xl leading-tight text-white">
-            INSCRIÇÃO DE <br />
-            <span className="text-[#e50914]">ATLETA DESTAQUE</span>
+          <h1 className="mt-4 text-3xl sm:text-5xl font-black uppercase tracking-tight">
+            Ficha de Inscrição <span className="text-[#e50914]">do Time</span>
           </h1>
-          <p className="mt-4 text-sm sm:text-base text-[#cad0e0] leading-relaxed max-w-2xl">
-            Registe o seu perfil para ganhar visibilidade nos campeonatos regionais, coberturas em direto e na galeria editorial da Arena Vale.
+          <p className="mt-2 text-sm text-[#8a92a6]">
+            Preencha os dados da sua agremiação e a lista de atletas que disputarão o campeonato oficial.
           </p>
         </div>
 
-        {sucesso ? (
-          <div className="rounded-[2.5rem] border border-emerald-500/30 bg-[#13161f] p-10 text-center shadow-2xl">
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500/20 text-3xl text-emerald-400">
-              ✓
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-black uppercase text-white">
-              Inscrição Enviada com Sucesso!
-            </h2>
-            <p className="mt-3 text-sm text-[#8a92a6] max-w-md mx-auto">
-              Os dados e fotografias foram registados. A equipa editorial da Arena Vale irá avaliar o perfil para inclusão na galeria oficial.
-            </p>
-            <div className="mt-8 flex justify-center gap-4">
-              <Link
-                href="/coordenador/atletasdestaques"
-                className="rounded-full bg-[#e50914] px-7 py-3 text-xs font-black uppercase tracking-wider text-white transition hover:bg-[#ff1e27]"
-              >
-                Ver Galeria de Atletas
-              </Link>
-              <button
-                type="button"
-                onClick={() => {
-                  setSucesso(false);
-                  setNome('');
-                  setPosicao('');
-                  setTelefone('');
-                  setBio('');
-                  setFoto(null);
-                  setFotoPreview(null);
-                }}
-                className="rounded-full border border-white/20 bg-white/5 px-6 py-3 text-xs font-bold text-white transition hover:bg-white/10"
-              >
-                Nova Inscrição
-              </button>
-            </div>
+        {sucesso && (
+          <div className="mb-8 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-5 text-emerald-300 text-sm font-bold flex items-center justify-between">
+            <span>✅ Ficha gerada com sucesso! Redirecionando para a homologação oficial.</span>
+            <button onClick={() => setSucesso(false)} className="text-xs uppercase underline">Fechar</button>
           </div>
-        ) : (
-          <div className="rounded-[2.5rem] border border-white/10 bg-[#13161f] p-8 sm:p-12 shadow-2xl">
-            {erro && (
-              <div className="mb-6 rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-xs font-semibold text-red-400">
-                {erro}
-              </div>
-            )}
+        )}
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Informações Básicas */}
-              <div className="grid gap-6 sm:grid-cols-2">
-                <div>
-                  <label className="block text-xs font-black uppercase tracking-wider text-[#cad0e0]">
-                    Nome Completo *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={nome}
-                    onChange={(e) => setNome(e.target.value)}
-                    placeholder="Ex: Lucas Ferreira"
-                    className="mt-2 w-full rounded-xl border border-white/10 bg-[#0b0d12] px-4 py-3 text-sm text-white placeholder-[#555d6e] outline-none transition focus:border-[#e50914] focus:ring-1 focus:ring-[#e50914]"
-                  />
-                </div>
+        <form onSubmit={handleSubmit} className="space-y-8">
+          {/* BLOCO 1: DADOS DA EQUIPE & CAPITÃO */}
+          <div className="rounded-[2rem] border border-white/10 bg-[#13161f] p-6 sm:p-10 shadow-2xl">
+            <h2 className="text-lg font-black uppercase tracking-wider text-white border-b border-white/10 pb-4 mb-6 flex items-center gap-2">
+              <span className="text-[#e50914]">1.</span> Informações da Agremiação & Capitão
+            </h2>
 
-                <div>
-                  <label className="block text-xs font-black uppercase tracking-wider text-[#cad0e0]">
-                    Data de Nascimento
-                  </label>
-                  <input
-                    type="date"
-                    value={dataNascimento}
-                    onChange={(e) => setDataNascimento(e.target.value)}
-                    className="mt-2 w-full rounded-xl border border-white/10 bg-[#0b0d12] px-4 py-3 text-sm text-white outline-none transition focus:border-[#e50914] focus:ring-1 focus:ring-[#e50914]"
-                  />
-                </div>
-              </div>
-
-              {/* Modalidade e Posição */}
-              <div className="grid gap-6 sm:grid-cols-2">
-                <div>
-                  <label className="block text-xs font-black uppercase tracking-wider text-[#cad0e0]">
-                    Modalidade *
-                  </label>
-                  <select
-                    value={modalidade}
-                    onChange={(e) => setModalidade(e.target.value)}
-                    className="mt-2 w-full rounded-xl border border-white/10 bg-[#0b0d12] px-4 py-3 text-sm text-white outline-none transition focus:border-[#e50914] focus:ring-1 focus:ring-[#e50914]"
-                  >
-                    <option value="Futsal">Futsal</option>
-                    <option value="Futebol 7">Futebol 7 (Society)</option>
-                    <option value="Futebol de Campo">Futebol de Campo</option>
-                    <option value="Voleibol">Voleibol</option>
-                    <option value="Basquetebol">Basquetebol</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-black uppercase tracking-wider text-[#cad0e0]">
-                    Posição / Função *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={posicao}
-                    onChange={(e) => setPosicao(e.target.value)}
-                    placeholder="Ex: Ala / Fixo / Pivô"
-                    className="mt-2 w-full rounded-xl border border-white/10 bg-[#0b0d12] px-4 py-3 text-sm text-white placeholder-[#555d6e] outline-none transition focus:border-[#e50914] focus:ring-1 focus:ring-[#e50914]"
-                  />
-                </div>
-              </div>
-
-              {/* Contacto e Cidade */}
-              <div className="grid gap-6 sm:grid-cols-2">
-                <div>
-                  <label className="block text-xs font-black uppercase tracking-wider text-[#cad0e0]">
-                    WhatsApp / Contacto *
-                  </label>
-                  <input
-                    type="tel"
-                    required
-                    value={telefone}
-                    onChange={(e) => setTelefone(e.target.value)}
-                    placeholder="(47) 99999-9999"
-                    className="mt-2 w-full rounded-xl border border-white/10 bg-[#0b0d12] px-4 py-3 text-sm text-white placeholder-[#555d6e] outline-none transition focus:border-[#e50914] focus:ring-1 focus:ring-[#e50914]"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-black uppercase tracking-wider text-[#cad0e0]">
-                    Cidade / Região
-                  </label>
-                  <input
-                    type="text"
-                    value={cidade}
-                    onChange={(e) => setCidade(e.target.value)}
-                    placeholder="Ex: Blumenau - SC"
-                    className="mt-2 w-full rounded-xl border border-white/10 bg-[#0b0d12] px-4 py-3 text-sm text-white placeholder-[#555d6e] outline-none transition focus:border-[#e50914] focus:ring-1 focus:ring-[#e50914]"
-                  />
-                </div>
-              </div>
-
-              {/* Upload de Fotografia do Atleta */}
+            <div className="grid gap-5 sm:grid-cols-2">
               <div>
-                <label className="block text-xs font-black uppercase tracking-wider text-[#cad0e0]">
-                  Fotografia de Perfil do Atleta
+                <label className="block text-xs font-bold uppercase tracking-wider text-[#8a92a6] mb-2">
+                  Nome do Time / Clube *
                 </label>
-                <div className="mt-2 flex flex-col items-center justify-center rounded-2xl border border-dashed border-white/20 bg-[#0b0d12] p-6 transition hover:border-[#e50914]">
-                  {fotoPreview ? (
-                    <div className="flex flex-col items-center">
-                      <img
-                        src={fotoPreview}
-                        alt="Pré-visualização"
-                        className="h-32 w-32 rounded-2xl object-cover border border-[#e50914] shadow-lg mb-3"
-                      />
-                      <label className="cursor-pointer text-xs font-bold text-[#e50914] hover:underline">
-                        Trocar fotografia
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={handleFotoChange}
-                          className="hidden"
-                        />
-                      </label>
-                    </div>
-                  ) : (
-                    <label className="flex cursor-pointer flex-col items-center">
-                      <span className="text-3xl mb-2">📸</span>
-                      <span className="text-xs font-bold text-white">Carregar fotografia do atleta</span>
-                      <span className="mt-1 text-[11px] text-[#8a92a6]">PNG, JPG ou WEBP até 10MB</span>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleFotoChange}
-                        className="hidden"
-                      />
-                    </label>
-                  )}
-                </div>
-              </div>
-
-              {/* Biografia / Conquistas */}
-              <div>
-                <label className="block text-xs font-black uppercase tracking-wider text-[#cad0e0]">
-                  Histórico Esportivo / Conquistas
-                </label>
-                <textarea
-                  rows={4}
-                  value={bio}
-                  onChange={(e) => setBio(e.target.value)}
-                  placeholder="Conte um pouco sobre as suas equipas anteriores, títulos conquistados e metas na temporada..."
-                  className="mt-2 w-full rounded-xl border border-white/10 bg-[#0b0d12] px-4 py-3 text-sm text-white placeholder-[#555d6e] outline-none transition focus:border-[#e50914] focus:ring-1 focus:ring-[#e50914]"
+                <input
+                  type="text"
+                  required
+                  placeholder="Ex: Fênix Clube SC"
+                  value={nomeTime}
+                  onChange={(e) => setNomeTime(e.target.value)}
+                  className="w-full rounded-xl border border-white/15 bg-[#0b0d12] px-4 py-3 text-sm text-white focus:border-[#e50914] focus:outline-none"
                 />
               </div>
 
-              {/* Botão de Envio */}
-              <button
-                type="submit"
-                disabled={enviando}
-                className="w-full rounded-full bg-[#e50914] py-4 text-xs font-black uppercase tracking-wider text-white shadow-xl shadow-[#e50914]/25 transition hover:bg-[#ff1e27] hover:scale-[1.01] disabled:opacity-50"
-              >
-                {enviando ? 'Enviando Cadastro...' : 'Concluir e Enviar Inscrição'}
-              </button>
-            </form>
-          </div>
-        )}
-      </main>
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-[#8a92a6] mb-2">
+                  Campeonato / Modalidade *
+                </label>
+                <select
+                  value={modalidade}
+                  onChange={(e) => setModalidade(e.target.value)}
+                  className="w-full rounded-xl border border-white/15 bg-[#0b0d12] px-4 py-3 text-sm text-white focus:border-[#e50914] focus:outline-none"
+                >
+                  <option value="Futsal Regional">Futsal Regional</option>
+                  <option value="Basquetebol Open">Basquetebol Open</option>
+                  <option value="Voleibol Vale Cup">Voleibol Vale Cup</option>
+                  <option value="Futebol 7 Intermunicipal">Futebol 7 Intermunicipal</option>
+                </select>
+              </div>
 
-      {/* 3. RODAPÉ */}
-      <footer className="border-t border-white/10 bg-[#07080b] px-6 py-8">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 sm:flex-row text-xs text-[#8a92a6]">
-          <div>
-            © 2026 Arena Vale · Mídia Esportiva. Todos os direitos reservados.
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-[#8a92a6] mb-2">
+                  Cidade / Bairro *
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="Ex: Blumenau / Garcia"
+                  value={cidade}
+                  onChange={(e) => setCidade(e.target.value)}
+                  className="w-full rounded-xl border border-white/15 bg-[#0b0d12] px-4 py-3 text-sm text-white focus:border-[#e50914] focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-[#8a92a6] mb-2">
+                  Nome do Capitão / Responsável *
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="Nome completo do responsável"
+                  value={capitaoNome}
+                  onChange={(e) => setCapitaoNome(e.target.value)}
+                  className="w-full rounded-xl border border-white/15 bg-[#0b0d12] px-4 py-3 text-sm text-white focus:border-[#e50914] focus:outline-none"
+                />
+              </div>
+
+              <div className="sm:col-span-2">
+                <label className="block text-xs font-bold uppercase tracking-wider text-[#8a92a6] mb-2">
+                  WhatsApp para Contato Oficial *
+                </label>
+                <input
+                  type="tel"
+                  required
+                  placeholder="(47) 99999-9999"
+                  value={capitaoWhats}
+                  onChange={(e) => setCapitaoWhats(e.target.value)}
+                  className="w-full rounded-xl border border-white/15 bg-[#0b0d12] px-4 py-3 text-sm text-white focus:border-[#e50914] focus:outline-none"
+                />
+              </div>
+            </div>
           </div>
-          <div className="flex items-center gap-5">
-            <Link href="/" className="hover:text-white">Portal</Link>
-            <Link href="/coordenador/atletasdestaques" className="hover:text-white">Atletas Destaques</Link>
-            <Link href="/login" className="hover:text-white">Painel</Link>
-          </div>
-        </div>
-      </footer>
-    </div>
-  );
-}
+
+          {/* BLOCO 2: LISTA DE ATLETAS */}
+          <div className="rounded-[2rem] border border-white/10 bg-[#13161f] p-6 sm:p-10 shadow-2xl">
+            <div className="flex flex-wrap items-center justify-between border-b border-white/10 pb-4 mb-6 gap-3">
+              <div>
+                <h2 className="text-lg font-black uppercase tracking-wider text-white flex items-center gap-2">
+                  <span className="text-[#e50914]">2.</span> Elenco de Atletas
+                </h2>
+                <p className="text-xs text-[#8a92a6] mt-0.5">Cadastre os jogadores que compõem o elenco.</p>
+              </div>
+              <button
+                type="button"
+                onClick={adicionarAtleta}
+                className="rounded-full border border-[#e50914]/40 bg-[#e50914]/15 px-4 py-2 text-xs font-black uppercase tracking-wider text-[#ff1e27] hover:bg-[#e50914] hover:text-white transition"
+              >
+                + Adicionar Atleta
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              {atletas.map((atleta, index) => (
+                <div
+                  key={atleta.id}
+                  className="grid grid-cols-12 gap-3 items-center rounded-2xl border border-white/5 bg-[#0b0d12] p-4"
+                >
+                  <div className="col-span-12 sm:col-span-1 text-center font-black text-xs text-[#8a92a6]">
+                    #{index + 1}
+                  </div>
+
+                  <div className="col-span-12 sm:col-span-5">
+                    <label className="block text-[10px] font-bold uppercase text-[#8a92a6] sm:hidden mb-1">
+                      Nome do Atleta
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Nome completo do jogador"
+                      value={atleta.nome}
+                      onChange={(e) => atualizarAtleta(atleta.id, 'nome', e.target.value)}
+                      className="w-full rounded-xl border border-white/15 bg-[#13161f] px-3 py-2.5 text-xs text-white focus:border-[#e50914] focus:outline-none"
+                    />
+                  </div>
+
+                  <div className="col-span-4 sm:col-span-2">
+                    <label className="block text-[10px] font-bold uppercase text-[#8a92a6] sm:hidden mb-1">
+                      Camisa Nº
+                    </label>
+                    <input
