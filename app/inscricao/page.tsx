@@ -17,7 +17,6 @@ export default function InscricaoPage() {
   const [cidade, setCidade] = useState('');
   const [responsavel, setResponsavel] = useState('');
   const [documentoResponsavel, setDocumentoResponsavel] = useState('');
-  const [telefone, setTelefone] = useState('');
   const [termoAceito, setTermoAceito] = useState(false);
 
   const [atletas, setAtletas] = useState<Atleta[]>([
@@ -51,6 +50,7 @@ export default function InscricaoPage() {
     const dataHoraRegistro = new Date().toLocaleString('pt-BR');
 
     let texto = `*INSCRIÇÃO OFICIAL · ARENA VALE*\n`;
+    texto += `*CNPJ Organizador:* 40.694.741/0001-34\n`;
     texto += `------------------------------------\n`;
     texto += `*Equipa:* ${nomeEquipe}\n`;
     texto += `*Modalidade:* ${modalidade}\n`;
@@ -58,11 +58,10 @@ export default function InscricaoPage() {
     texto += `*Cidade/Região:* ${cidade}\n`;
     texto += `*Responsável pelo Registo:* ${responsavel}\n`;
     texto += `*Documento (CPF/RG):* ${documentoResponsavel}\n`;
-    texto += `*Contacto:* ${telefone}\n`;
     texto += `*Data/Hora do Registo:* ${dataHoraRegistro}\n`;
     texto += `------------------------------------\n`;
     texto += `*TERMO DE DIREITO DE IMAGEM: ACEITE CONFIRMADO*\n`;
-    texto += `O responsável declara possuir a autorização prévia de todos os atletas para transmissão, fotos e divulgação oficial na plataforma Arena Vale.\n`;
+    texto += `O responsável declara possuir a autorização prévia de todos os atletas para transmissão, fotos e divulgação oficial na plataforma Arena Vale (CNPJ 40.694.741/0001-34).\n`;
     texto += `------------------------------------\n`;
     texto += `*ELENCO DE ATLETAS (${atletas.length}):*\n`;
 
@@ -101,12 +100,12 @@ export default function InscricaoPage() {
             Inscrição de Equipa & Atletas
           </h1>
           <p className="mt-3 text-sm text-[#8a92a6] max-w-2xl mx-auto">
-            Preencha os dados oficiais da agremiação, o elenco de atletas e confirme o termo de responsabilidade de imagens para homologação no sistema.
+            Preencha os dados oficiais da agremiação, o elenco de atletas e confirme o termo de responsabilidade de imagens perante a Arena Vale (CNPJ 40.694.741/0001-34).
           </p>
         </div>
 
         <form onSubmit={handleEnviarInscricao} className="space-y-8">
-          {/* Dados da Equipa */}
+          {/* 1. Dados da Equipa */}
           <div className="rounded-[2rem] border border-white/10 bg-[#13161f] p-6 sm:p-8 shadow-xl">
             <h2 className="text-lg font-black uppercase tracking-wider text-[#e50914] mb-6 flex items-center gap-2">
               <span>⚽</span> 1. Dados da Agremiação & Modalidade
@@ -169,12 +168,12 @@ export default function InscricaoPage() {
             </div>
           </div>
 
-          {/* Dados do Responsável / Declarante */}
+          {/* 2. Responsável pelo Cadastro (Apenas Nome e Documento) */}
           <div className="rounded-[2rem] border border-white/10 bg-[#13161f] p-6 sm:p-8 shadow-xl">
             <h2 className="text-lg font-black uppercase tracking-wider text-[#e50914] mb-6 flex items-center gap-2">
-              <span>👤</span> 2. Responsável pelo Cadastro (Capitão / Dirigente)
+              <span>👤</span> 2. Responsável pelo Registo (Capitão / Dirigente)
             </h2>
-            <div className="grid gap-5 sm:grid-cols-3">
+            <div className="grid gap-5 sm:grid-cols-2">
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-[#8a92a6] mb-2">
                   Nome Completo do Responsável *
@@ -198,168 +197,4 @@ export default function InscricaoPage() {
                   placeholder="000.000.000-00"
                   value={documentoResponsavel}
                   onChange={(e) => setDocumentoResponsavel(e.target.value)}
-                  className="w-full rounded-xl border border-white/15 bg-[#0b0d12] px-4 py-3 text-sm text-white focus:border-[#e50914] focus:outline-none"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-[#8a92a6] mb-2">
-                  Telefone / WhatsApp de Contacto *
-                </label>
-                <input
-                  type="tel"
-                  required
-                  placeholder="(47) 99999-9999"
-                  value={telefone}
-                  onChange={(e) => setTelefone(e.target.value)}
-                  className="w-full rounded-xl border border-white/15 bg-[#0b0d12] px-4 py-3 text-sm text-white focus:border-[#e50914] focus:outline-none"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Relação de Atletas */}
-          <div className="rounded-[2rem] border border-white/10 bg-[#13161f] p-6 sm:p-8 shadow-xl">
-            <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-              <div>
-                <h2 className="text-lg font-black uppercase tracking-wider text-[#e50914] flex items-center gap-2">
-                  <span>📋</span> 3. Elenco de Atletas Inscritos
-                </h2>
-                <p className="text-xs text-[#8a92a6] mt-1">
-                  Registe o nome, número de camisola e documento de cada integrante.
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={adicionarAtleta}
-                className="rounded-full bg-white/10 hover:bg-white/20 px-5 py-2 text-xs font-black uppercase tracking-wider text-white transition"
-              >
-                + Adicionar Atleta
-              </button>
-            </div>
-
-            <div className="space-y-3">
-              {atletas.map((atleta, index) => (
-                <div
-                  key={index}
-                  className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center rounded-xl border border-white/5 bg-[#0b0d12] p-3 text-xs"
-                >
-                  <div className="sm:col-span-1 text-center font-black text-[#8a92a6]">
-                    #{index + 1}
-                  </div>
-                  <div className="sm:col-span-4">
-                    <input
-                      type="text"
-                      required
-                      placeholder="Nome completo do atleta *"
-                      value={atleta.nome}
-                      onChange={(e) => atualizarAtleta(index, 'nome', e.target.value)}
-                      className="w-full rounded-lg border border-white/10 bg-[#13161f] px-3 py-2 text-white placeholder:text-[#555d6e] focus:border-[#e50914] focus:outline-none"
-                    />
-                  </div>
-                  <div className="sm:col-span-2">
-                    <input
-                      type="text"
-                      placeholder="Nº Camisola"
-                      value={atleta.camisa}
-                      onChange={(e) => atualizarAtleta(index, 'camisa', e.target.value)}
-                      className="w-full rounded-lg border border-white/10 bg-[#13161f] px-3 py-2 text-white placeholder:text-[#555d6e] focus:border-[#e50914] focus:outline-none"
-                    />
-                  </div>
-                  <div className="sm:col-span-2">
-                    <input
-                      type="text"
-                      placeholder="Posição"
-                      value={atleta.posicao}
-                      onChange={(e) => atualizarAtleta(index, 'posicao', e.target.value)}
-                      className="w-full rounded-lg border border-white/10 bg-[#13161f] px-3 py-2 text-white placeholder:text-[#555d6e] focus:border-[#e50914] focus:outline-none"
-                    />
-                  </div>
-                  <div className="sm:col-span-2">
-                    <input
-                      type="text"
-                      placeholder="Doc (RG/CPF)"
-                      value={atleta.documento}
-                      onChange={(e) => atualizarAtleta(index, 'documento', e.target.value)}
-                      className="w-full rounded-lg border border-white/10 bg-[#13161f] px-3 py-2 text-white placeholder:text-[#555d6e] focus:border-[#e50914] focus:outline-none"
-                    />
-                  </div>
-                  <div className="sm:col-span-1 text-center">
-                    {atletas.length > 1 && (
-                      <button
-                        type="button"
-                        onClick={() => removerAtleta(index)}
-                        className="text-red-400 hover:text-red-300 font-black text-sm"
-                        title="Remover atleta"
-                      >
-                        ✕
-                      </button>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Termo Jurídico de Responsabilidade e Cessão de Imagens */}
-          <div className="rounded-[2rem] border border-[#e50914]/40 bg-[#181114] p-6 sm:p-8 shadow-2xl">
-            <div className="flex items-center gap-3 mb-4">
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#e50914]/20 text-[#e50914] text-lg font-black">
-                ⚖️
-              </span>
-              <div>
-                <h3 className="text-base font-black uppercase tracking-wider text-white">
-                  Termo de Responsabilidade & Autorização de Direito de Imagem
-                </h3>
-                <p className="text-[11px] text-[#8a92a6]">Documento de adesão obrigatória para todas as agremiações participantes.</p>
-              </div>
-            </div>
-
-            <div className="rounded-xl border border-white/10 bg-[#0b0d12]/80 p-4 text-xs text-[#cad0e0] leading-relaxed max-h-48 overflow-y-auto space-y-2 mb-6">
-              <p>
-                <strong>1. DECLARAÇÃO DE RESPONSABILIDADE:</strong> Na qualidade de representante, capitão ou dirigente da agremiação acima qualificada, declaro sob as penas da lei que todas as informações e dados dos atletas aqui inseridos são verídicos e de minha inteira responsabilidade.
-              </p>
-              <p>
-                <strong>2. AUTORIZAÇÃO DE DIREITO DE IMAGEM E VOZ:</strong> Declaro que possuo a expressa e prévia anuência de todos os atletas e membros inscritos (bem como dos respetivos responsáveis legais, no caso de atletas menores de idade) para que as suas imagens, nomes, vozes e desempenhos desportivos sejam captados, fotografados, filmados, reproduzidos e transmitidos em direto ou gravados pela plataforma <strong>ARENA VALE</strong> e seus canais multimédia (website, YouTube, redes sociais e parceiros institucionais).
-              </p>
-              <p>
-                <strong>3. FINALIDADE E GRATUIDADE:</strong> A cessão e divulgação destas imagens é concedida a título gratuito, em âmbito universal, para fins informativos, desportivos, de entretenimento, divulgação institucional dos campeonatos e valorização dos atletas em destaque.
-              </p>
-              <p>
-                <strong>4. ISENÇÃO:</strong> Isento a plataforma Arena Vale, seus sócios, moderadores, entidades parceiras e patrocinadores de qualquer encargo financeiro ou responsabilidade judicial/extrajudicial oriunda do uso legítimo das imagens e dados fornecidos neste formulário.
-              </p>
-            </div>
-
-            <label className="flex items-start gap-3 cursor-pointer select-none">
-              <input
-                type="checkbox"
-                required
-                checked={termoAceito}
-                onChange={(e) => setTermoAceito(e.target.checked)}
-                className="mt-1 h-5 w-5 rounded border-white/20 bg-[#0b0d12] text-[#e50914] focus:ring-[#e50914] focus:ring-offset-0 cursor-pointer"
-              />
-              <span className="text-xs text-white font-bold leading-normal">
-                Li, compreendi e concordo integralmente com os termos acima. Declaro ter autorização de todos os atletas relacionados para o uso e divulgação de suas imagens na plataforma Arena Vale. *
-              </span>
-            </label>
-          </div>
-
-          <div className="text-center pt-4">
-            <button
-              type="submit"
-              className="w-full sm:w-auto min-w-[320px] rounded-full bg-[#e50914] px-10 py-4 text-sm font-black uppercase tracking-wider text-white shadow-2xl shadow-[#e50914]/40 hover:bg-[#ff1e27] hover:scale-105 transition"
-            >
-              Confirmar Inscrição & Enviar para Homologação →
-            </button>
-            <p className="mt-3 text-[11px] text-[#8a92a6]">
-              Ao submeter, o registo formal e o termo assinado digitalmente serão transmitidos à coordenação da Arena Vale.
-            </p>
-          </div>
-        </form>
-      </main>
-
-      <footer className="border-t border-white/10 bg-[#07080b] py-8 text-center text-xs text-[#8a92a6]">
-        © 2026 Arena Vale · Plataforma Desportiva Oficial. Todos os direitos reservados.
-      </footer>
-    </div>
-  );
-}
+                  className="w-full rounded-xl border border-white/15
