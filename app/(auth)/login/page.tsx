@@ -19,13 +19,11 @@ export default function LoginPage() {
     const emailLimpo = email.trim().toLowerCase();
     const senhaLimpa = senha.trim();
 
-    // 1. Acesso do Proprietário
     if (emailLimpo === 'pmmiranda2017@gmail.com' && senhaLimpa === 'VINIGUTO2020') {
       router.push('/proprietario');
       return;
     }
 
-    // 2. Acesso da Coordenação Geral
     if (
       (emailLimpo === 'arenavale2026@gmail.com' ||
         emailLimpo === 'competicoes@arenavale.com.br' ||
@@ -36,19 +34,16 @@ export default function LoginPage() {
       return;
     }
 
-    // 3. Acesso de Moderador
     if (emailLimpo.includes('moderador') || emailLimpo.includes('mesa')) {
       router.push('/moderador');
       return;
     }
 
-    // 4. Acesso de Capitão
     if (emailLimpo.includes('capitao')) {
       router.push('/capitao');
       return;
     }
 
-    // Caso não coincida com nenhum perfil credenciado
     setTimeout(() => {
       setCarregando(false);
       setErro('Credenciais inválidas. Verifique o seu e-mail e palavra-passe.');
@@ -57,7 +52,6 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-[#0b0d12] text-white flex flex-col justify-between selection:bg-[#e50914] selection:text-white">
-      {/* CABEÇALHO */}
       <header className="border-b border-white/10 bg-[#0b0d12]/95 backdrop-blur-md px-6 py-4">
         <div className="mx-auto flex max-w-7xl items-center justify-between">
           <div className="flex items-center gap-3.5">
@@ -83,7 +77,6 @@ export default function LoginPage() {
         </div>
       </header>
 
-      {/* ÁREA CENTRAL DO LOGIN */}
       <main className="flex-1 flex items-center justify-center px-6 py-12">
         <div className="w-full max-w-md rounded-[2.5rem] border border-white/15 bg-[#13161f] p-8 sm:p-10 shadow-2xl">
           <div className="text-center pb-6 border-b border-white/10">
@@ -107,7 +100,7 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit} className="mt-6 space-y-4">
             <div>
               <label className="block text-[11px] font-bold uppercase text-[#cad0e0] mb-1.5">
-                E-mail Cadastrado
+                E-mail Registado
               </label>
               <input
                 type="email"
@@ -144,7 +137,6 @@ export default function LoginPage() {
         </div>
       </main>
 
-      {/* RODAPÉ */}
       <footer className="border-t border-white/10 bg-[#07080b] px-6 py-6 text-center text-xs text-[#8a92a6]">
         © 2026 Arena Vale · Sistema Seguro de Acesso
       </footer>
