@@ -1,259 +1,323 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 interface Atleta {
-  id: string;
+  id: number;
   nome: string;
-  categoria: string;
-  equipe: string;
-  campeonato: string;
-  imagem: string;
+  modalidade: string;
+  posicao: string;
+  cidade: string;
+  idade: number;
+  destaque: boolean;
+  status: 'APROVADO' | 'PENDENTE';
 }
 
-const ATLETAS_PADRAO: Atleta[] = [
-  {
-    id: '1',
-    nome: 'Maurício Miranda',
-    categoria: 'FUNDADOR',
-    equipe: 'ARENA VALE SPORTS',
-    campeonato: 'COPA ARENA VALE 2026',
-    imagem: 'https://0zjmezlsxvwtj.space.minimax.io/atleta-1.png'
-  },
-  {
-    id: '2',
-    nome: 'João Santos',
-    categoria: 'FUTEBOL',
-    equipe: 'AMIGOS FC',
-    campeonato: 'LIGA BLUMENAU 2026',
-    imagem: 'https://0zjmezlsxvwtj.space.minimax.io/atleta-2.png'
-  },
-  {
-    id: '3',
-    nome: 'Ana Oliveira',
-    categoria: 'VÔLEI',
-    equipe: 'RESENHA FC',
-    campeonato: 'SUPERCOPA VALE 2026',
-    imagem: 'https://0zjmezlsxvwtj.space.minimax.io/atleta-3.png'
-  }
-];
-
 export default function GestaoAtletasClient() {
-  const [atletas, setAtletas] = useState<Atleta[]>([]);
-  const [nome, setNome] = useState('');
-  const [categoria, setCategoria] = useState('');
-  const [equipe, setEquipe] = useState('');
-  const [campeonato, setCampeonato] = useState('');
-  const [imagemPreview, setImagemPreview] = useState('');
-  const [urlImagem, setUrlImagem] = useState('');
-
-  useEffect(() => {
-    const salvos = localStorage.getItem('arena_vale_atletas');
-    if (salvos) {
-      try {
-        setAtletas(JSON.parse(salvos));
-      } catch {
-        setAtletas(ATLETAS_PADRAO);
-      }
-    } else {
-      setAtletas(ATLETAS_PADRAO);
+  const [atletas, setAtletas] = useState<Atleta[]>([
+    {
+      id: 1,
+      nome: 'Gabriel Mendes',
+      modalidade: 'Futsal',
+      posicao: 'Ala / Fixo',
+      cidade: 'Blumenau',
+      idade: 19,
+      destaque: true,
+      status: 'APROVADO'
+    },
+    {
+      id: 2,
+      nome: 'Lucas Silveira',
+      modalidade: 'Basquetebol',
+      posicao: 'Armador',
+      cidade: 'Gaspar',
+      idade: 21,
+      destaque: true,
+      status: 'APROVADO'
+    },
+    {
+      id: 3,
+      nome: 'Matheus Rocha',
+      modalidade: 'Voleibol',
+      posicao: 'Ponteiro',
+      cidade: 'Indaial',
+      idade: 18,
+      destaque: false,
+      status: 'PENDENTE'
+    },
+    {
+      id: 4,
+      nome: 'Felipe Antunes',
+      modalidade: 'Futebol 7',
+      posicao: 'Meio-Campo',
+      cidade: 'Brusque',
+      idade: 22,
+      destaque: false,
+      status: 'PENDENTE'
     }
-  }, []);
+  ]);
 
-  const salvarLista = (novaLista: Atleta[]) => {
-    setAtletas(novaLista);
-    localStorage.setItem('arena_vale_atletas', JSON.stringify(novaLista));
+  const [filtroModalidade, setFiltroModalidade] = useState<string>('TODAS');
+  const [pesquisa, setPesquisa] = useState<string>('');
+
+  const [novoNome, setNovoNome] = useState('');
+  const [novaModalidade, setNovaModalidade] = useState('Futsal');
+  const [novaPosicao, setNovaPosicao] = useState('');
+  const [novaCidade, setNovaCidade] = useState('');
+  const [novaIdade, setNovaIdade] = useState('');
+
+  const alternarDestaque = (id: number) => {
+    setAtletas((prev) =>
+      prev.map((a) => (a.id === id ? { ...a, destaque: !a.destaque } : a))
+    );
   };
 
-  const handleUploadArquivo = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagemPreview(reader.result as string);
-        setUrlImagem('');
-      };
-      reader.readAsDataURL(file);
+  const alternarStatus = (id: number) => {
+    setAtletas((prev) =>
+      prev.map((a) =>
+        a.id === id
+          ? { ...a, status: a.status === 'APROVADO' ? 'PENDENTE' : 'APROVADO' }
+          : a
+      )
+    );
+  };
+
+  const removerAtleta = (id: number) => {
+    if (confirm('Tem a certeza de que deseja remover este atleta da base?')) {
+      setAtletas((prev) => prev.filter((a) => a.id !== id));
     }
   };
 
-  const handleAdicionar = (e: React.FormEvent) => {
+  const adicionarAtleta = (e: React.FormEvent) => {
     e.preventDefault();
-    const fotoFinal = imagemPreview || urlImagem;
+    if (!novoNome.trim() || !novaPosicao.trim() || !novaCidade.trim()) return;
 
-    if (!nome.trim() || !categoria.trim() || !equipe.trim() || !campeonato.trim() || !fotoFinal) {
-      alert('Preencha todos os campos e anexe a foto do atleta.');
-      return;
-    }
-
-    const novoAtleta: Atleta = {
-      id: Date.now().toString(),
-      nome,
-      categoria: categoria.toUpperCase(),
-      equipe,
-      campeonato,
-      imagem: fotoFinal
+    const novo: Atleta = {
+      id: Date.now(),
+      nome: novoNome.trim(),
+      modalidade: novaModalidade,
+      posicao: novaPosicao.trim(),
+      cidade: novaCidade.trim(),
+      idade: Number(novaIdade) || 18,
+      destaque: false,
+      status: 'APROVADO'
     };
 
-    const atualizados = [novoAtleta, ...atletas];
-    salvarLista(atualizados);
-
-    setNome('');
-    setCategoria('');
-    setEquipe('');
-    setCampeonato('');
-    setImagemPreview('');
-    setUrlImagem('');
+    setAtletas([novo, ...atletas]);
+    setNovoNome('');
+    setNovaPosicao('');
+    setNovaCidade('');
+    setNovaIdade('');
+    alert('Atleta cadastrado com sucesso!');
   };
 
-  const handleExcluir = (id: string) => {
-    if (confirm('Deseja realmente excluir este atleta em destaque?')) {
-      const atualizados = atletas.filter((a) => a.id !== id);
-      salvarLista(atualizados);
-    }
-  };
+  const atletasFiltrados = atletas.filter((a) => {
+    const matchModalidade =
+      filtroModalidade === 'TODAS' || a.modalidade === filtroModalidade;
+    const matchPesquisa =
+      a.nome.toLowerCase().includes(pesquisa.toLowerCase()) ||
+      a.cidade.toLowerCase().includes(pesquisa.toLowerCase());
+    return matchModalidade && matchPesquisa;
+  });
 
   return (
-    <div className="min-h-screen bg-[#071426] p-6 text-white sm:p-10">
-      <div className="mx-auto max-w-7xl">
-        <div className="mb-8 flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-6">
+    <div className="space-y-10">
+      <div className="rounded-[2.5rem] border border-white/10 bg-[#161a24] p-6 sm:p-8 shadow-xl">
+        <span className="text-xs font-black uppercase tracking-widest text-[#e50914]">
+          NOVO REGISTO EDITORIAL
+        </span>
+        <h2 className="mt-2 text-xl font-black uppercase text-white">
+          Registar Atleta em Destaque
+        </h2>
+        <p className="mt-1 text-xs text-[#8a92a6]">
+          Adicione um atleta diretamente à galeria com estatísticas e dados de homologação.
+        </p>
+
+        <form onSubmit={adicionarAtleta} className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
           <div>
-            <div className="flex items-center gap-2">
-              <span className="rounded-md bg-[#d4a849]/20 px-2 py-0.5 text-xs font-bold text-[#d4a849]">
-                🔒 ÁREA RESTRITA DO COORDENADOR
-              </span>
-            </div>
-            <h1 className="mt-2 text-3xl font-black uppercase text-white">Gerenciar Atletas em Destaque</h1>
-            <p className="text-sm text-[#a8b4cc]">Adicione e remova atletas, equipes, modalidades e campeonatos.</p>
+            <label className="block text-[11px] font-bold uppercase text-[#cad0e0] mb-1">
+              Nome Completo
+            </label>
+            <input
+              type="text"
+              required
+              value={novoNome}
+              onChange={(e) => setNovoNome(e.target.value)}
+              placeholder="Ex: Gabriel Mendes"
+              className="w-full rounded-xl border border-white/10 bg-[#0b0d12] px-3.5 py-2 text-xs text-white outline-none focus:border-[#e50914]"
+            />
           </div>
-          <a
-            href="/coordenador"
-            className="rounded-full border border-white/20 px-5 py-2.5 text-xs font-bold transition hover:bg-white/10"
-          >
-            ← Voltar ao Painel
-          </a>
+
+          <div>
+            <label className="block text-[11px] font-bold uppercase text-[#cad0e0] mb-1">
+              Modalidade
+            </label>
+            <select
+              value={novaModalidade}
+              onChange={(e) => setNovaModalidade(e.target.value)}
+              className="w-full rounded-xl border border-white/10 bg-[#0b0d12] px-3.5 py-2 text-xs text-white outline-none focus:border-[#e50914]"
+            >
+              <option value="Futsal">Futsal</option>
+              <option value="Voleibol">Voleibol</option>
+              <option value="Basquetebol">Basquetebol</option>
+              <option value="Futebol 7">Futebol 7</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-[11px] font-bold uppercase text-[#cad0e0] mb-1">
+              Posição
+            </label>
+            <input
+              type="text"
+              required
+              value={novaPosicao}
+              onChange={(e) => setNovaPosicao(e.target.value)}
+              placeholder="Ex: Ala / Pivô"
+              className="w-full rounded-xl border border-white/10 bg-[#0b0d12] px-3.5 py-2 text-xs text-white outline-none focus:border-[#e50914]"
+            />
+          </div>
+
+          <div>
+            <label className="block text-[11px] font-bold uppercase text-[#cad0e0] mb-1">
+              Cidade / Clube
+            </label>
+            <input
+              type="text"
+              required
+              value={novaCidade}
+              onChange={(e) => setNovaCidade(e.target.value)}
+              placeholder="Ex: Blumenau"
+              className="w-full rounded-xl border border-white/10 bg-[#0b0d12] px-3.5 py-2 text-xs text-white outline-none focus:border-[#e50914]"
+            />
+          </div>
+
+          <div>
+            <label className="block text-[11px] font-bold uppercase text-[#cad0e0] mb-1">
+              Idade
+            </label>
+            <input
+              type="number"
+              required
+              value={novaIdade}
+              onChange={(e) => setNovaIdade(e.target.value)}
+              placeholder="Ex: 19"
+              className="w-full rounded-xl border border-white/10 bg-[#0b0d12] px-3.5 py-2 text-xs text-white outline-none focus:border-[#e50914]"
+            />
+          </div>
+
+          <div className="sm:col-span-2 lg:col-span-5 flex justify-end pt-2">
+            <button
+              type="submit"
+              className="rounded-full bg-[#e50914] px-6 py-2.5 text-xs font-black uppercase text-white hover:bg-[#ff1e27] transition shadow-lg shadow-[#e50914]/20"
+            >
+              + Adicionar à Galeria
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-4">
+        <div className="flex flex-wrap gap-2">
+          {['TODAS', 'Futsal', 'Voleibol', 'Basquetebol', 'Futebol 7'].map((mod) => (
+            <button
+              key={mod}
+              type="button"
+              onClick={() => setFiltroModalidade(mod)}
+              className={`rounded-full px-4 py-1.5 text-xs font-black uppercase tracking-wider transition ${
+                filtroModalidade === mod
+                  ? 'bg-[#e50914] text-white shadow-lg shadow-[#e50914]/30'
+                  : 'border border-white/15 bg-white/5 text-[#cad0e0] hover:text-white'
+              }`}
+            >
+              {mod}
+            </button>
+          ))}
         </div>
 
-        <section className="mb-12 rounded-3xl border border-white/10 bg-[#0e2148] p-6 sm:p-8">
-          <h2 className="text-xl font-black uppercase text-[#d4a849]">Novo Atleta Destaque</h2>
+        <input
+          type="text"
+          value={pesquisa}
+          onChange={(e) => setPesquisa(e.target.value)}
+          placeholder="Pesquisar por nome ou cidade..."
+          className="rounded-full border border-white/15 bg-[#0b0d12] px-4 py-1.5 text-xs text-white outline-none focus:border-[#e50914] w-64"
+        />
+      </div>
 
-          <form onSubmit={handleAdicionar} className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {atletasFiltrados.map((atleta) => (
+          <div
+            key={atleta.id}
+            className={`flex flex-col justify-between rounded-[2rem] border p-6 shadow-xl transition ${
+              atleta.destaque
+                ? 'border-[#e50914]/50 bg-gradient-to-b from-[#1c1417] to-[#13161f]'
+                : 'border-white/10 bg-[#13161f]'
+            }`}
+          >
             <div>
-              <label className="mb-1.5 block text-xs font-bold text-[#a8b4cc]">NOME COMPLETO</label>
-              <input
-                type="text"
-                placeholder="Ex: Carlos Eduardo"
-                value={nome}
-                onChange={(e) => setNome(e.target.value)}
-                className="w-full rounded-xl border border-white/10 bg-[#071426] px-4 py-3 text-sm text-white outline-none focus:border-[#d4a849]"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="mb-1.5 block text-xs font-bold text-[#a8b4cc]">MODALIDADE / CATEGORIA</label>
-              <input
-                type="text"
-                placeholder="Ex: FUTEBOL, VÔLEI, FUNDADOR..."
-                value={categoria}
-                onChange={(e) => setCategoria(e.target.value)}
-                className="w-full rounded-xl border border-white/10 bg-[#071426] px-4 py-3 text-sm text-white outline-none focus:border-[#d4a849]"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="mb-1.5 block text-xs font-bold text-[#a8b4cc]">EQUIPE / CLUBE</label>
-              <input
-                type="text"
-                placeholder="Ex: ARENA VALE SPORTS"
-                value={equipe}
-                onChange={(e) => setEquipe(e.target.value)}
-                className="w-full rounded-xl border border-white/10 bg-[#071426] px-4 py-3 text-sm text-white outline-none focus:border-[#d4a849]"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="mb-1.5 block text-xs font-bold text-[#a8b4cc]">CAMPEONATO</label>
-              <input
-                type="text"
-                placeholder="Ex: COPA ARENA VALE 2026"
-                value={campeonato}
-                onChange={(e) => setCampeonato(e.target.value)}
-                className="w-full rounded-xl border border-white/10 bg-[#071426] px-4 py-3 text-sm text-white outline-none focus:border-[#d4a849]"
-                required
-              />
-            </div>
-
-            <div className="sm:col-span-2 lg:col-span-3">
-              <label className="mb-1.5 block text-xs font-bold text-[#a8b4cc]">FOTO DO ATLETA (UPLOAD OU LINK)</label>
-              <div className="grid gap-3 sm:grid-cols-2">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleUploadArquivo}
-                  className="w-full rounded-xl border border-white/10 bg-[#071426] px-3 py-2 text-xs text-[#a8b4cc] file:mr-3 file:rounded-lg file:border-0 file:bg-[#d4a849] file:px-3 file:py-1.5 file:text-xs file:font-bold file:text-[#071426]"
-                />
-                <input
-                  type="url"
-                  placeholder="Ou cole a URL da imagem (https://...)"
-                  value={urlImagem}
-                  onChange={(e) => {
-                    setUrlImagem(e.target.value);
-                    setImagemPreview('');
-                  }}
-                  className="w-full rounded-xl border border-white/10 bg-[#071426] px-4 py-3 text-sm text-white outline-none focus:border-[#d4a849]"
-                />
+              <div className="flex items-center justify-between pb-3 border-b border-white/5">
+                <span className="rounded-full bg-[#e50914]/15 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-[#e50914]">
+                  {atleta.modalidade}
+                </span>
+                <span
+                  className={`text-[10px] font-black ${
+                    atleta.status === 'APROVADO' ? 'text-emerald-400' : 'text-amber-400'
+                  }`}
+                >
+                  ● {atleta.status}
+                </span>
               </div>
+
+              <h3 className="mt-4 text-xl font-black uppercase tracking-tight text-white">
+                {atleta.nome}
+              </h3>
+              <p className="text-xs font-bold text-[#e50914] mt-0.5 uppercase tracking-wider">
+                {atleta.posicao} · {atleta.idade} anos
+              </p>
+              <p className="mt-2 text-xs text-[#8a92a6]">
+                📍 {atleta.cidade}
+              </p>
             </div>
 
-            <div className="flex items-end">
+            <div className="mt-6 space-y-2 border-t border-white/5 pt-4">
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => alternarDestaque(atleta.id)}
+                  className={`flex-1 rounded-full py-1.5 text-[11px] font-black uppercase tracking-wider transition ${
+                    atleta.destaque
+                      ? 'bg-amber-500 text-black shadow-lg shadow-amber-500/20'
+                      : 'border border-amber-500/30 bg-amber-500/10 text-amber-300 hover:bg-amber-500/20'
+                  }`}
+                >
+                  {atleta.destaque ? '★ Em Destaque na Home' : '☆ Destacar na Home'}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => alternarStatus(atleta.id)}
+                  className="rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-[11px] font-bold text-[#cad0e0] hover:text-white transition"
+                >
+                  {atleta.status === 'APROVADO' ? 'Pausar' : 'Aprovar'}
+                </button>
+              </div>
+
               <button
-                type="submit"
-                className="w-full rounded-xl bg-[#d4a849] py-3.5 text-sm font-black uppercase text-[#071426] transition hover:bg-[#e0b75a]"
+                type="button"
+                onClick={() => removerAtleta(atleta.id)}
+                className="w-full text-center text-[11px] font-bold text-red-400/70 hover:text-red-400 transition pt-1"
               >
-                + Adicionar Destaque
+                Remover Atleta ✕
               </button>
             </div>
-          </form>
-        </section>
-
-        <section>
-          <h2 className="mb-6 text-2xl font-black uppercase">Atletas Cadastrados ({atletas.length})</h2>
-          <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-            {atletas.map((atleta) => (
-              <article
-                key={atleta.id}
-                className="flex flex-col justify-between overflow-hidden rounded-3xl border border-white/10 bg-[#10275a] shadow-lg transition hover:border-[#d4a849]/50"
-              >
-                <div>
-                  <div className="h-56 w-full bg-[#071426]">
-                    <img src={atleta.imagem} alt={atleta.nome} className="h-full w-full object-cover" />
-                  </div>
-                  <div className="p-5">
-                    <span className="text-xs font-bold text-[#d4a849]">⭐ {atleta.categoria}</span>
-                    <h3 className="mt-2 text-xl font-black leading-tight text-white">{atleta.nome}</h3>
-                    <p className="mt-1 text-sm font-semibold text-[#a8b4cc]">{atleta.equipe}</p>
-                    <div className="mt-3 flex items-center gap-1.5 rounded-lg bg-[#071426]/60 px-2.5 py-1.5 text-xs text-[#d4a849]">
-                      <span>🏆</span>
-                      <span className="truncate font-semibold">{atleta.campeonato || 'Campeonato Geral'}</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="p-5 pt-0">
-                  <button
-                    onClick={() => handleExcluir(atleta.id)}
-                    className="mt-3 w-full rounded-xl border border-red-500/30 bg-red-500/10 py-2.5 text-xs font-bold text-red-400 transition hover:bg-red-500 hover:text-white"
-                  >
-                    🗑️ Excluir Atleta
-                  </button>
-                </div>
-              </article>
-            ))}
           </div>
-        </section>
+        ))}
+
+        {atletasFiltrados.length === 0 && (
+          <div className="col-span-full py-12 text-center text-xs text-[#8a92a6]">
+            Nenhum atleta encontrado com os filtros selecionados.
+          </div>
+        )}
       </div>
     </div>
   );
