@@ -94,7 +94,7 @@ export default function HomePage() {
             <Link href="#noticias" className="hover:text-white whitespace-nowrap transition">Notícias</Link>
             <Link href="#agenda" className="hover:text-white whitespace-nowrap transition">Agenda</Link>
             <Link href="#campeonatos" className="hover:text-white whitespace-nowrap transition">Campeonatos</Link>
-            <Link href="/coordenador/atletasdestaques" className="hover:text-white whitespace-nowrap transition">Atletas Destaques</Link>
+            <Link href="/atletasdestaques" className="hover:text-white whitespace-nowrap transition">Atletas Destaques</Link>
             <Link href="#projetosocial" className="hover:text-white whitespace-nowrap transition">Projeto Social</Link>
           </nav>
 
