@@ -20,9 +20,9 @@ export default function HomePage() {
 
   return (
 <div id="topo" className="min-h-screen bg-[#0b0d12] text-white selection:bg-[#e50914] selection:text-white">
-      {/* 1. CABEÇALHO COM LOGO AMPLIADA E DESTAQUE */}
+      {/* 1. CABEÇALHO COM LETRAS DO MENU AUMENTADAS */}
       <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0b0d12]/95 backdrop-blur-md">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 py-3">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 py-3.5">
           <div className="flex items-center">
             <Link href="/proprietario" title="Acesso Seguro" className="flex items-center transition hover:opacity-90">
               <img
@@ -33,10 +33,11 @@ export default function HomePage() {
             </Link>
           </div>
 
-          <nav className="hidden xl:flex items-center gap-6 text-xs font-bold uppercase tracking-wider text-[#a0a8be]">
+          {/* MENU COM TIPOGRAFIA MAIOR (TEXT-SM E FONT-BLACK) */}
+          <nav className="hidden xl:flex items-center gap-6 text-sm font-black uppercase tracking-wider text-[#a0a8be]">
             <Link href="#inicio" className="text-white hover:text-[#e50914] whitespace-nowrap transition">Início</Link>
-            <Link href="#aovivo" className="flex items-center gap-1.5 text-white hover:text-[#e50914] whitespace-nowrap transition">
-              <span className="h-2 w-2 rounded-full bg-[#e50914] animate-pulse shrink-0" /> Ao Vivo
+            <Link href="#aovivo" className="flex items-center gap-2 text-white hover:text-[#e50914] whitespace-nowrap transition">
+              <span className="h-2.5 w-2.5 rounded-full bg-[#e50914] animate-pulse shrink-0" /> Ao Vivo
             </Link>
             <Link href="#noticias" className="hover:text-white whitespace-nowrap transition">Notícias</Link>
             <Link href="#agenda" className="hover:text-white whitespace-nowrap transition">Agenda</Link>
