@@ -72,5 +72,14 @@ export default function HomePage() {
 
   const ativo = campeonatos[campeonatoSelecionado];
 
-  return <>
-    <main id="topo"
+  return (
+    <div id="topo" className="min-h-screen bg-[#0b0d12] text-white selection:bg-[#e50914] selection:text-white">
+      {/* 1. CABEÇALHO */}
+      <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0b0d12]/95 backdrop-blur-md">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 py-3.5">
+          <div className="flex items-center">
+            <Link href="/proprietario" title="Acesso Seguro" className="flex items-center transition hover:opacity-90">
+              <img
+                src="/logo 02.png"
+                alt="Arena Vale Sports"
+                className="h-14 sm:h-16 md:h-20 w-auto max-w-[190px] sm:max-w-[240px] object-contain
