@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 
 interface VideoItem {
@@ -10,19 +10,35 @@ interface VideoItem {
   formato: 'widescreen' | 'shorts';
 }
 
+const VIDEOS_INICIAIS: VideoItem[] = [
+  {
+    id: 'default-1',
+    youtubeId: 'sY8Dpv7KIho',
+    titulo: 'Resenha da Arbitragem · TV Arena Vale',
+    formato: 'widescreen'
+  }
+];
+
 export default function PainelCoordenadorPage() {
   const [novoLink, setNovoLink] = useState('');
   const [novoTitulo, setNovoTitulo] = useState('');
   const [formatoEscolhido, setFormatoEscolhido] = useState<'widescreen' | 'shorts'>('widescreen');
+  const [listaVideos, setListaVideos] = useState<VideoItem[]>([]);
 
-  const [listaVideos, setListaVideos] = useState<VideoItem[]>([
-    {
-      id: 'default-1',
-      youtubeId: 'sY8Dpv7KIho',
-      titulo: 'Resenha da Arbitragem · TV Arena Vale',
-      formato: 'widescreen'
+  // Carrega do localStorage ao abrir a página
+  useEffect(() => {
+    try {
+      const salvos = localStorage.getItem('arenavale_videos');
+      if (salvos) {
+        setListaVideos(JSON.parse(salvos));
+      } else {
+        setListaVideos(VIDEOS_INICIAIS);
+        localStorage.setItem('arenavale_videos', JSON.stringify(VIDEOS_INICIAIS));
+      }
+    } catch {
+      setListaVideos(VIDEOS_INICIAIS);
     }
-  ]);
+  }, []);
 
   const extrairIdYoutube = (url: string) => {
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|shorts\/|watch\?v=|\&v=)([^#\&\?]*).*/;
@@ -42,22 +58,29 @@ export default function PainelCoordenadorPage() {
     const item: VideoItem = {
       id: Date.now().toString(),
       youtubeId: id,
-      titulo: novoTitulo.trim() || 'Nova Transmissão · Arena Vale',
+      titulo: novoTitulo.trim() || 'Nova Transmissão · TV Arena Vale',
       formato: formatoEscolhido
     };
 
-    setListaVideos([item, ...listaVideos]);
+    const novaLista = [item, ...listaVideos];
+    setListaVideos(novaLista);
+    localStorage.setItem('arenavale_videos', JSON.stringify(novaLista));
+
     setNovoLink('');
     setNovoTitulo('');
+    alert('Vídeo publicado com sucesso! Já está visível na página principal.');
   };
 
   const removerVideo = (id: string) => {
-    setListaVideos(listaVideos.filter((v) => v.id !== id));
+    if (confirm('Tem a certeza que deseja remover este vídeo?')) {
+      const novaLista = listaVideos.filter((v) => v.id !== id);
+      setListaVideos(novaLista);
+      localStorage.setItem('arenavale_videos', JSON.stringify(novaLista));
+    }
   };
 
   return (
     <div className="min-h-screen bg-[#0b0d12] text-white selection:bg-[#e50914] selection:text-white">
-      {/* Cabeçalho do Painel com acabamento Dourado */}
       <header className="sticky top-0 z-40 border-b border-amber-500/20 bg-[#0b0d12]/95 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <div className="flex items-center gap-4">
@@ -72,40 +95,38 @@ export default function PainelCoordenadorPage() {
 
           <div className="flex items-center gap-3">
             <Link href="/" className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-xs font-bold text-[#cad0e0] hover:bg-white/10 hover:text-white transition">
-              ← Voltar ao Portal
+              ← Ver Site Principal
             </Link>
           </div>
         </div>
       </header>
 
       <main className="mx-auto max-w-7xl px-6 py-10 space-y-10">
-        {/* Título e Visão Geral */}
         <div>
           <div className="inline-flex items-center gap-2 rounded-full border border-amber-400/40 bg-amber-500/10 px-3.5 py-1 text-xs font-black uppercase tracking-wider text-amber-300 mb-3">
-            GESTÃO DE TRANSMISSÕES E CONTEÚDOS
+            GESTÃO DE TRANSMISSÕES E VÍDEOS
           </div>
           <h1 className="text-3xl sm:text-4xl font-black uppercase tracking-tight text-white">
             Painel de Controlo do Coordenador
           </h1>
           <p className="mt-2 text-sm text-[#8a92a6] max-w-2xl">
-            Insira links do YouTube para alimentar a grelha de transmissões ao vivo, jogos gravados e resumos de campo.
+            Adicione vídeos ou transmissões do YouTube. Eles serão publicados imediatamente na página inicial do site.
           </p>
         </div>
 
-        {/* Módulo: Formulário para Adicionar Vídeo / Live */}
         <section className="rounded-3xl border border-amber-500/20 bg-[#13161f] p-6 sm:p-8 shadow-2xl">
           <h2 className="text-xl font-black uppercase tracking-tight text-white flex items-center gap-2 mb-2">
             <span className="text-amber-400">📹</span> Adicionar Vídeo / Transmissão
           </h2>
           <p className="text-xs text-[#8a92a6] mb-6">
-            Cole o URL de qualquer transmissão direta, vídeo completo ou Shorts da TV Arena Vale.
+            Cole o link do YouTube (vídeo longo, live ou shorts).
           </p>
 
           <form onSubmit={handleAdicionarVideo} className="space-y-4">
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
                 <label className="block text-xs font-black uppercase tracking-wider text-[#cad0e0] mb-2">
-                  Título da Transmissão / Vídeo
+                  Título do Vídeo
                 </label>
                 <input
                   type="text"
@@ -142,7 +163,7 @@ export default function PainelCoordenadorPage() {
                   onClick={() => setFormatoEscolhido('widescreen')}
                   className={`rounded-full px-5 py-2 text-xs font-black uppercase tracking-wider transition ${
                     formatoEscolhido === 'widescreen'
-                      ? 'bg-amber-400 text-black shadow-lg shadow-amber-400/20'
+                      ? 'bg-amber-400 text-black font-bold shadow-lg shadow-amber-400/20'
                       : 'border border-white/15 bg-white/5 text-[#cad0e0] hover:text-white'
                   }`}
                 >
@@ -153,7 +174,7 @@ export default function PainelCoordenadorPage() {
                   onClick={() => setFormatoEscolhido('shorts')}
                   className={`rounded-full px-5 py-2 text-xs font-black uppercase tracking-wider transition ${
                     formatoEscolhido === 'shorts'
-                      ? 'bg-[#e50914] text-white shadow-lg shadow-[#e50914]/20'
+                      ? 'bg-[#e50914] text-white font-bold shadow-lg shadow-[#e50914]/20'
                       : 'border border-white/15 bg-white/5 text-[#cad0e0] hover:text-white'
                   }`}
                 >
@@ -164,14 +185,13 @@ export default function PainelCoordenadorPage() {
 
             <button
               type="submit"
-              className="rounded-full bg-gradient-to-r from-amber-500 to-amber-400 px-8 py-3.5 text-xs font-black uppercase tracking-wider text-black shadow-xl shadow-amber-500/20 hover:brightness-110 transition"
+              className="rounded-full bg-gradient-to-r from-amber-500 to-amber-400 px-8 py-3.5 text-xs font-black uppercase tracking-wider text-black shadow-xl shadow-amber-500/20 hover:brightness-110 transition cursor-pointer"
             >
               + Publicar Vídeo na Grelha
             </button>
           </form>
         </section>
 
-        {/* Módulo: Lista e Gestão dos Vídeos Configurados */}
         <section className="space-y-6">
           <div className="flex items-center justify-between border-b border-white/10 pb-4">
             <h2 className="text-xl font-black uppercase tracking-tight text-white">
@@ -214,7 +234,7 @@ export default function PainelCoordenadorPage() {
                     <button
                       type="button"
                       onClick={() => removerVideo(video.id)}
-                      className="rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-1 text-xs font-bold text-red-400 hover:bg-red-500 hover:text-white transition"
+                      className="rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-1 text-xs font-bold text-red-400 hover:bg-red-500 hover:text-white transition cursor-pointer"
                     >
                       Remover
                     </button>
