@@ -1,282 +1,230 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 
-export default function CoordenadorDashboardPage() {
+interface VideoItem {
+  id: string;
+  youtubeId: string;
+  titulo: string;
+  formato: 'widescreen' | 'shorts';
+}
+
+export default function PainelCoordenadorPage() {
+  const [novoLink, setNovoLink] = useState('');
+  const [novoTitulo, setNovoTitulo] = useState('');
+  const [formatoEscolhido, setFormatoEscolhido] = useState<'widescreen' | 'shorts'>('widescreen');
+
+  const [listaVideos, setListaVideos] = useState<VideoItem[]>([
+    {
+      id: 'default-1',
+      youtubeId: 'sY8Dpv7KIho',
+      titulo: 'Resenha da Arbitragem · TV Arena Vale',
+      formato: 'widescreen'
+    }
+  ]);
+
+  const extrairIdYoutube = (url: string) => {
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|shorts\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    return match && match[2].length === 11 ? match[2] : null;
+  };
+
+  const handleAdicionarVideo = (e: React.FormEvent) => {
+    e.preventDefault();
+    const id = extrairIdYoutube(novoLink);
+
+    if (!id) {
+      alert('Introduza um link válido do YouTube (ex: watch?v=, youtu.be/ ou shorts/)');
+      return;
+    }
+
+    const item: VideoItem = {
+      id: Date.now().toString(),
+      youtubeId: id,
+      titulo: novoTitulo.trim() || 'Nova Transmissão · Arena Vale',
+      formato: formatoEscolhido
+    };
+
+    setListaVideos([item, ...listaVideos]);
+    setNovoLink('');
+    setNovoTitulo('');
+  };
+
+  const removerVideo = (id: string) => {
+    setListaVideos(listaVideos.filter((v) => v.id !== id));
+  };
+
   return (
-    <div className="min-h-screen bg-[#0b0d12] text-white flex flex-col justify-between selection:bg-[#e50914] selection:text-white">
-      {/* 1. CABEÇALHO */}
-      <header className="sticky top-0 z-50 border-b border-white/10 bg-[#0b0d12]/95 backdrop-blur-md">
+    <div className="min-h-screen bg-[#0b0d12] text-white selection:bg-[#e50914] selection:text-white">
+      {/* Cabeçalho do Painel com acabamento Dourado */}
+      <header className="sticky top-0 z-40 border-b border-amber-500/20 bg-[#0b0d12]/95 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-3.5">
-            {/* GATILHO RESTRITO NO LOGÓTIPO [AV] */}
-            <button
-              type="button"
-              onClick={() => {
-                const dialog = document.getElementById('dialog-proprietario') as HTMLDialogElement | null;
-                if (dialog) dialog.showModal();
-              }}
-              title="Arena Vale"
-              className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/20 bg-gradient-to-br from-[#161922] to-[#0b0d12] shadow-inner transition hover:border-[#e50914] cursor-pointer"
-            >
-              <span className="text-sm font-black tracking-tighter text-white">
-                <span className="text-[#e50914]">A</span>V
-              </span>
-            </button>
-            <Link href="/" className="text-xl sm:text-2xl font-black tracking-tight leading-none text-white">
-              ARENA <span className="text-[#e50914]">VALE</span>
+          <div className="flex items-center gap-4">
+            <Link href="/" className="flex items-center gap-3 transition hover:opacity-90">
+              <img src="/logo 02.png" alt="Arena Vale" className="h-10 w-auto object-contain" />
+              <span className="text-xl font-black tracking-tight text-white">ARENA <span className="text-[#e50914]">VALE</span></span>
             </Link>
+            <span className="hidden sm:inline-block rounded-full border border-amber-400/40 bg-amber-500/10 px-3 py-0.5 text-[11px] font-black uppercase tracking-wider text-amber-300">
+              🛡️ Painel do Coordenador
+            </span>
           </div>
 
-          <div className="flex items-center gap-2">
-            <Link
-              href="/"
-              className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-xs font-bold text-[#cad0e0] transition hover:border-white/40 hover:text-white"
-            >
-              Ver Site ↗
-            </Link>
-            <Link
-              href="/login"
-              className="rounded-full border border-red-500/20 bg-red-500/10 px-4 py-2 text-xs font-bold text-red-400 transition hover:bg-red-500/20 hover:text-red-300"
-            >
-              Sair
+          <div className="flex items-center gap-3">
+            <Link href="/" className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-xs font-bold text-[#cad0e0] hover:bg-white/10 hover:text-white transition">
+              ← Voltar ao Portal
             </Link>
           </div>
         </div>
       </header>
 
-      {/* 2. ÁREA CENTRAL */}
-      <main className="mx-auto w-full max-w-7xl px-6 py-10 flex-1">
-        <div className="rounded-[2.5rem] border border-white/10 bg-[#161a24] p-8 sm:p-12 shadow-2xl mb-10">
-          <span className="text-xs font-black uppercase tracking-[0.25em] text-[#e50914]">
-            PAINEL DO COORDENADOR
-          </span>
-          <h1 className="mt-3 text-3xl font-black uppercase sm:text-5xl leading-tight text-white">
-            CENTRAL DE CONTROLE <br />
-            <span className="text-[#e50914]">ARENA VALE</span>
+      <main className="mx-auto max-w-7xl px-6 py-10 space-y-10">
+        {/* Título e Visão Geral */}
+        <div>
+          <div className="inline-flex items-center gap-2 rounded-full border border-amber-400/40 bg-amber-500/10 px-3.5 py-1 text-xs font-black uppercase tracking-wider text-amber-300 mb-3">
+            GESTÃO DE TRANSMISSÕES E CONTEÚDOS
+          </div>
+          <h1 className="text-3xl sm:text-4xl font-black uppercase tracking-tight text-white">
+            Painel de Controlo do Coordenador
           </h1>
-          <p className="mt-4 text-sm sm:text-base text-[#cad0e0] leading-relaxed max-w-2xl">
-            Área operacional exclusiva para manutenção editorial, moderação de inscritos, acompanhamento de partidas e tabelas de competições.
+          <p className="mt-2 text-sm text-[#8a92a6] max-w-2xl">
+            Insira links do YouTube para alimentar a grelha de transmissões ao vivo, jogos gravados e resumos de campo.
           </p>
         </div>
 
-        {/* MÓDULOS DE OPERAÇÃO DO PORTAL */}
-        <div className="grid gap-6 sm:grid-cols-2">
-          <div className="flex flex-col justify-between rounded-[2rem] border border-[#e50914]/40 bg-[#161a24] p-8 shadow-xl">
-            <div>
-              <span className="text-[11px] font-black uppercase tracking-wider text-[#e50914]">EDITORIAL</span>
-              <h3 className="mt-4 text-2xl font-black uppercase tracking-tight text-white">ATLETAS EM DESTAQUE</h3>
-              <p className="mt-2 text-sm text-[#8a92a6] leading-relaxed">Aprovação editorial, fotos e perfil de novos talentos.</p>
-            </div>
-            <div className="mt-8 border-t border-white/5 pt-5">
-              <Link href="/coordenador/atletasdestaques" className="inline-flex items-center rounded-full bg-[#e50914] px-6 py-3 text-xs font-black uppercase tracking-wider text-white shadow-lg shadow-[#e50914]/30 hover:bg-[#ff1e27]">Acessar Galeria →</Link>
-            </div>
-          </div>
+        {/* Módulo: Formulário para Adicionar Vídeo / Live */}
+        <section className="rounded-3xl border border-amber-500/20 bg-[#13161f] p-6 sm:p-8 shadow-2xl">
+          <h2 className="text-xl font-black uppercase tracking-tight text-white flex items-center gap-2 mb-2">
+            <span className="text-amber-400">📹</span> Adicionar Vídeo / Transmissão
+          </h2>
+          <p className="text-xs text-[#8a92a6] mb-6">
+            Cole o URL de qualquer transmissão direta, vídeo completo ou Shorts da TV Arena Vale.
+          </p>
 
-          <div className="flex flex-col justify-between rounded-[2rem] border border-white/10 bg-[#13161f] p-8 shadow-xl">
-            <div>
-              <span className="text-[11px] font-black uppercase tracking-wider text-[#e50914]">TV ARENA</span>
-              <h3 className="mt-4 text-2xl font-black uppercase tracking-tight text-white">TRANSMISSÕES AO VIVO</h3>
-              <p className="mt-2 text-sm text-[#8a92a6] leading-relaxed">Manutenção do player, YouTube e placares ao vivo.</p>
-            </div>
-            <div className="mt-8 border-t border-white/5 pt-5">
-              <Link href="/#aovivo" className="inline-flex items-center rounded-full border border-white/15 bg-white/5 px-6 py-3 text-xs font-black uppercase tracking-wider text-[#cad0e0] hover:text-white">Configurar Jogos →</Link>
-            </div>
-          </div>
+          <form onSubmit={handleAdicionarVideo} className="space-y-4">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <label className="block text-xs font-black uppercase tracking-wider text-[#cad0e0] mb-2">
+                  Título da Transmissão / Vídeo
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="Ex: Final Regional 2026 · TV Arena Vale"
+                  value={novoTitulo}
+                  onChange={(e) => setNovoTitulo(e.target.value)}
+                  className="w-full rounded-xl border border-white/15 bg-[#0b0d12] px-4 py-3 text-sm text-white placeholder:text-[#555d6e] focus:border-amber-400 focus:outline-none"
+                />
+              </div>
 
-          <div className="flex flex-col justify-between rounded-[2rem] border border-white/10 bg-[#13161f] p-8 shadow-xl">
-            <div>
-              <span className="text-[11px] font-black uppercase tracking-wider text-[#e50914]">CADASTROS</span>
-              <h3 className="mt-4 text-2xl font-black uppercase tracking-tight text-white">SOLICITAÇÕES DE INSCRIÇÃO</h3>
-              <p className="mt-2 text-sm text-[#8a92a6] leading-relaxed">Acompanhamento de novos atletas cadastrados no formulário.</p>
-            </div>
-            <div className="mt-8 border-t border-white/5 pt-5">
-              <Link href="/inscricao" className="inline-flex items-center rounded-full border border-white/15 bg-white/5 px-6 py-3 text-xs font-black uppercase tracking-wider text-[#cad0e0] hover:text-white">Ver Solicitações →</Link>
-            </div>
-          </div>
-
-          <div className="flex flex-col justify-between rounded-[2rem] border border-white/10 bg-[#13161f] p-8 shadow-xl">
-            <div>
-              <span className="text-[11px] font-black uppercase tracking-wider text-[#e50914]">COMPETIÇÕES</span>
-              <h3 className="mt-4 text-2xl font-black uppercase tracking-tight text-white">CAMPEONATOS & TABELAS</h3>
-              <p className="mt-2 text-sm text-[#8a92a6] leading-relaxed">Estruturação de torneios regionais, fases e datas.</p>
-            </div>
-            <div className="mt-8 border-t border-white/5 pt-5">
-              <Link href="/#campeonatos" className="inline-flex items-center rounded-full border border-white/15 bg-white/5 px-6 py-3 text-xs font-black uppercase tracking-wider text-[#cad0e0] hover:text-white">Gerir Torneios →</Link>
-            </div>
-          </div>
-        </div>
-      </main>
-
-      {/* 3. MODAL DE GESTÃO (SEM EXIBIÇÃO DE DICAS DE PALAVRA-PASSE OU CREDENCIAIS) */}
-      <dialog
-        id="dialog-proprietario"
-        className="backdrop:bg-black/85 rounded-[2.5rem] border border-white/15 bg-[#13161f] p-6 sm:p-8 text-white max-w-lg w-full shadow-2xl m-auto"
-      >
-        <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-6">
-          <div>
-            <span className="text-[10px] font-black uppercase tracking-widest text-amber-400">
-              ALTA ADMINISTRAÇÃO
-            </span>
-            <h3 className="text-lg font-black uppercase tracking-wider text-white">
-              Credenciamento de Acesso
-            </h3>
-          </div>
-          <button
-            type="button"
-            onClick={() => {
-              const dialog = document.getElementById('dialog-proprietario') as HTMLDialogElement | null;
-              if (dialog) dialog.close();
-            }}
-            className="text-sm font-bold text-[#8a92a6] hover:text-white"
-          >
-            ✕
-          </button>
-        </div>
-
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            const form = e.currentTarget;
-            const emailProp = (form.elements.namedItem('emailProp') as HTMLInputElement).value;
-            const chave = (form.elements.namedItem('chave') as HTMLInputElement).value;
-            const nome = (form.elements.namedItem('nome') as HTMLInputElement).value;
-            const email = (form.elements.namedItem('email') as HTMLInputElement).value;
-
-            // Validação estrita do Proprietário sem expor dados
-            const emailValido = emailProp.trim().toLowerCase() === 'pmmiranda2017@gmail.com';
-            const chaveValida = chave.trim().toUpperCase() === 'VINIGUTO2020';
-
-            if (emailValido && chaveValida) {
-              alert('Coordenador "' + nome + '" credenciado com sucesso no sistema!');
-              form.reset();
-              const dialog = document.getElementById('dialog-proprietario') as HTMLDialogElement | null;
-              if (dialog) dialog.close();
-            } else {
-              alert('Credenciais inválidas. Verifique o e-mail do proprietário e a palavra-passe.');
-            }
-          }}
-          className="space-y-6"
-        >
-          {/* SEÇÃO 1: AUTORIZAÇÃO DO PROPRIETÁRIO */}
-          <div className="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-4 space-y-3">
-            <div className="flex items-center gap-2">
-              <span className="text-sm">👑</span>
-              <span className="text-xs font-black uppercase tracking-wider text-amber-300">
-                1. Autorização do Proprietário
-              </span>
-            </div>
-            
-            <div>
-              <label className="block text-[11px] font-bold uppercase text-[#cad0e0]">E-mail do Proprietário</label>
-              <input
-                name="emailProp"
-                type="email"
-                required
-                placeholder="Insira o seu e-mail"
-                className="mt-1 w-full rounded-xl border border-amber-500/40 bg-[#0b0d12] px-3.5 py-2 text-xs text-white outline-none focus:border-amber-400"
-              />
+              <div>
+                <label className="block text-xs font-black uppercase tracking-wider text-[#cad0e0] mb-2">
+                  Link do YouTube (Live, Vídeo ou Shorts)
+                </label>
+                <input
+                  type="url"
+                  required
+                  placeholder="https://www.youtube.com/watch?v=... ou /shorts/..."
+                  value={novoLink}
+                  onChange={(e) => setNovoLink(e.target.value)}
+                  className="w-full rounded-xl border border-white/15 bg-[#0b0d12] px-4 py-3 text-sm text-white placeholder:text-[#555d6e] focus:border-amber-400 focus:outline-none"
+                />
+              </div>
             </div>
 
             <div>
-              <label className="block text-[11px] font-bold uppercase text-[#cad0e0]">Palavra-passe Mestra</label>
-              <input
-                name="chave"
-                type="password"
-                required
-                placeholder="••••••••"
-                className="mt-1 w-full rounded-xl border border-amber-500/40 bg-[#0b0d12] px-3.5 py-2 text-xs text-white outline-none focus:border-amber-400"
-              />
-            </div>
-          </div>
-
-          {/* SEÇÃO 2: DADOS DO NOVO COORDENADOR */}
-          <div className="rounded-2xl border border-white/10 bg-[#0b0d12]/50 p-4 space-y-3.5">
-            <div className="flex items-center gap-2 pb-1 border-b border-white/5">
-              <span className="text-sm">👤</span>
-              <span className="text-xs font-black uppercase tracking-wider text-white">
-                2. Credenciais do Novo Coordenador
-              </span>
-            </div>
-
-            <div>
-              <label className="block text-[11px] font-bold uppercase text-[#cad0e0]">Nome Completo</label>
-              <input
-                name="nome"
-                type="text"
-                required
-                placeholder="Nome do coordenador"
-                className="mt-1 w-full rounded-xl border border-white/10 bg-[#0b0d12] px-3.5 py-2 text-xs text-white outline-none focus:border-[#e50914]"
-              />
+              <label className="block text-xs font-black uppercase tracking-wider text-[#cad0e0] mb-2">
+                Enquadramento
+              </label>
+              <div className="flex flex-wrap gap-3">
+                <button
+                  type="button"
+                  onClick={() => setFormatoEscolhido('widescreen')}
+                  className={`rounded-full px-5 py-2 text-xs font-black uppercase tracking-wider transition ${
+                    formatoEscolhido === 'widescreen'
+                      ? 'bg-amber-400 text-black shadow-lg shadow-amber-400/20'
+                      : 'border border-white/15 bg-white/5 text-[#cad0e0] hover:text-white'
+                  }`}
+                >
+                  📺 16:9 Widescreen (Sem Sobras Laterais)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setFormatoEscolhido('shorts')}
+                  className={`rounded-full px-5 py-2 text-xs font-black uppercase tracking-wider transition ${
+                    formatoEscolhido === 'shorts'
+                      ? 'bg-[#e50914] text-white shadow-lg shadow-[#e50914]/20'
+                      : 'border border-white/15 bg-white/5 text-[#cad0e0] hover:text-white'
+                  }`}
+                >
+                  📱 9:16 Vertical Nativo (Shorts)
+                </button>
+              </div>
             </div>
 
-            <div>
-              <label className="block text-[11px] font-bold uppercase text-[#cad0e0]">Cargo / Função</label>
-              <input
-                name="cargo"
-                type="text"
-                defaultValue="COORDENADOR DE COMPETIÇÕES"
-                className="mt-1 w-full rounded-xl border border-white/10 bg-[#0b0d12] px-3.5 py-2 text-xs text-white outline-none focus:border-[#e50914]"
-              />
-            </div>
-
-            <div>
-              <label className="block text-[11px] font-bold uppercase text-[#cad0e0]">E-mail de Acesso</label>
-              <input
-                name="email"
-                type="email"
-                required
-                placeholder="E-mail de login do coordenador"
-                className="mt-1 w-full rounded-xl border border-white/10 bg-[#0b0d12] px-3.5 py-2 text-xs text-white outline-none focus:border-[#e50914]"
-              />
-            </div>
-
-            <div>
-              <label className="block text-[11px] font-bold uppercase text-[#cad0e0]">Palavra-passe de Acesso</label>
-              <input
-                name="senhaCoord"
-                type="password"
-                required
-                placeholder="••••••••"
-                className="mt-1 w-full rounded-xl border border-white/10 bg-[#0b0d12] px-3.5 py-2 text-xs text-white outline-none focus:border-[#e50914]"
-              />
-            </div>
-          </div>
-
-          {/* BOTÕES DE AÇÃO */}
-          <div className="flex justify-end gap-2 pt-2">
-            <button
-              type="button"
-              onClick={() => {
-                const dialog = document.getElementById('dialog-proprietario') as HTMLDialogElement | null;
-                if (dialog) dialog.close();
-              }}
-              className="rounded-full border border-white/10 bg-white/5 px-5 py-2 text-xs font-bold text-[#8a92a6] hover:text-white"
-            >
-              Cancelar
-            </button>
             <button
               type="submit"
-              className="rounded-full bg-[#e50914] px-6 py-2 text-xs font-black uppercase text-white hover:bg-[#ff1e27] transition shadow-lg shadow-[#e50914]/25"
+              className="rounded-full bg-gradient-to-r from-amber-500 to-amber-400 px-8 py-3.5 text-xs font-black uppercase tracking-wider text-black shadow-xl shadow-amber-500/20 hover:brightness-110 transition"
             >
-              Salvar e Habilitar Coordenador
+              + Publicar Vídeo na Grelha
             </button>
-          </div>
-        </form>
-      </dialog>
+          </form>
+        </section>
 
-      {/* 4. RODAPÉ */}
-      <footer className="border-t border-white/10 bg-[#07080b] px-6 py-8">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 sm:flex-row text-xs text-[#8a92a6]">
-          <div>© 2026 Arena Vale · Sistema de Gestão Interna</div>
-          <div className="flex items-center gap-4">
-            <Link href="/" className="hover:text-white">Portal</Link>
-            <Link href="/coordenador/atletasdestaques" className="hover:text-white">Galeria de Atletas</Link>
-            <Link href="/login" className="hover:text-white">Sair</Link>
+        {/* Módulo: Lista e Gestão dos Vídeos Configurados */}
+        <section className="space-y-6">
+          <div className="flex items-center justify-between border-b border-white/10 pb-4">
+            <h2 className="text-xl font-black uppercase tracking-tight text-white">
+              Vídeos Publicados na Plataforma ({listaVideos.length})
+            </h2>
           </div>
-        </div>
-      </footer>
+
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {listaVideos.map((video) => (
+              <div key={video.id} className="flex flex-col rounded-2xl border border-white/10 bg-[#13161f] overflow-hidden shadow-xl">
+                <div className={`relative ${video.formato === 'shorts' ? 'aspect-[9/16] max-h-96' : 'aspect-video'} w-full overflow-hidden bg-black flex items-center justify-center`}>
+                  <iframe
+                    className={`${video.formato === 'widescreen' ? 'h-[140%] w-[140%] max-w-none' : 'h-full w-full'}`}
+                    src={`https://www.youtube.com/embed/${video.youtubeId}?autoplay=0&controls=1`}
+                    title={video.titulo}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                </div>
+
+                <div className="p-5 flex flex-col justify-between flex-1">
+                  <div>
+                    <span className="rounded bg-white/5 px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-amber-300">
+                      {video.formato === 'widescreen' ? '16:9 Widescreen' : '9:16 Shorts'}
+                    </span>
+                    <h3 className="mt-2 text-sm font-black uppercase leading-snug text-white">
+                      {video.titulo}
+                    </h3>
+                  </div>
+
+                  <div className="mt-4 pt-3 border-t border-white/5 flex items-center justify-between">
+                    <a
+                      href={`https://www.youtube.com/watch?v=${video.youtubeId}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-xs font-bold text-[#8a92a6] hover:text-white transition"
+                    >
+                      Abrir no YouTube ↗
+                    </a>
+                    <button
+                      type="button"
+                      onClick={() => removerVideo(video.id)}
+                      className="rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-1 text-xs font-bold text-red-400 hover:bg-red-500 hover:text-white transition"
+                    >
+                      Remover
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      </main>
     </div>
   );
 }
