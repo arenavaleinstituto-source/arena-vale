@@ -526,7 +526,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* PAVILHÃO DE PATROCINADORES DE ELITE (LOGOMARCA 3X MAIOR E IMPONENTE) */}
+      {/* PAVILHÃO DE PATROCINADORES DE ELITE (LOGOMARCA AMPLIADA EM 3X E BEM VISÍVEL) */}
       <section className="mx-auto max-w-7xl px-4 sm:px-6 py-16">
         <div className="relative overflow-hidden rounded-[2.5rem] border border-amber-500/30 bg-gradient-to-br from-[#12151f] via-[#0d1017] to-[#07080c] p-8 sm:p-14 shadow-[0_25px_80px_rgba(0,0,0,0.8)]">
           <div className="absolute -right-20 -top-20 h-72 w-72 rounded-full bg-amber-500/10 blur-3xl pointer-events-none" />
@@ -543,15 +543,15 @@ export default function HomePage() {
             <p className="text-xs font-black uppercase tracking-[0.2em] text-[#8a92a6] mb-6">VITRINE DE PARCEIROS & COTAS OFICIAIS</p>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               
-              {/* Slot 1: Parceiro Institucional (LOGOMARCA 3X MAIOR E EM DESTAQUE) */}
+              {/* Slot 1: Parceiro Institucional (LOGO 3X MAIOR · h-56) */}
               <div className="group relative flex flex-col justify-between rounded-2xl border border-amber-400/50 bg-gradient-to-b from-amber-500/10 to-[#07080c] p-6 text-center shadow-xl transition hover:scale-[1.02] hover:border-amber-300">
                 <div className="absolute top-2.5 right-2.5"><span className="flex h-2.5 w-2.5 rounded-full bg-amber-400 animate-pulse" /></div>
                 <div>
                   <span className="text-[10px] font-black uppercase tracking-widest text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded">Cota Institucional</span>
                   
-                  {/* ESPAÇO DA LOGO 3X MAIOR (h-40) E COM GLOW */}
-                  <div className="my-6 flex h-40 w-full items-center justify-center rounded-2xl bg-black/60 border border-amber-400/40 p-4 shadow-[0_0_20px_rgba(251,191,36,0.15)]">
-                    <img src="/logo 02.png" alt="ACADESF" className="h-full w-full object-contain filter drop-shadow-[0_0_12px_rgba(251,191,36,0.7)]" />
+                  {/* ESPAÇO DA LOGO 3X MAIOR (h-56) BEM VISÍVEL */}
+                  <div className="my-6 flex h-56 w-full items-center justify-center rounded-2xl bg-black/60 border border-amber-400/40 p-4 shadow-[0_0_25px_rgba(251,191,36,0.2)]">
+                    <img src="/logo 02.png" alt="ACADESF" className="h-full w-full object-contain filter drop-shadow-[0_0_15px_rgba(251,191,36,0.8)]" />
                   </div>
                   
                   <h4 className="text-base font-black uppercase text-white tracking-wider">ACADESF</h4>
@@ -560,14 +560,13 @@ export default function HomePage() {
                 <div className="mt-6 pt-4 border-t border-white/10"><span className="text-[10px] font-mono text-[#8a92a6] uppercase">EXPOSIÇÃO 100% ATIVA</span></div>
               </div>
 
-              {/* Slot 2: Cota Master 01 (Espaço Ampliado para a Logo da Empresa) */}
+              {/* Slot 2: Cota Master 01 (Espaço Ampliado h-56 para a Logo do Empresário) */}
               <div className="group relative flex flex-col justify-between rounded-2xl border border-dashed border-white/20 bg-white/[0.02] p-6 text-center shadow-xl transition hover:border-[#e50914] hover:bg-[#e50914]/5">
                 <div>
                   <span className="text-[10px] font-black uppercase tracking-widest text-[#e50914] bg-[#e50914]/10 px-2.5 py-1 rounded">Disponível</span>
                   
-                  {/* ESPAÇO AMPLIADO PARA LOGO DO EMPRESÁRIO */}
-                  <div className="my-6 flex h-40 w-full items-center justify-center rounded-2xl bg-black/40 border border-dashed border-white/30 p-4 group-hover:border-[#e50914]/60 transition">
-                    <span className="text-xs font-black uppercase tracking-widest text-white/50 group-hover:text-white transition">Sua Logo Aqui<br/><span className="text-[9px] text-[#8a92a6]">Espaço Premium 3x</span></span>
+                  <div className="my-6 flex h-56 w-full items-center justify-center rounded-2xl bg-black/40 border border-dashed border-white/30 p-4 group-hover:border-[#e50914]/60 transition">
+                    <span className="text-xs font-black uppercase tracking-widest text-white/50 group-hover:text-white transition">Sua Logo Aqui<br/><span className="text-[10px] text-[#e50914] font-bold">Espaço Premium Gigante 3x</span></span>
                   </div>
                   
                   <h4 className="text-base font-black uppercase text-white tracking-wider">Cota Master 01</h4>
@@ -578,13 +577,13 @@ export default function HomePage() {
                 </div>
               </div>
 
-              {/* Slot 3: Cota Master 02 (Espaço Ampliado) */}
+              {/* Slot 3: Cota Master 02 (Espaço Ampliado h-56) */}
               <div className="group relative flex flex-col justify-between rounded-2xl border border-dashed border-white/20 bg-white/[0.02] p-6 text-center shadow-xl transition hover:border-[#e50914] hover:bg-[#e50914]/5">
                 <div>
                   <span className="text-[10px] font-black uppercase tracking-widest text-[#e50914] bg-[#e50914]/10 px-2.5 py-1 rounded">Disponível</span>
                   
-                  <div className="my-6 flex h-40 w-full items-center justify-center rounded-2xl bg-black/40 border border-dashed border-white/30 p-4 group-hover:border-[#e50914]/60 transition">
-                    <span className="text-xs font-black uppercase tracking-widest text-white/50 group-hover:text-white transition">Sua Logo Aqui<br/><span className="text-[9px] text-[#8a92a6]">Espaço Premium 3x</span></span>
+                  <div className="my-6 flex h-56 w-full items-center justify-center rounded-2xl bg-black/40 border border-dashed border-white/30 p-4 group-hover:border-[#e50914]/60 transition">
+                    <span className="text-xs font-black uppercase tracking-widest text-white/50 group-hover:text-white transition">Sua Logo Aqui<br/><span className="text-[10px] text-[#e50914] font-bold">Espaço Premium Gigante 3x</span></span>
                   </div>
                   
                   <h4 className="text-base font-black uppercase text-white tracking-wider">Cota Master 02</h4>
@@ -595,13 +594,13 @@ export default function HomePage() {
                 </div>
               </div>
 
-              {/* Slot 4: Apoio Regional (Espaço Ampliado) */}
+              {/* Slot 4: Apoio Regional (Espaço Ampliado h-56) */}
               <div className="group relative flex flex-col justify-between rounded-2xl border border-dashed border-white/20 bg-white/[0.02] p-6 text-center shadow-xl transition hover:border-[#e50914] hover:bg-[#e50914]/5">
                 <div>
                   <span className="text-[10px] font-black uppercase tracking-widest text-[#e50914] bg-[#e50914]/10 px-2.5 py-1 rounded">Disponível</span>
                   
-                  <div className="my-6 flex h-40 w-full items-center justify-center rounded-2xl bg-black/40 border border-dashed border-white/30 p-4 group-hover:border-[#e50914]/60 transition">
-                    <span className="text-xs font-black uppercase tracking-widest text-white/50 group-hover:text-white transition">Sua Logo Aqui<br/><span className="text-[9px] text-[#8a92a6]">Espaço Premium 3x</span></span>
+                  <div className="my-6 flex h-56 w-full items-center justify-center rounded-2xl bg-black/40 border border-dashed border-white/30 p-4 group-hover:border-[#e50914]/60 transition">
+                    <span className="text-xs font-black uppercase tracking-widest text-white/50 group-hover:text-white transition">Sua Logo Aqui<br/><span className="text-[10px] text-[#e50914] font-bold">Espaço Premium Gigante 3x</span></span>
                   </div>
                   
                   <h4 className="text-base font-black uppercase text-white tracking-wider">Apoio Regional</h4>
