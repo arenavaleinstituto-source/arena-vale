@@ -294,7 +294,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 📱 SECÇÃO DE DIVULGAÇÃO DO APLICATIVO E SUAS FUNÇÕES (CENTRALIZADO E EM CAIXA ALTA) */}
+      {/* 📱 SECÇÃO DE DIVULGAÇÃO DO APLICATIVO E SUAS FUNÇÕES */}
       <section id="app" className="border-t border-white/5 bg-gradient-to-br from-[#12151f] via-[#0b0d14] to-[#07080c] px-4 sm:px-6 py-20 text-center">
         <div className="mx-auto max-w-5xl flex flex-col items-center">
           <span className="inline-flex items-center gap-2 rounded-full border border-amber-400/40 bg-amber-500/10 px-4 py-1.5 text-xs font-black uppercase tracking-[0.2em] text-amber-300 mb-4">NOVIDADE NA ÁREA · APLICATIVO OFICIAL</span>
@@ -518,7 +518,7 @@ export default function HomePage() {
               COLOQUE A SUA MARCA NO <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-200 to-[#e50914]">PALCO DO DESPORTO.</span>
             </h2>
-            <p className="mt-5 text-sm sm:text-base text-[#cad0e0] leading-relaxed max-w-3xl mx-auto">A Arena Vale conecta sua empresa a uma audiência engajada e apaixonada por desporto. Visibilidade garantida em transmissões em direto em alta definição, placares eletrónicos, redes sociais oficiais e backdrops de campo.</p>
+            <p className="mt-5 text-sm sm:text-base text-[#cad0e0] leading-relaxed max-w-3xl mx-auto uppercase">A ARENA VALE CONECTA SUA EMPRESA A UMA AUDIÊNCIA ENGAJADA E APAIXONADA POR DESPORTO. VISIBILIDADE GARANTIDA EM TRANSMISSÕES EM DIRETO EM ALTA DEFINIÇÃO, PLACARES ELETRÓNICOS, REDES SOCIAIS OFICIAIS E BACKDROPS DE CAMPO.</p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
               <a href="https://wa.me/5547988444404?text=Olá,%20tenho%20interesse%20em%20investir%20e%20colocar%20a%20logo%20da%20minha%20empresa%20na%20Arena%20Vale!" target="_blank" rel="noreferrer" className="rounded-full bg-gradient-to-r from-amber-500 to-amber-400 px-8 py-4 text-xs font-black uppercase tracking-widest text-black shadow-xl shadow-amber-500/20 hover:scale-105 transition">💼 INVESTIR COMO PATROCINADOR MASTER ↗</a>
             </div>
