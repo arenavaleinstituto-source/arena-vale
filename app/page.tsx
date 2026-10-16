@@ -209,7 +209,7 @@ export default function HomePage() {
             <nav className="flex flex-col gap-3 text-lg font-black uppercase tracking-wide">
               <Link href="#inicio" onClick={() => setMenuMobileAberto(false)} className="py-2.5 text-white border-b border-white/5">Início</Link>
               <Link href="#aovivo" onClick={() => setMenuMobileAberto(false)} className="py-2.5 text-white border-b border-white/5 flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-[#e50914] animate-pulse" /> YouTube / Ao Vivo</Link>
-              <Link href="#app" onClick={() => setMenuMobileAberto(false)} className="py-2.5 text-amber-400 border-b border-white/5">BAIXAR APP</Link>
+              <Link href="#app" onClick={() => setMenuMobileAberto(false)} className="py-2.5 text-amber-400 border-b border-white/5 block xl:hidden">BAIXAR APP</Link>
               <Link href="#noticias" onClick={() => setMenuMobileAberto(false)} className="py-2.5 text-[#cad0e0] border-b border-white/5">Notícias</Link>
               <Link href="#agenda" onClick={() => setMenuMobileAberto(false)} className="py-2.5 text-[#cad0e0] border-b border-white/5">Agenda</Link>
               <Link href="#campeonatos" onClick={() => setMenuMobileAberto(false)} className="py-2.5 text-[#cad0e0] border-b border-white/5">Campeonatos</Link>
@@ -454,8 +454,14 @@ export default function HomePage() {
             <div className="absolute inset-0 bg-gradient-to-t from-[#07080c] via-[#07080c]/80 to-transparent sm:bg-gradient-to-r sm:from-[#07080c]/95 sm:via-[#07080c]/70 sm:to-transparent" />
             <div className="relative z-10 flex min-h-[380px] flex-col justify-end p-8 sm:min-h-[440px] sm:max-w-2xl sm:p-14">
               <span className="inline-flex items-center gap-2 self-start rounded-full bg-[#e50914]/20 px-3.5 py-1 text-xs font-black uppercase tracking-wider text-[#ff1e27] backdrop-blur-md">HISTÓRIAS DA ARENA</span>
-              <h3 className="mt-4 text-3xl font-black uppercase leading-tight text-white sm:text-5xl">CONHEÇA TODOS OS <br /><span className="text-[#e50914]">ATLETAS EM DESTAQUE</span></h3>
-              <p className="mt-4 text-sm leading-relaxed text-[#cad0e0] sm:text-base">Os talentos, artilheiros e protagonistas que transformarão cada confronto desportivo num grande espetáculo no Vale.</p>
+              {/* TÍTULO EM DUAS LINHAS E EM CAIXA ALTA */}
+              <h3 className="mt-4 text-3xl font-black uppercase leading-tight text-white sm:text-5xl">
+                CONHEÇA TODOS OS<br />
+                <span className="text-[#e50914]">ATLETAS EM DESTAQUE</span>
+              </h3>
+              <p className="mt-4 text-sm sm:text-base text-[#cad0e0] leading-relaxed uppercase">
+                OS TALENTOS, ARTILHEIROS E PROTAGONISTAS QUE TRANSFORMARÃO CADA CONFRONTO DESPORTIVO NUM GRANDE ESPETÁCULO NO VALE.
+              </p>
               <div className="mt-8 flex flex-wrap items-center gap-4"><Link href="/atletasdestaques" className="rounded-full bg-[#e50914] px-7 py-3.5 text-xs font-black uppercase tracking-wider text-white shadow-lg shadow-[#e50914]/30 transition hover:bg-[#ff1e27] hover:scale-105">GALERIA OFICIAL →</Link></div>
             </div>
           </div>
