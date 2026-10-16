@@ -294,34 +294,28 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 📱 SECÇÃO DE DIVULGAÇÃO DO APLICATIVO E SUAS FUNÇÕES */}
+      {/* 📱 SECÇÃO DE DIVULGAÇÃO DO APLICATIVO E SUAS FUNÇÕES (CENTRALIZADO E EM CAIXA ALTA) */}
       <section id="app" className="border-t border-white/5 bg-gradient-to-br from-[#12151f] via-[#0b0d14] to-[#07080c] px-4 sm:px-6 py-20 text-center">
-        <div className="mx-auto max-w-5xl">
-          <div className="inline-flex items-center gap-2 rounded-full border border-amber-400/40 bg-amber-500/10 px-4 py-1.5 text-xs font-black uppercase tracking-[0.2em] text-amber-300 mb-4">NOVIDADE NA ÁREA · APLICATIVO OFICIAL</div>
+        <div className="mx-auto max-w-5xl flex flex-col items-center">
+          <span className="inline-flex items-center gap-2 rounded-full border border-amber-400/40 bg-amber-500/10 px-4 py-1.5 text-xs font-black uppercase tracking-[0.2em] text-amber-300 mb-4">NOVIDADE NA ÁREA · APLICATIVO OFICIAL</span>
           <h2 className="text-3xl sm:text-5xl font-black italic uppercase tracking-tight text-white leading-tight">BAIXE O APLICATIVO <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-[#e50914]">ARENA VALE</span></h2>
-          <p className="mt-4 text-sm sm:text-base text-[#cad0e0] leading-relaxed max-w-2xl mx-auto">Tudo o que você precisa para gerir equipes, acompanhar campeonatos e solicitar serviços diretamente na palma da sua mão.</p>
+          <p className="mt-4 text-sm sm:text-base text-[#cad0e0] leading-relaxed max-w-2xl mx-auto uppercase">Tudo o que você precisa para gerir equipes, acompanhar campeonatos e solicitar serviços diretamente na palma da sua mão.</p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
             <a href="https://wa.me/5547988444404?text=Olá,%20quero%20saber%20mais%20sobre%20o%20aplicativo%20da%20Arena%20Vale!" target="_blank" rel="noreferrer" className="rounded-full bg-gradient-to-r from-amber-500 to-amber-400 px-8 py-4 text-xs font-black uppercase tracking-widest text-black shadow-xl shadow-amber-500/20 hover:scale-105 transition">INSTALAR O APP ↗</a>
           </div>
-          {/* AS 3 FUNÇÕES SEM EMOJIS E SEM ACESSAR */}
-          <div className="mt-14 grid gap-6 sm:grid-cols-3 text-left">
-            <div className="group rounded-2xl border border-white/10 bg-white/[0.02] p-6 shadow-xl transition hover:border-amber-400/50">
-              <div>
-                <h4 className="text-base font-black uppercase tracking-wider text-white">GESTÃO DE EQUIPES</h4>
-                <p className="mt-2 text-xs text-[#8a92a6] leading-relaxed">Sorteador por estrelas, cronômetro oficial, registro de gols, assistências e tabela anual.</p>
-              </div>
+          {/* AS 3 FUNÇÕES CENTRALIZADAS E EM CAIXA ALTA */}
+          <div className="mt-14 grid gap-6 sm:grid-cols-3 w-full">
+            <div className="group rounded-2xl border border-white/10 bg-white/[0.02] p-6 shadow-xl transition hover:border-amber-400/50 text-center flex flex-col items-center justify-center">
+              <h4 className="text-base font-black uppercase tracking-wider text-white">GESTÃO DE EQUIPES</h4>
+              <p className="mt-2 text-xs text-[#8a92a6] leading-relaxed uppercase">Sorteador por estrelas, cronômetro oficial, registro de gols, assistências e tabela anual.</p>
             </div>
-            <div className="group rounded-2xl border border-white/10 bg-white/[0.02] p-6 shadow-xl transition hover:border-amber-400/50">
-              <div>
-                <h4 className="text-base font-black uppercase tracking-wider text-white">MENSALIDADES ESCOLINHA</h4>
-                <p className="mt-2 text-xs text-[#8a92a6] leading-relaxed">Matrícula de alunos, vencimentos e cobrança via WhatsApp aos pais com chave PIX.</p>
-              </div>
+            <div className="group rounded-2xl border border-white/10 bg-white/[0.02] p-6 shadow-xl transition hover:border-amber-400/50 text-center flex flex-col items-center justify-center">
+              <h4 className="text-base font-black uppercase tracking-wider text-white">MENSALIDADES ESCOLINHA</h4>
+              <p className="mt-2 text-xs text-[#8a92a6] leading-relaxed uppercase">Matrícula de alunos, vencimentos e cobrança via WhatsApp aos pais com chave PIX.</p>
             </div>
-            <div className="group rounded-2xl border border-white/10 bg-white/[0.02] p-6 shadow-xl transition hover:border-amber-400/50">
-              <div>
-                <h4 className="text-base font-black uppercase tracking-wider text-white">SOLICITAR EQUIPE DE ARBITRAGEM</h4>
-                <p className="mt-2 text-xs text-[#8a92a6] leading-relaxed">Delegado, árbitro principal e auxiliares para futebol, futsal, basquete e vôlei.</p>
-              </div>
+            <div className="group rounded-2xl border border-white/10 bg-white/[0.02] p-6 shadow-xl transition hover:border-amber-400/50 text-center flex flex-col items-center justify-center">
+              <h4 className="text-base font-black uppercase tracking-wider text-white">SOLICITAR EQUIPE DE ARBITRAGEM</h4>
+              <p className="mt-2 text-xs text-[#8a92a6] leading-relaxed uppercase">Delegado, árbitro principal e auxiliares para futebol, futsal, basquete e vôlei.</p>
             </div>
           </div>
         </div>
