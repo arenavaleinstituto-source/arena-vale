@@ -3,13 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 
-interface VideoItem {
-  id: string;
-  youtubeId: string;
-  titulo: string;
-  formato: 'widescreen' | 'shorts';
-}
-
 interface NoticiaItem {
   id: string;
   titulo: string;
@@ -17,16 +10,6 @@ interface NoticiaItem {
   categoria: string;
   tag: string;
   imagem?: string;
-}
-
-interface JogoItem {
-  id: string;
-  dataHora: string;
-  equipeA: string;
-  equipeB: string;
-  modalidade: string;
-  local: string;
-  status: string;
 }
 
 interface AtletaItem {
@@ -37,15 +20,6 @@ interface AtletaItem {
   destaque: string;
   imagem?: string;
 }
-
-const VIDEOS_PADRAO: VideoItem[] = [
-  {
-    id: 'default-1',
-    youtubeId: 'sY8Dpv7KIho',
-    titulo: 'Resenha da Arbitragem · TV Arena Vale',
-    formato: 'widescreen'
-  }
-];
 
 const NOTICIAS_PADRAO: NoticiaItem[] = [
   {
@@ -71,18 +45,6 @@ const NOTICIAS_PADRAO: NoticiaItem[] = [
     categoria: 'COMPETIÇÕES',
     tag: 'OFICIAL',
     imagem: '/foto-pro-site-1.png'
-  }
-];
-
-const JOGOS_PADRAO: JogoItem[] = [
-  {
-    id: 'jogo-1',
-    dataHora: 'SÁBADO · 19:30',
-    equipeA: 'EQUIPE AZUL',
-    equipeB: 'EQUIPE BRANCA',
-    modalidade: 'FUTSAL REGIONAL',
-    local: 'ARENA MULTIUSO',
-    status: 'TRANSMISSÃO AO VIVO'
   }
 ];
 
@@ -118,21 +80,13 @@ export default function HomePage() {
   const [menuPainelAberto, setMenuPainelAberto] = useState(false);
   const [campeonatoSelecionado, setCampeonatoSelecionado] = useState(0);
 
-  const [videosPublicos, setVideosPublicos] = useState<VideoItem[]>(VIDEOS_PADRAO);
   const [noticiasPublicas, setNoticiasPublicas] = useState<NoticiaItem[]>(NOTICIAS_PADRAO);
-  const [jogosPublicos, setJogosPublicos] = useState<JogoItem[]>(JOGOS_PADRAO);
   const [atletasPublicos, setAtletasPublicos] = useState<AtletaItem[]>(ATLETAS_PADRAO);
 
   useEffect(() => {
     try {
-      const v = localStorage.getItem('arenavale_videos');
-      if (v) setVideosPublicos(JSON.parse(v));
-
       const n = localStorage.getItem('arenavale_noticias');
       if (n) setNoticiasPublicas(JSON.parse(n));
-
-      const j = localStorage.getItem('arenavale_agenda');
-      if (j) setJogosPublicos(JSON.parse(j));
 
       const a = localStorage.getItem('arenavale_atletas');
       if (a) setAtletasPublicos(JSON.parse(a));
@@ -162,9 +116,9 @@ export default function HomePage() {
           </div>
           <nav className="hidden xl:flex items-center gap-7 2xl:gap-9 text-sm font-black uppercase tracking-[0.12em] text-[#b8c0d4]">
             <Link href="#inicio" className="text-white hover:text-[#e50914] whitespace-nowrap transition">Início</Link>
-            <Link href="#aovivo" className="flex items-center gap-2 text-white hover:text-[#e50914] whitespace-nowrap transition"><span className="h-2.5 w-2.5 rounded-full bg-[#e50914] animate-pulse shadow-[0_0_8px_#e50914] shrink-0" /> YouTube / Ao Vivo</Link>
+            <Link href="/tv" className="flex items-center gap-2 text-white hover:text-[#e50914] whitespace-nowrap transition"><span className="h-2.5 w-2.5 rounded-full bg-[#e50914] animate-pulse shadow-[0_0_8px_#e50914] shrink-0" /> TV Arena Vale</Link>
             <Link href="#noticias" className="hover:text-white whitespace-nowrap transition">Notícias</Link>
-            <Link href="#agenda" className="hover:text-white whitespace-nowrap transition">Agenda</Link>
+            <Link href="/agenda" className="hover:text-white whitespace-nowrap transition">Agenda</Link>
             <Link href="#campeonatos" className="hover:text-white whitespace-nowrap transition">Campeonatos</Link>
             <Link href="/atletasdestaques" className="hover:text-white whitespace-nowrap transition">Atletas Destaque</Link>
             <Link href="#projetosocial" className="hover:text-white whitespace-nowrap transition">Projeto Social</Link>
@@ -208,10 +162,10 @@ export default function HomePage() {
             <p className="text-xs font-black uppercase tracking-widest text-[#e50914]">Navegação Oficial</p>
             <nav className="flex flex-col gap-3 text-lg font-black uppercase tracking-wide">
               <Link href="#inicio" onClick={() => setMenuMobileAberto(false)} className="py-2.5 text-white border-b border-white/5">Início</Link>
-              <Link href="#aovivo" onClick={() => setMenuMobileAberto(false)} className="py-2.5 text-white border-b border-white/5 flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-[#e50914] animate-pulse" /> YouTube / Ao Vivo</Link>
+              <Link href="/tv" onClick={() => setMenuMobileAberto(false)} className="py-2.5 text-white border-b border-white/5 flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-[#e50914] animate-pulse" /> TV Arena Vale</Link>
               <Link href="#app" onClick={() => setMenuMobileAberto(false)} className="py-2.5 text-amber-400 border-b border-white/5 block xl:hidden">BAIXAR APP</Link>
               <Link href="#noticias" onClick={() => setMenuMobileAberto(false)} className="py-2.5 text-[#cad0e0] border-b border-white/5">Notícias</Link>
-              <Link href="#agenda" onClick={() => setMenuMobileAberto(false)} className="py-2.5 text-[#cad0e0] border-b border-white/5">Agenda</Link>
+              <Link href="/agenda" onClick={() => setMenuMobileAberto(false)} className="py-2.5 text-[#cad0e0] border-b border-white/5">Agenda</Link>
               <Link href="#campeonatos" onClick={() => setMenuMobileAberto(false)} className="py-2.5 text-[#cad0e0] border-b border-white/5">Campeonatos</Link>
               <Link href="/atletasdestaques" onClick={() => setMenuMobileAberto(false)} className="py-2.5 text-[#cad0e0] border-b border-white/5">Atletas Destaque</Link>
               <Link href="#projetosocial" onClick={() => setMenuMobileAberto(false)} className="py-2.5 text-[#cad0e0] border-b border-white/5">Projeto Social</Link>
@@ -238,21 +192,22 @@ export default function HomePage() {
             <div className="inline-flex items-center gap-2 rounded-full border border-[#e50914]/50 bg-[#e50914]/15 px-3.5 py-1.5 text-[11px] sm:text-xs font-black uppercase tracking-[0.15em] text-white backdrop-blur-md"><span className="h-2 w-2 rounded-full bg-[#e50914] animate-ping" /> COBERTURA & TRANSMISSÃO OFICIAL</div>
             <h1 className="mt-4 sm:mt-5 text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black uppercase tracking-tight text-white leading-tight"><span className="block whitespace-nowrap">O PALCO DO</span><span className="block whitespace-nowrap mt-1 sm:mt-2"><span className="text-[#e50914]">ESPORTE</span> É AQUI.</span></h1>
             <p className="mt-4 sm:mt-5 max-w-2xl text-sm sm:text-xl text-[#cad0e0] leading-relaxed">Transmissões ao vivo, coberturas, análises e as grandes histórias de quem vive o jogo dentro e fora de quadra.</p>
-            <div className="mt-6 sm:mt-8 flex flex-wrap items-center gap-3 sm:gap-4"><a href="#aovivo" className="flex items-center gap-2 rounded-full bg-gradient-to-r from-[#e50914] to-[#ff1e27] px-6 sm:px-8 py-3.5 sm:py-4 text-xs font-black uppercase tracking-[0.15em] text-white shadow-xl shadow-[#e50914]/30 transition hover:scale-105"><span>▶</span> TRANSMISSÕES</a><a href="#campeonatos" className="rounded-full border border-white/20 bg-white/5 px-6 sm:px-8 py-3.5 sm:py-4 text-xs font-black uppercase tracking-[0.15em] text-white backdrop-blur-md transition hover:bg-white/10 hover:border-white/40">VER CAMPEONATOS →</a></div>
+            <div className="mt-6 sm:mt-8 flex flex-wrap items-center gap-3 sm:gap-4"><Link href="/tv" className="flex items-center gap-2 rounded-full bg-gradient-to-r from-[#e50914] to-[#ff1e27] px-6 sm:px-8 py-3.5 sm:py-4 text-xs font-black uppercase tracking-[0.15em] text-white shadow-xl shadow-[#e50914]/30 transition hover:scale-105"><span>▶</span> TRANSMISSÕES</Link><a href="#campeonatos" className="rounded-full border border-white/20 bg-white/5 px-6 sm:px-8 py-3.5 sm:py-4 text-xs font-black uppercase tracking-[0.15em] text-white backdrop-blur-md transition hover:bg-white/10 hover:border-white/40">VER CAMPEONATOS →</a></div>
           </div>
         </div>
       </section>
 
-      <section id="aovivo" className="border-t border-white/5 bg-[#0b0d14] px-4 sm:px-6 py-16">
+      {/* SECÇÃO TV ARENA VALE (LEVE E DIRECIONADA) */}
+      <section className="border-t border-white/5 bg-[#0b0d14] px-4 sm:px-6 py-16">
         <div className="mx-auto max-w-7xl">
           <div className="flex flex-wrap items-center justify-between gap-4 mb-10">
             <div>
               <p className="text-xs font-black tracking-[0.25em] text-[#e50914] uppercase">TV ARENA VALE · BROADCAST</p>
-              <h2 className="mt-2 text-3xl sm:text-4xl font-black italic uppercase tracking-tighter text-white">VÍDEOS & <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#e50914] to-[#ff4b52]">TRANSMISSÕES</span></h2>
+              <h2 className="mt-2 text-3xl sm:text-4xl font-black italic uppercase tracking-tighter text-white">SINAL AO VIVO & <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#e50914] to-[#ff4b52]">VÍDEOS</span></h2>
             </div>
             <a href="https://www.youtube.com/@TVArenaVale" target="_blank" rel="noreferrer" className="flex items-center gap-2 rounded-full border border-[#e50914]/60 bg-[#e50914]/10 px-6 py-2.5 text-xs font-black uppercase tracking-wider text-white hover:bg-[#e50914] transition shadow-lg shadow-[#e50914]/15"><span>▶</span> Canal YouTube ↗</a>
           </div>
-          <div className="mb-12">
+          <div className="mb-10">
             <div className="flex items-center justify-between mb-3"><span className="inline-flex items-center gap-2 rounded-full bg-[#e50914]/20 border border-[#e50914]/40 px-3.5 py-1 text-[11px] font-black uppercase tracking-wider text-white"><span className="h-2.5 w-2.5 rounded-full bg-[#e50914] animate-ping" /> SINAL AO VIVO</span></div>
             <div className="relative mx-auto max-w-4xl aspect-video overflow-hidden rounded-3xl border border-white/10 bg-[#07080c] shadow-2xl flex flex-col items-center justify-center p-6 text-center group">
               <div className="absolute inset-0 bg-gradient-to-t from-[#07080c] via-[#07080c]/50 to-transparent" />
@@ -263,33 +218,10 @@ export default function HomePage() {
               </div>
             </div>
           </div>
-          <div className="border-t border-white/5 pt-10">
-            <div className="flex items-center justify-between mb-8">
-              <h3 className="text-xl font-black italic uppercase tracking-wider text-white">DESTAQUES DA SEMANA</h3>
-              <span className="text-xs font-black uppercase tracking-widest text-[#8a92a6]">16:9 CINEMA</span>
-            </div>
-            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-              {videosPublicos.map((v) => (
-                <div key={v.id} className="group relative flex flex-col rounded-2xl border border-white/10 bg-[#0c0f17] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.8)] transition-all duration-500 hover:-translate-y-2 hover:border-[#e50914]/70">
-                  <div className="absolute top-3 left-3 h-4 w-4 border-t-2 border-l-2 border-white/30 z-10 transition-colors group-hover:border-[#e50914]" />
-                  <div className="absolute top-3 right-3 h-4 w-4 border-t-2 border-r-2 border-white/30 z-10 transition-colors group-hover:border-[#e50914]" />
-                  <div className={`relative ${v.formato === 'shorts' ? 'aspect-[9/16] max-h-96' : 'aspect-video'} w-full overflow-hidden bg-black flex items-center justify-center`}>
-                    <iframe className={`${v.formato === 'widescreen' ? 'h-[140%] w-[140%] max-w-none' : 'h-full w-full'}`} src={`https://www.youtube.com/embed/${v.youtubeId}?autoplay=0&controls=1&modestbranding=1&rel=0`} title={v.titulo} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
-                  </div>
-                  <div className="p-6 flex flex-col justify-between flex-1 bg-gradient-to-t from-[#07080c] to-[#0c0f17]">
-                    <div>
-                      <span className="inline-block -skew-x-12 bg-[#e50914] px-3 py-0.5 text-[10px] font-black uppercase tracking-widest text-white mb-2"><span className="inline-block skew-x-12">{v.formato === 'shorts' ? 'SHORTS 9:16' : 'WIDESCREEN 16:9'}</span></span>
-                      <h4 className="text-lg font-black italic uppercase text-white leading-snug group-hover:text-[#ff2a35] transition-colors">{v.titulo}</h4>
-                    </div>
-                    <div className="mt-4 pt-4 border-t border-white/10 flex items-center justify-between text-xs">
-                      <span className="text-[#8a92a6] font-mono">ID: {v.youtubeId}</span>
-                      <a href={`https://www.youtube.com/watch?v=${v.youtubeId}`} target="_blank" rel="noreferrer" className="font-black uppercase tracking-wider text-white hover:text-[#e50914] transition">Ver no YouTube ↗</a>
-                    </div>
-                  </div>
-                  <div className="h-1.5 w-full bg-gradient-to-r from-[#e50914] via-[#ff4b52] to-transparent opacity-75 group-hover:opacity-100 transition-opacity" />
-                </div>
-              ))}
-            </div>
+          <div className="text-center pt-8 border-t border-white/5">
+             <Link href="/tv" className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-8 py-4 text-sm font-black uppercase tracking-[0.15em] text-white hover:bg-white/10 transition shadow-lg">
+                ACESSE O CATÁLOGO COMPLETO DA TV ARENA VALE ↗
+             </Link>
           </div>
         </div>
       </section>
@@ -303,7 +235,6 @@ export default function HomePage() {
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
             <a href="https://wa.me/5547988444404?text=Olá,%20quero%20saber%20mais%20sobre%20o%20aplicativo%20da%20Arena%20Vale!" target="_blank" rel="noreferrer" className="rounded-full bg-gradient-to-r from-amber-500 to-amber-400 px-8 py-4 text-xs font-black uppercase tracking-widest text-black shadow-xl shadow-amber-500/20 hover:scale-105 transition">INSTALAR O APP ↗</a>
           </div>
-          {/* AS 3 FUNÇÕES CENTRALIZADAS E EM CAIXA ALTA */}
           <div className="mt-14 grid gap-6 sm:grid-cols-3 w-full">
             <div className="group rounded-2xl border border-white/10 bg-white/[0.02] p-6 shadow-xl transition hover:border-amber-400/50 text-center flex flex-col items-center justify-center">
               <h4 className="text-base font-black uppercase tracking-wider text-white">GESTÃO DE EQUIPES</h4>
@@ -363,7 +294,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="agenda" className="border-t border-white/5 bg-[#0b0d14] px-4 sm:px-6 py-20">
+      {/* SECÇÃO AGENDA (LEVE E DIRECIONADA) */}
+      <section className="border-t border-white/5 bg-[#0b0d14] px-4 sm:px-6 py-20">
         <div className="mx-auto max-w-7xl">
           <div className="mb-12 flex flex-col sm:flex-row sm:items-end justify-between gap-6 border-b border-white/10 pb-6">
             <div className="relative">
@@ -372,77 +304,15 @@ export default function HomePage() {
             </div>
             <a href="https://wa.me/5547988444404" target="_blank" rel="noreferrer" className="rounded-full border border-white/20 bg-white/5 px-6 py-2.5 text-xs font-black uppercase tracking-wider text-white hover:bg-white/10 transition">Informações sobre Torneios ↗</a>
           </div>
-          {jogosPublicos.length > 0 ? (
-            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-              {jogosPublicos.map((jogo) => (
-                <div key={jogo.id} className="group relative min-h-[360px] flex flex-col justify-between rounded-2xl border border-white/10 bg-[#0c0f17] p-8 overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.8)] transition-all duration-500 hover:-translate-y-2 hover:border-[#e50914]/70">
-                  <div className="absolute top-3 left-3 h-4 w-4 border-t-2 border-l-2 border-white/30 transition-colors group-hover:border-[#e50914]" />
-                  <div className="absolute top-3 right-3 h-4 w-4 border-t-2 border-r-2 border-white/30 transition-colors group-hover:border-[#e50914]" />
-                  <span className="pointer-events-none select-none absolute -right-3 top-10 text-7xl font-black italic uppercase tracking-tighter text-white/[0.04]">MATCH</span>
-                  <div>
-                    <div className="flex items-center justify-between mb-6">
-                      <span className="inline-block -skew-x-12 bg-amber-500 px-3.5 py-1 text-[11px] font-black uppercase tracking-widest text-black shadow-[0_0_15px_rgba(245,158,11,0.4)]"><span className="inline-block skew-x-12">{jogo.modalidade}</span></span>
-                      <span className="text-xs font-mono font-black text-[#cad0e0]">📅 {jogo.dataHora}</span>
-                    </div>
-                    <div className="my-6 text-center">
-                      <h3 className="text-2xl font-black italic uppercase text-white tracking-tight group-hover:text-[#ff2a35] transition-colors">{jogo.equipeA}</h3>
-                      <div className="my-2 inline-flex items-center justify-center rounded-full bg-[#e50914]/20 border border-[#e50914]/50 px-4 py-1 text-xs font-black italic text-[#ff4b52]">VS</div>
-                      <h3 className="text-2xl font-black italic uppercase text-white tracking-tight group-hover:text-[#ff2a35] transition-colors">{jogo.equipeB}</h3>
-                    </div>
-                    <p className="text-xs text-center font-bold text-[#8a92a6] uppercase tracking-widest mt-4">📍 {jogo.local}</p>
-                  </div>
-                  <div className="mt-8 pt-4 border-t border-white/10 flex items-center justify-between">
-                    <span className="rounded bg-emerald-500/10 px-3 py-1 text-[10px] font-black uppercase text-emerald-400 border border-emerald-500/30">{jogo.status}</span>
-                    <a href="#aovivo" className="text-xs font-black uppercase tracking-wider text-white hover:text-[#e50914] transition">Acompanhar ↗</a>
-                  </div>
-                  <div className="absolute bottom-0 left-0 h-1.5 w-full bg-gradient-to-r from-[#e50914] via-[#ff4b52] to-transparent opacity-75 group-hover:opacity-100 transition-opacity" />
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="rounded-[2.5rem] border border-white/10 bg-[#11141d] p-8 sm:p-12 shadow-2xl text-center flex flex-col items-center justify-center">
-              <div className="h-16 w-16 rounded-full bg-[#e50914]/20 border border-[#e50914]/40 flex items-center justify-center text-2xl text-[#e50914] mb-4">📅</div>
-              <h3 className="text-2xl sm:text-3xl font-black uppercase text-white">Agenda em Atualização</h3>
-              <p className="mt-2 text-sm text-[#8a92a6] max-w-xl">O calendário oficial de confrontos, horários de transmissão e locais das partidas da temporada 2026 será publicado assim que as chaves forem sorteadas.</p>
-            </div>
-          )}
-        </div>
-      </section>
-
-      <section className="border-t border-white/5 bg-[#07080c] px-4 sm:px-6 py-20">
-        <div className="mx-auto max-w-7xl">
-          <div className="mb-12 flex flex-col sm:flex-row sm:items-end justify-between gap-6 border-b border-white/10 pb-6">
-            <div className="relative">
-              <div className="inline-flex items-center gap-2 mb-2"><span className="h-3 w-1.5 bg-[#e50914] -skew-x-12" /><span className="text-xs font-black tracking-[0.3em] text-[#e50914] uppercase">PROTAGONISTAS DA TEMPORADA</span></div>
-              <h2 className="text-4xl sm:text-5xl font-black italic uppercase tracking-tighter text-white leading-none">ATLETAS EM <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#e50914] to-[#ff4b52]">DESTAQUE</span></h2>
-            </div>
-            <Link href="/atletasdestaques" className="rounded-full border border-white/20 bg-white/5 px-6 py-2.5 text-xs font-black uppercase tracking-wider text-white hover:bg-white/10 transition">Galeria Oficial →</Link>
-          </div>
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {atletasPublicos.map((atleta, index) => (
-              <div key={atleta.id} className="group relative min-h-[420px] flex flex-col justify-between rounded-2xl border border-white/10 bg-[#0c0f17] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.8)] transition-all duration-500 hover:-translate-y-2 hover:border-[#e50914]/70">
-                <img src={atleta.imagem || '/foto-pro-site-1.png'} alt={atleta.nome} className="absolute inset-0 h-full w-full object-cover object-center opacity-40 mix-blend-luminosity filter contrast-125 transition-all duration-700 group-hover:scale-110 group-hover:opacity-60 group-hover:mix-blend-normal" />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#07080c] via-[#07080c]/85 to-transparent" />
-                <div className="absolute inset-0 bg-gradient-to-br from-[#e50914]/20 via-transparent to-black/90 opacity-60 group-hover:opacity-90 transition-opacity duration-500" />
-                <span className="pointer-events-none select-none absolute -right-3 top-10 text-7xl font-black italic uppercase tracking-tighter text-white/[0.04]">MVP</span>
-                <div className="absolute top-3 left-3 h-4 w-4 border-t-2 border-l-2 border-white/30 transition-colors group-hover:border-[#e50914]" />
-                <div className="absolute top-3 right-3 h-4 w-4 border-t-2 border-r-2 border-white/30 transition-colors group-hover:border-[#e50914]" />
-                <div className="relative z-10 p-6 flex items-start justify-between">
-                  <span className="inline-block -skew-x-12 bg-[#e50914] px-3.5 py-1 text-[11px] font-black uppercase tracking-widest text-white shadow-[0_0_15px_rgba(229,9,20,0.5)]"><span className="inline-block skew-x-12">{atleta.modalidade}</span></span>
-                  <span className="text-4xl font-black italic leading-none text-transparent select-none" style={{ WebkitTextStroke: '1px rgba(255,255,255,0.22)' }}>0{index + 1}</span>
-                </div>
-                <div className="relative z-10 p-6 pt-0 mt-auto">
-                  <div className="mb-2"><span className="text-xs font-black uppercase tracking-[0.2em] text-amber-400">🛡️ {atleta.equipe}</span></div>
-                  <h3 className="text-2xl sm:text-3xl font-black italic uppercase leading-tight tracking-tight text-white drop-shadow-md group-hover:text-[#ff2a35] transition-colors">{atleta.nome}</h3>
-                  <p className="mt-2 text-xs font-bold text-[#b8c0d4] tracking-wide uppercase">⭐ {atleta.destaque}</p>
-                  <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between">
-                    <span className="text-[10px] font-mono text-[#8a92a6] uppercase">ARENA VALE SCOUT</span>
-                    <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-white/10 text-[10px] text-white group-hover:bg-[#e50914] transition-all">★</span>
-                  </div>
-                </div>
-                <div className="relative z-10 h-1.5 w-full bg-gradient-to-r from-[#e50914] via-[#ff4b52] to-transparent opacity-75 group-hover:opacity-100 transition-opacity" />
-              </div>
-            ))}
+          
+          <div className="rounded-[2.5rem] border border-white/10 bg-gradient-to-br from-[#12151f] via-[#0b0d14] to-[#07080c] p-10 sm:p-16 shadow-2xl text-center flex flex-col items-center justify-center relative overflow-hidden">
+             <div className="absolute -right-20 -bottom-20 h-72 w-72 rounded-full bg-[#e50914]/10 blur-3xl pointer-events-none" />
+             <div className="h-20 w-20 rounded-full bg-[#e50914]/20 border border-[#e50914]/40 flex items-center justify-center text-4xl mb-6 shadow-[0_0_30px_rgba(229,9,20,0.3)]">📅</div>
+             <h3 className="text-2xl sm:text-4xl font-black uppercase text-white tracking-tight">CONFIRA O CALENDÁRIO COMPLETO DE CONFRONTOS</h3>
+             <p className="mt-4 text-sm sm:text-base text-[#8a92a6] max-w-2xl uppercase">Acesse a nossa agenda oficial para conferir datas, horários, equipas e locais de todas as partidas de Futsal, Futebol 7, Basquetebol e Voleibol.</p>
+             <Link href="/agenda" className="mt-10 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#e50914] to-[#ff1e27] px-10 py-4 text-sm font-black uppercase tracking-[0.15em] text-white hover:scale-105 transition shadow-lg shadow-[#e50914]/30">
+                VER AGENDA COMPLETA ↗
+             </Link>
           </div>
         </div>
       </section>
@@ -454,7 +324,6 @@ export default function HomePage() {
             <div className="absolute inset-0 bg-gradient-to-t from-[#07080c] via-[#07080c]/80 to-transparent sm:bg-gradient-to-r sm:from-[#07080c]/95 sm:via-[#07080c]/70 sm:to-transparent" />
             <div className="relative z-10 flex min-h-[380px] flex-col justify-end p-8 sm:min-h-[440px] sm:max-w-2xl sm:p-14">
               <span className="inline-flex items-center gap-2 self-start rounded-full bg-[#e50914]/20 px-3.5 py-1 text-xs font-black uppercase tracking-wider text-[#ff1e27] backdrop-blur-md">HISTÓRIAS DA ARENA</span>
-              {/* TÍTULO EM DUAS LINHAS E EM CAIXA ALTA */}
               <h3 className="mt-4 text-3xl font-black uppercase leading-tight text-white sm:text-5xl">
                 CONHEÇA TODOS OS<br />
                 <span className="text-[#e50914]">ATLETAS EM DESTAQUE</span>
