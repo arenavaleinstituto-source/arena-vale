@@ -1,10 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 
-// Simulação de Base de Dados de Utilizadores (Futuramente será substituído por Supabase/Firebase)
-const USUARIOS_SISTEMA = [
+// 🌟 1. COLOQUE AQUI OS SEUS COORDENADORES FIXOS PARA NUNCA MAIS PERDER
+const USUARIOS_PADRAO = [
   { 
     email: 'admin@arenavale.com.br', 
     senha: 'admin', 
@@ -12,13 +12,16 @@ const USUARIOS_SISTEMA = [
     nome: 'Maurício (Admin)',
     permissoes: 'all' 
   },
+  // 👇 ADICIONE OS OUTROS COORDENADORES ABAIXO NESTE FORMATO:
   { 
-    email: 'mesario1@arenavale.com.br', 
-    senha: '123', 
+    email: 'coordenador2@arenavale.com.br', 
+    senha: 'senha-do-coordenador', 
     role: 'coordenador', 
-    nome: 'Mesário Principal',
+    nome: 'Nome do Coordenador',
     permissoes: 'all' 
   },
+  
+  // EXEMPLOS DE ORGANIZADORES E CAPITÃES (MANTIDOS PARA TESTE)
   { 
     email: 'cliente@ligavale.com', 
     senha: '123', 
@@ -40,12 +43,34 @@ export default function LoginPage() {
   const [senha, setSenha] = useState('');
   const [erro, setErro] = useState('');
   const [sucesso, setSucesso] = useState(false);
+  const [usuariosAtivos, setUsuariosAtivos] = useState<any[]>(USUARIOS_PADRAO);
+
+  // 🌟 2. RECUPERA UTILIZADORES ADICIONADOS DINAMICAMENTE PARA NÃO OS EXCLUIR
+  useEffect(() => {
+    try {
+      const salvos = localStorage.getItem('arenavale_usuarios');
+      if (salvos) {
+        const usuariosSalvos = JSON.parse(salvos);
+        
+        // Mescla os usuários do código com os usuários salvos no navegador sem duplicar
+        const todosUsuarios = [...USUARIOS_PADRAO];
+        usuariosSalvos.forEach((userSalvo: any) => {
+           if(!todosUsuarios.find(u => u.email === userSalvo.email)) {
+               todosUsuarios.push(userSalvo);
+           }
+        });
+        setUsuariosAtivos(todosUsuarios);
+      }
+    } catch {
+      // Fallback para os usuários padrão em caso de erro
+    }
+  }, []);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     setErro('');
 
-    const usuario = USUARIOS_SISTEMA.find(u => u.email === email && u.senha === senha);
+    const usuario = usuariosAtivos.find(u => u.email === email && u.senha === senha);
 
     if (!usuario) {
       setErro('Credenciais inválidas. Verifique o seu e-mail e senha.');
@@ -155,7 +180,7 @@ export default function LoginPage() {
         </div>
         
         <div className="mt-8 text-center text-xs text-[#555d6e]">
-          <p>Esqueceu a sua senha? <a href="https://wa.me/5547988444404" target="_blank" rel="noreferrer" className="text-amber-500 hover:text-amber-400 font-bold">Solicitar suporte técnico ↗</a></p>
+          <p>Esqueceu a sua senha? <a href="https://wa.me/5547988444404" target="_blank" rel="noreferrer" className="text-[#e50914] hover:text-[#ff4b52] font-bold transition">Solicitar suporte técnico ↗</a></p>
         </div>
       </div>
     </div>
