@@ -63,7 +63,9 @@ export default function CampeonatosPage() {
     setImagemPreview(null);
     setSucesso(true);
 
-    setTimeout(() => setSucesso(false), 4000);
+    setTimeout(() => {
+      setSucesso(false);
+    }, 4000);
   }
 
   return (
@@ -114,3 +116,11 @@ export default function CampeonatosPage() {
             <div className="relative rounded-xl overflow-hidden border border-slate-700 bg-slate-950 max-h-52 flex items-center justify-center p-3">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
+                src={imagemPreview}
+                alt="Pré-visualização do Torneio"
+                className="max-h-44 object-contain rounded-lg"
+              />
+              <button
+                type="button"
+                onClick={handleRemoverImagem}
+                className="absolute top-3 right-3 px-3 py-1.5 bg-slate-900/90 hover:bg-slate-800 text-xs text-white font-semibold rounded-lg border border-slate-600
