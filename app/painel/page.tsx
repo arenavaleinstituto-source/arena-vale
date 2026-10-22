@@ -12,7 +12,6 @@ interface UsuarioItem {
 export default function PainelGeralPage() {
   const [utilizadorLogado, setUtilizadorLogado] = useState<{ email: string; perfil: string } | null>(null);
   
-  // Listas de gestão do Proprietário
   const [coordenadores, setCoordenadores] = useState<UsuarioItem[]>([
     { email: 'lpostjen@gmail.com', senha: 'arenaanera', cargo: 'Coordenador (Ouro)' },
     { email: 'iigoranjo@gmail.com', senha: 'Aren@123', cargo: 'Coordenador (Ouro)' }
@@ -21,7 +20,6 @@ export default function PainelGeralPage() {
   const [moderadores, setModeradores] = useState<UsuarioItem[]>([]);
   const [capitaes, setCapitaes] = useState<UsuarioItem[]>([]);
 
-  // Inputs para novos registos pelo Proprietário
   const [novoCoordEmail, setNovoCoordEmail] = useState('');
   const [novoCoordSenha, setNovoCoordSenha] = useState('');
 
@@ -31,20 +29,17 @@ export default function PainelGeralPage() {
   const [novoCapEmail, setNovoCapEmail] = useState('');
   const [novoCapSenha, setNovoCapSenha] = useState('');
 
-  // Estados para Coordenador (Notícias e Campeonatos)
   const [noticias, setNoticias] = useState([
     { id: '1', titulo: 'Abertura do Circuito 2026', status: 'Publicado' }
   ]);
   const [novaNoticia, setNovaNoticia] = useState('');
 
-  // Estados para Moderador (Adicionar Capitães próprios)
   const [capitaesModerador, setCapitaesModerador] = useState([
     { nome: 'Carlos Equipa A', equipe: 'Vale FC' }
   ]);
   const [nomeCapitao, setNomeCapitao] = useState('');
   const [nomeEquipe, setNomeEquipe] = useState('');
 
-  // Estados para Capitão (Atletas)
   const [atletas, setAtletas] = useState([
     { nome: 'Matheus Silva', dorsal: '10' }
   ]);
@@ -157,7 +152,6 @@ export default function PainelGeralPage() {
   return (
     <>
       <div className="min-h-screen bg-[#07080c] text-white selection:bg-[#e50914] selection:text-white flex flex-col justify-between font-sans">
-        {/* CABEÇALHO DO PAINEL */}
         <header className="border-b border-white/[0.08] bg-[#07080c]/90 backdrop-blur-xl">
           <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
             <div className="flex items-center gap-3">
@@ -173,10 +167,9 @@ export default function PainelGeralPage() {
           </div>
         </header>
 
-        {/* CONTEÚDO DINÂMICO CONSOANTE O PERFIL */}
         <main className="mx-auto max-w-5xl w-full px-6 py-12 flex-grow space-y-12">
           
-          {/* 1. PAINEL DO PROPRIETÁRIO (ADMIN SUPREMO) */}
+          {/* 1. PAINEL DO PROPRIETÁRIO */}
           {utilizadorLogado.perfil === 'Proprietário' && (
             <div className="space-y-10">
               <div className="rounded-[2.5rem] border border-amber-500/30 bg-[#11141d] p-8 shadow-2xl">
@@ -194,4 +187,232 @@ export default function PainelGeralPage() {
                     value={novoCoordEmail} 
                     onChange={(e) => setNovoCoordEmail(e.target.value)} 
                     placeholder="coordenador@arenavale.com" 
-                    className="rounded-xl border border-white/1
+                    className="rounded-xl border border-white/15 bg-[#07080c] px-4 py-3 text-xs text-white placeholder:text-white/20 focus:border-[#e50914] focus:outline-none"
+                  />
+                  <input 
+                    type="password" 
+                    value={novoCoordSenha} 
+                    onChange={(e) => setNovoCoordSenha(e.target.value)} 
+                    placeholder="Palavra-passe" 
+                    className="rounded-xl border border-white/15 bg-[#07080c] px-4 py-3 text-xs text-white placeholder:text-white/20 focus:border-[#e50914] focus:outline-none"
+                  />
+                  <button type="submit" className="sm:col-span-2 rounded-xl bg-amber-500 px-6 py-3 text-xs font-black uppercase tracking-wider text-black hover:bg-amber-400 transition">
+                    Adicionar Novo Coordenador
+                  </button>
+                </form>
+
+                <div className="mt-6 space-y-3">
+                  {coordenadores.map((coord, idx) => (
+                    <div key={idx} className="flex items-center justify-between rounded-xl border border-white/10 bg-[#07080c] p-4">
+                      <div>
+                        <span className="font-bold text-white text-xs">{coord.email}</span>
+                        <span className="block text-[10px] text-amber-400">Senha: {coord.senha} · {coord.cargo}</span>
+                      </div>
+                      <button onClick={() => removerCoordenador(coord.email)} className="rounded-lg bg-red-500/20 border border-red-500/40 px-3 py-1.5 text-[10px] font-black text-red-400 hover:bg-red-500 hover:text-white transition">
+                        Excluir
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* SEÇÃO: MODERADORES */}
+              <div className="rounded-[2rem] border border-slate-300/20 bg-[#0e1118] p-6 sm:p-8 shadow-xl">
+                <h2 className="text-lg font-black uppercase text-slate-200 mb-2">2. Gestão de Moderadores (Prata)</h2>
+                <form onSubmit={adicionarModerador} className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <input 
+                    type="email" 
+                    value={novoModEmail} 
+                    onChange={(e) => setNovoModEmail(e.target.value)} 
+                    placeholder="moderador@arenavale.com" 
+                    className="rounded-xl border border-white/15 bg-[#07080c] px-4 py-3 text-xs text-white placeholder:text-white/20 focus:border-[#e50914] focus:outline-none"
+                  />
+                  <input 
+                    type="password" 
+                    value={novoModSenha} 
+                    onChange={(e) => setNovoModSenha(e.target.value)} 
+                    placeholder="Palavra-passe" 
+                    className="rounded-xl border border-white/15 bg-[#07080c] px-4 py-3 text-xs text-white placeholder:text-white/20 focus:border-[#e50914] focus:outline-none"
+                  />
+                  <button type="submit" className="sm:col-span-2 rounded-xl bg-slate-200 px-6 py-3 text-xs font-black uppercase tracking-wider text-black hover:bg-white transition">
+                    Adicionar Novo Moderador
+                  </button>
+                </form>
+
+                <div className="mt-6 space-y-3">
+                  {moderadores.map((mod, idx) => (
+                    <div key={idx} className="flex items-center justify-between rounded-xl border border-white/10 bg-[#07080c] p-4">
+                      <div>
+                        <span className="font-bold text-white text-xs">{mod.email}</span>
+                        <span className="block text-[10px] text-slate-300">Senha: {mod.senha} · {mod.cargo}</span>
+                      </div>
+                      <button onClick={() => removerModerador(mod.email)} className="rounded-lg bg-red-500/20 border border-red-500/40 px-3 py-1.5 text-[10px] font-black text-red-400 hover:bg-red-500 hover:text-white transition">
+                        Excluir
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* SEÇÃO: CAPITÃES */}
+              <div className="rounded-[2rem] border border-amber-700/30 bg-[#0e1118] p-6 sm:p-8 shadow-xl">
+                <h2 className="text-lg font-black uppercase text-amber-600 mb-2">3. Gestão de Capitães (Bronze)</h2>
+                <form onSubmit={adicionarCapitaoAdmin} className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <input 
+                    type="email" 
+                    value={novoCapEmail} 
+                    onChange={(e) => setNovoCapEmail(e.target.value)} 
+                    placeholder="capitao@arenavale.com" 
+                    className="rounded-xl border border-white/15 bg-[#07080c] px-4 py-3 text-xs text-white placeholder:text-white/20 focus:border-[#e50914] focus:outline-none"
+                  />
+                  <input 
+                    type="password" 
+                    value={novoCapSenha} 
+                    onChange={(e) => setNovoCapSenha(e.target.value)} 
+                    placeholder="Palavra-passe" 
+                    className="rounded-xl border border-white/15 bg-[#07080c] px-4 py-3 text-xs text-white placeholder:text-white/20 focus:border-[#e50914] focus:outline-none"
+                  />
+                  <button type="submit" className="sm:col-span-2 rounded-xl bg-amber-700 px-6 py-3 text-xs font-black uppercase tracking-wider text-white hover:bg-amber-600 transition">
+                    Adicionar Novo Capitão
+                  </button>
+                </form>
+
+                <div className="mt-6 space-y-3">
+                  {capitaes.map((cap, idx) => (
+                    <div key={idx} className="flex items-center justify-between rounded-xl border border-white/10 bg-[#07080c] p-4">
+                      <div>
+                        <span className="font-bold text-white text-xs">{cap.email}</span>
+                        <span className="block text-[10px] text-amber-500">Senha: {cap.senha} · {cap.cargo}</span>
+                      </div>
+                      <button onClick={() => removerCapitaoAdmin(cap.email)} className="rounded-lg bg-red-500/20 border border-red-500/40 px-3 py-1.5 text-[10px] font-black text-red-400 hover:bg-red-500 hover:text-white transition">
+                        Excluir
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 2. PAINEL DO COORDENADOR */}
+          {utilizadorLogado.perfil === 'Coordenador' && (
+            <div className="space-y-8">
+              <div className="rounded-[2.5rem] border border-amber-400/30 bg-[#11141d] p-8 shadow-2xl">
+                <span className="inline-block rounded-full bg-amber-400/10 border border-amber-400/30 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-amber-300 mb-4">🏆 PORTAL DO COORDENADOR (OURO)</span>
+                <h1 className="text-2xl font-black uppercase tracking-tight text-white">Gestão de Notícias & Campeonatos</h1>
+                <p className="text-xs text-[#8a92a6] mt-1 uppercase">Total autonomia para manusear e atualizar as notícias e os torneios oficiais da Arena Vale.</p>
+
+                <form onSubmit={adicionarNoticia} className="mt-6 flex gap-3">
+                  <input 
+                    type="text" 
+                    value={novaNoticia} 
+                    onChange={(e) => setNovaNoticia(e.target.value)} 
+                    placeholder="Título da nova notícia ou atualização..." 
+                    className="flex-1 rounded-xl border border-white/15 bg-[#07080c] px-4 py-3 text-xs text-white placeholder:text-white/20 focus:border-[#e50914] focus:outline-none"
+                  />
+                  <button type="submit" className="rounded-xl bg-[#e50914] px-6 py-3 text-xs font-black uppercase tracking-wider text-white hover:bg-red-600 transition">
+                    Publicar Notícia
+                  </button>
+                </form>
+
+                <div className="mt-6 space-y-3">
+                  {noticias.map((n) => (
+                    <div key={n.id} className="flex items-center justify-between rounded-xl border border-white/10 bg-[#07080c] p-4">
+                      <span className="font-bold text-white text-xs">{n.titulo}</span>
+                      <span className="rounded-full bg-emerald-500/10 border border-emerald-500/30 px-3 py-1 text-[10px] font-black text-emerald-400">{n.status}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 3. PAINEL DO MODERADOR */}
+          {utilizadorLogado.perfil === 'Moderador' && (
+            <div className="space-y-8">
+              <div className="rounded-[2.5rem] border border-slate-300/30 bg-[#11141d] p-8 shadow-2xl">
+                <span className="inline-block rounded-full bg-slate-300/10 border border-slate-300/30 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-slate-200 mb-4">🥈 PORTAL DO MODERADOR (PRATA)</span>
+                <h1 className="text-2xl font-black uppercase tracking-tight text-white">Gestão de Capitães</h1>
+                <p className="text-xs text-[#8a92a6] mt-1 uppercase">Adicione os capitães responsáveis pelas equipas do seu campeonato.</p>
+
+                <form onSubmit={adicionarCapitao} className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <input 
+                    type="text" 
+                    value={nomeCapitao} 
+                    onChange={(e) => setNomeCapitao(e.target.value)} 
+                    placeholder="Nome do Capitão" 
+                    className="rounded-xl border border-white/15 bg-[#07080c] px-4 py-3 text-xs text-white placeholder:text-white/20 focus:border-[#e50914] focus:outline-none"
+                  />
+                  <input 
+                    type="text" 
+                    value={nomeEquipe} 
+                    onChange={(e) => setNomeEquipe(e.target.value)} 
+                    placeholder="Nome da Equipa" 
+                    className="rounded-xl border border-white/15 bg-[#07080c] px-4 py-3 text-xs text-white placeholder:text-white/20 focus:border-[#e50914] focus:outline-none"
+                  />
+                  <button type="submit" className="sm:col-span-2 rounded-xl bg-slate-200 px-6 py-3 text-xs font-black uppercase tracking-wider text-black hover:bg-white transition">
+                    Registar Capitão
+                  </button>
+                </form>
+
+                <div className="mt-6 space-y-3">
+                  {capitaesModerador.map((cap, idx) => (
+                    <div key={idx} className="flex items-center justify-between rounded-xl border border-white/10 bg-[#07080c] p-4">
+                      <span className="font-bold text-white text-xs">{cap.nome} · <span className="text-slate-400">{cap.equipe}</span></span>
+                      <span className="text-[10px] text-slate-300">Capitão Ativo</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 4. PAINEL DO CAPITÃO */}
+          {utilizadorLogado.perfil === 'Capitão' && (
+            <div className="space-y-8">
+              <div className="rounded-[2.5rem] border border-amber-700/40 bg-[#11141d] p-8 shadow-2xl">
+                <span className="inline-block rounded-full bg-amber-700/10 border border-amber-700/40 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-amber-600 mb-4">🥉 PORTAL DO CAPITÃO (BRONZE)</span>
+                <h1 className="text-2xl font-black uppercase tracking-tight text-white">Gestão da Lista de Atletas</h1>
+                <p className="text-xs text-[#8a92a6] mt-1 uppercase">Adicione e gira os atletas inscritos para a disputa dos jogos da sua equipa.</p>
+
+                <form onSubmit={adicionarAtleta} className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <input 
+                    type="text" 
+                    value={nomeAtleta} 
+                    onChange={(e) => setNomeAtleta(e.target.value)} 
+                    placeholder="Nome Completo do Atleta" 
+                    className="sm:col-span-2 rounded-xl border border-white/15 bg-[#07080c] px-4 py-3 text-xs text-white placeholder:text-white/20 focus:border-[#e50914] focus:outline-none"
+                  />
+                  <input 
+                    type="text" 
+                    value={dorsalAtleta} 
+                    onChange={(e) => setDorsalAtleta(e.target.value)} 
+                    placeholder="Dorsal" 
+                    className="rounded-xl border border-white/15 bg-[#07080c] px-4 py-3 text-xs text-white placeholder:text-white/20 focus:border-[#e50914] focus:outline-none"
+                  />
+                  <button type="submit" className="sm:col-span-3 rounded-xl bg-amber-700 px-6 py-3 text-xs font-black uppercase tracking-wider text-white hover:bg-amber-600 transition">
+                    Adicionar Atleta à Equipa
+                  </button>
+                </form>
+
+                <div className="mt-6 space-y-3">
+                  {atletas.map((atl, idx) => (
+                    <div key={idx} className="flex items-center justify-between rounded-xl border border-white/10 bg-[#07080c] p-4">
+                      <span className="font-bold text-white text-xs">{atl.nome}</span>
+                      <span className="rounded-lg bg-white/5 px-3 py-1 text-[10px] font-black text-amber-500">Dorsal #{atl.dorsal}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+        </main>
+
+        <footer className="border-t border-white/10 bg-[#050609] py-6 text-center text-xs text-[#555d6e]">
+          © 2026 Arena Vale · Configuração Registada sob a etiqueta **CFG6**. Todos os direitos reservados.
+        </footer>
+      </div>
+    </>
+  );
+}
