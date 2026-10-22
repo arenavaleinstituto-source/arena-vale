@@ -37,7 +37,6 @@ export default function LoginPage() {
       return;
     }
 
-    // Validação para Moderadores ou Capitães customizados
     if (emailTrim && senha) {
       localStorage.setItem('arenavale_user_email', emailTrim);
       setMensagem('Autenticação efetuada com sucesso! A carregar painel...');
