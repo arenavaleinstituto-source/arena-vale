@@ -28,7 +28,7 @@ const NOTICIAS_PADRAO: NoticiaItem[] = [
     descricao: 'A Arena Vale prepara cobertura técnica e multimédia completa para o desporto regional com câmaras IA.',
     categoria: 'BROADCAST',
     tag: 'AO VIVO',
-    imagem: '/CAPA.png'
+    imagem: '/capa.jpg'
   },
   {
     id: 'noticia-2',
@@ -36,7 +36,7 @@ const NOTICIAS_PADRAO: NoticiaItem[] = [
     descricao: 'Aproximamos marcas, atletas e projetos com impacto direto na comunidade desportiva do Vale.',
     categoria: 'PROJETO VALE',
     tag: 'DESTAQUE',
-    imagem: '/CAPA.png'
+    imagem: '/capa.jpg'
   },
   {
     id: 'noticia-3',
@@ -44,7 +44,7 @@ const NOTICIAS_PADRAO: NoticiaItem[] = [
     descricao: 'Coordenação e arbitragem estruturadas para elevar o nível técnico de todas as competições.',
     categoria: 'COMPETIÇÕES',
     tag: 'OFICIAL',
-    imagem: '/CAPA.png'
+    imagem: '/capa.jpg'
   }
 ];
 
@@ -55,7 +55,7 @@ const ATLETAS_PADRAO: AtletaItem[] = [
     modalidade: 'FUTSAL ADULTO',
     equipe: 'VALE FC',
     destaque: 'Artilheiro da Temporada · 18 Golos',
-    imagem: '/CAPA.png'
+    imagem: '/capa.jpg'
   },
   {
     id: 'atleta-2',
@@ -63,7 +63,7 @@ const ATLETAS_PADRAO: AtletaItem[] = [
     modalidade: 'FUTEBOL 7',
     equipe: 'ATLÉTICO VALE',
     destaque: 'Melhor Guarda-Redes do Circuito',
-    imagem: '/CAPA.png'
+    imagem: '/capa.jpg'
   },
   {
     id: 'atleta-3',
@@ -71,7 +71,7 @@ const ATLETAS_PADRAO: AtletaItem[] = [
     modalidade: 'BASQUETEBOL',
     equipe: 'VALE HOOPS',
     destaque: 'MVP da Etapa Regional',
-    imagem: '/CAPA.png'
+    imagem: '/capa.jpg'
   }
 ];
 
@@ -173,7 +173,7 @@ export default function HomePage() {
 
         <section id="inicio" className="relative mx-auto max-w-7xl px-4 sm:px-6 pt-6 sm:pt-8 pb-12">
           <div className="relative min-h-[520px] sm:min-h-[600px] overflow-hidden rounded-[2rem] sm:rounded-[2.5rem] border border-white/10 bg-[#11141d] shadow-[0_25px_70px_rgba(0,0,0,0.75)] flex flex-col justify-end p-6 sm:p-14">
-            <img src="/CAPA.png" alt="Arena Vale" className="absolute inset-0 h-full w-full object-cover object-center brightness-60 contrast-110" />
+            <img src="/capa.jpg" alt="Arena Vale" className="absolute inset-0 h-full w-full object-cover object-center brightness-60 contrast-110" />
             <div className="absolute inset-0 bg-gradient-to-t from-[#07080c] via-[#07080c]/70 to-transparent" />
             <div className="absolute inset-0 bg-gradient-to-r from-[#07080c]/95 via-[#07080c]/45 to-transparent" />
             <div className="relative z-10 max-w-4xl">
@@ -252,7 +252,7 @@ export default function HomePage() {
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {noticiasPublicas.map((h, index) => (
               <article key={h.id} className="group relative min-h-[430px] flex flex-col justify-between rounded-2xl border border-white/10 bg-[#0c0f17] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.8)] transition-all duration-500 hover:-translate-y-2 hover:border-[#e50914]/70">
-                <img src={h.imagem || '/CAPA.png'} alt={h.titulo} className="absolute inset-0 h-full w-full object-cover object-center opacity-35 mix-blend-luminosity filter contrast-125 transition-all duration-700 group-hover:scale-110 group-hover:opacity-55 group-hover:mix-blend-normal" />
+                <img src={h.imagem || '/capa.jpg'} alt={h.titulo} className="absolute inset-0 h-full w-full object-cover object-center opacity-35 mix-blend-luminosity filter contrast-125 transition-all duration-700 group-hover:scale-110 group-hover:opacity-55 group-hover:mix-blend-normal" />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#07080c] via-[#07080c]/85 to-transparent" />
                 <div className="absolute inset-0 bg-gradient-to-br from-[#e50914]/15 via-transparent to-black/80 opacity-60 group-hover:opacity-90 transition-opacity duration-500" />
                 <span className="pointer-events-none select-none absolute -right-3 top-10 text-7xl font-black italic uppercase tracking-tighter text-white/[0.04] transition-transform duration-500 group-hover:-translate-x-3">{h.categoria}</span>
@@ -310,7 +310,7 @@ export default function HomePage() {
         <section className="bg-[#07080c] px-6 py-14">
           <div className="mx-auto max-w-7xl">
             <div className="relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-[#11141d] shadow-2xl">
-              <img src="/CAPA.png" alt="Atletas em Destaque" className="absolute inset-0 h-full w-full object-cover object-center brightness-60 transition duration-700 hover:scale-105" />
+              <img src="/capa.jpg" alt="Atletas em Destaque" className="absolute inset-0 h-full w-full object-cover object-center brightness-60 transition duration-700 hover:scale-105" />
               <div className="absolute inset-0 bg-gradient-to-t from-[#07080c] via-[#07080c]/80 to-transparent sm:bg-gradient-to-r sm:from-[#07080c]/95 sm:via-[#07080c]/70 sm:to-transparent" />
               <div className="relative z-10 flex min-h-[380px] flex-col justify-end p-8 sm:min-h-[440px] sm:max-w-2xl sm:p-14">
                 <span className="inline-flex items-center gap-2 self-start rounded-full bg-[#e50914]/20 px-3.5 py-1 text-xs font-black uppercase tracking-wider text-[#ff1e27] backdrop-blur-md">HISTÓRIAS DA ARENA</span>
