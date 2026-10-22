@@ -1,27 +1,15 @@
-import type { Metadata } from 'next';
 import './globals.css';
 
-export const metadata: Metadata = {
+export const metadata = {
+  metadataBase: new URL('https://arena-vale.vercel.app'),
   title: 'Arena Vale Sports | O Palco do Esporte é Aqui',
-  description: 'Transmissões ao vivo, coberturas, agenda e os atletas em destaque das principais competições esportivas do Vale.',
-  keywords: ['Arena Vale', 'Futsal', 'Basquete', 'Futebol 7', 'Esportes', 'Transmissão ao vivo', 'Campeonatos'],
-  icons: {
-    icon: '/logo 02.png',
-    shortcut: '/logo 02.png',
-    apple: '/logo 02.png',
-  },
+  description: 'Cobertura oficial de campeonatos, agenda, TV Arena Vale e atletas em destaque no ecossistema desportivo.',
+  keywords: ['Arena Vale', 'Esporte', 'Futsal', 'Futebol 7', 'Basquete', 'Vôlei', 'Campeonatos', 'Santa Catarina'],
   openGraph: {
     title: 'Arena Vale Sports | O Palco do Esporte é Aqui',
-    description: 'Acompanhe as transmissões, tabelas e os grandes protagonistas do esporte regional.',
+    description: 'Cobertura oficial de campeonatos, agenda e atletas em destaque.',
+    url: 'https://arena-vale.vercel.app',
     siteName: 'Arena Vale Sports',
-    images: [
-      {
-        url: '/logo 02.png',
-        width: 800,
-        height: 600,
-        alt: 'Arena Vale Sports',
-      },
-    ],
     locale: 'pt_BR',
     type: 'website',
   },
@@ -32,9 +20,33 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'SportsOrganization',
+    'name': 'Arena Vale Sports',
+    'url': 'https://arena-vale.vercel.app',
+    'logo': 'https://arena-vale.vercel.app/logo%2002.png',
+    'description': 'Organização de eventos desportivos, campeonatos e plataforma de transmissão multimédia.',
+    'address': {
+      '@type': 'PostalAddress',
+      'addressLocality': 'Vale',
+      'addressRegion': 'SC',
+      'addressCountry': 'BR'
+    },
+    'sameAs': [
+      'https://www.youtube.com/@TVArenaVale'
+    ]
+  };
+
   return (
-    <html lang="pt-BR">
-      <body className="bg-[#0b0d12] text-white antialiased selection:bg-[#e50914] selection:text-white">
+    <html lang="pt-BR" className="scroll-smooth">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
+      <body className="bg-[#07080c] text-white antialiased selection:bg-[#e50914] selection:text-white overflow-x-hidden">
         {children}
       </body>
     </html>
