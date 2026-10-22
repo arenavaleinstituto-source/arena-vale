@@ -61,7 +61,6 @@ export default function PainelGeralPage() {
 
     setUtilizadorLogado({ email: emailSalvo, perfil });
 
-    // Carregar dados salvos se existirem
     try {
       const savedCoords = localStorage.getItem('cfg6_coordenadores');
       if (savedCoords) setCoordenadores(JSON.parse(savedCoords));
@@ -76,7 +75,6 @@ export default function PainelGeralPage() {
     }
   }, []);
 
-  // Funções de Gestão do Proprietário
   const adicionarCoordenador = (e: React.FormEvent) => {
     e.preventDefault();
     if (novoCoordEmail && novoCoordSenha) {
@@ -128,7 +126,6 @@ export default function PainelGeralPage() {
     localStorage.setItem('cfg6_capitaes', JSON.stringify(atualizados));
   };
 
-  // Funções dos outros perfis
   const adicionarNoticia = (e: React.FormEvent) => {
     e.preventDefault();
     if (novaNoticia) {
@@ -158,155 +155,43 @@ export default function PainelGeralPage() {
   if (!utilizadorLogado) return <div className="min-h-screen bg-[#07080c] text-white p-10">A carregar painel...</div>;
 
   return (
-    <div className="min-h-screen bg-[#07080c] text-white selection:bg-[#e50914] selection:text-white flex flex-col justify-between font-sans">
-      {/* CABEÇALHO DO PAINEL */}
-      <header className="border-b border-white/[0.08] bg-[#07080c]/90 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-3">
-            <img src="/logo 02.png" alt="Arena Vale" className="h-12 w-auto object-contain rounded-lg mix-blend-lighten" />
-            <div>
-              <h2 className="text-sm font-black uppercase text-white">Painel de Controlo · CFG6</h2>
-              <p className="text-[10px] text-amber-400 font-bold">Perfil: {utilizadorLogado.perfil} ({utilizadorLogado.email})</p>
+    <>
+      <div className="min-h-screen bg-[#07080c] text-white selection:bg-[#e50914] selection:text-white flex flex-col justify-between font-sans">
+        {/* CABEÇALHO DO PAINEL */}
+        <header className="border-b border-white/[0.08] bg-[#07080c]/90 backdrop-blur-xl">
+          <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+            <div className="flex items-center gap-3">
+              <img src="/logo 02.png" alt="Arena Vale" className="h-12 w-auto object-contain rounded-lg mix-blend-lighten" />
+              <div>
+                <h2 className="text-sm font-black uppercase text-white">Painel de Controlo · CFG6</h2>
+                <p className="text-[10px] text-amber-400 font-bold">Perfil: {utilizadorLogado.perfil} ({utilizadorLogado.email})</p>
+              </div>
             </div>
+            <Link href="/" className="rounded-full border border-white/20 bg-white/5 px-6 py-2 text-xs font-black uppercase tracking-wider text-white hover:bg-white/10 transition">
+              Sair do Painel ↗
+            </Link>
           </div>
-          <Link href="/" className="rounded-full border border-white/20 bg-white/5 px-6 py-2 text-xs font-black uppercase tracking-wider text-white hover:bg-white/10 transition">
-            Sair do Painel ↗
-          </Link>
-        </div>
-      </header>
+        </header>
 
-      {/* CONTEÚDO DINÂMICO CONSOANTE O PERFIL */}
-      <main className="mx-auto max-w-5xl w-full px-6 py-12 flex-grow space-y-12">
-        
-        {/* 1. PAINEL DO PROPRIETÁRIO (ADMIN SUPREMO) */}
-        {utilizadorLogado.perfil === 'Proprietário' && (
-          <div className="space-y-10">
-            <div className="rounded-[2.5rem] border border-amber-500/30 bg-[#11141d] p-8 shadow-2xl">
-              <span className="inline-block rounded-full bg-amber-500/10 border border-amber-400/30 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-amber-300 mb-4">👑 PAINEL DO PROPRIETÁRIO · EXCLUSIVO CFG6</span>
-              <h1 className="text-2xl font-black uppercase tracking-tight text-white">Gestão Global de Acessos</h1>
-              <p className="text-xs text-[#8a92a6] mt-1 uppercase">Apenas o proprietário tem o direito exclusivo de adicionar e excluir Coordenadores, Moderadores e Capitães.</p>
-            </div>
-
-            {/* SEÇÃO: COORDENADORES */}
-            <div className="rounded-[2rem] border border-amber-400/20 bg-[#0e1118] p-6 sm:p-8 shadow-xl">
-              <h2 className="text-lg font-black uppercase text-amber-400 mb-2">1. Gestão de Coordenadores (Ouro)</h2>
-              <form onSubmit={adicionarCoordenador} className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <input 
-                  type="email" 
-                  value={novoCoordEmail} 
-                  onChange={(e) => setNovoCoordEmail(e.target.value)} 
-                  placeholder="coordenador@arenavale.com" 
-                  className="rounded-xl border border-white/15 bg-[#07080c] px-4 py-3 text-xs text-white placeholder:text-white/20 focus:border-[#e50914] focus:outline-none"
-                />
-                <input 
-                  type="password" 
-                  value={novoCoordSenha} 
-                  onChange={(e) => setNovoCoordSenha(e.target.value)} 
-                  placeholder="Palavra-passe" 
-                  className="rounded-xl border border-white/15 bg-[#07080c] px-4 py-3 text-xs text-white placeholder:text-white/20 focus:border-[#e50914] focus:outline-none"
-                />
-                <button type="submit" className="sm:col-span-2 rounded-xl bg-amber-500 px-6 py-3 text-xs font-black uppercase tracking-wider text-black hover:bg-amber-400 transition">
-                  Adicionar Novo Coordenador
-                </button>
-              </form>
-
-              <div className="mt-6 space-y-3">
-                {coordenadores.map((coord, idx) => (
-                  <div key={idx} className="flex items-center justify-between rounded-xl border border-white/10 bg-[#07080c] p-4">
-                    <div>
-                      <span className="font-bold text-white text-xs">{coord.email}</span>
-                      <span className="block text-[10px] text-amber-400">Senha: {coord.senha} · {coord.cargo}</span>
-                    </div>
-                    <button onClick={() => removerCoordenador(coord.email)} className="rounded-lg bg-red-500/20 border border-red-500/40 px-3 py-1.5 text-[10px] font-black text-red-400 hover:bg-red-500 hover:text-white transition">
-                      Excluir
-                    </button>
-                  </div>
-                ))}
+        {/* CONTEÚDO DINÂMICO CONSOANTE O PERFIL */}
+        <main className="mx-auto max-w-5xl w-full px-6 py-12 flex-grow space-y-12">
+          
+          {/* 1. PAINEL DO PROPRIETÁRIO (ADMIN SUPREMO) */}
+          {utilizadorLogado.perfil === 'Proprietário' && (
+            <div className="space-y-10">
+              <div className="rounded-[2.5rem] border border-amber-500/30 bg-[#11141d] p-8 shadow-2xl">
+                <span className="inline-block rounded-full bg-amber-500/10 border border-amber-400/30 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-amber-300 mb-4">👑 PAINEL DO PROPRIETÁRIO · EXCLUSIVO CFG6</span>
+                <h1 className="text-2xl font-black uppercase tracking-tight text-white">Gestão Global de Acessos</h1>
+                <p className="text-xs text-[#8a92a6] mt-1 uppercase">Apenas o proprietário tem o direito exclusivo de adicionar e excluir Coordenadores, Moderadores e Capitães.</p>
               </div>
-            </div>
 
-            {/* SEÇÃO: MODERADORES */}
-            <div className="rounded-[2rem] border border-slate-300/20 bg-[#0e1118] p-6 sm:p-8 shadow-xl">
-              <h2 className="text-lg font-black uppercase text-slate-200 mb-2">2. Gestão de Moderadores (Prata)</h2>
-              <form onSubmit={adicionarModerador} className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <input 
-                  type="email" 
-                  value={novoModEmail} 
-                  onChange={(e) => setNovoModEmail(e.target.value)} 
-                  placeholder="moderador@arenavale.com" 
-                  className="rounded-xl border border-white/15 bg-[#07080c] px-4 py-3 text-xs text-white placeholder:text-white/20 focus:border-[#e50914] focus:outline-none"
-                />
-                <input 
-                  type="password" 
-                  value={novoModSenha} 
-                  onChange={(e) => setNovoModSenha(e.target.value)} 
-                  placeholder="Palavra-passe" 
-                  className="rounded-xl border border-white/15 bg-[#07080c] px-4 py-3 text-xs text-white placeholder:text-white/20 focus:border-[#e50914] focus:outline-none"
-                />
-                <button type="submit" className="sm:col-span-2 rounded-xl bg-slate-200 px-6 py-3 text-xs font-black uppercase tracking-wider text-black hover:bg-white transition">
-                  Adicionar Novo Moderador
-                </button>
-              </form>
-
-              <div className="mt-6 space-y-3">
-                {moderadores.map((mod, idx) => (
-                  <div key={idx} className="flex items-center justify-between rounded-xl border border-white/10 bg-[#07080c] p-4">
-                    <div>
-                      <span className="font-bold text-white text-xs">{mod.email}</span>
-                      <span className="block text-[10px] text-slate-300">Senha: {mod.senha} · {mod.cargo}</span>
-                    </div>
-                    <button onClick={() => removerModerador(mod.email)} className="rounded-lg bg-red-500/20 border border-red-500/40 px-3 py-1.5 text-[10px] font-black text-red-400 hover:bg-red-500 hover:text-white transition">
-                      Excluir
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* SEÇÃO: CAPITÃES */}
-            <div className="rounded-[2rem] border border-amber-700/30 bg-[#0e1118] p-6 sm:p-8 shadow-xl">
-              <h2 className="text-lg font-black uppercase text-amber-600 mb-2">3. Gestão de Capitães (Bronze)</h2>
-              <form onSubmit={adicionarCapitaoAdmin} className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <input 
-                  type="email" 
-                  value={novoCapEmail} 
-                  onChange={(e) => setNovoCapEmail(e.target.value)} 
-                  placeholder="capitao@arenavale.com" 
-                  className="rounded-xl border border-white/15 bg-[#07080c] px-4 py-3 text-xs text-white placeholder:text-white/20 focus:border-[#e50914] focus:outline-none"
-                />
-                <input 
-                  type="password" 
-                  value={novoCapSenha} 
-                  onChange={(e) => setNovoCapSenha(e.target.value)} 
-                  placeholder="Palavra-passe" 
-                  className="rounded-xl border border-white/15 bg-[#07080c] px-4 py-3 text-xs text-white placeholder:text-white/20 focus:border-[#e50914] focus:outline-none"
-                />
-                <button type="submit" className="sm:col-span-2 rounded-xl bg-amber-700 px-6 py-3 text-xs font-black uppercase tracking-wider text-white hover:bg-amber-600 transition">
-                  Adicionar Novo Capitão
-                </button>
-              </form>
-
-              <div className="mt-6 space-y-3">
-                {capitaes.map((cap, idx) => (
-                  <div key={idx} className="flex items-center justify-between rounded-xl border border-white/10 bg-[#07080c] p-4">
-                    <div>
-                      <span className="font-bold text-white text-xs">{cap.email}</span>
-                      <span className="block text-[10px] text-amber-500">Senha: {cap.senha} · {cap.cargo}</span>
-                    </div>
-                    <button onClick={() => removerCapitaoAdmin(cap.email)} className="rounded-lg bg-red-500/20 border border-red-500/40 px-3 py-1.5 text-[10px] font-black text-red-400 hover:bg-red-500 hover:text-white transition">
-                      Excluir
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* 2. PAINEL DO COORDENADOR */}
-        {utilizadorLogado.perfil === 'Coordenador' && (
-          <div className="space-y-8">
-            <div className="rounded-[2.5rem] border border-amber-400/30 bg-[#11141d] p-8 shadow-2xl">
-              <span className="inline-block rounded-full bg-amber-400/10 border border-amber-400/30 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-amber-300 mb-4">🏆 PORTAL DO COORDENADOR (OURO)</span>
-              <h1 className="text-2xl font-black uppercase tracking-tight text-white">Gestão de Notícias & Campeonatos</h1>
-              <p className="text-xs text-[#8a92a6] mt-1 uppercase
+              {/* SEÇÃO: COORDENADORES */}
+              <div className="rounded-[2rem] border border-amber-400/20 bg-[#0e1118] p-6 sm:p-8 shadow-xl">
+                <h2 className="text-lg font-black uppercase text-amber-400 mb-2">1. Gestão de Coordenadores (Ouro)</h2>
+                <form onSubmit={adicionarCoordenador} className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <input 
+                    type="email" 
+                    value={novoCoordEmail} 
+                    onChange={(e) => setNovoCoordEmail(e.target.value)} 
+                    placeholder="coordenador@arenavale.com" 
+                    className="rounded-xl border border-white/1
