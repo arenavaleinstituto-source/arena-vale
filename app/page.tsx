@@ -158,20 +158,22 @@ export default function HomePage() {
   return (
     <>
       <div id="topo" className="min-h-screen bg-[#07080c] text-white selection:bg-[#e50914] selection:text-white">
+        
+        {/* CABEÇALHO COMPACTO E OTIMIZADO */}
         <header className="sticky top-0 z-40 border-b border-white/[0.08] bg-[#07080c]/90 backdrop-blur-xl shadow-[0_10px_30px_rgba(0,0,0,0.6)]">
-          <div className="mx-auto flex max-w-[1750px] items-center justify-between px-4 sm:px-6 lg:px-12 py-3 sm:py-4">
+          <div className="mx-auto flex max-w-[1750px] items-center justify-between px-4 sm:px-6 lg:px-12 py-2 sm:py-2.5">
             
-            {/* LOGOTIPO CLICÁVEL (DIRETO PARA /login) */}
+            {/* LOGOTIPO COMPACTO */}
             <div className="flex items-center shrink-0">
-              <Link href="/login" title="Portal do Proprietário (Admin)" className="group relative flex items-center rounded-2xl p-1 transition duration-300 hover:scale-[1.02]">
-                <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-amber-400/30 via-white/10 to-transparent opacity-0 blur-lg transition duration-500 group-hover:opacity-100" />
-                <img src="/logo 02.png" alt="Portal do Proprietário" className="relative h-12 sm:h-16 md:h-[80px] w-auto object-contain rounded-xl mix-blend-lighten contrast-110 drop-shadow-[0_0_20px_rgba(229,9,20,0.3)]" />
+              <Link href="/login" title="Portal do Proprietário (Admin)" className="group relative flex items-center rounded-xl p-0.5 transition duration-300 hover:scale-[1.02]">
+                <div className="absolute -inset-1 rounded-xl bg-gradient-to-r from-amber-400/30 via-white/10 to-transparent opacity-0 blur-lg transition duration-500 group-hover:opacity-100" />
+                <img src="/logo 02.png" alt="Portal do Proprietário" className="relative h-10 sm:h-12 md:h-14 w-auto object-contain rounded-lg mix-blend-lighten contrast-110 drop-shadow-[0_0_15px_rgba(229,9,20,0.3)]" />
               </Link>
             </div>
 
-            <nav className="hidden xl:flex items-center gap-7 2xl:gap-9 text-sm font-black uppercase tracking-[0.12em] text-[#b8c0d4]">
+            <nav className="hidden xl:flex items-center gap-6 2xl:gap-8 text-xs font-black uppercase tracking-[0.12em] text-[#b8c0d4]">
               <Link href="#inicio" className="text-white hover:text-[#e50914] whitespace-nowrap transition">Início</Link>
-              <Link href="/tv" className="flex items-center gap-2 text-white hover:text-[#e50914] whitespace-nowrap transition"><span className="h-2.5 w-2.5 rounded-full bg-[#e50914] animate-pulse shadow-[0_0_8px_#e50914] shrink-0" /> TV Arena Vale</Link>
+              <Link href="/tv" className="flex items-center gap-2 text-white hover:text-[#e50914] whitespace-nowrap transition"><span className="h-2 w-2 rounded-full bg-[#e50914] animate-pulse shadow-[0_0_8px_#e50914] shrink-0" /> TV Arena Vale</Link>
               <Link href="#noticias" className="hover:text-white whitespace-nowrap transition">Notícias</Link>
               <Link href="/agenda" className="hover:text-white whitespace-nowrap transition">Agenda</Link>
               <Link href="#campeonatos" className="hover:text-white whitespace-nowrap transition">Campeonatos</Link>
@@ -179,47 +181,47 @@ export default function HomePage() {
               <Link href="#projetosocial" className="hover:text-white whitespace-nowrap transition">Projeto Social</Link>
             </nav>
 
-            <div className="hidden xl:flex items-center gap-4 shrink-0">
-              <a href="https://wa.me/5547988444404" target="_blank" rel="noreferrer" className="rounded-full bg-gradient-to-r from-[#e50914] to-[#ff1e27] px-7 py-3 text-xs font-black uppercase tracking-[0.15em] text-white shadow-lg shadow-[#e50914]/30 transition hover:scale-105 hover:shadow-[#e50914]/50 whitespace-nowrap">Anuncie</a>
+            <div className="hidden xl:flex items-center gap-3 shrink-0">
+              <a href="https://wa.me/5547988444404" target="_blank" rel="noreferrer" className="rounded-full bg-gradient-to-r from-[#e50914] to-[#ff1e27] px-5 py-2 text-[11px] font-black uppercase tracking-[0.15em] text-white shadow-lg shadow-[#e50914]/30 transition hover:scale-105 whitespace-nowrap">Anuncie</a>
               
-              {/* MENU DROPDOWN DE ACESSO AOS PORTAIS (BOTÃO: PORTAIS) */}
+              {/* MENU DROPDOWN DE ACESSO AOS PORTAIS */}
               <div className="relative">
-                <button type="button" onClick={() => setMenuPainelAberto(!menuPainelAberto)} className="inline-flex items-center gap-2.5 rounded-full border border-amber-400/50 bg-amber-500/10 px-6 py-3 text-xs font-black uppercase tracking-[0.15em] text-amber-300 transition hover:bg-amber-500/20 whitespace-nowrap shadow-lg"><span>🔒 PORTAIS</span> <span className="text-[10px]">▼</span></button>
+                <button type="button" onClick={() => setMenuPainelAberto(!menuPainelAberto)} className="inline-flex items-center gap-2 rounded-full border border-amber-400/50 bg-amber-500/10 px-5 py-2 text-[11px] font-black uppercase tracking-[0.15em] text-amber-300 transition hover:bg-amber-500/20 whitespace-nowrap shadow-lg"><span>🔒 PORTAIS</span> <span className="text-[9px]">▼</span></button>
                 {menuPainelAberto && (
-                  <div className="absolute right-0 mt-3 w-64 rounded-2xl border border-white/15 bg-[#0e1118]/98 p-3 shadow-2xl backdrop-blur-2xl z-50 space-y-2" onMouseLeave={() => setMenuPainelAberto(false)}>
+                  <div className="absolute right-0 mt-2 w-60 rounded-2xl border border-white/15 bg-[#0e1118]/98 p-2.5 shadow-2xl backdrop-blur-2xl z-50 space-y-1.5" onMouseLeave={() => setMenuPainelAberto(false)}>
                     
                     {/* Coordenador - OURO */}
-                    <Link href="/login" onClick={() => setMenuPainelAberto(false)} className="flex items-center gap-3 rounded-xl p-2.5 hover:bg-white/5 transition group">
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-amber-400/60 bg-[#07080c] p-1 shadow-[0_0_10px_rgba(251,191,36,0.3)]">
+                    <Link href="/login" onClick={() => setMenuPainelAberto(false)} className="flex items-center gap-2.5 rounded-xl p-2 hover:bg-white/5 transition group">
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-amber-400/60 bg-[#07080c] p-1 shadow-[0_0_10px_rgba(251,191,36,0.3)]">
                         <img src="/logo 02.png" alt="Coordenador" className="h-full w-full object-contain mix-blend-lighten filter sepia-[0.85] saturate-[3.5] hue-rotate-[-15deg]" />
                       </div>
-                      <div><span className="font-black text-amber-400 group-hover:underline transition text-xs uppercase block">Coordenador</span><span className="text-[9px] text-[#8a92a6]">Ouro</span></div>
+                      <div><span className="font-black text-amber-400 group-hover:underline transition text-[11px] uppercase block">Coordenador</span><span className="text-[8px] text-[#8a92a6]">Ouro</span></div>
                     </Link>
 
                     {/* Moderador - PRATA */}
-                    <Link href="/login" onClick={() => setMenuPainelAberto(false)} className="flex items-center gap-3 rounded-xl p-2.5 hover:bg-white/5 transition group">
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-slate-300/60 bg-[#07080c] p-1 shadow-[0_0_10px_rgba(203,213,225,0.3)]">
+                    <Link href="/login" onClick={() => setMenuPainelAberto(false)} className="flex items-center gap-2.5 rounded-xl p-2 hover:bg-white/5 transition group">
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-slate-300/60 bg-[#07080c] p-1 shadow-[0_0_10px_rgba(203,213,225,0.3)]">
                         <img src="/logo 02.png" alt="Moderador" className="h-full w-full object-contain mix-blend-lighten filter grayscale brightness-125" />
                       </div>
-                      <div><span className="font-black text-slate-200 group-hover:underline transition text-xs uppercase block">Moderador</span><span className="text-[9px] text-[#8a92a6]">Prata</span></div>
+                      <div><span className="font-black text-slate-200 group-hover:underline transition text-[11px] uppercase block">Moderador</span><span className="text-[8px] text-[#8a92a6]">Prata</span></div>
                     </Link>
 
                     {/* Capitão - BRONZE */}
-                    <Link href="/login" onClick={() => setMenuPainelAberto(false)} className="flex items-center gap-3 rounded-xl p-2.5 hover:bg-white/5 transition group">
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-amber-700/60 bg-[#07080c] p-1 shadow-[0_0_10px_rgba(180,83,9,0.3)]">
+                    <Link href="/login" onClick={() => setMenuPainelAberto(false)} className="flex items-center gap-2.5 rounded-xl p-2 hover:bg-white/5 transition group">
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-amber-700/60 bg-[#07080c] p-1 shadow-[0_0_10px_rgba(180,83,9,0.3)]">
                         <img src="/logo 02.png" alt="Capitão" className="h-full w-full object-contain mix-blend-lighten filter sepia-[0.9] saturate-[2] hue-rotate-[10deg] brightness-90" />
                       </div>
-                      <div><span className="font-black text-amber-600 group-hover:underline transition text-xs uppercase block">Capitão</span><span className="text-[9px] text-[#8a92a6]">Bronze</span></div>
+                      <div><span className="font-black text-amber-600 group-hover:underline transition text-[11px] uppercase block">Capitão</span><span className="text-[8px] text-[#8a92a6]">Bronze</span></div>
                     </Link>
 
                   </div>
                 )}
               </div>
-
             </div>
-            <div className="flex xl:hidden items-center gap-2.5">
-              <a href="https://wa.me/5547988444404" target="_blank" rel="noreferrer" className="rounded-full bg-[#e50914] px-4 py-2 text-[11px] font-black uppercase tracking-wider text-white shadow-lg shadow-[#e50914]/30 whitespace-nowrap">Anuncie</a>
-              <button type="button" onClick={() => setMenuMobileAberto(true)} aria-label="Abrir Menu" className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/15 bg-white/5 text-white active:scale-95 transition-transform"><div className="flex flex-col gap-1.5 w-5 pointer-events-none"><span className="h-0.5 w-full bg-white rounded-full"></span><span className="h-0.5 w-full bg-[#e50914] rounded-full"></span><span className="h-0.5 w-full bg-white rounded-full"></span></div></button>
+
+            <div className="flex xl:hidden items-center gap-2">
+              <a href="https://wa.me/5547988444404" target="_blank" rel="noreferrer" className="rounded-full bg-[#e50914] px-3.5 py-1.5 text-[10px] font-black uppercase tracking-wider text-white shadow-lg shadow-[#e50914]/30 whitespace-nowrap">Anuncie</a>
+              <button type="button" onClick={() => setMenuMobileAberto(true)} aria-label="Abrir Menu" className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/15 bg-white/5 text-white active:scale-95 transition-transform"><div className="flex flex-col gap-1 w-4 pointer-events-none"><span className="h-0.5 w-full bg-white rounded-full"></span><span className="h-0.5 w-full bg-[#e50914] rounded-full"></span><span className="h-0.5 w-full bg-white rounded-full"></span></div></button>
             </div>
           </div>
         </header>
@@ -228,16 +230,16 @@ export default function HomePage() {
           <div className="xl:hidden fixed inset-0 z-[9999] bg-[#07080c]/98 backdrop-blur-2xl flex flex-col justify-between p-6 overflow-y-auto">
             <div className="space-y-6">
               <div className="flex items-center justify-between pb-4 border-b border-white/10">
-                <img src="/logo 02.png" alt="Arena Vale" className="h-14 w-auto object-contain rounded-lg mix-blend-lighten" />
-                <button type="button" onClick={() => setMenuMobileAberto(false)} aria-label="Fechar Menu" className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/20 bg-white/10 text-white text-2xl font-bold active:scale-95 transition-transform">✕</button>
+                <img src="/logo 02.png" alt="Arena Vale" className="h-12 w-auto object-contain rounded-lg mix-blend-lighten" />
+                <button type="button" onClick={() => setMenuMobileAberto(false)} aria-label="Fechar Menu" className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/20 bg-white/10 text-white text-xl font-bold active:scale-95 transition-transform">✕</button>
               </div>
               <p className="text-xs font-black uppercase tracking-widest text-[#e50914]">Navegação Oficial</p>
-              <nav className="flex flex-col gap-3 text-lg font-black uppercase tracking-wide">
-                <Link href="#inicio" onClick={() => setMenuMobileAberto(false)} className="py-2.5 text-white border-b border-white/5">Início</Link>
-                <Link href="/tv" onClick={() => setMenuMobileAberto(false)} className="py-2.5 text-white border-b border-white/5 flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-[#e50914] animate-pulse" /> TV Arena Vale</Link>
-                <Link href="/agenda" onClick={() => setMenuMobileAberto(false)} className="py-2.5 text-[#cad0e0] border-b border-white/5">Agenda</Link>
-                <Link href="/patrocinio" onClick={() => setMenuMobileAberto(false)} className="py-2.5 text-amber-400 border-b border-white/5">Seja Patrocinador</Link>
-                <Link href="#campeonatos" onClick={() => setMenuMobileAberto(false)} className="py-2.5 text-[#cad0e0] border-b border-white/5">Campeonatos</Link>
+              <nav className="flex flex-col gap-3 text-base font-black uppercase tracking-wide">
+                <Link href="#inicio" onClick={() => setMenuMobileAberto(false)} className="py-2 text-white border-b border-white/5">Início</Link>
+                <Link href="/tv" onClick={() => setMenuMobileAberto(false)} className="py-2 text-white border-b border-white/5 flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-[#e50914] animate-pulse" /> TV Arena Vale</Link>
+                <Link href="/agenda" onClick={() => setMenuMobileAberto(false)} className="py-2 text-[#cad0e0] border-b border-white/5">Agenda</Link>
+                <Link href="/patrocinio" onClick={() => setMenuMobileAberto(false)} className="py-2 text-amber-400 border-b border-white/5">Seja Patrocinador</Link>
+                <Link href="#campeonatos" onClick={() => setMenuMobileAberto(false)} className="py-2 text-[#cad0e0] border-b border-white/5">Campeonatos</Link>
               </nav>
             </div>
             <div className="pt-6 mt-6 border-t border-white/10 space-y-3">
@@ -406,13 +408,4 @@ export default function HomePage() {
               <span className="hidden sm:inline">|</span>
               <div className="flex items-center gap-4">
                 <Link href="/patrocinio" className="hover:text-white transition underline underline-offset-4 decoration-amber-400/40 text-amber-400 font-bold">Seja Patrocinador</Link>
-                <Link href="/privacidade" className="hover:text-white transition underline underline-offset-4 decoration-white/20">Política de Privacidade</Link>
-                <Link href="/termos" className="hover:text-white transition underline underline-offset-4 decoration-white/20">Termos de Uso</Link>
-              </div>
-            </div>
-          </div>
-        </footer>
-      </div>
-    </>
-  );
-}
+                <Link href="/privacidade" className="hover:text-white transition underline underline-offset-4
