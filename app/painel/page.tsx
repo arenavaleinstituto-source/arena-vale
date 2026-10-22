@@ -122,6 +122,4 @@ export default function PainelPage() {
           </div>
         </section>
 
-        {/* FERRAMENTAS DE CONTEÚDO & CAMPEONATOS */}
-        <section className="bg-slate-900/60 p-6 rounded-2xl border border-white/5 space-y-4">
-          <h2 className="text-sm
+        {/* FERRAMENTAS DE CONTEÚDO
