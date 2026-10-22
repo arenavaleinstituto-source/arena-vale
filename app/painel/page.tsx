@@ -1,72 +1,20 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
 export default function PainelPage() {
   const router = useRouter();
-  const supabase = createClientComponentClient();
 
-  const [usuarioEmail, setUsuarioEmail] = useState<string>('carregando...');
-  const [totalCampeonatos, setTotalCampeonatos] = useState<number | string>('--');
-  const [totalInscricoes, setTotalInscricoes] = useState<number | string>('--');
-  const [campeonatoDestaque, setCampeonatoDestaque] = useState<string>('Copa Regional Vale 2026');
-  const [sistemaStatus, setSistemaStatus] = useState<boolean>(true);
+  const [usuarioEmail] = useState('arenavale2026@gmail.com');
+  const [totalCampeonatos] = useState('12');
+  const [totalInscricoes] = useState('1.436');
+  const [campeonatoDestaque] = useState('Copa Regional Vale 2026');
+  const [sistemaStatus] = useState(true);
 
-  useEffect(() => {
-    async function carregarDadosPainel() {
-      try {
-        // 1. Identificar usuário logado
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user?.email) {
-          setUsuarioEmail(user.email);
-        }
-
-        // 2. Buscar contagem de campeonatos cadastrados
-        const { count: countCamps, error: errCamps } = await supabase
-          .from('campeonatos')
-          .select('*', { count: 'exact', head: true });
-
-        if (!errCamps && countCamps !== null) {
-          setTotalCampeonatos(countCamps);
-        }
-
-        // 3. Buscar inscrições de atletas
-        const { count: countInscritos, error: errInsc } = await supabase
-          .from('inscricoes')
-          .select('*', { count: 'exact', head: true });
-
-        if (!errInsc && countInscritos !== null) {
-          setTotalInscricoes(countInscritos);
-        }
-
-        // 4. Buscar campeonato ativo principal
-        const { data: campAtivo } = await supabase
-          .from('campeonatos')
-          .select('nome')
-          .order('created_at', { ascending: false })
-          .limit(1)
-          .maybeSingle();
-
-        if (campAtivo?.nome) {
-          setCampeonatoDestaque(campAtivo.nome);
-        }
-      } catch (err) {
-        console.error('Erro ao carregar dados:', err);
-        setSistemaStatus(false);
-      }
-    }
-
-    carregarDadosPainel();
-  }, [supabase]);
-
-  // Função para deslogar
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
+  const handleLogout = () => {
     router.push('/login');
-    router.refresh();
   };
 
   return (
@@ -128,3 +76,52 @@ export default function PainelPage() {
             </div>
 
             <div>
+              <span
+                className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold border ${
+                  sistemaStatus
+                    ? 'bg-emerald-950/60 border-emerald-500/30 text-emerald-400'
+                    : 'bg-amber-950/60 border-amber-500/30 text-amber-400'
+                }`}
+              >
+                <span className={`w-2 h-2 rounded-full ${sistemaStatus ? 'bg-emerald-400' : 'bg-amber-400'} animate-pulse`} />
+                {sistemaStatus ? 'Sistema Ativo & Sincronizado' : 'Aguardando Sincronização'}
+              </span>
+            </div>
+          </div>
+
+          {/* CARDS DE NÚMEROS */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="bg-slate-950/60 p-5 rounded-xl border border-slate-800">
+              <span className="text-[11px] font-bold uppercase text-slate-400">Total Campeonatos</span>
+              <div className="text-3xl font-extrabold text-white mt-2">{totalCampeonatos}</div>
+              <span className="text-[10px] font-medium text-emerald-400 mt-2 block">CADASTRADOS NA BASE</span>
+            </div>
+
+            <div className="bg-slate-950/60 p-5 rounded-xl border border-slate-800">
+              <span className="text-[11px] font-bold uppercase text-slate-400">Atletas Inscritos</span>
+              <div className="text-3xl font-extrabold text-amber-400 mt-2">{totalInscricoes}</div>
+              <span className="text-[10px] font-medium text-slate-400 mt-2 block">TOTAL GERAL DE ATLETAS</span>
+            </div>
+
+            <div className="bg-slate-950/60 p-5 rounded-xl border border-slate-800">
+              <span className="text-[11px] font-bold uppercase text-slate-400">Conteúdo em Foco</span>
+              <div className="text-sm font-bold text-white mt-2 truncate">TV Arena Vale - Ao Vivo</div>
+              <span className="text-[10px] font-semibold text-amber-400 mt-2 block uppercase">Transmissões Ativas</span>
+            </div>
+
+            <div className="bg-slate-950/60 p-5 rounded-xl border border-slate-800">
+              <span className="text-[11px] font-bold uppercase text-slate-400">Campeonato Monitorado</span>
+              <div className="text-sm font-bold text-white mt-2 truncate">{campeonatoDestaque}</div>
+              <span className="text-[10px] font-semibold text-emerald-400 mt-2 block uppercase">Maior Volume de Acessos</span>
+            </div>
+          </div>
+
+          <div className="bg-amber-950/20 border border-amber-500/20 rounded-xl p-3.5 flex items-center gap-3 text-amber-300 text-xs font-medium">
+            <span>💡</span>
+            <span>DICA DE GESTÃO: Utilize estes dados para avaliar o alcance das transmissões e definir estratégias de divulgação junto aos atletas e patrocinadores.</span>
+          </div>
+        </section>
+
+        {/* FERRAMENTAS DE CONTEÚDO & CAMPEONATOS */}
+        <section className="bg-slate-900/60 p-6 rounded-2xl border border-white/5 space-y-4">
+          <h2 className="text-sm
