@@ -342,7 +342,7 @@ export default function HomePage() {
                 <div className="inline-flex items-center gap-2 mb-2"><span className="h-3 w-1.5 bg-[#e50914] -skew-x-12" /><span className="text-xs font-black tracking-[0.3em] text-[#e50914] uppercase">CALENDÁRIO DESPORTIVO</span></div>
                 <h2 className="text-4xl sm:text-5xl font-black italic uppercase tracking-tighter text-white leading-none">AGENDA DE <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#e50914] to-[#ff4b52]">JOGOS</span></h2>
               </div>
-              <a href="https://wa.me/5547988444404" target="_blank" rel="noreferrer" className="rounded-full border border-white/20 bg-white/5 px-6 py-2.5 text-xs font-black uppercase tracking-wider text-white hover:bg-white/10 transition">Informações sobre Torneios ↗</a>
+              <Link href="/agenda" className="rounded-full border border-white/20 bg-white/5 px-6 py-2.5 text-xs font-black uppercase tracking-wider text-white hover:bg-white/10 transition">Ver Agenda Completa ↗</Link>
             </div>
             
             <div className="rounded-[2.5rem] border border-white/10 bg-gradient-to-br from-[#12151f] via-[#0b0d14] to-[#07080c] p-10 sm:p-16 shadow-2xl text-center flex flex-col items-center justify-center relative overflow-hidden">
@@ -438,64 +438,92 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* 🌟 PAVILHÃO DE PATROCINADORES */}
+        {/* 🌟 PAVILHÃO DE PATROCINADORES & COTAS */}
         <section className="mx-auto max-w-7xl px-4 sm:px-6 py-16">
-          <div className="relative overflow-hidden rounded-[2.5rem] border border-amber-500/30 bg-gradient-to-br from-[#12151f] via-[#0d1017] to-[#07080c] p-8 sm:p-14 shadow-[0_25px_80px_rgba(0,0,0,0.8)] text-center">
+          <div className="relative overflow-hidden rounded-[2.5rem] border border-amber-500/30 bg-gradient-to-br from-[#12151f] via-[#0d1017] to-[#07080c] p-8 sm:p-16 shadow-[0_25px_80px_rgba(0,0,0,0.8)]">
             <div className="absolute -right-20 -top-20 h-72 w-72 rounded-full bg-amber-500/10 blur-3xl pointer-events-none" />
             <div className="absolute -left-20 -bottom-20 h-72 w-72 rounded-full bg-[#e50914]/10 blur-3xl pointer-events-none" />
-            <div className="relative z-10 max-w-4xl mx-auto flex flex-col items-center">
+            
+            {/* APRESENTAÇÃO COMERCIAL */}
+            <div className="relative z-10 max-w-4xl mx-auto text-center mb-16">
               <span className="inline-flex items-center gap-2 rounded-full border border-amber-400/40 bg-amber-500/10 px-4 py-1.5 text-xs font-black uppercase tracking-[0.2em] text-amber-300 mb-4">OPORTUNIDADE COMERCIAL EXCLUSIVA</span>
               <h2 className="text-3xl sm:text-5xl md:text-6xl font-black italic uppercase tracking-tight text-white leading-tight">
-                COLOQUE A SUA MARCA NO <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-200 to-[#e50914]">PALCO DO DESPORTO.</span>
+                POR QUE PATROCINAR A <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-amber-200 to-[#e50914]">ARENA VALE</span>
               </h2>
-              <p className="mt-5 text-sm sm:text-base text-[#cad0e0] leading-relaxed max-w-3xl mx-auto uppercase">A ARENA VALE CONECTA SUA EMPRESA A UMA AUDIÊNCIA ENGAJADA E APAIXONADA POR DESPORTO. VISIBILIDADE GARANTIDA EM TRANSMISSÕES EM DIRETO EM ALTA DEFINIÇÃO, PLACARES ELETRÓNICOS, REDES SOCIAIS OFICIAIS E BACKDROPS DE CAMPO.</p>
-              <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-                <a href="https://wa.me/5547988444404?text=Olá,%20tenho%20interesse%20em%20investir%20e%20colocar%20a%20logo%20da%20minha%20empresa%20na%20Arena%20Vale!" target="_blank" rel="noreferrer" className="rounded-full bg-gradient-to-r from-amber-500 to-amber-400 px-8 py-4 text-xs font-black uppercase tracking-widest text-black shadow-xl shadow-amber-500/20 hover:scale-105 transition">💼 INVESTIR COMO PATROCINADOR MASTER ↗</a>
+              <p className="mt-5 text-sm sm:text-base text-[#cad0e0] leading-relaxed max-w-3xl mx-auto uppercase">
+                A Arena Vale conecta sua marca a um público engajado e apaixonado por esporte na região do Vale. Visibilidade garantida em transmissões ao vivo em alta definição, placares eletrônicos, redes sociais oficiais e backdrops de campo — em futsal, futebol 7, basquete e vôlei, o ano inteiro.
+              </p>
+            </div>
+
+            {/* DETALHE DAS COTAS */}
+            <div className="relative z-10 grid gap-8 lg:grid-cols-3 mb-16">
+              {/* Cota Master */}
+              <div className="flex flex-col justify-between rounded-3xl border border-amber-400/60 bg-gradient-to-b from-amber-500/15 via-[#0c0f17] to-[#07080c] p-8 shadow-2xl relative overflow-hidden group hover:border-amber-300 transition">
+                <div className="absolute top-0 right-0 bg-amber-400 text-black text-[10px] font-black uppercase px-4 py-1 rounded-bl-2xl tracking-wider">DESTAQUE</div>
+                <div>
+                  <h3 className="text-2xl font-black uppercase text-white tracking-wider mb-2">Cota Master</h3>
+                  <p className="text-xs font-bold text-amber-400 uppercase tracking-widest mb-6">Exposição Principal em TV e Campo</p>
+                  <p className="text-xs sm:text-sm text-[#b8c0d4] leading-relaxed mb-6 uppercase">
+                    A cota de maior visibilidade da Arena Vale. Sua marca aparece como patrocinadora oficial em todas as transmissões ao vivo da temporada, com presença fixa no placar eletrônico e em todo material de campo (backdrop, faixas).
+                  </p>
+                  <ul className="space-y-2.5 text-xs text-[#cad0e0] mb-8">
+                    <li className="flex items-start gap-2"><span className="text-amber-400 font-bold">✓</span> Logo em destaque na abertura e no intervalo de todas as transmissões</li>
+                    <li className="flex items-start gap-2"><span className="text-amber-400 font-bold">✓</span> Presença fixa no placar eletrônico durante os jogos</li>
+                    <li className="flex items-start gap-2"><span className="text-amber-400 font-bold">✓</span> Backdrop de campo em todos os jogos da temporada</li>
+                    <li className="flex items-start gap-2"><span className="text-amber-400 font-bold">✓</span> Menção nas redes sociais oficiais a cada rodada</li>
+                    <li className="flex items-start gap-2"><span className="text-amber-400 font-bold">✓</span> Selo de &quot;Patrocinador Master&quot; no site</li>
+                  </ul>
+                </div>
+                <a href="https://wa.me/5547988444404?text=Olá,%2520tenho%2520interesse%2520na%2520Cota%2520Master%2520da%2520Arena%2520Vale!" target="_blank" rel="noreferrer" className="w-full text-center rounded-full bg-amber-400 py-3 text-xs font-black uppercase tracking-widest text-black hover:bg-amber-300 transition shadow-lg shadow-amber-500/20">Garantir Cota Master ↗</a>
+              </div>
+
+              {/* Cota Apoio Regional */}
+              <div className="flex flex-col justify-between rounded-3xl border border-white/20 bg-gradient-to-b from-white/[0.05] via-[#0c0f17] to-[#07080c] p-8 shadow-2xl relative overflow-hidden group hover:border-[#e50914] transition">
+                <div>
+                  <h3 className="text-2xl font-black uppercase text-white tracking-wider mb-2">Cota Apoio Regional</h3>
+                  <p className="text-xs font-bold text-[#e50914] uppercase tracking-widest mb-6">Cota de Transmissão Ao Vivo</p>
+                  <p className="text-xs sm:text-sm text-[#b8c0d4] leading-relaxed mb-6 uppercase">
+                    Ideal para marcas regionais que querem presença constante nas transmissões, com um investimento mais acessível que a Cota Master.
+                  </p>
+                  <ul className="space-y-2.5 text-xs text-[#cad0e0] mb-8">
+                    <li className="flex items-start gap-2"><span className="text-[#e50914] font-bold">✓</span> Logo exibida durante as transmissões ao vivo (inserção periódica)</li>
+                    <li className="flex items-start gap-2"><span className="text-[#e50914] font-bold">✓</span> Menção no início e encerramento de cada transmissão</li>
+                    <li className="flex items-start gap-2"><span className="text-[#e50914] font-bold">✓</span> Presença no site, na seção de parceiros</li>
+                  </ul>
+                </div>
+                <a href="https://wa.me/5547988444404?text=Olá,%2520tenho%2520interesse%2520na%2520Cota%2520Apoio%2520Regional%2520da%2520Arena%2520Vale!" target="_blank" rel="noreferrer" className="w-full text-center rounded-full border border-white/20 bg-white/5 py-3 text-xs font-black uppercase tracking-widest text-white hover:bg-white/10 hover:border-white/40 transition">Garantir Apoio Regional ↗</a>
+              </div>
+
+              {/* Cota Institucional */}
+              <div className="flex flex-col justify-between rounded-3xl border border-emerald-500/40 bg-gradient-to-b from-emerald-500/10 via-[#0c0f17] to-[#07080c] p-8 shadow-2xl relative overflow-hidden group hover:border-emerald-400 transition">
+                <div>
+                  <h3 className="text-2xl font-black uppercase text-white tracking-wider mb-2">Cota Institucional</h3>
+                  <p className="text-xs font-bold text-emerald-400 uppercase tracking-widest mb-6">Parceiros de Apoio ao Desporto</p>
+                  <p className="text-xs sm:text-sm text-[#b8c0d4] leading-relaxed mb-6 uppercase">
+                    Para entidades, federações e parceiros de apoio ao esporte regional. Reconhecimento como parceiro institucional oficial da Arena Vale.
+                  </p>
+                  <ul className="space-y-2.5 text-xs text-[#cad0e0] mb-8">
+                    <li className="flex items-start gap-2"><span className="text-emerald-400 font-bold">✓</span> Logo fixa na seção de parceiros do site</li>
+                    <li className="flex items-start gap-2"><span className="text-emerald-400 font-bold">✓</span> Associação ao Projeto Social Arena Vale</li>
+                    <li className="flex items-start gap-2"><span className="text-emerald-400 font-bold">✓</span> Menção em releases e materiais institucionais</li>
+                  </ul>
+                </div>
+                <a href="https://wa.me/5547988444404?text=Olá,%2520tenho%2520interesse%2520na%2520Cota%2520Institucional%2520da%2520Arena%2520Vale!" target="_blank" rel="noreferrer" className="w-full text-center rounded-full border border-emerald-500/40 bg-emerald-500/15 py-3 text-xs font-black uppercase tracking-widest text-emerald-300 hover:bg-emerald-500 hover:text-black transition">Garantir Cota Institucional ↗</a>
               </div>
             </div>
-            <div className="mt-14 pt-10 border-t border-white/10 text-left">
-              <p className="text-xs font-black uppercase tracking-[0.2em] text-[#8a92a6] mb-6 text-center sm:text-left">VITRINE DE PARCEIROS & COTAS OFICIAIS</p>
-              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                <div className="group relative flex flex-col justify-between rounded-2xl border border-amber-400/50 bg-gradient-to-b from-amber-500/10 to-[#07080c] p-6 text-center shadow-xl transition hover:scale-[1.02] hover:border-amber-300">
-                  <div className="absolute top-2.5 right-2.5"><span className="flex h-2.5 w-2.5 rounded-full bg-amber-400 animate-pulse" /></div>
-                  <div>
-                    <span className="text-[10px] font-black uppercase tracking-widest text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded">Cota Institucional</span>
-                    <div className="my-6 flex h-56 w-full items-center justify-center rounded-2xl bg-black/60 border border-amber-400/40 p-4 shadow-[0_0_25px_rgba(251,191,36,0.2)]"><img src="/logo 02.png" alt="ACADESF" className="h-full w-full object-contain filter drop-shadow-[0_0_15px_rgba(251,191,36,0.8)]" /></div>
-                    <h4 className="text-base font-black uppercase text-white tracking-wider">ACADESF</h4>
-                    <p className="text-[11px] font-bold text-amber-300 mt-1">Parceiro Institucional Oficial</p>
-                  </div>
-                  <div className="mt-6 pt-4 border-t border-white/10"><span className="text-[10px] font-mono text-[#8a92a6] uppercase">EXPOSIÇÃO 100% ATIVA</span></div>
-                </div>
-                <div className="group relative flex flex-col justify-between rounded-2xl border border-dashed border-white/20 bg-white/[0.02] p-6 text-center shadow-xl transition hover:border-[#e50914] hover:bg-[#e50914]/5">
-                  <div>
-                    <span className="text-[10px] font-black uppercase tracking-widest text-[#e50914] bg-[#e50914]/10 px-2.5 py-1 rounded">Disponível</span>
-                    <div className="my-6 flex h-56 w-full items-center justify-center rounded-2xl bg-black/40 border border-dashed border-white/30 p-4 group-hover:border-[#e50914]/60 transition"><span className="text-xs font-black uppercase tracking-widest text-white/50 group-hover:text-white transition">Sua Logo Aqui<br/><span className="text-[10px] text-[#e50914] font-bold">Espaço Premium Gigante 3x</span></span></div>
-                    <h4 className="text-base font-black uppercase text-white tracking-wider">Cota Master 01</h4>
-                    <p className="text-[11px] font-bold text-[#8a92a6] mt-1">Exposição Principal em TV & Campo</p>
-                  </div>
-                  <div className="mt-6 pt-4 border-t border-white/10"><a href="https://wa.me/5547988444404?text=Quero%20reservar%20a%20Cota%20Master%2001" target="_blank" rel="noreferrer" className="text-[10px] font-black uppercase tracking-wider text-amber-400 hover:underline">Garantir esta Cota ↗</a></div>
-                </div>
-                <div className="group relative flex flex-col justify-between rounded-2xl border border-dashed border-white/20 bg-white/[0.02] p-6 text-center shadow-xl transition hover:border-[#e50914] hover:bg-[#e50914]/5">
-                  <div>
-                    <span className="text-[10px] font-black uppercase tracking-widest text-[#e50914] bg-[#e50914]/10 px-2.5 py-1 rounded">Disponível</span>
-                    <div className="my-6 flex h-56 w-full items-center justify-center rounded-2xl bg-black/40 border border-dashed border-white/30 p-4 group-hover:border-[#e50914]/60 transition"><span className="text-xs font-black uppercase tracking-widest text-white/50 group-hover:text-white transition">Sua Logo Aqui<br/><span className="text-[10px] text-[#e50914] font-bold">Espaço Premium Gigante 3x</span></span></div>
-                    <h4 className="text-base font-black uppercase text-white tracking-wider">Cota Master 02</h4>
-                    <p className="text-[11px] font-bold text-[#8a92a6] mt-1">Exposição em Placar & Redes</p>
-                  </div>
-                  <div className="mt-6 pt-4 border-t border-white/10"><a href="https://wa.me/5547988444404?text=Quero%20reservar%20a%20Cota%20Master%2002" target="_blank" rel="noreferrer" className="text-[10px] font-black uppercase tracking-wider text-amber-400 hover:underline">Garantir esta Cota ↗</a></div>
-                </div>
-                <div className="group relative flex flex-col justify-between rounded-2xl border border-dashed border-white/20 bg-white/[0.02] p-6 text-center shadow-xl transition hover:border-[#e50914] hover:bg-[#e50914]/5">
-                  <div>
-                    <span className="text-[10px] font-black uppercase tracking-widest text-[#e50914] bg-[#e50914]/10 px-2.5 py-1 rounded">Disponível</span>
-                    <div className="my-6 flex h-56 w-full items-center justify-center rounded-2xl bg-black/40 border border-dashed border-white/30 p-4 group-hover:border-[#e50914]/60 transition"><span className="text-xs font-black uppercase tracking-widest text-white/50 group-hover:text-white transition">Sua Logo Aqui<br/><span className="text-[10px] text-[#e50914] font-bold">Espaço Premium Gigante 3x</span></span></div>
-                    <h4 className="text-base font-black uppercase text-white tracking-wider">Apoio Regional</h4>
-                    <p className="text-[11px] font-bold text-[#8a92a6] mt-1">Cota de Transmissão Ao Vivo</p>
-                  </div>
-                  <div className="mt-6 pt-4 border-t border-white/10"><a href="https://wa.me/5547988444404?text=Quero%20reservar%20o%20Apoio%20Regional" target="_blank" rel="noreferrer" className="text-[10px] font-black uppercase tracking-wider text-amber-400 hover:underline">Garantir esta Cota ↗</a></div>
-                </div>
-              </div>
+
+            {/* COMO FECHAR UMA COTA */}
+            <div className="relative z-10 pt-10 border-t border-white/10 text-center max-w-2xl mx-auto">
+              <h4 className="text-sm font-black uppercase tracking-widest text-white mb-2">Como fechar uma cota</h4>
+              <p className="text-xs sm:text-sm text-[#8a92a6] uppercase leading-relaxed mb-6">
+                Todo interesse em patrocínio é direcionado para contato direto via WhatsApp, onde a equipe Arena Vale apresenta valores atualizados e disponibilidade de cada cota por temporada.
+              </p>
+              <a href="https://wa.me/5547988444404?text=Olá,%2520quero%2520conversar%2520sobre%2520patrocínio%2520na%2520Arena%2520Vale!" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-emerald-600 to-emerald-500 px-8 py-4 text-xs font-black uppercase tracking-widest text-white hover:scale-105 transition shadow-lg shadow-emerald-600/30">
+                💬 WhatsApp Patrocínios: (47) 98844-4404 ↗
+              </a>
             </div>
+
           </div>
         </section>
 
