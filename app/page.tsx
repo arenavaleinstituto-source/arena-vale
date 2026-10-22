@@ -186,24 +186,24 @@ export default function HomePage() {
               <div className="relative">
                 <button type="button" onClick={() => setMenuPainelAberto(!menuPainelAberto)} className="inline-flex items-center gap-2.5 rounded-full border border-amber-400/50 bg-amber-500/10 px-6 py-3 text-xs font-black uppercase tracking-[0.15em] text-amber-300 transition hover:bg-amber-500/20 whitespace-nowrap shadow-lg"><span>🔒 Acesso Portais</span> <span className="text-[10px]">▼</span></button>
                 {menuPainelAberto && (
-                  <div className="absolute right-0 mt-3 w-72 rounded-2xl border border-white/15 bg-[#0e1118]/98 p-3 shadow-2xl backdrop-blur-2xl z-50 space-y-2" onMouseLeave={() => setMenuPainelAberto(false)}>
+                  <div className="absolute right-0 mt-3 w-64 rounded-2xl border border-white/15 bg-[#0e1118]/98 p-3 shadow-2xl backdrop-blur-2xl z-50 space-y-2" onMouseLeave={() => setMenuPainelAberto(false)}>
                     
-                    {/* 1. Coordenador / Moderador (OURO) */}
+                    {/* 1. Coordenador (OURO) */}
                     <Link href="/login" onClick={() => setMenuPainelAberto(false)} className="flex items-center gap-3 rounded-xl p-2.5 hover:bg-white/5 transition group">
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-amber-400/60 bg-[#07080c] text-amber-400 font-black text-sm shadow-[0_0_10px_rgba(251,191,36,0.3)]">🏆</div>
-                      <div><span className="font-black text-amber-400 group-hover:underline transition text-xs uppercase block">Portal Coordenador / Moderador</span><span className="text-[10px] text-[#8a92a6]">Gestão de Competições (Ouro)</span></div>
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-amber-400/60 bg-[#07080c] text-amber-400 font-black text-xs shadow-[0_0_10px_rgba(251,191,36,0.3)]">🏆</div>
+                      <div><span className="font-black text-amber-400 group-hover:underline transition text-xs uppercase block">Coordenador</span><span className="text-[9px] text-[#8a92a6]">Ouro</span></div>
                     </Link>
 
-                    {/* 2. Moderador de Espaço (PRATA) */}
+                    {/* 2. Moderador (PRATA) */}
                     <Link href="/login" onClick={() => setMenuPainelAberto(false)} className="flex items-center gap-3 rounded-xl p-2.5 hover:bg-white/5 transition group">
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-slate-300/60 bg-[#07080c] text-slate-200 font-black text-sm shadow-[0_0_10px_rgba(203,213,225,0.3)]">🥈</div>
-                      <div><span className="font-black text-slate-200 group-hover:underline transition text-xs uppercase block">Portal Moderador de Espaço</span><span className="text-[10px] text-[#8a92a6]">Anúncio de Campeonatos (Prata)</span></div>
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-slate-300/60 bg-[#07080c] text-slate-200 font-black text-xs shadow-[0_0_10px_rgba(203,213,225,0.3)]">🥈</div>
+                      <div><span className="font-black text-slate-200 group-hover:underline transition text-xs uppercase block">Moderador</span><span className="text-[9px] text-[#8a92a6]">Prata</span></div>
                     </Link>
 
-                    {/* 3. Capitão de Equipa (BRONZE) */}
+                    {/* 3. Capitão (BRONZE) */}
                     <Link href="/login" onClick={() => setMenuPainelAberto(false)} className="flex items-center gap-3 rounded-xl p-2.5 hover:bg-white/5 transition group">
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-amber-700/60 bg-[#07080c] text-amber-600 font-black text-sm shadow-[0_0_10px_rgba(180,83,9,0.3)]">🥉</div>
-                      <div><span className="font-black text-amber-600 group-hover:underline transition text-xs uppercase block">Portal Capitão de Equipa</span><span className="text-[10px] text-[#8a92a6]">Inscrição e Atletas (Bronze)</span></div>
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-amber-700/60 bg-[#07080c] text-amber-600 font-black text-xs shadow-[0_0_10px_rgba(180,83,9,0.3)]">🥉</div>
+                      <div><span className="font-black text-amber-600 group-hover:underline transition text-xs uppercase block">Capitão</span><span className="text-[9px] text-[#8a92a6]">Bronze</span></div>
                     </Link>
 
                   </div>
@@ -236,9 +236,9 @@ export default function HomePage() {
             </div>
             <div className="pt-6 mt-6 border-t border-white/10 space-y-3">
               <p className="text-[10px] font-black uppercase tracking-widest text-amber-400">Portais de Acesso:</p>
-              <Link href="/login" onClick={() => setMenuMobileAberto(false)} className="block text-center w-full rounded-xl border border-amber-400/50 bg-[#07080c] py-3 text-xs font-black uppercase text-amber-400">🏆 Portal Coordenador / Moderador (Ouro)</Link>
-              <Link href="/login" onClick={() => setMenuMobileAberto(false)} className="block text-center w-full rounded-xl border border-slate-300/50 bg-[#07080c] py-3 text-xs font-black uppercase text-slate-200">🥈 Portal Moderador de Espaço (Prata)</Link>
-              <Link href="/login" onClick={() => setMenuMobileAberto(false)} className="block text-center w-full rounded-xl border border-amber-700/50 bg-[#07080c] py-3 text-xs font-black uppercase text-amber-600">🥉 Portal Capitão de Equipa (Bronze)</Link>
+              <Link href="/login" onClick={() => setMenuMobileAberto(false)} className="block text-center w-full rounded-xl border border-amber-400/50 bg-[#07080c] py-3 text-xs font-black uppercase text-amber-400">🏆 Coordenador (Ouro)</Link>
+              <Link href="/login" onClick={() => setMenuMobileAberto(false)} className="block text-center w-full rounded-xl border border-slate-300/50 bg-[#07080c] py-3 text-xs font-black uppercase text-slate-200">🥈 Moderador (Prata)</Link>
+              <Link href="/login" onClick={() => setMenuMobileAberto(false)} className="block text-center w-full rounded-xl border border-amber-700/50 bg-[#07080c] py-3 text-xs font-black uppercase text-amber-600">🥉 Capitão (Bronze)</Link>
             </div>
           </div>
         )}
