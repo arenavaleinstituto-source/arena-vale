@@ -1,10 +1,3 @@
-Percebi o motivo! Como o projeto está organizado utilizando a estrutura de pastas do Next.js com a rota de autenticação agrupada em **`(auth)/login`**, a rota real que o Next.js gera no servidor para essa página é **`/auth/login`** (e não `/login` diretamente, a menos que se utilize um redirecionamento).
-
-Para garantir que ao clicar no logótipo (ou em qualquer perfil do menu) abra instantaneamente a página correta sem dar erro ou falhar, vamos alterar o destino do link de `/login` para **`/auth/login`**.
-
-Aqui tem o código 100% completo e atualizado do ficheiro **`app/page.tsx`**, já com as rotas corrigidas para `/auth/login` tanto no logótipo do proprietário quanto nos três perfis de acesso:
-
-```tsx
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -423,5 +416,3 @@ export default function HomePage() {
     </>
   );
 }
-
-```
