@@ -21,7 +21,7 @@ export default function CampeonatosPage() {
     e.preventDefault();
     if (!nome.trim()) return;
 
-    const novo = {
+    const novo: CampeonatoItem = {
       id: Date.now(),
       nome,
       modalidade,
