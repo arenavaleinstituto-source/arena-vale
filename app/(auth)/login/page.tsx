@@ -15,7 +15,7 @@ export default function LoginPage() {
 
     const emailTrim = email.trim().toLowerCase();
 
-    // Validação estrita CFG6
+    // Validação estrita CFG6 - Proprietário
     if (emailTrim === 'pmmiranda2017@gmail.com' && senha === 'novaarena2020@') {
       localStorage.setItem('arenavale_user_email', emailTrim);
       setMensagem('Login de Proprietário bem-sucedido! A redirecionar...');
@@ -23,6 +23,7 @@ export default function LoginPage() {
       return;
     }
 
+    // Validação estrita CFG6 - Coordenadores
     if (emailTrim === 'lpostjen@gmail.com' && senha === 'arenaanera') {
       localStorage.setItem('arenavale_user_email', emailTrim);
       setMensagem('Login de Coordenador bem-sucedido! A redirecionar...');
@@ -35,6 +36,30 @@ export default function LoginPage() {
       setMensagem('Login de Coordenador bem-sucedido! A redirecionar...');
       setTimeout(() => router.push('/painel'), 1000);
       return;
+    }
+
+    if (emailTrim === 'arenavale2026@gmail.com') {
+      localStorage.setItem('arenavale_user_email', emailTrim);
+      setMensagem('Login de Coordenador bem-sucedido! A redirecionar...');
+      setTimeout(() => router.push('/painel'), 1000);
+      return;
+    }
+
+    // Verificação de Coordenadores adicionados dinamicamente pelo proprietário no localStorage
+    try {
+      const savedCoords = localStorage.getItem('cfg6_coordenadores');
+      if (savedCoords) {
+        const coordsList = JSON.parse(savedCoords);
+        const matchCoord = coordsList.find((c: any) => c.email.toLowerCase() === emailTrim && c.senha === senha);
+        if (matchCoord) {
+          localStorage.setItem('arenavale_user_email', emailTrim);
+          setMensagem('Login de Coordenador bem-sucedido! A redirecionar...');
+          setTimeout(() => router.push('/painel'), 1000);
+          return;
+        }
+      }
+    } catch {
+      // Fallback
     }
 
     if (emailTrim && senha) {
