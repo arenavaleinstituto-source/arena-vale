@@ -1,3 +1,10 @@
+Percebi o motivo! Como o projeto está organizado utilizando a estrutura de pastas do Next.js com a rota de autenticação agrupada em **`(auth)/login`**, a rota real que o Next.js gera no servidor para essa página é **`/auth/login`** (e não `/login` diretamente, a menos que se utilize um redirecionamento).
+
+Para garantir que ao clicar no logótipo (ou em qualquer perfil do menu) abra instantaneamente a página correta sem dar erro ou falhar, vamos alterar o destino do link de `/login` para **`/auth/login`**.
+
+Aqui tem o código 100% completo e atualizado do ficheiro **`app/page.tsx`**, já com as rotas corrigidas para `/auth/login` tanto no logótipo do proprietário quanto nos três perfis de acesso:
+
+```tsx
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -161,9 +168,9 @@ export default function HomePage() {
         <header className="sticky top-0 z-40 border-b border-white/[0.08] bg-[#07080c]/90 backdrop-blur-xl shadow-[0_10px_30px_rgba(0,0,0,0.6)]">
           <div className="mx-auto flex max-w-[1750px] items-center justify-between px-4 sm:px-6 lg:px-12 py-3 sm:py-4">
             
-            {/* LOGOTIPO CLICÁVEL (PORTAL DO PROPRIETÁRIO) */}
+            {/* LOGOTIPO CLICÁVEL (DIRETO PARA O PORTAL DO PROPRIETÁRIO EM /auth/login) */}
             <div className="flex items-center shrink-0">
-              <a href="/login" title="Portal do Proprietário (Admin)" className="group relative flex items-center rounded-2xl p-1 transition duration-300 hover:scale-[1.02]">
+              <a href="/auth/login" title="Portal do Proprietário (Admin)" className="group relative flex items-center rounded-2xl p-1 transition duration-300 hover:scale-[1.02]">
                 <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-amber-400/30 via-white/10 to-transparent opacity-0 blur-lg transition duration-500 group-hover:opacity-100" />
                 <img src="/logo 02.png" alt="Portal do Proprietário" className="relative h-12 sm:h-16 md:h-[80px] w-auto object-contain rounded-xl mix-blend-lighten contrast-110 drop-shadow-[0_0_20px_rgba(229,9,20,0.3)]" />
               </a>
@@ -189,7 +196,7 @@ export default function HomePage() {
                   <div className="absolute right-0 mt-3 w-64 rounded-2xl border border-white/15 bg-[#0e1118]/98 p-3 shadow-2xl backdrop-blur-2xl z-50 space-y-2" onMouseLeave={() => setMenuPainelAberto(false)}>
                     
                     {/* Coordenador - OURO */}
-                    <Link href="/login" onClick={() => setMenuPainelAberto(false)} className="flex items-center gap-3 rounded-xl p-2.5 hover:bg-white/5 transition group">
+                    <Link href="/auth/login" onClick={() => setMenuPainelAberto(false)} className="flex items-center gap-3 rounded-xl p-2.5 hover:bg-white/5 transition group">
                       <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-amber-400/60 bg-[#07080c] p-1 shadow-[0_0_10px_rgba(251,191,36,0.3)]">
                         <img src="/logo 02.png" alt="Coordenador" className="h-full w-full object-contain mix-blend-lighten filter sepia-[0.85] saturate-[3.5] hue-rotate-[-15deg]" />
                       </div>
@@ -197,7 +204,7 @@ export default function HomePage() {
                     </Link>
 
                     {/* Moderador - PRATA */}
-                    <Link href="/login" onClick={() => setMenuPainelAberto(false)} className="flex items-center gap-3 rounded-xl p-2.5 hover:bg-white/5 transition group">
+                    <Link href="/auth/login" onClick={() => setMenuPainelAberto(false)} className="flex items-center gap-3 rounded-xl p-2.5 hover:bg-white/5 transition group">
                       <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-slate-300/60 bg-[#07080c] p-1 shadow-[0_0_10px_rgba(203,213,225,0.3)]">
                         <img src="/logo 02.png" alt="Moderador" className="h-full w-full object-contain mix-blend-lighten filter grayscale brightness-125" />
                       </div>
@@ -205,7 +212,7 @@ export default function HomePage() {
                     </Link>
 
                     {/* Capitão - BRONZE */}
-                    <Link href="/login" onClick={() => setMenuPainelAberto(false)} className="flex items-center gap-3 rounded-xl p-2.5 hover:bg-white/5 transition group">
+                    <Link href="/auth/login" onClick={() => setMenuPainelAberto(false)} className="flex items-center gap-3 rounded-xl p-2.5 hover:bg-white/5 transition group">
                       <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-amber-700/60 bg-[#07080c] p-1 shadow-[0_0_10px_rgba(180,83,9,0.3)]">
                         <img src="/logo 02.png" alt="Capitão" className="h-full w-full object-contain mix-blend-lighten filter sepia-[0.9] saturate-[2] hue-rotate-[10deg] brightness-90" />
                       </div>
@@ -242,9 +249,9 @@ export default function HomePage() {
             </div>
             <div className="pt-6 mt-6 border-t border-white/10 space-y-3">
               <p className="text-[10px] font-black uppercase tracking-widest text-amber-400">Portais de Acesso:</p>
-              <Link href="/login" onClick={() => setMenuMobileAberto(false)} className="block text-center w-full rounded-xl border border-amber-400/50 bg-[#07080c] py-3 text-xs font-black uppercase text-amber-400">Coordenador (Ouro)</Link>
-              <Link href="/login" onClick={() => setMenuMobileAberto(false)} className="block text-center w-full rounded-xl border border-slate-300/50 bg-[#07080c] py-3 text-xs font-black uppercase text-slate-200">Moderador (Prata)</Link>
-              <Link href="/login" onClick={() => setMenuMobileAberto(false)} className="block text-center w-full rounded-xl border border-amber-700/50 bg-[#07080c] py-3 text-xs font-black uppercase text-amber-600">Capitão (Bronze)</Link>
+              <Link href="/auth/login" onClick={() => setMenuMobileAberto(false)} className="block text-center w-full rounded-xl border border-amber-400/50 bg-[#07080c] py-3 text-xs font-black uppercase text-amber-400">Coordenador (Ouro)</Link>
+              <Link href="/auth/login" onClick={() => setMenuMobileAberto(false)} className="block text-center w-full rounded-xl border border-slate-300/50 bg-[#07080c] py-3 text-xs font-black uppercase text-slate-200">Moderador (Prata)</Link>
+              <Link href="/auth/login" onClick={() => setMenuMobileAberto(false)} className="block text-center w-full rounded-xl border border-amber-700/50 bg-[#07080c] py-3 text-xs font-black uppercase text-amber-600">Capitão (Bronze)</Link>
             </div>
           </div>
         )}
@@ -416,3 +423,5 @@ export default function HomePage() {
     </>
   );
 }
+
+```
