@@ -1,21 +1,10 @@
+'use client';
+
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-export const metadata = {
-  title: 'Portal de Acesso | Arena Vale Sports',
-  robots: {
-    index: false,
-    follow: false,
-  },
-};
-
 export default function LoginPage() {
-  return <LoginClient />;
-}
-
-// Componente interno com a lógica de cliente
-function LoginClient() {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [mensagem, setMensagem] = useState('');
