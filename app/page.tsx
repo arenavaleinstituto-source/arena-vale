@@ -161,12 +161,12 @@ export default function HomePage() {
         <header className="sticky top-0 z-40 border-b border-white/[0.08] bg-[#07080c]/90 backdrop-blur-xl shadow-[0_10px_30px_rgba(0,0,0,0.6)]">
           <div className="mx-auto flex max-w-[1750px] items-center justify-between px-4 sm:px-6 lg:px-12 py-3 sm:py-4">
             
-            {/* LOGOTIPO CLICÁVEL (PORTAL DO PROPRIETÁRIO) */}
+            {/* LOGOTIPO CLICÁVEL (DIRETO PARA O LOGIN DO PROPRIETÁRIO) */}
             <div className="flex items-center shrink-0">
-              <Link href="/login" title="Portal do Proprietário (Admin)" className="group relative flex items-center rounded-2xl p-1 transition duration-300 hover:scale-[1.02]">
+              <a href="/login" title="Portal do Proprietário (Admin)" className="group relative flex items-center rounded-2xl p-1 transition duration-300 hover:scale-[1.02]">
                 <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-amber-400/30 via-white/10 to-transparent opacity-0 blur-lg transition duration-500 group-hover:opacity-100" />
                 <img src="/logo 02.png" alt="Portal do Proprietário" className="relative h-12 sm:h-16 md:h-[80px] w-auto object-contain rounded-xl mix-blend-lighten contrast-110 drop-shadow-[0_0_20px_rgba(229,9,20,0.3)]" />
-              </Link>
+              </a>
             </div>
 
             <nav className="hidden xl:flex items-center gap-7 2xl:gap-9 text-sm font-black uppercase tracking-[0.12em] text-[#b8c0d4]">
@@ -182,25 +182,25 @@ export default function HomePage() {
             <div className="hidden xl:flex items-center gap-4 shrink-0">
               <a href="https://wa.me/5547988444404" target="_blank" rel="noreferrer" className="rounded-full bg-gradient-to-r from-[#e50914] to-[#ff1e27] px-7 py-3 text-xs font-black uppercase tracking-[0.15em] text-white shadow-lg shadow-[#e50914]/30 transition hover:scale-105 hover:shadow-[#e50914]/50 whitespace-nowrap">Anuncie</a>
               
-              {/* MENU DROPDOWN COM CORES OURO, PRATA E BRONZE */}
+              {/* MENU DROPDOWN DE ACESSO AOS PORTAIS */}
               <div className="relative">
                 <button type="button" onClick={() => setMenuPainelAberto(!menuPainelAberto)} className="inline-flex items-center gap-2.5 rounded-full border border-amber-400/50 bg-amber-500/10 px-6 py-3 text-xs font-black uppercase tracking-[0.15em] text-amber-300 transition hover:bg-amber-500/20 whitespace-nowrap shadow-lg"><span>🔒 Acesso Portais</span> <span className="text-[10px]">▼</span></button>
                 {menuPainelAberto && (
                   <div className="absolute right-0 mt-3 w-64 rounded-2xl border border-white/15 bg-[#0e1118]/98 p-3 shadow-2xl backdrop-blur-2xl z-50 space-y-2" onMouseLeave={() => setMenuPainelAberto(false)}>
                     
-                    {/* 1. Coordenador (OURO) */}
+                    {/* Coordenador - OURO */}
                     <Link href="/login" onClick={() => setMenuPainelAberto(false)} className="flex items-center gap-3 rounded-xl p-2.5 hover:bg-white/5 transition group">
                       <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-amber-400/60 bg-[#07080c] text-amber-400 font-black text-xs shadow-[0_0_10px_rgba(251,191,36,0.3)]">🏆</div>
                       <div><span className="font-black text-amber-400 group-hover:underline transition text-xs uppercase block">Coordenador</span><span className="text-[9px] text-[#8a92a6]">Ouro</span></div>
                     </Link>
 
-                    {/* 2. Moderador (PRATA) */}
+                    {/* Moderador - PRATA */}
                     <Link href="/login" onClick={() => setMenuPainelAberto(false)} className="flex items-center gap-3 rounded-xl p-2.5 hover:bg-white/5 transition group">
                       <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-slate-300/60 bg-[#07080c] text-slate-200 font-black text-xs shadow-[0_0_10px_rgba(203,213,225,0.3)]">🥈</div>
                       <div><span className="font-black text-slate-200 group-hover:underline transition text-xs uppercase block">Moderador</span><span className="text-[9px] text-[#8a92a6]">Prata</span></div>
                     </Link>
 
-                    {/* 3. Capitão (BRONZE) */}
+                    {/* Capitão - BRONZE */}
                     <Link href="/login" onClick={() => setMenuPainelAberto(false)} className="flex items-center gap-3 rounded-xl p-2.5 hover:bg-white/5 transition group">
                       <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-amber-700/60 bg-[#07080c] text-amber-600 font-black text-xs shadow-[0_0_10px_rgba(180,83,9,0.3)]">🥉</div>
                       <div><span className="font-black text-amber-600 group-hover:underline transition text-xs uppercase block">Capitão</span><span className="text-[9px] text-[#8a92a6]">Bronze</span></div>
