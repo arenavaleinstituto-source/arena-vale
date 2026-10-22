@@ -1,188 +1,98 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
-
-// 🌟 1. COLOQUE AQUI OS SEUS COORDENADORES FIXOS PARA NUNCA MAIS PERDER
-const USUARIOS_PADRAO = [
-  { 
-    email: 'admin@arenavale.com.br', 
-    senha: 'admin', 
-    role: 'coordenador', 
-    nome: 'Maurício (Admin)',
-    permissoes: 'all' 
-  },
-  // 👇 ADICIONE OS OUTROS COORDENADORES ABAIXO NESTE FORMATO:
-  { 
-    email: 'coordenador2@arenavale.com.br', 
-    senha: 'senha-do-coordenador', 
-    role: 'coordenador', 
-    nome: 'Nome do Coordenador',
-    permissoes: 'all' 
-  },
-  
-  // EXEMPLOS DE ORGANIZADORES E CAPITÃES (MANTIDOS PARA TESTE)
-  { 
-    email: 'cliente@ligavale.com', 
-    senha: '123', 
-    role: 'organizador', 
-    nome: 'Organizador Liga Vale',
-    campeonatoId: 'camp-privado-001' // Acesso EXCLUSIVO apenas a este campeonato
-  },
-  { 
-    email: 'capitao@valefc.com', 
-    senha: '123', 
-    role: 'capitao', 
-    nome: 'João (Capitão)',
-    equipeId: 'eqp-010'
-  }
-];
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
-  const [erro, setErro] = useState('');
-  const [sucesso, setSucesso] = useState(false);
-  const [usuariosAtivos, setUsuariosAtivos] = useState<any[]>(USUARIOS_PADRAO);
-
-  // 🌟 2. RECUPERA UTILIZADORES ADICIONADOS DINAMICAMENTE PARA NÃO OS EXCLUIR
-  useEffect(() => {
-    try {
-      const salvos = localStorage.getItem('arenavale_usuarios');
-      if (salvos) {
-        const usuariosSalvos = JSON.parse(salvos);
-        
-        // Mescla os usuários do código com os usuários salvos no navegador sem duplicar
-        const todosUsuarios = [...USUARIOS_PADRAO];
-        usuariosSalvos.forEach((userSalvo: any) => {
-           if(!todosUsuarios.find(u => u.email === userSalvo.email)) {
-               todosUsuarios.push(userSalvo);
-           }
-        });
-        setUsuariosAtivos(todosUsuarios);
-      }
-    } catch {
-      // Fallback para os usuários padrão em caso de erro
-    }
-  }, []);
+  const [mensagem, setMensagem] = useState('');
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    setErro('');
-
-    const usuario = usuariosAtivos.find(u => u.email === email && u.senha === senha);
-
-    if (!usuario) {
-      setErro('Credenciais inválidas. Verifique o seu e-mail e senha.');
-      return;
+    // Simulação de login para validação inicial
+    if (email && senha) {
+      setMensagem('Autenticação simulada com sucesso! A conectar ao painel...');
+    } else {
+      setMensagem('Por favor, preencha o e-mail e a senha.');
     }
-
-    // Salva a sessão no navegador de forma segura
-    localStorage.setItem('arenavale_sessao', JSON.stringify({
-      nome: usuario.nome,
-      role: usuario.role,
-      campeonatoId: usuario.campeonatoId || null,
-      equipeId: usuario.equipeId || null
-    }));
-
-    setSucesso(true);
-
-    // Redirecionamento inteligente baseado no cargo do utilizador
-    setTimeout(() => {
-      if (usuario.role === 'coordenador') {
-        window.location.href = '/coordenador'; // Painel Total + Mesário
-      } else if (usuario.role === 'organizador') {
-        window.location.href = `/organizador?liga=${usuario.campeonatoId}`; // Painel Restrito da Liga Dele
-      } else if (usuario.role === 'capitao') {
-        window.location.href = '/inscricao'; // Painel de Gestão da Equipa
-      }
-    }, 1500);
   };
 
   return (
-    <div className="min-h-screen bg-[#050609] flex flex-col justify-center py-12 sm:px-6 lg:px-8 selection:bg-[#e50914] selection:text-white">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
-        <Link href="/" className="inline-block transition-transform hover:scale-105">
-          <img src="/logo 02.png" alt="Arena Vale" className="mx-auto h-24 w-auto mix-blend-lighten drop-shadow-[0_0_20px_rgba(229,9,20,0.3)]" />
-        </Link>
-        <h2 className="mt-6 text-center text-3xl font-black italic uppercase tracking-tight text-white">
-          ACESSO AO PORTAL
-        </h2>
-        <p className="mt-2 text-center text-sm text-[#8a92a6] font-medium uppercase tracking-wider">
-          Insira as suas credenciais para gerir os seus eventos
-        </p>
-      </div>
+    <div className="min-h-screen bg-[#07080c] text-white selection:bg-[#e50914] selection:text-white flex flex-col justify-between font-sans">
+      {/* CABEÇALHO */}
+      <header className="border-b border-white/[0.08] bg-[#07080c]/90 backdrop-blur-xl">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+          <Link href="/" className="flex items-center gap-3">
+            <img src="/logo 02.png" alt="Arena Vale" className="h-12 w-auto object-contain rounded-lg mix-blend-lighten" />
+          </Link>
+          <Link href="/" className="rounded-full border border-white/20 bg-white/5 px-6 py-2 text-xs font-black uppercase tracking-wider text-white hover:bg-white/10 transition">
+            ← Voltar ao Início
+          </Link>
+        </div>
+      </header>
 
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-[#0b0d14] py-8 px-4 shadow-[0_20px_50px_rgba(0,0,0,0.7)] sm:rounded-3xl border border-white/10 sm:px-10 relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#e50914] to-[#ff4b52]" />
+      {/* CONTEÚDO DE LOGIN */}
+      <main className="mx-auto max-w-md w-full px-6 py-12">
+        <div className="rounded-[2.5rem] border border-white/15 bg-[#11141d] p-8 sm:p-10 shadow-2xl relative overflow-hidden">
+          <div className="absolute -right-16 -top-16 h-48 w-48 rounded-full bg-[#e50914]/15 blur-3xl pointer-events-none" />
           
-          {sucesso ? (
-            <div className="text-center py-10">
-              <span className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-emerald-500/20 border border-emerald-500/50 mb-6">
-                <span className="text-2xl text-emerald-400">✓</span>
-              </span>
-              <h3 className="text-xl font-black uppercase text-white tracking-wide">Autenticado com Sucesso!</h3>
-              <p className="text-sm text-[#8a92a6] mt-2">A preparar o seu painel de trabalho...</p>
+          <div className="text-center mb-8">
+            <span className="inline-flex items-center gap-2 rounded-full border border-amber-400/40 bg-amber-500/10 px-3.5 py-1 text-[10px] font-black uppercase tracking-[0.2em] text-amber-300 mb-3">ÁREA RESTRITA</span>
+            <h1 className="text-2xl sm:text-3xl font-black uppercase tracking-tight text-white">Portal do Coordenador</h1>
+            <p className="text-xs text-[#8a92a6] mt-2 uppercase">Aceda para gerir equipas, inscrições e escalações</p>
+          </div>
+
+          <form onSubmit={handleLogin} className="space-y-5">
+            <div>
+              <label className="block text-[11px] font-black uppercase tracking-wider text-[#cad0e0] mb-2">E-mail de Acesso</label>
+              <input 
+                type="email" 
+                value={email} 
+                onChange={(e) => setEmail(e.target.value)} 
+                placeholder="coordenador@arenavale.com" 
+                className="w-full rounded-xl border border-white/15 bg-[#07080c] px-4 py-3.5 text-xs text-white placeholder:text-white/20 focus:border-[#e50914] focus:outline-none transition"
+              />
             </div>
-          ) : (
-            <form className="space-y-6" onSubmit={handleLogin}>
-              <div>
-                <label htmlFor="email" className="block text-xs font-black uppercase tracking-wider text-[#cad0e0]">
-                  Endereço de E-mail
-                </label>
-                <div className="mt-2">
-                  <input
-                    id="email"
-                    type="email"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="block w-full appearance-none rounded-xl border border-white/10 bg-[#050609] px-4 py-3.5 text-white placeholder-white/30 focus:border-[#e50914] focus:outline-none focus:ring-1 focus:ring-[#e50914] sm:text-sm transition-all"
-                    placeholder="coordenador@arenavale.com.br"
-                  />
-                </div>
-              </div>
 
-              <div>
-                <label htmlFor="senha" className="block text-xs font-black uppercase tracking-wider text-[#cad0e0]">
-                  Senha de Acesso
-                </label>
-                <div className="mt-2">
-                  <input
-                    id="senha"
-                    type="password"
-                    required
-                    value={senha}
-                    onChange={(e) => setSenha(e.target.value)}
-                    className="block w-full appearance-none rounded-xl border border-white/10 bg-[#050609] px-4 py-3.5 text-white placeholder-white/30 focus:border-[#e50914] focus:outline-none focus:ring-1 focus:ring-[#e50914] sm:text-sm transition-all"
-                    placeholder="••••••••"
-                  />
-                </div>
-              </div>
+            <div>
+              <label className="block text-[11px] font-black uppercase tracking-wider text-[#cad0e0] mb-2">Palavra-passe</label>
+              <input 
+                type="password" 
+                value={senha} 
+                onChange={(e) => setSenha(e.target.value)} 
+                placeholder="••••••••" 
+                className="w-full rounded-xl border border-white/15 bg-[#07080c] px-4 py-3.5 text-xs text-white placeholder:text-white/20 focus:border-[#e50914] focus:outline-none transition"
+              />
+            </div>
 
-              {erro && (
-                <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-center">
-                  <p className="text-xs font-bold text-red-400">{erro}</p>
-                </div>
-              )}
-
-              <div>
-                <button
-                  type="submit"
-                  className="flex w-full justify-center rounded-xl bg-[#e50914] px-4 py-3.5 text-xs font-black uppercase tracking-widest text-white shadow-lg shadow-[#e50914]/30 hover:bg-[#ff1e27] hover:scale-[1.02] transition-all focus:outline-none focus:ring-2 focus:ring-[#e50914] focus:ring-offset-2 focus:ring-offset-[#0b0d14]"
-                >
-                  Entrar no Painel Seguramente
-                </button>
+            {mensagem && (
+              <div className="rounded-xl bg-[#e50914]/10 border border-[#e50914]/30 p-3 text-center text-xs font-bold text-amber-300">
+                {mensagem}
               </div>
-            </form>
-          )}
+            )}
+
+            <button 
+              type="submit" 
+              className="w-full rounded-full bg-gradient-to-r from-[#e50914] to-[#ff1e27] py-4 text-xs font-black uppercase tracking-widest text-white shadow-lg shadow-[#e50914]/30 hover:scale-[1.02] transition"
+            >
+              Entrar no Painel 🔒
+            </button>
+          </form>
+
+          <div className="mt-8 pt-6 border-t border-white/10 text-center">
+            <p className="text-[11px] text-[#8a92a6]">Precisa de ajuda com o acesso?</p>
+            <a href="https://wa.me/5547988444404?text=Olá,%20preciso%20de%20suporte%20com%20o%20acesso%20ao%20painel%20da%20Arena%20Vale!" target="_blank" rel="noreferrer" className="mt-2 inline-block text-xs font-black uppercase tracking-wider text-amber-400 hover:underline">
+              Falar com o Suporte via WhatsApp ↗
+            </a>
+          </div>
         </div>
-        
-        <div className="mt-8 text-center text-xs text-[#555d6e]">
-          <p>Esqueceu a sua senha? <a href="https://wa.me/5547988444404" target="_blank" rel="noreferrer" className="text-[#e50914] hover:text-[#ff4b52] font-bold transition">Solicitar suporte técnico ↗</a></p>
-        </div>
-      </div>
+      </main>
+
+      {/* RODAPÉ SIMPLES */}
+      <footer className="border-t border-white/10 bg-[#050609] py-6 text-center text-xs text-[#555d6e]">
+        © 2026 Arena Vale · Todos os direitos reservados. CNPJ: 40.694.741/0001-34
+      </footer>
     </div>
   );
 }
