@@ -184,7 +184,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* SECÇÃO TV ARENA VALE */}
+      {/* SECÇÃO TV ARENA VALE (LEVE E DIRECIONADA) */}
       <section className="border-t border-white/5 bg-[#0b0d14] px-4 sm:px-6 py-16">
         <div className="mx-auto max-w-7xl">
           <div className="flex flex-wrap items-center justify-between gap-4 mb-10">
@@ -282,7 +282,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* SECÇÃO AGENDA (DIRECIONAMENTO) */}
+      {/* SECÇÃO AGENDA (LEVE E DIRECIONADA) */}
       <section className="border-t border-white/5 bg-[#0b0d14] px-4 sm:px-6 py-20">
         <div className="mx-auto max-w-7xl">
           <div className="mb-12 flex flex-col sm:flex-row sm:items-end justify-between gap-6 border-b border-white/10 pb-6">
