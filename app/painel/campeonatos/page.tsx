@@ -1,44 +1,38 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+
+interface CampeonatoItem {
+  id: number;
+  nome: string;
+  modalidade: string;
+}
 
 export default function CampeonatosPage() {
-  const supabase = createClientComponentClient();
-  const [campeonatos, setCampeonatos] = useState<any[]>([]);
+  const [campeonatos, setCampeonatos] = useState<CampeonatoItem[]>([
+    { id: 1, nome: 'Copa Regional Vale 2026', modalidade: 'Futebol Suíço' },
+    { id: 2, nome: 'Circuito Futsal Arena', modalidade: 'Futsal' },
+  ]);
   const [nome, setNome] = useState('');
   const [modalidade, setModalidade] = useState('Futebol Suíço');
-  const [salvando, setSalvando] = useState(false);
 
-  useEffect(() => {
-    carregarCampeonatos();
-  }, []);
-
-  async function carregarCampeonatos() {
-    const { data } = await supabase
-      .from('campeonatos')
-      .select('*')
-      .order('created_at', { ascending: false });
-    if (data) setCampeonatos(data);
-  }
-
-  async function handleSubmit(e: React.FormEvent) {
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!nome) return;
-    setSalvando(true);
+    if (!nome.trim()) return;
 
-    const { error } = await supabase.from('campeonatos').insert([{ nome, modalidade }]);
+    const novo = {
+      id: Date.now(),
+      nome,
+      modalidade,
+    };
 
-    if (!error) {
-      setNome('');
-      carregarCampeonatos();
-    }
-    setSalvando(false);
+    setCampeonatos((prev) => [novo, ...prev]);
+    setNome('');
   }
 
   return (
-    <div className="min-h-screen bg-[#070b13] text-white p-6 max-w-5xl mx-auto">
+    <div className="min-h-screen bg-[#070b13] text-white p-6 max-w-5xl mx-auto font-sans">
       <Link href="/painel" className="text-xs text-amber-400 font-semibold hover:underline">
         ← Voltar ao Centro de Comando
       </Link>
@@ -73,10 +67,9 @@ export default function CampeonatosPage() {
         </div>
         <button
           type="submit"
-          disabled={salvando}
-          className="w-full md:w-auto px-6 py-2.5 bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold rounded-lg text-sm transition"
+          className="w-full md:w-auto px-6 py-2.5 bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold rounded-lg text-sm transition cursor-pointer"
         >
-          {salvando ? 'Salvando...' : 'Adicionar'}
+          Adicionar
         </button>
       </form>
 
@@ -90,7 +83,7 @@ export default function CampeonatosPage() {
             <div key={c.id} className="p-4 bg-slate-900 border border-slate-800 rounded-lg flex items-center justify-between">
               <div>
                 <span className="font-semibold text-white">{c.nome}</span>
-                <span className="text-xs text-slate-400 block">{c.modalidade || 'Futebol Suíço'}</span>
+                <span className="text-xs text-slate-400 block">{c.modalidade}</span>
               </div>
               <span className="text-xs px-2.5 py-1 bg-emerald-950 border border-emerald-500/30 text-emerald-400 rounded">
                 Ativo
