@@ -34,7 +34,6 @@ export default function CampeonatosPage() {
   const [imagemPreview, setImagemPreview] = useState<string | null>(null);
   const [sucesso, setSucesso] = useState(false);
 
-  // Manipular upload de imagem e criar URL de pré-visualização local
   function handleImagemChange(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (file) {
@@ -43,12 +42,10 @@ export default function CampeonatosPage() {
     }
   }
 
-  // Remover a imagem selecionada
   function handleRemoverImagem() {
     setImagemPreview(null);
   }
 
-  // Submissão do formulário
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!nome.trim()) return;
@@ -105,3 +102,15 @@ export default function CampeonatosPage() {
               <option value="Futebol de Campo">Futebol de Campo</option>
             </select>
           </div>
+        </div>
+
+        {/* CAMPO DE LOGÓTIPO / CAPA DO CAMPEONATO */}
+        <div>
+          <label className="text-xs text-slate-300 block mb-1 font-semibold uppercase">
+            Identidade Visual do Torneio (Logótipo ou Banner)
+          </label>
+
+          {imagemPreview ? (
+            <div className="relative rounded-xl overflow-hidden border border-slate-700 bg-slate-950 max-h-52 flex items-center justify-center p-3">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
