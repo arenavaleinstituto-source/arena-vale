@@ -29,16 +29,8 @@ export default function CampeonatosPage() {
     },
   ]);
 
-  // Lista dinâmica de modalidades
-  const [opcoesModalidade, setOpcoesModalidade] = useState([
-    'Futebol Suíço',
-    'Futsal',
-    'Futebol de Campo'
-  ]);
-  
   const [nome, setNome] = useState('');
   const [modalidade, setModalidade] = useState('Futebol Suíço');
-  const [isCustomModalidade, setIsCustomModalidade] = useState(false);
   const [imagemPreview, setImagemPreview] = useState<string | null>(null);
   const [sucesso, setSucesso] = useState(false);
 
@@ -51,16 +43,7 @@ export default function CampeonatosPage() {
 
   const handleSalvar = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!nome.trim() || !modalidade.trim()) return;
-
-    // Se for uma modalidade nova, adiciona à lista para as próximas vezes
-    if (isCustomModalidade) {
-      setOpcoesModalidade((prev) => {
-        if (!prev.includes(modalidade)) return [...prev, modalidade];
-        return prev;
-      });
-      setIsCustomModalidade(false); // Volta ao formato de lista
-    }
+    if (!nome.trim()) return;
 
     const item: Torneio = {
       id: Date.now(),
@@ -100,53 +83,17 @@ export default function CampeonatosPage() {
             />
           </div>
 
-          <div className="w-full">
+          <div>
             <label className="text-xs text-slate-300 block mb-1 font-semibold uppercase">Modalidade</label>
-            
-            {isCustomModalidade ? (
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={modalidade}
-                  onChange={(e) => setModalidade(e.target.value)}
-                  placeholder="Escreva a modalidade"
-                  className="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-amber-400"
-                  required
-                  autoFocus
-                />
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsCustomModalidade(false);
-                    setModalidade(opcoesModalidade[0]);
-                  }}
-                  className="px-3 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-lg text-slate-300 transition font-bold"
-                  title="Voltar para a lista"
-                >
-                  ✕
-                </button>
-              </div>
-            ) : (
-              <select
-                value={opcoesModalidade.includes(modalidade) ? modalidade : 'OUTRA'}
-                onChange={(e) => {
-                  if (e.target.value === 'OUTRA') {
-                    setIsCustomModalidade(true);
-                    setModalidade('');
-                  } else {
-                    setModalidade(e.target.value);
-                  }
-                }}
-                className="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-amber-400"
-              >
-                {opcoesModalidade.map((op) => (
-                  <option key={op} value={op}>{op}</option>
-                ))}
-                <option value="OUTRA" className="font-bold text-amber-400">
-                  + Criar nova manualmente
-                </option>
-              </select>
-            )}
+            <select
+              value={modalidade}
+              onChange={(e) => setModalidade(e.target.value)}
+              className="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-amber-400"
+            >
+              <option value="Futebol Suíço">Futebol Suíço</option>
+              <option value="Futsal">Futsal</option>
+              <option value="Futebol de Campo">Futebol de Campo</option>
+            </select>
           </div>
         </div>
 
