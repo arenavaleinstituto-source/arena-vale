@@ -23,29 +23,19 @@ export default function LoginPage() {
       return;
     }
 
-    // Validação estrita CFG6 - Coordenadores
-    if (emailTrim === 'lpostjen@gmail.com' && senha === 'arenaanera') {
+    // Validação Coordenadores Oficiais
+    if (
+      (emailTrim === 'lpostjen@gmail.com' && senha === 'arenaanera') ||
+      (emailTrim === 'iigoranjo@gmail.com' && senha === 'Aren@123') ||
+      (emailTrim === 'arenavale2026@gmail.com')
+    ) {
       localStorage.setItem('arenavale_user_email', emailTrim);
       setMensagem('Login de Coordenador bem-sucedido! A redirecionar...');
       setTimeout(() => router.push('/painel'), 1000);
       return;
     }
 
-    if (emailTrim === 'iigoranjo@gmail.com' && senha === 'Aren@123') {
-      localStorage.setItem('arenavale_user_email', emailTrim);
-      setMensagem('Login de Coordenador bem-sucedido! A redirecionar...');
-      setTimeout(() => router.push('/painel'), 1000);
-      return;
-    }
-
-    if (emailTrim === 'arenavale2026@gmail.com') {
-      localStorage.setItem('arenavale_user_email', emailTrim);
-      setMensagem('Login de Coordenador bem-sucedido! A redirecionar...');
-      setTimeout(() => router.push('/painel'), 1000);
-      return;
-    }
-
-    // Verificação de Coordenadores adicionados dinamicamente pelo proprietário no localStorage
+    // Verificação de Coordenadores adicionados pelo proprietário
     try {
       const savedCoords = localStorage.getItem('cfg6_coordenadores');
       if (savedCoords) {
@@ -73,7 +63,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#07080c] text-white selection:bg-[#e50914] selection:text-white flex flex-col justify-between font-sans">
+    <div className="min-h-screen bg-[#07080c] text-white selection:bg-[#e50914] selection:text-white flex flex-col justify-between font-sans overflow-x-hidden">
       <header className="border-b border-white/[0.08] bg-[#07080c]/90 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <Link href="/" className="flex items-center gap-3">
