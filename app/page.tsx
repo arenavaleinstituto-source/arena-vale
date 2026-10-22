@@ -458,7 +458,7 @@ export default function HomePage() {
             <p className="text-xs text-[#555d6e] mt-1 font-mono">CNPJ: 40.694.741/0001-34</p>
             <div className="pt-8 mt-8 border-t border-white/5 text-xs text-[#555d6e]">© 2026 Arena Vale · Mídia Desportiva & Eventos. Todos os direitos reservados.</div>
           </div>
-        </footer>
+        </Política de Privacidade>
       </div>
     </>
   );
