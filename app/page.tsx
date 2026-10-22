@@ -96,10 +96,61 @@ export default function HomePage() {
   }, []);
 
   const modalidades = [
-    { id: 'futsal', nome: 'Futsal', fase: 'Em Breve · Temporada 2026', descricao: 'Circuitos regionais de alto rendimento e categorias de base no Vale.', statusBadge: 'CIRCUITO 2026' },
-    { id: 'basquete', nome: 'Basquetebol', fase: 'Em Breve · Temporada 2026', descricao: 'Competições abertas, clínicas desportivas e etapas regionais oficiais.', statusBadge: 'EM PLANEAMENTO' },
-    { id: 'fut7', nome: 'Futebol 7', fase: 'Em Breve · Temporada 2026', descricao: 'Torneios intermunicipais com transmissão ao vivo e cobertura multimédia completa.', statusBadge: 'PRÉ-TEMPORADA' },
-    { id: 'volei', nome: 'Voleibol', fase: 'Em Breve · Temporada 2026', descricao: 'Circuito regional e integração comunitária através do desporto.', statusBadge: 'PROJETOS ABERTOS' }
+    {
+      id: 'futsal',
+      nome: 'Futsal',
+      tituloOficial: 'Circuito Arena Vale de Futsal 2026',
+      fase: 'Em Breve · Temporada 2026',
+      descricao: 'O futsal é a modalidade mais tradicional da região do Vale, reunindo equipes de clubes, bairros e empresas em disputas de alto nível técnico dentro de quadra. O Circuito Arena Vale organiza a temporada em fase de grupos seguida de mata-mata, com transmissão ao vivo das principais partidas pela TV Arena Vale.',
+      statusBadge: 'CIRCUITO 2026',
+      detalhes: [
+        'Categorias: Sub-15, Sub-20, Livre (adulto) e Master (35+)',
+        'Formato: fase de grupos + mata-mata eliminatório',
+        'Duração da partida: 2 tempos de 20 minutos (base) ou 25 minutos (Livre/Master)',
+        'Local: ginásios parceiros da região do Vale'
+      ]
+    },
+    {
+      id: 'fut7',
+      nome: 'Futebol 7',
+      tituloOficial: 'Copa Arena Vale de Futebol 7',
+      fase: 'Em Breve · Temporada 2026',
+      descricao: 'Disputado em campos society, o futebol 7 é ideal para quem busca um futebol mais dinâmico, com espaços reduzidos e jogadas rápidas. A Copa reúne times amadores e semiprofissionais em uma disputa equilibrada ao longo da temporada.',
+      statusBadge: 'PRÉ-TEMPORADA',
+      detalhes: [
+        'Categorias: Livre (adulto) e Sub-17',
+        'Formato: fase de grupos + mata-mata eliminatório',
+        'Duração da partida: 2 tempos de 25 minutos',
+        'Local: campos society parceiros'
+      ]
+    },
+    {
+      id: 'basquete',
+      nome: 'Basquetebol',
+      tituloOficial: 'Liga Arena Vale de Basquete',
+      fase: 'Em Breve · Temporada 2026',
+      descricao: 'A liga de basquete valoriza o preparo físico e técnico dos atletas, com jogos disputados em quadras cobertas e cronometragem oficial. É uma das modalidades com maior crescimento de público nas transmissões da Arena Vale.',
+      statusBadge: 'EM PLANEAMENTO',
+      detalhes: [
+        'Categorias: Sub-17 e Livre (adulto)',
+        'Formato: pontos corridos (turno único) + fase final com os 4 melhores',
+        'Duração da partida: 4 quartos de 10 minutos',
+        'Local: ginásios parceiros da região do Vale'
+      ]
+    },
+    {
+      id: 'volei',
+      nome: 'Voleibol',
+      tituloOficial: 'Torneio Arena Vale de Vôlei',
+      fase: 'Em Breve · Temporada 2026',
+      descricao: 'O vôlei reúne equipes masculinas e femininas em um torneio disputado em sistema de melhor de 3 ou 5 sets, com arbitragem oficial e cobertura completa das principais partidas.',
+      statusBadge: 'PROJETOS ABERTOS',
+      detalhes: [
+        'Categorias: Masculino e Feminino, Livre (adulto)',
+        'Formato: fase de grupos + mata-mata (melhor de 3 sets) + final (melhor de 5 sets)',
+        'Local: ginásios parceiros da região do Vale'
+      ]
+    }
   ];
 
   const ativo = modalidades[campeonatoSelecionado];
@@ -327,7 +378,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* SECÇÃO CAMPEONATOS */}
+        {/* SECÇÃO CAMPEONATOS E MODALIDADES */}
         <section id="campeonatos" className="mx-auto max-w-7xl px-6 py-16">
           <div className="mb-8">
             <p className="text-xs font-black tracking-[0.25em] text-[#e50914] uppercase">COMPETIÇÕES OFICIAIS</p>
@@ -346,14 +397,28 @@ export default function HomePage() {
                 </div>
                 <div className="flex flex-col justify-center">
                   <span className="self-center sm:self-start rounded-full bg-[#e50914]/15 px-3.5 py-1 text-xs font-black uppercase tracking-wider text-[#e50914]">{ativo.statusBadge}</span>
-                  <h3 className="mt-3 text-3xl sm:text-4xl lg:text-5xl font-black uppercase text-white leading-tight">{ativo.nome}</h3>
+                  <h3 className="mt-3 text-2xl sm:text-3xl lg:text-4xl font-black uppercase text-white leading-tight">{ativo.tituloOficial}</h3>
                   <p className="text-sm text-emerald-400 font-bold mt-2">{ativo.fase}</p>
-                  <p className="mt-3 text-xs sm:text-sm text-[#8a92a6] max-w-md">{ativo.descricao}</p>
+                  <p className="mt-3 text-xs sm:text-sm text-[#8a92a6] max-w-2xl leading-relaxed">{ativo.descricao}</p>
                 </div>
               </div>
-              <a href="https://wa.me/5547988444404" target="_blank" rel="noreferrer" className="rounded-full border border-[#e50914]/40 bg-[#e50914]/15 px-8 py-3.5 text-xs font-black uppercase tracking-wider text-[#ff1e27] hover:bg-[#e50914] hover:text-white transition shadow-lg shadow-[#e50914]/25 shrink-0">Consultar Calendário e Ligas ↗</a>
+              <a href="https://wa.me/5547988444404" target="_blank" rel="noreferrer" className="rounded-full border border-[#e50914]/40 bg-[#e50914]/15 px-8 py-3.5 text-xs font-black uppercase tracking-wider text-[#ff1e27] hover:bg-[#e50914] hover:text-white transition shadow-lg shadow-[#e50914]/25 shrink-0">Inscrever Equipe ↗</a>
             </div>
-            <div className="mt-10">
+            
+            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {ativo.detalhes.map((detalhe, idx) => {
+                const [titulo, ...resto] = detalhe.split(':');
+                const texto = resto.join(':');
+                return (
+                  <div key={idx} className="rounded-2xl border border-white/10 bg-white/[0.02] p-5 flex flex-col justify-between">
+                    <span className="text-[10px] font-black uppercase tracking-wider text-[#e50914] mb-1">{titulo}</span>
+                    <p className="text-xs font-bold text-white uppercase">{texto.trim()}</p>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="mt-10 pt-8 border-t border-white/10">
               <p className="text-xs font-black uppercase tracking-widest text-[#8a92a6] mb-5">PARCERIAS & COTAS DE APOIO</p>
               <div className="grid gap-4 sm:grid-cols-3">
                 <div className="flex flex-col items-center justify-center rounded-2xl border border-emerald-500/30 bg-emerald-500/5 p-6 text-center">
