@@ -1,5 +1,4 @@
 import React from 'react';
-import Link from 'next/link'; // Importação essencial adicionada
 
 export default function NotFound() {
   return (
@@ -9,12 +8,13 @@ export default function NotFound() {
       <p className="text-sm text-slate-400 max-w-md mb-8">
         O conteúdo que procura não existe ou foi movido. Verifique o endereço ou regresse à página principal da Arena Vale.
       </p>
-      <Link 
+      {/* Utilizando âncora padrão <a> para evitar o ReferenceError do Link */}
+      <a 
         href="/" 
         className="px-6 py-3 bg-amber-400 hover:bg-amber-300 text-[#070b13] font-bold rounded-lg text-sm transition"
       >
         VOLTAR AO INÍCIO
-      </Link>
+      </a>
     </main>
   );
 }
