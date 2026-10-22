@@ -35,7 +35,6 @@ export default function LoginPage() {
       return;
     }
 
-    // Verificação de Coordenadores adicionados pelo proprietário
     try {
       const savedCoords = localStorage.getItem('cfg6_coordenadores');
       if (savedCoords) {
@@ -64,13 +63,22 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-[#07080c] text-white selection:bg-[#e50914] selection:text-white flex flex-col justify-between font-sans overflow-x-hidden">
-      <header className="border-b border-white/[0.08] bg-[#07080c]/90 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+      
+      {/* CABEÇALHO OTIMIZADO COM NAVEGAÇÃO COMPLETA */}
+      <header className="border-b border-white/[0.08] bg-[#07080c]/90 backdrop-blur-xl sticky top-0 z-40">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
           <Link href="/" className="flex items-center gap-3">
-            <img src="/logo 02.png" alt="Arena Vale" className="h-12 w-auto object-contain rounded-lg mix-blend-lighten" />
+            <img src="/logo 02.png" alt="Arena Vale" className="h-10 w-auto object-contain rounded-lg mix-blend-lighten" />
           </Link>
-          <Link href="/" className="rounded-full border border-white/20 bg-white/5 px-6 py-2 text-xs font-black uppercase tracking-wider text-white hover:bg-white/10 transition">
-            ← Voltar ao Início
+          <nav className="hidden md:flex items-center gap-6 text-xs font-black uppercase tracking-wider text-[#b8c0d4]">
+            <Link href="/" className="hover:text-white transition">Início</Link>
+            <Link href="/tv" className="hover:text-white transition">TV Arena Vale</Link>
+            <Link href="/campeonatos" className="hover:text-white transition">Campeonatos</Link>
+            <Link href="/atletasdestaques" className="hover:text-white transition">Atletas</Link>
+            <Link href="/patrocinio" className="text-amber-400 hover:underline transition">Patrocínio</Link>
+          </nav>
+          <Link href="/" className="rounded-full border border-white/20 bg-white/5 px-5 py-2 text-xs font-black uppercase tracking-wider text-white hover:bg-white/10 transition">
+            ← Início
           </Link>
         </div>
       </header>
