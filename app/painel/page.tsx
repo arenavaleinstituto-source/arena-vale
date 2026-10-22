@@ -1,21 +1,18 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 
 export default function PainelPage() {
-  const router = useRouter();
+  const usuarioEmail = 'arenavale2026@gmail.com';
+  const totalCampeonatos = '12';
+  const totalInscricoes = '1.436';
+  const campeonatoDestaque = 'Copa Regional Vale 2026';
+  const sistemaStatus = true;
 
-  const [usuarioEmail] = useState('arenavale2026@gmail.com');
-  const [totalCampeonatos] = useState('12');
-  const [totalInscricoes] = useState('1.436');
-  const [campeonatoDestaque] = useState('Copa Regional Vale 2026');
-  const [sistemaStatus] = useState(true);
-
-  const handleLogout = () => {
-    router.push('/login');
-  };
+  function handleLogout() {
+    window.location.href = '/login';
+  }
 
   return (
     <main className="min-h-screen bg-[#070b13] text-white p-4 md:p-8 font-sans">
@@ -42,15 +39,16 @@ export default function PainelPage() {
             </Link>
 
             <button
+              type="button"
               onClick={handleLogout}
-              className="px-4 py-2 text-xs md:text-sm font-bold rounded-lg bg-red-700 hover:bg-red-800 text-white transition flex items-center gap-2 shadow-md cursor-pointer"
+              className="px-4 py-2 text-xs md:text-sm font-bold rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 text-white transition flex items-center gap-2 shadow-md cursor-pointer"
             >
               SAIR 🔒
             </button>
           </div>
         </header>
 
-        {/* HERO / TÍTULO PRINCIPAL */}
+        {/* HERO / TITULO PRINCIPAL */}
         <section className="bg-gradient-to-r from-slate-900 via-slate-900/90 to-slate-950 p-6 md:p-8 rounded-2xl border border-white/5 shadow-xl">
           <h1 className="text-2xl md:text-3xl font-extrabold uppercase tracking-tight text-white">
             Centro de Comando & Gestão Editorial
@@ -60,7 +58,7 @@ export default function PainelPage() {
           </p>
         </section>
 
-        {/* SEÇÃO DE MÉTRICAS */}
+        {/* SECAO DE METRICAS */}
         <section className="bg-slate-900/60 p-6 rounded-2xl border border-white/5 space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
@@ -89,7 +87,7 @@ export default function PainelPage() {
             </div>
           </div>
 
-          {/* CARDS DE NÚMEROS */}
+          {/* CARDS DE NUMEROS */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="bg-slate-950/60 p-5 rounded-xl border border-slate-800">
               <span className="text-[11px] font-bold uppercase text-slate-400">Total Campeonatos</span>
@@ -122,4 +120,55 @@ export default function PainelPage() {
           </div>
         </section>
 
-        {/* FERRAMENTAS DE CONTEÚDO
+        {/* FERRAMENTAS DE CONTEUDO & CAMPEONATOS */}
+        <section className="bg-slate-900/60 p-6 rounded-2xl border border-white/5 space-y-4">
+          <h2 className="text-sm font-extrabold uppercase tracking-wider text-slate-300">
+            Ferramentas de Conteúdo & Campeonatos
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Link
+              href="/painel/campeonatos"
+              className="group block p-5 bg-slate-950/80 rounded-xl border border-slate-800 hover:border-amber-400/50 hover:bg-slate-900 transition-all shadow-md cursor-pointer"
+            >
+              <div className="text-2xl mb-2">🏆</div>
+              <h3 className="font-bold text-white group-hover:text-amber-400 transition text-sm uppercase">
+                Gerir Campeonatos
+              </h3>
+              <p className="text-xs text-slate-400 mt-1">
+                Criar novas copas, jornadas e inscrições.
+              </p>
+            </Link>
+
+            <Link
+              href="/painel/noticias"
+              className="group block p-5 bg-slate-950/80 rounded-xl border border-slate-800 hover:border-amber-400/50 hover:bg-slate-900 transition-all shadow-md cursor-pointer"
+            >
+              <div className="text-2xl mb-2">📰</div>
+              <h3 className="font-bold text-white group-hover:text-amber-400 transition text-sm uppercase">
+                Publicar Notícias
+              </h3>
+              <p className="text-xs text-slate-400 mt-1">
+                Lançar comunicados, destaques e novidades.
+              </p>
+            </Link>
+
+            <Link
+              href="/painel/tv"
+              className="group block p-5 bg-slate-950/80 rounded-xl border border-slate-800 hover:border-amber-400/50 hover:bg-slate-900 transition-all shadow-md cursor-pointer"
+            >
+              <div className="text-2xl mb-2">📺</div>
+              <h3 className="font-bold text-white group-hover:text-amber-400 transition text-sm uppercase">
+                Atualizar TV Arena Vale
+              </h3>
+              <p className="text-xs text-slate-400 mt-1">
+                Gerir transmissões e vídeos ao vivo.
+              </p>
+            </Link>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  );
+}
