@@ -39,7 +39,7 @@ export default function LoginPage() {
           
           <div className="text-center mb-8">
             <span className="inline-flex items-center gap-2 rounded-full border border-amber-400/40 bg-amber-500/10 px-3.5 py-1 text-[10px] font-black uppercase tracking-[0.2em] text-amber-300 mb-3">ÁREA RESTRITA</span>
-            <h1 className="text-2xl sm:text-3xl font-black uppercase tracking-tight text-white">Portal do Coordenador</h1>
+            <h1 className="text-2xl sm:text-3xl font-black uppercase tracking-tight text-white">Portal do Proprietário</h1>
             <p className="text-xs text-[#8a92a6] mt-2 uppercase">Aceda para gerir equipas, inscrições e escalações</p>
           </div>
 
