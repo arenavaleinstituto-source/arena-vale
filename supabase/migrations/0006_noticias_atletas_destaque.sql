@@ -1,57 +1,46 @@
 -- ====================================================================
--- ARENA VALE — Noticias e Atletas em Destaque (saindo do localStorage)
+-- ARENA VALE — Conteudo inicial de Noticias (texto real, sem Em Breve)
 -- ====================================================================
--- Rode com:  supabase db push
+-- Rode com:  supabase db push  (ou cole direto no SQL Editor do Supabase)
+-- Script idempotente: pode rodar mais de uma vez sem duplicar
+--
+-- Obs: a tabela atletas_destaque fica vazia de proposito por enquanto.
+-- Enquanto nao tiver atletas reais cadastrados, o site mostra os 3
+-- exemplos ja prontos que existem no codigo (fallback automatico) --
+-- fica melhor do que inventar nomes genericos aqui.
 -- ====================================================================
 
--- NOTICIAS
-create table if not exists public.noticias (
-  id uuid primary key default gen_random_uuid(),
-  titulo text not null,
-  descricao text not null,
-  categoria text not null,
-  tag text not null,
-  imagem_url text,
-  ordem int not null default 0,
-  ativo boolean not null default true,
-  created_by uuid references public.profiles(id),
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now()
+insert into public.noticias (titulo, descricao, categoria, tag, ordem, ativo)
+select * from (values
+  (
+    'ARENA VALE FECHA PARCERIA OFICIAL COM A ACADESF',
+    'A Arena Vale firma parceria institucional com a ACADESF para fortalecer o desenvolvimento do esporte amador na regiao do Vale, unindo estrutura, arbitragem e visibilidade para clubes e atletas locais.',
+    'PARCERIA',
+    'OFICIAL',
+    1,
+    true
+  ),
+  (
+    'INSCRICOES ABERTAS PARA A TEMPORADA 2026',
+    'Estao abertas as inscricoes de equipes para o Circuito de Futsal, a Copa de Futebol 7, a Liga de Basquete e o Torneio de Volei da temporada 2026. Times interessados podem garantir vaga diretamente pelo WhatsApp oficial.',
+    'CAMPEONATOS',
+    'INSCRICOES ABERTAS',
+    2,
+    true
+  ),
+  (
+    'TV ARENA VALE AMPLIA COBERTURA DAS TRANSMISSOES',
+    'A partir desta temporada, a TV Arena Vale passa a transmitir um numero maior de partidas ao vivo, com cobertura tecnica dedicada para Futsal, Futebol 7, Basquete e Volei direto do canal oficial no YouTube.',
+    'BROADCAST',
+    'NOVIDADE',
+    3,
+    true
+  )
+) as v(titulo, descricao, categoria, tag, ordem, ativo)
+where not exists (
+  select 1 from public.noticias n where n.titulo = v.titulo
 );
-create index idx_noticias_ativo_ordem on public.noticias(ativo, ordem);
-
--- ATLETAS EM DESTAQUE
-create table if not exists public.atletas_destaque (
-  id uuid primary key default gen_random_uuid(),
-  nome text not null,
-  modalidade text not null,
-  equipe text not null,
-  destaque_texto text not null,
-  imagem_url text,
-  ordem int not null default 0,
-  ativo boolean not null default true,
-  created_by uuid references public.profiles(id),
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now()
-);
-create index idx_atletas_destaque_ativo_ordem on public.atletas_destaque(ativo, ordem);
-
--- updated_at automatico (reaproveitando a funcao que ja existe em 0001_init.sql)
-create trigger tr_noticias_updated before update on public.noticias for each row execute function public.set_updated_at();
-create trigger tr_atletas_destaque_updated before update on public.atletas_destaque for each row execute function public.set_updated_at();
 
 -- ====================================================================
--- ROW LEVEL SECURITY — mesmo padrao de patrocinadores (leitura publica, escrita so coordenador)
--- ====================================================================
-alter table public.noticias enable row level security;
-alter table public.atletas_destaque enable row level security;
-
-create policy "noticias_read_all" on public.noticias for select using (true);
-create policy "noticias_write_coord" on public.noticias for all using (public.is_coordenador());
-
-create policy "atletas_destaque_read_all" on public.atletas_destaque for select using (true);
-create policy "atletas_destaque_write_coord" on public.atletas_destaque for all using (public.is_coordenador());
-
--- ====================================================================
--- FIM — script idempotente
+-- FIM
 -- ====================================================================
