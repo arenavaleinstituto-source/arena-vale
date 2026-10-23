@@ -6,9 +6,9 @@ export const metadata: Metadata = {
   title: 'Arena Vale Sports',
   description: 'Plataforma de gestão de campeonatos e transmissões esportivas.',
   icons: {
-    icon: '/logo 02.png',
-    shortcut: '/logo 02.png',
-    apple: '/logo 02.png',
+    icon: '/logo.png',
+    shortcut: '/logo.png',
+    apple: '/logo.png',
   },
   manifest: '/manifest.json',
   openGraph: {
