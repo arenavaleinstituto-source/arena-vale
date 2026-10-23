@@ -95,7 +95,7 @@ export default function TVArenaPage() {
             rel="noreferrer"
             className="px-6 py-3 bg-red-600 hover:bg-red-500 text-white font-black text-xs uppercase tracking-wider rounded-xl transition shadow-lg flex-shrink-0"
           >
-            Aceder ao YouTube ↗
+            Acessar o YouTube ↗
           </a>
         </div>
 
