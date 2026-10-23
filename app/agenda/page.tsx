@@ -60,7 +60,7 @@ export default function AgendaPublicaPage() {
         
         <div className="text-center space-y-2">
           <span className="inline-block px-3.5 py-1 rounded-full bg-amber-400/10 border border-amber-400/30 text-amber-400 text-xs font-black uppercase tracking-widest">
-            Calendário Desportivo 2026
+            Calendário Esportivo 2026
           </span>
           <h1 className="text-3xl md:text-5xl font-black uppercase tracking-tight text-white">
             Próximos Confrontos & Jogos
