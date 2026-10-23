@@ -5,6 +5,12 @@ import './globals.css';
 export const metadata: Metadata = {
   title: 'Arena Vale Sports',
   description: 'Plataforma de gestão de campeonatos e transmissões desportivas.',
+  icons: {
+    icon: '/logo 02.png',
+    shortcut: '/logo 02.png',
+    apple: '/logo 02.png',
+  },
+  manifest: '/manifest.json',
 };
 
 export default function RootLayout({
