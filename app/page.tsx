@@ -95,13 +95,13 @@ export default function HomePage() {
               .from('noticias')
               .select('id, titulo, descricao, categoria, tag, imagem_url')
               .eq('ativo', true)
-              .order('ordem', { ascending: true })
+              .order('created_at'.order('ordem', { ascending: true })
               .limit(3),
             supabase
               .from('atletas_destaque')
               .select('id, nome, modalidade, equipe, destaque_texto, imagem_url')
               .eq('ativo', true)
-              .order('ordem', { ascending: true })
+              .order('created_at', { ascending: true })
               .limit(3),
           ]);
 
