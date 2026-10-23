@@ -95,7 +95,7 @@ export default function HomePage() {
               .from('noticias')
               .select('id, titulo, descricao, categoria, tag, imagem_url')
               .eq('ativo', true)
-              .order('created_at'.order('ordem', { ascending: true })
+              .order('ordem', { ascending: true }) // CORRIGIDO AQUI
               .limit(3),
             supabase
               .from('atletas_destaque')
@@ -131,7 +131,7 @@ export default function HomePage() {
           );
         }
       } catch {
-        // Se der qualquer erro, mantem os itens padrao (nao quebra a pagina)
+        // Mantém os itens padrão se houver falha na ligação
       }
     }
 
@@ -216,7 +216,7 @@ export default function HomePage() {
               <Link href="/agenda" className="hover:text-white whitespace-nowrap transition">Agenda</Link>
               <Link href="#campeonatos" className="hover:text-white whitespace-nowrap transition">Campeonatos</Link>
               <Link href="/atletasdestaques" className="hover:text-white whitespace-nowrap transition">Atletas Destaque</Link>
-              <Link href="#projetosocial" className="hover:text-white whitespace-nowrap transition">Projeto Social</Link>
+              <Link href="/projetosocial" className="hover:text-white whitespace-nowrap transition">Projeto Social</Link>
             </nav>
             <div className="hidden xl:flex items-center gap-4 shrink-0">
               <a href="https://wa.me/5547988444404" target="_blank" rel="noreferrer" className="rounded-full bg-gradient-to-r from-[#e50914] to-[#ff1e27] px-7 py-3 text-xs font-black uppercase tracking-[0.15em] text-white shadow-lg shadow-[#e50914]/30 transition hover:scale-105 hover:shadow-[#e50914]/50 whitespace-nowrap">Anuncie</a>
@@ -255,7 +255,7 @@ export default function HomePage() {
                 <Link href="/agenda" onClick={() => setMenuMobileAberto(false)} className="py-2.5 text-[#cad0e0] border-b border-white/5">Agenda</Link>
                 <Link href="#campeonatos" onClick={() => setMenuMobileAberto(false)} className="py-2.5 text-[#cad0e0] border-b border-white/5">Campeonatos</Link>
                 <Link href="/atletasdestaques" onClick={() => setMenuMobileAberto(false)} className="py-2.5 text-[#cad0e0] border-b border-white/5">Atletas Destaque</Link>
-                <Link href="#projetosocial" onClick={() => setMenuMobileAberto(false)} className="py-2.5 text-[#cad0e0] border-b border-white/5">Projeto Social</Link>
+                <Link href="/projetosocial" onClick={() => setMenuMobileAberto(false)} className="py-2.5 text-[#cad0e0] border-b border-white/5">Projeto Social</Link>
               </nav>
             </div>
             <div className="pt-6 mt-6 border-t border-white/10 space-y-4">
@@ -394,7 +394,7 @@ export default function HomePage() {
                <h3 className="text-2xl sm:text-4xl font-black uppercase text-white tracking-tight">CONFIRA O CALENDÁRIO COMPLETO DE CONFRONTOS</h3>
                <p className="mt-4 text-sm sm:text-base text-[#8a92a6] max-w-2xl uppercase">Acesse a nossa agenda oficial para conferir datas, horários, equipas e locais de todas as partidas de Futsal, Futebol 7, Basquetebol e Voleibol.</p>
                <Link href="/agenda" className="mt-10 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#e50914] to-[#ff1e27] px-10 py-4 text-sm font-black uppercase tracking-[0.15em] text-white hover:scale-105 transition shadow-lg shadow-[#e50914]/30">
-                  VER AGENDA COMPLETA ↗
+                   VER AGENDA COMPLETA ↗
                </Link>
             </div>
           </div>
@@ -515,7 +515,7 @@ export default function HomePage() {
                     <li className="flex items-start gap-2"><span className="text-amber-400 font-bold">✓</span> Selo de &quot;Patrocinador Master&quot; no site</li>
                   </ul>
                 </div>
-                <a href="https://wa.me/5547988444404?text=Olá,%2520tenho%2520interesse%2520na%2520Cota%2520Master%2520da%2520Arena%2520Vale!" target="_blank" rel="noreferrer" className="w-full text-center rounded-full bg-amber-400 py-3 text-xs font-black uppercase tracking-widest text-black hover:bg-amber-300 transition shadow-lg shadow-amber-500/20">Garantir Cota Master ↗</a>
+                <a href="https://wa.me/5547988444404?text=Olá,%20tenho%20interesse%20na%20Cota%20Master%20da%20Arena%20Vale!" target="_blank" rel="noreferrer" className="w-full text-center rounded-full bg-amber-400 py-3 text-xs font-black uppercase tracking-widest text-black hover:bg-amber-300 transition shadow-lg shadow-amber-500/20">Garantir Cota Master ↗</a>
               </div>
 
               <div className="flex flex-col justify-between rounded-3xl border border-white/20 bg-gradient-to-b from-white/[0.05] via-[#0c0f17] to-[#07080c] p-8 shadow-2xl relative overflow-hidden group hover:border-[#e50914] transition">
@@ -531,7 +531,7 @@ export default function HomePage() {
                     <li className="flex items-start gap-2"><span className="text-[#e50914] font-bold">✓</span> Presença no site, na seção de parceiros</li>
                   </ul>
                 </div>
-                <a href="https://wa.me/5547988444404?text=Olá,%2520tenho%2520interesse%2520na%2520Cota%2520Apoio%2520Regional%2520da%2520Arena%2520Vale!" target="_blank" rel="noreferrer" className="w-full text-center rounded-full border border-white/20 bg-white/5 py-3 text-xs font-black uppercase tracking-widest text-white hover:bg-white/10 hover:border-white/40 transition">Garantir Apoio Regional ↗</a>
+                <a href="https://wa.me/5547988444404?text=Olá,%20tenho%20interesse%20na%20Cota%20Apoio%20Regional%20da%20Arena%20Vale!" target="_blank" rel="noreferrer" className="w-full text-center rounded-full border border-white/20 bg-white/5 py-3 text-xs font-black uppercase tracking-widest text-white hover:bg-white/10 hover:border-white/40 transition">Garantir Apoio Regional ↗</a>
               </div>
 
               <div className="flex flex-col justify-between rounded-3xl border border-emerald-500/40 bg-gradient-to-b from-emerald-500/10 via-[#0c0f17] to-[#07080c] p-8 shadow-2xl relative overflow-hidden group hover:border-emerald-400 transition">
@@ -547,7 +547,7 @@ export default function HomePage() {
                     <li className="flex items-start gap-2"><span className="text-emerald-400 font-bold">✓</span> Menção em releases e materiais institucionais</li>
                   </ul>
                 </div>
-                <a href="https://wa.me/5547988444404?text=Olá,%2520tenho%2520interesse%2520na%2520Cota%2520Institucional%2520da%2520Arena%2520Vale!" target="_blank" rel="noreferrer" className="w-full text-center rounded-full border border-emerald-500/40 bg-emerald-500/15 py-3 text-xs font-black uppercase tracking-widest text-emerald-300 hover:bg-emerald-500 hover:text-black transition">Garantir Cota Institucional ↗</a>
+                <a href="https://wa.me/5547988444404?text=Olá,%20tenho%20interesse%20na%20Cota%20Institucional%20da%20Arena%20Vale!" target="_blank" rel="noreferrer" className="w-full text-center rounded-full border border-emerald-500/40 bg-emerald-500/15 py-3 text-xs font-black uppercase tracking-widest text-emerald-300 hover:bg-emerald-500 hover:text-black transition">Garantir Cota Institucional ↗</a>
               </div>
             </div>
 
@@ -556,7 +556,7 @@ export default function HomePage() {
               <p className="text-xs sm:text-sm text-[#8a92a6] uppercase leading-relaxed mb-6">
                 Todo interesse em patrocínio é direcionado para contato direto via WhatsApp, onde a equipe Arena Vale apresenta valores atualizados e disponibilidade de cada cota por temporada.
               </p>
-              <a href="https://wa.me/5547988444404?text=Olá,%2520quero%2520conversar%2520sobre%2520patrocínio%2520na%2520Arena%2520Vale!" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-emerald-600 to-emerald-500 px-8 py-4 text-xs font-black uppercase tracking-widest text-white hover:scale-105 transition shadow-lg shadow-emerald-600/30">
+              <a href="https://wa.me/5547988444404?text=Olá,%20quero%20conversar%20sobre%20patrocínio%20na%20Arena%20Vale!" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-emerald-600 to-emerald-500 px-8 py-4 text-xs font-black uppercase tracking-widest text-white hover:scale-105 transition shadow-lg shadow-emerald-600/30">
                 💬 WhatsApp Patrocínios: (47) 98844-4404 ↗
               </a>
             </div>
