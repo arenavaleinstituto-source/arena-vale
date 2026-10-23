@@ -22,7 +22,7 @@ const ATLETAS_INICIAIS: AtletaItem[] = [
     modalidade: 'FUTSAL',
     equipe: 'Fênix Club · Ala / Fixo',
     destaque: 'Artilheiro da Copa Vale 2026',
-    imagem: '/fundo-arena.jpg',
+    imagem: 'https://ui-avatars.com/api/?name=Gabriel+Mendes&background=eab308&color=070b13',
     jogos: '12',
     golsOrPontos: '18 Gols',
     assistencias: '9'
@@ -33,7 +33,7 @@ const ATLETAS_INICIAIS: AtletaItem[] = [
     modalidade: 'BASQUETEBOL',
     equipe: 'Vale United Basquete · Armador',
     destaque: 'MVP da Rodada Classificatória',
-    imagem: '/fundo-arena.jpg',
+    imagem: 'https://ui-avatars.com/api/?name=Lucas+Silveira&background=eab308&color=070b13',
     jogos: '8',
     golsOrPontos: '164 Pontos',
     assistencias: '42'
@@ -44,7 +44,7 @@ const ATLETAS_INICIAIS: AtletaItem[] = [
     modalidade: 'FUTEBOL 7',
     equipe: 'Arena FC · Pivô',
     destaque: 'Melhor Jogador do Mês',
-    imagem: '/fundo-arena.jpg',
+    imagem: 'https://ui-avatars.com/api/?name=Matheus+Becker&background=eab308&color=070b13',
     jogos: '10',
     golsOrPontos: '14 Gols',
     assistencias: '6'
@@ -121,7 +121,7 @@ export default function AtletasDestaquesPage() {
             >
               <div className="absolute inset-0 bg-gradient-to-t from-[#07080c] via-[#11141d]/80 to-transparent opacity-90" />
               
-              {/* Imagem de Fundo Válida (Sem erros) */}
+              {/* Imagem do Atleta */}
               <img 
                 src={atleta.imagem || '/fundo-arena.jpg'} 
                 alt={atleta.nome} 
@@ -159,7 +159,7 @@ export default function AtletasDestaquesPage() {
 
       {/* RODAPÉ */}
       <footer className="border-t border-white/10 bg-[#050609] py-6 text-center text-xs text-[#555d6e]">
-        © 2026 Arena Vale · Configuração Registada sob a etiqueta **CFG6**. Todos os direitos reservados.
+        © 2026 Arena Vale · Todos os direitos reservados.
       </footer>
     </div>
   );
