@@ -26,14 +26,14 @@ const NOTICIAS_PADRAO: NoticiaItem[] = [
   {
     id: 'noticia-1',
     titulo: 'NOVA TEMPORADA DE TRANSMISSÕES',
-    descricao: 'A Arena Vale prepara cobertura técnica e multimédia completa para o desporto regional com câmaras IA.',
+    descricao: 'A Arena Vale prepara cobertura técnica e multimídia completa para o esporte regional com câmeras IA.',
     categoria: 'BROADCAST',
     tag: 'AO VIVO',
     imagem: '/fundo-arena.jpg'
   },
   {
     id: 'noticia-2',
-    titulo: 'INCENTIVO AO DESPORTO REGIONAL',
+    titulo: 'INCENTIVO AO ESPORTE REGIONAL',
     descricao: 'Aproximamos marcas, atletas e projetos com impacto direto na comunidade desportiva do Vale.',
     categoria: 'PROJETO VALE',
     tag: 'DESTAQUE',
@@ -382,7 +382,7 @@ export default function HomePage() {
           <div className="mx-auto max-w-7xl">
             <div className="mb-12 flex flex-col sm:flex-row sm:items-end justify-between gap-6 border-b border-white/10 pb-6">
               <div className="relative">
-                <div className="inline-flex items-center gap-2 mb-2"><span className="h-3 w-1.5 bg-[#e50914] -skew-x-12" /><span className="text-xs font-black tracking-[0.3em] text-[#e50914] uppercase">CALENDÁRIO DESPORTIVO</span></div>
+                <div className="inline-flex items-center gap-2 mb-2"><span className="h-3 w-1.5 bg-[#e50914] -skew-x-12" /><span className="text-xs font-black tracking-[0.3em] text-[#e50914] uppercase">CALENDÁRIO ESPORTIVO</span></div>
                 <h2 className="text-4xl sm:text-5xl font-black italic uppercase tracking-tighter text-white leading-none">AGENDA DE <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#e50914] to-[#ff4b52]">JOGOS</span></h2>
               </div>
               <Link href="/agenda" className="rounded-full border border-white/20 bg-white/5 px-6 py-2.5 text-xs font-black uppercase tracking-wider text-white hover:bg-white/10 transition">Ver Agenda Completa ↗</Link>
@@ -392,7 +392,7 @@ export default function HomePage() {
                <div className="absolute -right-20 -bottom-20 h-72 w-72 rounded-full bg-[#e50914]/10 blur-3xl pointer-events-none" />
                <div className="h-20 w-20 rounded-full bg-[#e50914]/20 border border-[#e50914]/40 flex items-center justify-center text-4xl mb-6 shadow-[0_0_30px_rgba(229,9,20,0.3)]">📅</div>
                <h3 className="text-2xl sm:text-4xl font-black uppercase text-white tracking-tight">CONFIRA O CALENDÁRIO COMPLETO DE CONFRONTOS</h3>
-               <p className="mt-4 text-sm sm:text-base text-[#8a92a6] max-w-2xl uppercase">Acesse a nossa agenda oficial para conferir datas, horários, equipas e locais de todas as partidas de Futsal, Futebol 7, Basquetebol e Voleibol.</p>
+               <p className="mt-4 text-sm sm:text-base text-[#8a92a6] max-w-2xl uppercase">Acesse a nossa agenda oficial para conferir datas, horários, equipes e locais de todas as partidas de Futsal, Futebol 7, Basquetebol e Voleibol.</p>
                <Link href="/agenda" className="mt-10 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#e50914] to-[#ff1e27] px-10 py-4 text-sm font-black uppercase tracking-[0.15em] text-white hover:scale-105 transition shadow-lg shadow-[#e50914]/30">
                    VER AGENDA COMPLETA ↗
                </Link>
