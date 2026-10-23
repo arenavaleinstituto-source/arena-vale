@@ -34,14 +34,14 @@ const NOTICIAS_PADRAO: NoticiaItem[] = [
   {
     id: 'noticia-2',
     titulo: 'INCENTIVO AO ESPORTE REGIONAL',
-    descricao: 'Aproximamos marcas, atletas e projetos com impacto direto na comunidade desportiva do Vale.',
+    descricao: 'Aproximamos marcas, atletas e projetos com impacto direto na comunidade esportiva do Vale.',
     categoria: 'PROJETO VALE',
     tag: 'DESTAQUE',
     imagem: '/fundo-arena.jpg'
   },
   {
     id: 'noticia-3',
-    titulo: 'ORGANIZAÇÃO E GESTÃO DESPORTIVA',
+    titulo: 'ORGANIZAÇÃO E GESTÃO ESPORTIVA',
     descricao: 'Coordenação e arbitragem estruturadas para elevar o nível técnico de todas as competições.',
     categoria: 'COMPETIÇÕES',
     tag: 'OFICIAL',
@@ -55,7 +55,7 @@ const ATLETAS_PADRAO: AtletaItem[] = [
     nome: 'MATHEUS SILVA',
     modalidade: 'FUTSAL ADULTO',
     equipe: 'VALE FC',
-    destaque: 'Artilheiro da Temporada · 18 Golos',
+    destaque: 'Artilheiro da Temporada · 18 Gols',
     imagem: '/fundo-arena.jpg'
   },
   {
@@ -63,7 +63,7 @@ const ATLETAS_PADRAO: AtletaItem[] = [
     nome: 'GABRIEL SOUZA',
     modalidade: 'FUTEBOL 7',
     equipe: 'ATLÉTICO VALE',
-    destaque: 'Melhor Guarda-Redes do Circuito',
+    destaque: 'Melhor Goleiro do Circuito',
     imagem: '/fundo-arena.jpg'
   },
   {
@@ -302,7 +302,7 @@ export default function HomePage() {
             </div>
             <div className="text-center pt-8 border-t border-white/5">
                <Link href="/tv" className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-8 py-4 text-sm font-black uppercase tracking-[0.15em] text-white hover:bg-white/10 transition shadow-lg">
-                  ACESSE O CATÁLOGO COMPLETO DA TV ARENA VALE ↗
+                 ACESSE O CATÁLOGO COMPLETO DA TV ARENA VALE ↗
                </Link>
             </div>
           </div>
@@ -413,7 +413,7 @@ export default function HomePage() {
                   <span className="text-[#e50914]">ATLETAS EM DESTAQUE</span>
                 </h3>
                 <p className="mt-4 text-sm sm:text-base text-[#cad0e0] leading-relaxed uppercase">
-                  OS TALENTOS, ARTILHEIROS E PROTAGONISTAS QUE TRANSFORMARÃO CADA CONFRONTO DESPORTIVO NUM GRANDE ESPETÁCULO NO VALE.
+                  OS TALENTOS, ARTILHEIROS E PROTAGONISTAS QUE TRANSFORMARÃO CADA CONFRONTO ESPORTIVO NUM GRANDE ESPETÁCULO NO VALE.
                 </p>
                 <div className="mt-8 flex flex-wrap items-center gap-4"><Link href="/atletasdestaques" className="rounded-full bg-[#e50914] px-7 py-3.5 text-xs font-black uppercase tracking-wider text-white shadow-lg shadow-[#e50914]/30 transition hover:bg-[#ff1e27] hover:scale-105">GALERIA OFICIAL →</Link></div>
               </div>
@@ -537,7 +537,7 @@ export default function HomePage() {
               <div className="flex flex-col justify-between rounded-3xl border border-emerald-500/40 bg-gradient-to-b from-emerald-500/10 via-[#0c0f17] to-[#07080c] p-8 shadow-2xl relative overflow-hidden group hover:border-emerald-400 transition">
                 <div>
                   <h3 className="text-2xl font-black uppercase text-white tracking-wider mb-2">Cota Institucional</h3>
-                  <p className="text-xs font-bold text-emerald-400 uppercase tracking-widest mb-6">Parceiros de Apoio ao Desporto</p>
+                  <p className="text-xs font-bold text-emerald-400 uppercase tracking-widest mb-6">Parceiros de Apoio ao Esporte</p>
                   <p className="text-xs sm:text-sm text-[#b8c0d4] leading-relaxed mb-6 uppercase">
                     Para entidades, federações e parceiros de apoio ao esporte regional. Reconhecimento como parceiro institucional oficial da Arena Vale.
                   </p>
@@ -570,7 +570,7 @@ export default function HomePage() {
             <div className="rounded-[2.5rem] border border-white/10 bg-[#161a24] p-8 sm:p-14 shadow-2xl">
               <span className="text-xs font-black uppercase tracking-[0.25em] text-[#e50914]">IMPACTO & INCLUSÃO</span>
               <h2 className="mt-3 text-3xl font-black uppercase sm:text-5xl leading-tight">PROJETO SOCIAL <br /><span className="text-[#e50914]">ARENA VALE</span></h2>
-              <p className="mt-4 max-w-2xl text-base text-[#cad0e0] leading-relaxed">O desporto como ferramenta de transformação comunitária. Apoio para formação de jovens talentos, integração social e cooperação nas comunidades do Vale.</p>
+              <p className="mt-4 max-w-2xl text-base text-[#cad0e0] leading-relaxed">O esporte como ferramenta de transformação comunitária. Apoio para formação de jovens talentos, integração social e cooperação nas comunidades do Vale.</p>
               <div className="mt-8 flex flex-wrap gap-4"><a href="https://wa.me/5547988444404" target="_blank" rel="noreferrer" className="rounded-full bg-[#e50914] px-8 py-3.5 text-xs font-black uppercase tracking-wider text-white shadow-lg shadow-[#e50914]/25 transition hover:bg-[#ff1e27]">💼 Apoiar o Projeto Social</a></div>
             </div>
           </div>
@@ -585,11 +585,11 @@ export default function HomePage() {
               <a href="https://wa.me/5547988444404" target="_blank" rel="noreferrer" title="WhatsApp Oficial" className="flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-white/5 text-[#cad0e0] transition hover:border-emerald-500 hover:bg-emerald-600 hover:text-white shadow-lg"><svg className="h-5 w-5 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg></a>
               <a href="#" target="_blank" rel="noreferrer" title="Facebook Oficial" className="flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-white/5 text-[#cad0e0] transition hover:border-blue-500 hover:bg-blue-600 hover:text-white shadow-lg"><svg className="h-5 w-5 fill-current" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg></a>
             </div>
-            <p className="text-sm font-semibold text-[#8a92a6]">O palco do desporto é aqui.</p>
+            <p className="text-sm font-semibold text-[#8a92a6]">O palco do esporte é aqui.</p>
             <p className="text-xs text-[#555d6e] mt-1 font-mono">CNPJ: 40.694.741/0001-34</p>
             
             <div className="pt-8 mt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-center gap-4 text-xs text-[#555d6e]">
-              <span>© 2026 Arena Vale · Mídia Desportiva & Eventos. Todos os direitos reservados.</span>
+              <span>© 2026 Arena Vale · Mídia Esportiva & Eventos. Todos os direitos reservados.</span>
               <span className="hidden sm:inline">|</span>
               <div className="flex items-center gap-4">
                 <Link href="/privacidade" className="hover:text-white transition underline underline-offset-4 decoration-white/20">Política de Privacidade</Link>
