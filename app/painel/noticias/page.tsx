@@ -1,67 +1,131 @@
 'use client';
 
-import React, { useState, ChangeEvent } from 'react';
+import React, { useState, useEffect, ChangeEvent } from 'react';
 import Link from 'next/link';
+import { createClient } from '@/lib/supabase/client';
 
 interface NoticiaItem {
-  id: number;
+  id: string;
   titulo: string;
   categoria: string;
+  tag: string;
   conteudo: string;
   imagemCapa: string | null;
   data: string;
 }
 
+const BUCKET_CAPAS = 'noticias-capas';
+
 export default function NoticiasPage() {
+  const supabase = createClient();
+
   const [titulo, setTitulo] = useState('');
   const [categoria, setCategoria] = useState('Comunicado Oficial');
+  const [tag, setTag] = useState('NOVO');
   const [conteudo, setConteudo] = useState('');
+  const [arquivoImagem, setArquivoImagem] = useState<File | null>(null);
   const [imagemPreview, setImagemPreview] = useState<string | null>(null);
+  const [enviando, setEnviando] = useState(false);
   const [sucesso, setSucesso] = useState(false);
+  const [erro, setErro] = useState<string | null>(null);
+  const [carregando, setCarregando] = useState(true);
 
-  const [noticias, setNoticias] = useState<NoticiaItem[]>([
-    {
-      id: 1,
-      titulo: 'Definidas as datas da semifinal da Copa Regional 2026',
-      categoria: 'Campeonatos',
-      conteudo: 'As partidas decisivas acontecerão no próximo final de semana com cobertura ao vivo.',
-      imagemCapa: null,
-      data: '22/10/2026',
-    },
-  ]);
+  const [noticias, setNoticias] = useState<NoticiaItem[]>([]);
+
+  async function carregarNoticias() {
+    setCarregando(true);
+    const { data, error } = await supabase
+      .from('noticias')
+      .select('id, titulo, categoria, tag, descricao, imagem_url, created_at')
+      .order('created_at', { ascending: false });
+
+    if (!error && data) {
+      setNoticias(
+        data.map((n: any) => ({
+          id: n.id,
+          titulo: n.titulo,
+          categoria: n.categoria,
+          tag: n.tag,
+          conteudo: n.descricao,
+          imagemCapa: n.imagem_url,
+          data: new Date(n.created_at).toLocaleDateString('pt-BR'),
+        }))
+      );
+    }
+    setCarregando(false);
+  }
+
+  useEffect(() => {
+    carregarNoticias();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   function handleImagemChange(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (file) {
+      setArquivoImagem(file);
       const url = URL.createObjectURL(file);
       setImagemPreview(url);
     }
   }
 
   function handleRemoverImagem() {
+    setArquivoImagem(null);
     setImagemPreview(null);
   }
 
-  function handlePost(e: React.FormEvent) {
+  async function handlePost(e: React.FormEvent) {
     e.preventDefault();
     if (!titulo.trim() || !conteudo.trim()) return;
 
-    const novaNoticia: NoticiaItem = {
-      id: Date.now(),
-      titulo,
-      categoria,
-      conteudo,
-      imagemCapa: imagemPreview,
-      data: new Date().toLocaleDateString('pt-BR'),
-    };
+    setEnviando(true);
+    setErro(null);
 
-    setNoticias((prev) => [novaNoticia, ...prev]);
-    setSucesso(true);
-    setTitulo('');
-    setConteudo('');
-    setImagemPreview(null);
+    try {
+      let imagemUrl: string | null = null;
 
-    setTimeout(() => setSucesso(false), 4000);
+      if (arquivoImagem) {
+        const caminho = `${Date.now()}-${arquivoImagem.name}`;
+        const { error: erroUpload } = await supabase.storage
+          .from(BUCKET_CAPAS)
+          .upload(caminho, arquivoImagem);
+
+        if (erroUpload) {
+          throw new Error(
+            'Não consegui enviar a imagem. Confirme se o bucket "noticias-capas" existe no Storage do Supabase e está marcado como público.'
+          );
+        }
+
+        const { data: publicUrlData } = supabase.storage.from(BUCKET_CAPAS).getPublicUrl(caminho);
+        imagemUrl = publicUrlData.publicUrl;
+      }
+
+      const { error: erroInsert } = await supabase.from('noticias').insert({
+        titulo,
+        descricao: conteudo,
+        categoria,
+        tag,
+        imagem_url: imagemUrl,
+        ativo: true,
+      });
+
+      if (erroInsert) {
+        throw new Error('Não consegui salvar a notícia no banco de dados.');
+      }
+
+      setSucesso(true);
+      setTitulo('');
+      setConteudo('');
+      setTag('NOVO');
+      handleRemoverImagem();
+      await carregarNoticias();
+
+      setTimeout(() => setSucesso(false), 4000);
+    } catch (err: any) {
+      setErro(err.message || 'Algo deu errado ao publicar a notícia.');
+    } finally {
+      setEnviando(false);
+    }
   }
 
   return (
@@ -71,7 +135,7 @@ export default function NoticiasPage() {
       </Link>
 
       <h1 className="text-2xl font-bold mt-4 uppercase">Publicar Notícias & Comunicados</h1>
-      <p className="text-sm text-slate-400 mb-6">Lance notas oficiais, convocações de arbitragem e novidades do portal.</p>
+      <p className="text-sm text-slate-400 mb-6">Lance notas oficiais, convocações de arbitragem e novidades do portal. Tudo que você publicar aqui aparece direto no site, pra todo mundo.</p>
 
       <form onSubmit={handlePost} className="bg-slate-900/90 p-6 rounded-2xl border border-slate-800 space-y-5 shadow-xl">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -100,6 +164,18 @@ export default function NoticiasPage() {
               <option value="TV Arena Vale">TV Arena Vale</option>
             </select>
           </div>
+        </div>
+
+        <div>
+          <label className="text-xs text-slate-300 block mb-1 font-semibold uppercase">Selo (tag pequena ao lado da categoria)</label>
+          <input
+            type="text"
+            value={tag}
+            onChange={(e) => setTag(e.target.value.toUpperCase())}
+            placeholder="Ex: NOVO, OFICIAL, URGENTE"
+            maxLength={20}
+            className="w-full md:w-64 bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-amber-400"
+          />
         </div>
 
         <div>
@@ -156,15 +232,22 @@ export default function NoticiasPage() {
 
         {sucesso && (
           <div className="p-3 bg-emerald-950/70 border border-emerald-500/40 rounded-lg text-emerald-400 text-xs font-semibold">
-            ✓ Notícia e capa publicadas com sucesso!
+            ✓ Notícia publicada com sucesso! Já está salva no banco e visível no site.
+          </div>
+        )}
+
+        {erro && (
+          <div className="p-3 bg-red-950/70 border border-red-500/40 rounded-lg text-red-400 text-xs font-semibold">
+            ⚠ {erro}
           </div>
         )}
 
         <button
           type="submit"
-          className="px-6 py-2.5 bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold rounded-lg text-sm transition cursor-pointer"
+          disabled={enviando}
+          className="px-6 py-2.5 bg-amber-400 hover:bg-amber-300 disabled:opacity-50 disabled:cursor-not-allowed text-slate-950 font-bold rounded-lg text-sm transition cursor-pointer"
         >
-          Publicar Notícia
+          {enviando ? 'Publicando...' : 'Publicar Notícia'}
         </button>
       </form>
 
@@ -172,6 +255,14 @@ export default function NoticiasPage() {
         <h2 className="text-xs uppercase font-extrabold text-slate-400 tracking-wider">
           Publicações Recentes
         </h2>
+
+        {carregando && (
+          <p className="text-xs text-slate-500">Carregando notícias já publicadas...</p>
+        )}
+
+        {!carregando && noticias.length === 0 && (
+          <p className="text-xs text-slate-500">Nenhuma notícia publicada ainda.</p>
+        )}
 
         {noticias.map((item) => (
           <div
