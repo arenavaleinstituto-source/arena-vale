@@ -1,7 +1,11 @@
-'use client';
-
 import React from 'react';
 import Link from 'next/link';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Campeonatos | Arena Vale Sports',
+  description: 'Conheça todas as modalidades e circuitos oficiais gerenciados pela Arena Vale.',
+};
 
 export default function CampeonatosPage() {
   const modalidades = [
@@ -10,7 +14,7 @@ export default function CampeonatosPage() {
       nome: 'Futsal',
       tituloOficial: 'Circuito Arena Vale de Futsal 2026',
       fase: 'Em Breve · Temporada 2026',
-      descricao: 'O futsal é a modalidade mais tradicional da região do Vale, reunindo equipas de clubes, bairros e empresas em disputas de alto nível técnico dentro de quadra.',
+      descricao: 'O futsal é a modalidade mais tradicional da região do Vale, reunindo equipes de clubes, bairros e empresas em disputas de alto nível técnico dentro de quadra.',
       statusBadge: 'CIRCUITO 2026',
     },
     {
@@ -34,7 +38,7 @@ export default function CampeonatosPage() {
       nome: 'Voleibol',
       tituloOficial: 'Torneio Arena Vale de Vôlei',
       fase: 'Em Breve · Temporada 2026',
-      descricao: 'O vôlei reúne equipas masculinas e femininas em um torneio disputado em sistema de melhor de 3 ou 5 sets.',
+      descricao: 'O vôlei reúne equipes masculinas e femininas em um torneio disputado em sistema de melhor de 3 ou 5 sets.',
       statusBadge: 'PROJETOS ABERTOS',
     }
   ];
@@ -64,7 +68,7 @@ export default function CampeonatosPage() {
             Campeonatos & Competições
           </h1>
           <p className="text-sm text-slate-400 max-w-xl mx-auto uppercase">
-            Conheça todas as modalidades e circuitos oficiais geridos pela Arena Vale na região.
+            Conheça todas as modalidades e circuitos oficiais gerenciados pela Arena Vale na região.
           </p>
         </div>
 
@@ -89,7 +93,7 @@ export default function CampeonatosPage() {
                   rel="noreferrer"
                   className="px-5 py-2.5 bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs font-black uppercase tracking-wider rounded-xl transition shadow"
                 >
-                  Inscrever Equipa ↗
+                  Inscrever Equipe ↗
                 </a>
               </div>
             </div>
