@@ -80,11 +80,11 @@ export default function PainelPage() {
               <span
                 className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-[11px] font-black tracking-widest uppercase border ${
                   sistemaStatus
-                    ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
-                    : 'bg-[#d4af37]/10 border-[#d4af37]/20 text-[#d4af37]'
+                    ? 'bg-[#d4af37]/10 border-[#d4af37]/20 text-[#d4af37]'
+                    : 'bg-white/10 border-white/20 text-[#8a92a6]'
                 }`}
               >
-                <span className={`w-2 h-2 rounded-full ${sistemaStatus ? 'bg-emerald-400' : 'bg-[#d4af37]'} animate-pulse`} />
+                <span className={`w-2 h-2 rounded-full ${sistemaStatus ? 'bg-[#d4af37]' : 'bg-[#8a92a6]'} animate-pulse`} />
                 {sistemaStatus ? 'Sistema Ativo & Sincronizado' : 'Aguardando Sincronização'}
               </span>
             </div>
@@ -96,7 +96,7 @@ export default function PainelPage() {
               <div className="absolute top-0 left-0 w-1 h-full bg-[#d4af37] opacity-50 group-hover:opacity-100 transition-opacity" />
               <span className="text-[11px] font-black uppercase tracking-widest text-[#8a92a6]">Total Campeonatos</span>
               <div className="text-4xl font-black text-white mt-3 tracking-tighter">{totalCampeonatos}</div>
-              <span className="text-[10px] font-bold tracking-widest text-emerald-400 mt-3 block uppercase">CADASTRADOS NA BASE</span>
+              <span className="text-[10px] font-bold tracking-widest text-[#d4af37] mt-3 block uppercase">CADASTRADOS NA BASE</span>
             </div>
 
             <div className="bg-[#070b13] p-6 rounded-2xl border border-white/5 relative overflow-hidden group hover:border-[#d4af37]/50 transition-colors">
@@ -117,7 +117,7 @@ export default function PainelPage() {
               <div className="absolute top-0 left-0 w-1 h-full bg-[#d4af37] opacity-50 group-hover:opacity-100 transition-opacity" />
               <span className="text-[11px] font-black uppercase tracking-widest text-[#8a92a6]">Campeonato Monitorado</span>
               <div className="text-lg font-black text-white mt-3 truncate">{campeonatoDestaque}</div>
-              <span className="text-[10px] font-bold tracking-widest text-emerald-400 mt-3 block uppercase">Maior Volume de Acessos</span>
+              <span className="text-[10px] font-bold tracking-widest text-[#d4af37] mt-3 block uppercase">Maior Volume de Acessos</span>
             </div>
           </div>
 
