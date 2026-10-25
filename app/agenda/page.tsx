@@ -1,14 +1,19 @@
 import React from 'react';
 import Link from 'next/link';
 import { createClient } from '@supabase/supabase-js';
+import { Metadata } from 'next';
 
-// Inicialização direta do cliente para Server Component (apenas leitura pública)
+export const metadata: Metadata = {
+  title: 'Agenda de Jogos | Arena Vale Sports',
+  description: 'Acompanhe a agenda oficial com datas, horários e locais dos confrontos.',
+};
+
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-export const revalidate = 60; // Atualiza o cache a cada 60 segundos
+export const revalidate = 60;
 
 export default async function AgendaPage() {
   const { data: jogos } = await supabase
@@ -18,7 +23,6 @@ export default async function AgendaPage() {
 
   return (
     <div className="min-h-screen bg-[#070b13] text-white">
-      {/* Mantenha o seu Header aqui */}
       <main className="max-w-5xl mx-auto px-4 py-12">
         <h1 className="text-3xl font-black uppercase text-amber-400 mb-8">Agenda de Jogos</h1>
         
