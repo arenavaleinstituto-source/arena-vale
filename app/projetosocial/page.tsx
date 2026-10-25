@@ -1,7 +1,11 @@
-'use client';
-
 import React from 'react';
 import Link from 'next/link';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Projeto Social | Arena Vale Sports',
+  description: 'O esporte como ferramenta de transformação social e integração no Vale.',
+};
 
 export default function ProjetoSocialPage() {
   return (
@@ -29,14 +33,14 @@ export default function ProjetoSocialPage() {
             Projeto Social Arena Vale
           </h1>
           <p className="text-sm text-slate-400 max-w-xl mx-auto uppercase">
-            O desporto como ferramenta de transformação social, apoio à formação de jovens talentos e integração comunitária no Vale.
+            O esporte como ferramenta de transformação social, apoio à formação de jovens talentos e integração comunitária no Vale.
           </p>
         </div>
 
         <div className="bg-[#0a1120] border border-slate-800 rounded-3xl p-8 md:p-12 shadow-xl space-y-6">
           <h2 className="text-2xl font-black uppercase text-amber-400">Iniciativas e Apoio Direto</h2>
           <p className="text-sm text-slate-300 leading-relaxed uppercase">
-            Desenvolvemos ações contínuas em parceria com entidades locais para levar o desporto a crianças e jovens em situação de vulnerabilidade, promovendo disciplina, saúde e cidadania através do futebol, futsal e outras modalidades.
+            Desenvolvemos ações contínuas em parceria com entidades locais para levar o esporte a crianças e jovens em situação de vulnerabilidade, promovendo disciplina, saúde e cidadania através do futebol, futsal e outras modalidades.
           </p>
           <div className="pt-4">
             <a
