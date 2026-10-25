@@ -15,16 +15,16 @@ export default function PainelPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#070b13] text-white p-4 md:p-8 font-sans">
-      <div className="max-w-7xl mx-auto space-y-6">
+    <main className="min-h-screen bg-[#070b13] text-white p-4 md:p-8 font-sans selection:bg-[#d4af37] selection:text-[#070b13]">
+      <div className="max-w-7xl mx-auto space-y-8">
         
         {/* BARRA SUPERIOR */}
-        <header className="flex flex-col sm:flex-row items-center justify-between gap-4 pb-4 border-b border-white/10">
+        <header className="flex flex-col sm:flex-row items-center justify-between gap-4 pb-6 border-b border-white/10">
           <div className="flex items-center gap-3">
             <div className="flex flex-col">
-              <span className="font-black text-xl tracking-wider text-amber-400">ARENA VALE</span>
-              <span className="text-xs text-amber-300 font-semibold uppercase tracking-wider">
-                Painel Restrito • {usuarioEmail}
+              <span className="font-black text-2xl tracking-widest text-[#d4af37] uppercase">ARENA VALE</span>
+              <span className="text-xs text-[#8a92a6] font-bold uppercase tracking-widest">
+                Painel Restrito • <span className="text-white">{usuarioEmail}</span>
               </span>
             </div>
           </div>
@@ -33,7 +33,7 @@ export default function PainelPage() {
             <Link
               href="/"
               target="_blank"
-              className="px-4 py-2 text-xs md:text-sm font-semibold rounded-lg bg-slate-900 border border-slate-700 hover:bg-slate-800 text-slate-200 transition flex items-center gap-2"
+              className="px-5 py-2.5 text-xs font-black tracking-widest uppercase rounded-lg bg-[#101726] border border-white/10 hover:border-[#d4af37] hover:text-[#d4af37] text-white transition-all flex items-center gap-2 shadow-lg"
             >
               VER SITE PRINCIPAL ↗
             </Link>
@@ -41,7 +41,7 @@ export default function PainelPage() {
             <button
               type="button"
               onClick={handleLogout}
-              className="px-4 py-2 text-xs md:text-sm font-bold rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 text-white transition flex items-center gap-2 shadow-md cursor-pointer"
+              className="px-5 py-2.5 text-xs font-black tracking-widest uppercase rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-white transition-all flex items-center gap-2 shadow-lg cursor-pointer"
             >
               SAIR 🔒
             </button>
@@ -49,126 +49,33 @@ export default function PainelPage() {
         </header>
 
         {/* HERO / TITULO PRINCIPAL */}
-        <section className="bg-gradient-to-r from-slate-900 via-slate-900/90 to-slate-950 p-6 md:p-8 rounded-2xl border border-white/5 shadow-xl">
-          <h1 className="text-2xl md:text-3xl font-extrabold uppercase tracking-tight text-white">
-            Centro de Comando & Gestão Editorial
-          </h1>
-          <p className="text-xs md:text-sm text-slate-400 mt-2 tracking-wide uppercase font-medium">
-            Painel do Coordenador: autoridade total para criar campeonatos, postar notícias, gerir atletas e conteúdos.
-          </p>
+        <section className="bg-gradient-to-r from-[#101726] via-[#0c121e] to-[#070b13] p-8 md:p-10 rounded-[2rem] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] relative overflow-hidden">
+          <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-[#d4af37]/5 blur-3xl pointer-events-none" />
+          <div className="relative z-10">
+            <h1 className="text-3xl md:text-4xl font-black uppercase tracking-tighter text-white">
+              CENTRO DE COMANDO & <span className="text-[#d4af37]">GESTÃO EDITORIAL</span>
+            </h1>
+            <p className="text-xs md:text-sm text-[#8a92a6] mt-3 tracking-widest uppercase font-bold max-w-3xl">
+              Painel do Coordenador: autoridade total para criar campeonatos, postar notícias, gerir atletas e conteúdos da plataforma.
+            </p>
+          </div>
         </section>
 
         {/* SECAO DE METRICAS */}
-        <section className="bg-slate-900/60 p-6 rounded-2xl border border-white/5 space-y-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <section className="bg-[#101726] p-8 rounded-[2rem] border border-white/10 space-y-8 shadow-xl">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/5 pb-6">
             <div>
-              <span className="px-2.5 py-1 text-[10px] font-bold tracking-widest text-amber-300 bg-amber-400/10 rounded border border-amber-400/20 uppercase">
+              <span className="inline-block px-3 py-1 text-[10px] font-black tracking-widest text-[#d4af37] bg-[#d4af37]/10 rounded border border-[#d4af37]/20 uppercase mb-3">
                 Métricas e Avaliação
               </span>
-              <h2 className="text-xl font-bold uppercase tracking-wide text-white mt-2">
+              <h2 className="text-2xl font-black uppercase tracking-tight text-white">
                 Relatório de Tráfego e Desempenho
               </h2>
-              <p className="text-xs text-slate-400 uppercase tracking-wider mt-0.5">
+              <p className="text-xs text-[#8a92a6] uppercase tracking-widest mt-1 font-bold">
                 Acompanhamento em tempo real das visitas e conteúdos da Arena Vale
               </p>
             </div>
 
             <div>
               <span
-                className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold border ${
-                  sistemaStatus
-                    ? 'bg-emerald-950/60 border-emerald-500/30 text-emerald-400'
-                    : 'bg-amber-950/60 border-amber-500/30 text-amber-400'
-                }`}
-              >
-                <span className={`w-2 h-2 rounded-full ${sistemaStatus ? 'bg-emerald-400' : 'bg-amber-400'} animate-pulse`} />
-                {sistemaStatus ? 'Sistema Ativo & Sincronizado' : 'Aguardando Sincronização'}
-              </span>
-            </div>
-          </div>
-
-          {/* CARDS DE NUMEROS */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="bg-slate-950/60 p-5 rounded-xl border border-slate-800">
-              <span className="text-[11px] font-bold uppercase text-slate-400">Total Campeonatos</span>
-              <div className="text-3xl font-extrabold text-white mt-2">{totalCampeonatos}</div>
-              <span className="text-[10px] font-medium text-emerald-400 mt-2 block">CADASTRADOS NA BASE</span>
-            </div>
-
-            <div className="bg-slate-950/60 p-5 rounded-xl border border-slate-800">
-              <span className="text-[11px] font-bold uppercase text-slate-400">Atletas Inscritos</span>
-              <div className="text-3xl font-extrabold text-amber-400 mt-2">{totalInscricoes}</div>
-              <span className="text-[10px] font-medium text-slate-400 mt-2 block">TOTAL GERAL DE ATLETAS</span>
-            </div>
-
-            <div className="bg-slate-950/60 p-5 rounded-xl border border-slate-800">
-              <span className="text-[11px] font-bold uppercase text-slate-400">Conteúdo em Foco</span>
-              <div className="text-sm font-bold text-white mt-2 truncate">TV Arena Vale - Ao Vivo</div>
-              <span className="text-[10px] font-semibold text-amber-400 mt-2 block uppercase">Transmissões Ativas</span>
-            </div>
-
-            <div className="bg-slate-950/60 p-5 rounded-xl border border-slate-800">
-              <span className="text-[11px] font-bold uppercase text-slate-400">Campeonato Monitorado</span>
-              <div className="text-sm font-bold text-white mt-2 truncate">{campeonatoDestaque}</div>
-              <span className="text-[10px] font-semibold text-emerald-400 mt-2 block uppercase">Maior Volume de Acessos</span>
-            </div>
-          </div>
-
-          <div className="bg-amber-950/20 border border-amber-500/20 rounded-xl p-3.5 flex items-center gap-3 text-amber-300 text-xs font-medium">
-            <span>💡</span>
-            <span>DICA DE GESTÃO: Utilize estes dados para avaliar o alcance das transmissões e definir estratégias de divulgação junto aos atletas e patrocinadores.</span>
-          </div>
-        </section>
-
-        {/* FERRAMENTAS DE CONTEUDO & CAMPEONATOS */}
-        <section className="bg-slate-900/60 p-6 rounded-2xl border border-white/5 space-y-4">
-          <h2 className="text-sm font-extrabold uppercase tracking-wider text-slate-300">
-            Ferramentas de Conteúdo & Campeonatos
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Link
-              href="/painel/campeonatos"
-              className="group block p-5 bg-slate-950/80 rounded-xl border border-slate-800 hover:border-amber-400/50 hover:bg-slate-900 transition-all shadow-md cursor-pointer"
-            >
-              <div className="text-2xl mb-2">🏆</div>
-              <h3 className="font-bold text-white group-hover:text-amber-400 transition text-sm uppercase">
-                Gerir Campeonatos
-              </h3>
-              <p className="text-xs text-slate-400 mt-1">
-                Criar novas copas, jornadas e inscrições.
-              </p>
-            </Link>
-
-            <Link
-              href="/painel/noticias"
-              className="group block p-5 bg-slate-950/80 rounded-xl border border-slate-800 hover:border-amber-400/50 hover:bg-slate-900 transition-all shadow-md cursor-pointer"
-            >
-              <div className="text-2xl mb-2">📰</div>
-              <h3 className="font-bold text-white group-hover:text-amber-400 transition text-sm uppercase">
-                Publicar Notícias
-              </h3>
-              <p className="text-xs text-slate-400 mt-1">
-                Lançar comunicados, destaques e novidades.
-              </p>
-            </Link>
-
-            <Link
-              href="/painel/tv"
-              className="group block p-5 bg-slate-950/80 rounded-xl border border-slate-800 hover:border-amber-400/50 hover:bg-slate-900 transition-all shadow-md cursor-pointer"
-            >
-              <div className="text-2xl mb-2">📺</div>
-              <h3 className="font-bold text-white group-hover:text-amber-400 transition text-sm uppercase">
-                Atualizar TV Arena Vale
-              </h3>
-              <p className="text-xs text-slate-400 mt-1">
-                Gerir transmissões e vídeos ao vivo.
-              </p>
-            </Link>
-          </div>
-        </section>
-
-      </div>
-    </main>
-  );
-}
+                className={`inline-flex items-center
