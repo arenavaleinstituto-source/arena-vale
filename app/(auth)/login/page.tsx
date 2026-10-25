@@ -1,73 +1,72 @@
 'use client';
 
 import React, { useState } from 'react';
-import Link from 'next/link'; // Importação corrigida que resolve o erro
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function LoginPage() {
-  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     
-    // Simulação de login - ajuste para a sua função real do Supabase
-    setTimeout(() => {
-      router.push('/painel');
-    }, 1000);
+    // A lógica de conexão com o Supabase entrará aqui no próximo passo!
+    console.log('Tentativa de login:', email);
+    
+    setTimeout(() => setLoading(false), 1000);
   };
 
   return (
-    <main className="min-h-screen bg-[#070b13] flex items-center justify-center p-4 font-sans">
-      <div className="max-w-md w-full bg-[#0a1120] border border-slate-800 p-8 rounded-2xl shadow-2xl">
+    <div className="min-h-screen bg-[#070b13] flex items-center justify-center p-6 font-sans">
+      <div className="w-full max-w-md bg-[#101726] rounded-2xl border border-white/10 p-8 shadow-2xl">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-black text-amber-400 tracking-wider">ARENA VALE</h1>
-          <p className="text-xs text-slate-400 font-semibold uppercase mt-2">Acesso ao Centro de Comando</p>
+          <img src="/logo.png" alt="Arena Vale Sports" className="h-16 mx-auto mb-4 object-contain" />
+          <h1 className="text-2xl font-black text-white uppercase tracking-wider">Acesso Restrito</h1>
+          <p className="text-sm text-[#8a92a6] mt-2">Painel de Gestão Arena Vale</p>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-5">
           <div>
-            <label className="text-xs text-slate-300 block mb-1 font-semibold uppercase">E-mail</label>
+            <label className="block text-xs font-bold text-[#cad0e0] uppercase mb-1">E-mail</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="coordenador@arenavale.com"
-              className="w-full bg-[#070b13] border border-slate-700 rounded-lg p-3 text-sm text-white focus:outline-none focus:border-amber-400"
               required
+              className="w-full bg-[#070b13] border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] transition"
+              placeholder="admin@arenavale.com.br"
             />
           </div>
 
           <div>
-            <label className="text-xs text-slate-300 block mb-1 font-semibold uppercase">Senha</label>
+            <label className="block text-xs font-bold text-[#cad0e0] uppercase mb-1">Senha</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              className="w-full bg-[#070b13] border border-slate-700 rounded-lg p-3 text-sm text-white focus:outline-none focus:border-amber-400"
               required
+              className="w-full bg-[#070b13] border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] transition"
+              placeholder="••••••••"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 bg-amber-400 hover:bg-amber-300 text-[#070b13] font-bold rounded-lg text-sm transition cursor-pointer"
+            className="w-full bg-[#d4af37] hover:bg-[#b5952f] text-[#070b13] font-black uppercase tracking-wider py-3 rounded-lg transition disabled:opacity-50 mt-4"
           >
-            {loading ? 'Acessando...' : 'Entrar no Painel'}
+            {loading ? 'Autenticando...' : 'Entrar no Painel'}
           </button>
         </form>
 
         <div className="mt-6 text-center">
-          <Link href="/" className="text-xs text-slate-500 hover:text-amber-400 transition font-semibold">
-            ← VOLTAR AO SITE PRINCIPAL
+          <Link href="/" className="text-xs text-[#8a92a6] hover:text-white transition">
+            ← Voltar para o site
           </Link>
         </div>
       </div>
-    </main>
+    </div>
   );
 }
