@@ -15,7 +15,7 @@ export default function PainelPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#070b13] text-white p-4 md:p-8 font-sans selection:bg-[#d4af37] selection:text-[#070b13]">
+    <div className="min-h-screen bg-[#070b13] text-white p-4 md:p-8 font-sans selection:bg-[#d4af37] selection:text-[#070b13]">
       <div className="max-w-7xl mx-auto space-y-8">
         
         {/* BARRA SUPERIOR */}
@@ -78,4 +78,110 @@ export default function PainelPage() {
 
             <div>
               <span
-                className={`inline-flex items-center
+                className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-[11px] font-black tracking-widest uppercase border ${
+                  sistemaStatus
+                    ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
+                    : 'bg-[#d4af37]/10 border-[#d4af37]/20 text-[#d4af37]'
+                }`}
+              >
+                <span className={`w-2 h-2 rounded-full ${sistemaStatus ? 'bg-emerald-400' : 'bg-[#d4af37]'} animate-pulse`} />
+                {sistemaStatus ? 'Sistema Ativo & Sincronizado' : 'Aguardando Sincronização'}
+              </span>
+            </div>
+          </div>
+
+          {/* CARDS DE NUMEROS */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="bg-[#070b13] p-6 rounded-2xl border border-white/5 relative overflow-hidden group hover:border-[#d4af37]/50 transition-colors">
+              <div className="absolute top-0 left-0 w-1 h-full bg-[#d4af37] opacity-50 group-hover:opacity-100 transition-opacity" />
+              <span className="text-[11px] font-black uppercase tracking-widest text-[#8a92a6]">Total Campeonatos</span>
+              <div className="text-4xl font-black text-white mt-3 tracking-tighter">{totalCampeonatos}</div>
+              <span className="text-[10px] font-bold tracking-widest text-emerald-400 mt-3 block uppercase">CADASTRADOS NA BASE</span>
+            </div>
+
+            <div className="bg-[#070b13] p-6 rounded-2xl border border-white/5 relative overflow-hidden group hover:border-[#d4af37]/50 transition-colors">
+              <div className="absolute top-0 left-0 w-1 h-full bg-[#d4af37] opacity-50 group-hover:opacity-100 transition-opacity" />
+              <span className="text-[11px] font-black uppercase tracking-widest text-[#8a92a6]">Atletas Inscritos</span>
+              <div className="text-4xl font-black text-[#d4af37] mt-3 tracking-tighter">{totalInscricoes}</div>
+              <span className="text-[10px] font-bold tracking-widest text-[#8a92a6] mt-3 block uppercase">TOTAL GERAL DE ATLETAS</span>
+            </div>
+
+            <div className="bg-[#070b13] p-6 rounded-2xl border border-white/5 relative overflow-hidden group hover:border-[#d4af37]/50 transition-colors">
+              <div className="absolute top-0 left-0 w-1 h-full bg-[#d4af37] opacity-50 group-hover:opacity-100 transition-opacity" />
+              <span className="text-[11px] font-black uppercase tracking-widest text-[#8a92a6]">Conteúdo em Foco</span>
+              <div className="text-lg font-black text-white mt-3 truncate">TV Arena Vale - Ao Vivo</div>
+              <span className="text-[10px] font-bold tracking-widest text-[#d4af37] mt-3 block uppercase">Transmissões Ativas</span>
+            </div>
+
+            <div className="bg-[#070b13] p-6 rounded-2xl border border-white/5 relative overflow-hidden group hover:border-[#d4af37]/50 transition-colors">
+              <div className="absolute top-0 left-0 w-1 h-full bg-[#d4af37] opacity-50 group-hover:opacity-100 transition-opacity" />
+              <span className="text-[11px] font-black uppercase tracking-widest text-[#8a92a6]">Campeonato Monitorado</span>
+              <div className="text-lg font-black text-white mt-3 truncate">{campeonatoDestaque}</div>
+              <span className="text-[10px] font-bold tracking-widest text-emerald-400 mt-3 block uppercase">Maior Volume de Acessos</span>
+            </div>
+          </div>
+
+          <div className="bg-[#d4af37]/10 border border-[#d4af37]/20 rounded-xl p-4 flex items-start sm:items-center gap-4 text-[#d4af37] text-xs font-bold tracking-wider uppercase">
+            <span className="text-lg">💡</span>
+            <span className="leading-relaxed">DICA DE GESTÃO: Utilize estes dados para avaliar o alcance das transmissões e definir estratégias de divulgação junto aos atletas e patrocinadores.</span>
+          </div>
+        </section>
+
+        {/* FERRAMENTAS DE CONTEUDO & CAMPEONATOS */}
+        <section className="bg-[#101726] p-8 rounded-[2rem] border border-white/10 space-y-6 shadow-xl">
+          <div className="flex items-center gap-3 border-b border-white/5 pb-6">
+            <span className="h-4 w-1.5 bg-[#d4af37] -skew-x-12" />
+            <h2 className="text-lg font-black uppercase tracking-widest text-white">
+              Ferramentas de Conteúdo & Campeonatos
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Link
+              href="/painel/campeonatos"
+              className="group block p-8 bg-[#070b13] rounded-2xl border border-white/5 hover:border-[#d4af37]/60 transition-all duration-300 hover:-translate-y-1 shadow-lg relative overflow-hidden"
+            >
+              <div className="absolute top-0 right-0 w-24 h-24 bg-[#d4af37]/5 rounded-bl-full group-hover:bg-[#d4af37]/10 transition-colors" />
+              <div className="text-4xl mb-4 grayscale group-hover:grayscale-0 transition-all">🏆</div>
+              <h3 className="font-black text-white group-hover:text-[#d4af37] transition-colors text-base tracking-wider uppercase mb-2">
+                Gerir Campeonatos
+              </h3>
+              <p className="text-xs text-[#8a92a6] font-medium leading-relaxed">
+                Criar novas copas, jornadas e inscrições.
+              </p>
+            </Link>
+
+            <Link
+              href="/painel/noticias"
+              className="group block p-8 bg-[#070b13] rounded-2xl border border-white/5 hover:border-[#d4af37]/60 transition-all duration-300 hover:-translate-y-1 shadow-lg relative overflow-hidden"
+            >
+              <div className="absolute top-0 right-0 w-24 h-24 bg-[#d4af37]/5 rounded-bl-full group-hover:bg-[#d4af37]/10 transition-colors" />
+              <div className="text-4xl mb-4 grayscale group-hover:grayscale-0 transition-all">📰</div>
+              <h3 className="font-black text-white group-hover:text-[#d4af37] transition-colors text-base tracking-wider uppercase mb-2">
+                Publicar Notícias
+              </h3>
+              <p className="text-xs text-[#8a92a6] font-medium leading-relaxed">
+                Lançar comunicados, destaques e novidades.
+              </p>
+            </Link>
+
+            <Link
+              href="/painel/tv"
+              className="group block p-8 bg-[#070b13] rounded-2xl border border-white/5 hover:border-[#d4af37]/60 transition-all duration-300 hover:-translate-y-1 shadow-lg relative overflow-hidden"
+            >
+              <div className="absolute top-0 right-0 w-24 h-24 bg-[#d4af37]/5 rounded-bl-full group-hover:bg-[#d4af37]/10 transition-colors" />
+              <div className="text-4xl mb-4 grayscale group-hover:grayscale-0 transition-all">📺</div>
+              <h3 className="font-black text-white group-hover:text-[#d4af37] transition-colors text-base tracking-wider uppercase mb-2">
+                Atualizar TV Arena Vale
+              </h3>
+              <p className="text-xs text-[#8a92a6] font-medium leading-relaxed">
+                Gerir transmissões e vídeos ao vivo.
+              </p>
+            </Link>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  );
+}
