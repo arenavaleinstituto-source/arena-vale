@@ -2,20 +2,37 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { createClient } from '@/lib/supabase/client';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
+  const router = useRouter();
+  
+  // Inicializa o cliente do Supabase usando a sua estrutura existente
+  const supabase = createClient();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setErrorMsg('');
     
-    // A lógica de conexão com o Supabase entrará aqui no próximo passo!
-    console.log('Tentativa de login:', email);
-    
-    setTimeout(() => setLoading(false), 1000);
+    // Faz o pedido de login real ao Supabase
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      setErrorMsg('E-mail ou senha incorretos. Tente novamente.');
+      setLoading(false);
+    } else {
+      // Se tiver sucesso, encaminha para o painel de gestão
+      router.push('/painel');
+    }
   };
 
   return (
@@ -28,6 +45,12 @@ export default function LoginPage() {
         </div>
 
         <form onSubmit={handleLogin} className="space-y-5">
+          {errorMsg && (
+            <div className="bg-[#d4af37]/10 border border-[#d4af37]/50 text-[#d4af37] text-sm text-center py-2 rounded-lg font-bold">
+              {errorMsg}
+            </div>
+          )}
+
           <div>
             <label className="block text-xs font-bold text-[#cad0e0] uppercase mb-1">E-mail</label>
             <input
