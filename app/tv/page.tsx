@@ -1,105 +1,82 @@
-'use client';
-
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Link from 'next/link';
-import { createClient } from '@/lib/supabase/client';
 
-interface Transmissao {
-  id: string;
-  titulo: string;
-  descricao: string;
-  youtube_id: string;
-  ao_vivo: boolean;
-}
+export const metadata = {
+  title: 'TV Arena Vale | Transmissões e Jogos ao Vivo',
+  description: 'Acompanhe os melhores momentos, coberturas completas e jogos decisivos da nossa região em alta definição.',
+  robots: {
+    index: true,
+    follow: true,
+  },
+};
 
-export default function TVArenaPage() {
-  const [transmissaoAtiva, setTransmissaoAtiva] = useState<Transmissao | null>(null);
-  const [carregando, setCarregando] = useState(true);
-  const supabase = createClient();
-
-  useEffect(() => {
-    async function carregarTransmissao() {
-      try {
-        const { data, error } = await supabase
-          .from('transmissoes')
-          .select('*')
-          .eq('ativo', true)
-          .order('created_at', { ascending: false })
-          .limit(1);
-
-        if (!error && data && data.length > 0) {
-          setTransmissaoAtiva(data[0]);
-        }
-      } catch {
-        // Mantém fallback caso a tabela ainda não exista no Supabase
-      } finally {
-        setCarregando(false);
-      }
-    }
-
-    carregarTransmissao();
-  }, [supabase]);
-
-  // ID padrão do canal ou live oficial caso não haja registro na tabela
-  const defaultYoutubeId = 'live_stream?channel=UC_TVArenaVale'; // Ou substitua pelo ID de um vídeo/live real de exemplo
-
+export default function TvPage() {
   return (
-    <div className="min-h-screen bg-[#070b13] text-white font-sans selection:bg-amber-400 selection:text-black">
+    <div className="min-h-screen bg-[#07080c] text-white selection:bg-[#e50914] selection:text-white flex flex-col justify-between font-sans overflow-x-hidden">
       
-      {/* CABEÇALHO SIMPLIFICADO */}
-      <header className="w-full bg-[#070b13] py-4 border-b border-white/10 sticky top-0 z-50 backdrop-blur-md bg-opacity-95">
-        <div className="max-w-5xl mx-auto px-4 flex items-center justify-between">
-          <Link href="/" className="font-black text-xl tracking-wider text-amber-400">
-            ARENA VALE <span className="text-xs text-slate-400 font-normal uppercase ml-2">| TV Oficial</span>
+      {/* CABEÇALHO */}
+      <header className="border-b border-white/[0.08] bg-[#07080c]/90 backdrop-blur-xl sticky top-0 z-40">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
+          <Link href="/" className="flex items-center gap-3">
+            <span className="text-sm font-black uppercase tracking-widest text-white">ARENA VALE</span>
+            <span className="text-[10px] font-bold text-[#8a92a6] uppercase tracking-wider">| TV Oficial</span>
           </Link>
-          <Link href="/" className="text-xs text-slate-300 hover:text-amber-400 font-bold transition">
+          <Link href="/" className="rounded-full border border-white/20 bg-white/5 px-5 py-2 text-xs font-black uppercase tracking-wider text-white hover:bg-white/10 transition">
             ← Voltar ao Início
           </Link>
         </div>
       </header>
 
-      <main className="max-w-5xl mx-auto px-4 py-10 space-y-8">
+      {/* CONTEÚDO PRINCIPAL */}
+      <main className="mx-auto max-w-7xl w-full px-6 py-12 space-y-12">
         
-        <div className="text-center space-y-2">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-red-600/10 border border-red-500/30 text-red-500 text-xs font-black uppercase tracking-widest animate-pulse">
-            <span className="w-2 h-2 rounded-full bg-red-600"></span> Transmissão Oficial
-          </div>
-          <h1 className="text-3xl md:text-5xl font-black uppercase tracking-tight text-white">
-            {transmissaoAtiva ? transmissaoAtiva.titulo : 'TV Arena Vale Ao Vivo'}
+        {/* HERO / TÍTULO */}
+        <div className="text-center space-y-4 max-w-3xl mx-auto">
+          <span className="inline-flex items-center gap-2 rounded-full border border-[#e50914]/40 bg-[#e50914]/10 px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-[#ff4d4f]">
+            ● Transmissão Oficial
+          </span>
+          <h1 className="text-3xl sm:text-5xl font-black uppercase tracking-tight text-white">
+            TV Arena Vale Ao Vivo
           </h1>
-          <p className="text-sm text-slate-400 max-w-xl mx-auto">
-            {transmissaoAtiva ? transmissaoAtiva.descricao : 'Acompanhe os melhores momentos, coberturas completas e jogos decisivos da nossa região em alta definição.'}
+          <p className="text-xs sm:text-sm text-[#8a92a6] uppercase tracking-wide leading-relaxed">
+            Acompanhe os melhores momentos, coberturas completas e jogos decisivos da nossa região em alta definição.
           </p>
         </div>
 
-        {/* PLAYER DO YOUTUBE RESPONSIVO */}
-        <div className="relative w-full aspect-video rounded-3xl overflow-hidden border border-slate-800 bg-[#0a1120] shadow-2xl">
-          <iframe
-            className="w-full h-full absolute inset-0"
-            src={`https://www.youtube.com/embed/${transmissaoAtiva?.youtube_id || 'live_stream?channel=UCPX_Exemplo'}`}
-            title="TV Arena Vale Ao Vivo"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          ></iframe>
-        </div>
-
-        {/* BOTÃO DE ACESSO AO CANAL */}
-        <div className="flex flex-col sm:flex-row items-center justify-between p-6 rounded-2xl bg-[#0a1120] border border-slate-800 gap-4">
-          <div>
-            <h3 className="font-bold text-white uppercase text-sm">Inscreva-se no Canal Oficial</h3>
-            <p className="text-xs text-slate-400 mt-0.5">Ative as notificações no YouTube para não perder nenhuma live de Futsal e Futebol 7.</p>
+        {/* REPRODUTOR DE VÍDEO / YOUTUBE EMBED */}
+        <div className="rounded-[2.5rem] border border-white/15 bg-[#11141d] p-4 sm:p-8 shadow-2xl relative overflow-hidden">
+          <div className="aspect-video w-full rounded-2xl bg-[#07080c] border border-white/10 flex flex-col items-center justify-center relative overflow-hidden shadow-inner">
+            <iframe 
+              className="w-full h-full rounded-2xl"
+              src="https://www.youtube.com/embed/live_stream?channel=UC_TVArenaVale" 
+              title="TV Arena Vale ao Vivo"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
           </div>
-          <a
-            href="https://www.youtube.com/@TVArenaVale"
-            target="_blank"
-            rel="noreferrer"
-            className="px-6 py-3 bg-red-600 hover:bg-red-500 text-white font-black text-xs uppercase tracking-wider rounded-xl transition shadow-lg flex-shrink-0"
-          >
-            Acessar o YouTube ↗
-          </a>
+
+          <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-white/10 pt-6">
+            <div>
+              <h2 className="text-sm font-black uppercase tracking-wider text-white">Inscreva-se no Canal Oficial</h2>
+              <p className="text-[11px] text-[#8a92a6] uppercase mt-1">Ative as notificações no YouTube para não perder nenhuma live de Futsal e Futebol 7.</p>
+            </div>
+            <a 
+              href="https://www.youtube.com/@TVArenaVale" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="rounded-full bg-[#e50914] px-8 py-3.5 text-xs font-black uppercase tracking-widest text-white hover:bg-red-600 transition shadow-lg shadow-[#e50914]/30"
+            >
+              Acessar o YouTube ↗
+            </a>
+          </div>
         </div>
 
       </main>
+
+      {/* RODAPÉ */}
+      <footer className="border-t border-white/10 bg-[#050609] py-6 text-center text-xs text-[#555d6e]">
+        © 2026 Arena Vale · Configuração CFG6. Todos os direitos reservados.
+      </footer>
     </div>
   );
 }
