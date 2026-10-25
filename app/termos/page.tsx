@@ -1,7 +1,11 @@
-'use client';
-
 import React from 'react';
 import Link from 'next/link';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Termos de Uso | Arena Vale Sports',
+  description: 'Termos de uso, regras de competição e condições de serviço da plataforma Arena Vale.',
+};
 
 export default function TermosDeUsoPage() {
   return (
@@ -10,7 +14,7 @@ export default function TermosDeUsoPage() {
       <header className="sticky top-0 z-40 border-b border-white/[0.08] bg-[#07080c]/90 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <Link href="/" className="flex items-center gap-3">
-            <img src="/logo 02.png" alt="Arena Vale" className="h-12 w-auto object-contain rounded-lg mix-blend-lighten" />
+            <img src="/logo.png" alt="Arena Vale" className="h-12 w-auto object-contain rounded-lg mix-blend-lighten" />
           </Link>
           <Link href="/" className="rounded-full border border-white/20 bg-white/5 px-6 py-2 text-xs font-black uppercase tracking-wider text-white hover:bg-white/10 transition">
             ← Voltar ao Início
