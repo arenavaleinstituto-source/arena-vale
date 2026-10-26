@@ -54,16 +54,7 @@ export default function LoginPage() {
       // Fallback local seguro
     }
 
-    // Fallback geral para acesso operacional autorizado
-    if (emailTrim && senha) {
-      localStorage.setItem('arenavale_user_email', emailTrim);
-      localStorage.setItem('arenavale_user_nivel', 'Coordenador');
-      setMensagem('Autenticação efetuada com sucesso! A carregar painel...');
-      setTimeout(() => router.push('/painel'), 1000);
-      return;
-    }
-
-    setMensagem('Por favor, preencha o e-mail e a palavra-passe corretamente.');
+    setMensagem('E-mail ou palavra-passe inválidos. Confira os dados e tente novamente.');
   };
 
   // Função de Acesso Rápido para o Proprietário
@@ -80,7 +71,7 @@ export default function LoginPage() {
       <header className="border-b border-white/[0.08] bg-[#07080c]/90 backdrop-blur-xl sticky top-0 z-40">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
           <Link href="/" className="flex items-center gap-3">
-            <img src="/logo 02.png" alt="Arena Vale" className="h-10 w-auto object-contain rounded-lg mix-blend-lighten" />
+            <img src="/logo.png" alt="Arena Vale" className="h-10 w-auto object-contain rounded-lg mix-blend-lighten" />
           </Link>
           <Link href="/" className="rounded-full border border-white/20 bg-white/5 px-5 py-2 text-xs font-black uppercase tracking-wider text-white hover:bg-white/10 transition">
             ← Início
@@ -101,9 +92,13 @@ export default function LoginPage() {
 
           <form onSubmit={handleLogin} className="space-y-5">
             <div>
-              <label className="block text-[11px] font-black uppercase tracking-wider text-[#cad0e0] mb-2">E-mail de Acesso</label>
+              <label htmlFor="login-email" className="block text-[11px] font-black uppercase tracking-wider text-[#cad0e0] mb-2">E-mail de Acesso</label>
               <input 
-                type="email" 
+                id="login-email"
+                name="email"
+                autoComplete="username"
+                required
+                type="email"
                 value={email} 
                 onChange={(e) => setEmail(e.target.value)} 
                 placeholder="acesso@arenavale.com" 
@@ -112,9 +107,13 @@ export default function LoginPage() {
             </div>
 
             <div>
-              <label className="block text-[11px] font-black uppercase tracking-wider text-[#cad0e0] mb-2">Palavra-passe</label>
+              <label htmlFor="login-password" className="block text-[11px] font-black uppercase tracking-wider text-[#cad0e0] mb-2">Palavra-passe</label>
               <input 
-                type="password" 
+                id="login-password"
+                name="password"
+                autoComplete="current-password"
+                required
+                type="password"
                 value={senha} 
                 onChange={(e) => setSenha(e.target.value)} 
                 placeholder="••••••••" 
