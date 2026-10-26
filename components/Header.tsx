@@ -12,7 +12,7 @@ export default function Header() {
         
         {/* LOGO */}
         <Link href="/" className="flex items-center gap-3">
-          <img src="/logo 02.png" alt="Arena Vale" className="h-10 w-auto object-contain rounded-lg mix-blend-lighten" />
+          <img src="/logo.png" alt="Arena Vale" className="h-10 w-auto object-contain rounded-lg mix-blend-lighten" />
           <span className="text-sm font-black uppercase tracking-widest text-white hidden sm:inline">ARENA VALE</span>
         </Link>
 
