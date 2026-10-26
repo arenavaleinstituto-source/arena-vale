@@ -10,7 +10,7 @@ export default function PatrocinioPage() {
       <header className="sticky top-0 z-40 border-b border-white/[0.08] bg-[#07080c]/90 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <Link href="/" className="flex items-center gap-3">
-            <img src="/logo 02.png" alt="Arena Vale" className="h-12 w-auto object-contain rounded-lg mix-blend-lighten" />
+            <img src="/logo.png" alt="Arena Vale" className="h-12 w-auto object-contain rounded-lg mix-blend-lighten" />
           </Link>
           <Link href="/" className="rounded-full border border-white/20 bg-white/5 px-6 py-2 text-xs font-black uppercase tracking-wider text-white hover:bg-white/10 transition">
             ← Voltar ao Início
@@ -52,7 +52,7 @@ export default function PatrocinioPage() {
                 <li className="flex items-start gap-2"><span className="text-amber-400 font-bold">✓</span> Selo de &quot;Patrocinador Master&quot; no site</li>
               </ul>
             </div>
-            <a href="https://wa.me/5547988444404?text=Olá,%2520tenho%2520interesse%2520na%2520Cota%2520Master%2520da%2520Arena%2520Vale!" target="_blank" rel="noreferrer" className="w-full text-center rounded-full bg-amber-400 py-3 text-xs font-black uppercase tracking-widest text-black hover:bg-amber-300 transition shadow-lg shadow-amber-500/20">Garantir Cota Master ↗</a>
+            <a href="https://wa.me/5547988444404?text=Olá,%20tenho%20interesse%20na%20Cota%20Master%20da%20Arena%20Vale!" target="_blank" rel="noreferrer" className="w-full text-center rounded-full bg-amber-400 py-3 text-xs font-black uppercase tracking-widest text-black hover:bg-amber-300 transition shadow-lg shadow-amber-500/20">Garantir Cota Master ↗</a>
           </div>
 
           {/* Cota Apoio Regional */}
@@ -69,7 +69,7 @@ export default function PatrocinioPage() {
                 <li className="flex items-start gap-2"><span className="text-[#e50914] font-bold">✓</span> Presença no site, na seção de parceiros</li>
               </ul>
             </div>
-            <a href="https://wa.me/5547988444404?text=Olá,%2520tenho%2520interesse%2520na%2520Cota%2520Apoio%2520Regional%2520da%2520Arena%2520Vale!" target="_blank" rel="noreferrer" className="w-full text-center rounded-full border border-white/20 bg-white/5 py-3 text-xs font-black uppercase tracking-widest text-white hover:bg-white/10 hover:border-white/40 transition">Garantir Apoio Regional ↗</a>
+            <a href="https://wa.me/5547988444404?text=Olá,%20tenho%20interesse%20na%20Cota%20Apoio%20Regional%20da%20Arena%20Vale!" target="_blank" rel="noreferrer" className="w-full text-center rounded-full border border-white/20 bg-white/5 py-3 text-xs font-black uppercase tracking-widest text-white hover:bg-white/10 hover:border-white/40 transition">Garantir Apoio Regional ↗</a>
           </div>
 
           {/* Cota Institucional */}
@@ -86,7 +86,7 @@ export default function PatrocinioPage() {
                 <li className="flex items-start gap-2"><span className="text-emerald-400 font-bold">✓</span> Menção em releases e materiais institucionais</li>
               </ul>
             </div>
-            <a href="https://wa.me/5547988444404?text=Olá,%2520tenho%2520interesse%2520na%2520Cota%2520Institucional%2520da%2520Arena%2520Vale!" target="_blank" rel="noreferrer" className="w-full text-center rounded-full border border-emerald-500/40 bg-emerald-500/15 py-3 text-xs font-black uppercase tracking-widest text-emerald-300 hover:bg-emerald-500 hover:text-black transition">Garantir Cota Institucional ↗</a>
+            <a href="https://wa.me/5547988444404?text=Olá,%20tenho%20interesse%20na%20Cota%20Institucional%20da%20Arena%20Vale!" target="_blank" rel="noreferrer" className="w-full text-center rounded-full border border-emerald-500/40 bg-emerald-500/15 py-3 text-xs font-black uppercase tracking-widest text-emerald-300 hover:bg-emerald-500 hover:text-black transition">Garantir Cota Institucional ↗</a>
           </div>
 
         </div>
@@ -97,7 +97,7 @@ export default function PatrocinioPage() {
           <p className="text-xs sm:text-sm text-[#8a92a6] uppercase leading-relaxed max-w-2xl mx-auto">
             Todo interesse em patrocínio é direcionado para contato direto via WhatsApp, onde a equipe Arena Vale apresenta valores atualizados e disponibilidade de cada cota por temporada.
           </p>
-          <a href="https://wa.me/5547988444404?text=Olá,%2520quero%2520conversar%2520sobre%2520patrocínio%2520na%2520Arena%2520Vale!" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-emerald-600 to-emerald-500 px-10 py-4 text-xs font-black uppercase tracking-widest text-white hover:scale-105 transition shadow-lg shadow-emerald-600/30">
+          <a href="https://wa.me/5547988444404?text=Olá,%20quero%20conversar%20sobre%20patrocínio%20na%20Arena%20Vale!" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-emerald-600 to-emerald-500 px-10 py-4 text-xs font-black uppercase tracking-widest text-white hover:scale-105 transition shadow-lg shadow-emerald-600/30">
             💬 WhatsApp Patrocínios: (47) 98844-4404 ↗
           </a>
         </div>
