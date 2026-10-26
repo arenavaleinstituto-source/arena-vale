@@ -41,3 +41,9 @@ body {
   .heading { @apply font-serif text-4xl md:text-5xl font-extrabold leading-tight; }
   .accent { @apply bg-gradient-to-br from-[#ffe48f] to-[#c9a338] bg-clip-text text-transparent; }
 }
+
+/* Evita que componentes decorativos e menus largos criem rolagem horizontal. */
+html,
+body {
+  overflow-x: hidden;
+}
