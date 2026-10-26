@@ -52,17 +52,17 @@ export default function LinksPage() {
 
   return (
     <div className="min-h-screen bg-[#07080c] text-white selection:bg-[#e50914] selection:text-white flex flex-col justify-between font-sans px-6 py-12 overflow-x-hidden">
-      
+
       {/* CONTEÚDO CENTRALIZADO */}
       <main className="mx-auto max-w-md w-full flex flex-col items-center space-y-8 my-auto">
-        
+
         {/* LOGOTIPO / AVATAR */}
         <div className="text-center space-y-4">
           <div className="inline-block p-1 rounded-2xl bg-gradient-to-b from-[#e50914] to-transparent shadow-2xl shadow-[#e50914]/30">
-            <img 
-              src="/logo 02.png" 
-              alt="Arena Vale Sports" 
-              className="h-24 w-auto object-contain rounded-xl bg-[#07080c] p-2" 
+            <img
+              src="/logo.png"
+              alt="Arena Vale Sports"
+              className="h-24 w-auto object-contain rounded-xl bg-[#07080c] p-2"
             />
           </div>
           <div>
@@ -75,11 +75,11 @@ export default function LinksPage() {
         <div className="w-full space-y-4">
           {linksOficiais.map((item, index) => {
             const isExternal = item.url.startsWith('http');
-            
+
             const content = (
               <div className={`w-full rounded-2xl p-4 text-center text-xs font-black uppercase tracking-wider transition-all duration-300 flex items-center justify-center shadow-xl ${
-                item.destaque 
-                  ? 'bg-[#e50914] text-white hover:bg-red-600 shadow-[#e50914]/30 hover:scale-[1.02]' 
+                item.destaque
+                  ? 'bg-[#e50914] text-white hover:bg-red-600 shadow-[#e50914]/30 hover:scale-[1.02]'
                   : 'border border-white/15 bg-[#11141d] text-[#cad0e0] hover:border-[#e50914]/60 hover:text-white hover:bg-[#181d2a] hover:scale-[1.02]'
               }`}>
                 {item.nome}
