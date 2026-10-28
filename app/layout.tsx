@@ -1,36 +1,11 @@
-import React from 'react';
-import type { Metadata } from 'next';
 import './globals.css';
 
-export const metadata: Metadata = {
-  title: 'Arena Vale Sports',
-  description: 'Plataforma de gestão de campeonatos e transmissões esportivas.',
-  icons: {
-    icon: '/logo.png',
-    shortcut: '/logo.png',
-    apple: '/logo.png',
-  },
-  manifest: '/manifest.json',
-  openGraph: {
-    title: 'Arena Vale Sports',
-    description: 'O palco do esporte é aqui. Acompanhe campeonatos e transmissões.',
-    siteName: 'Arena Vale',
-    images: [
-      {
-        url: '/fundo-arena.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'Arena Vale Sports',
-      },
-    ],
-    locale: 'pt_BR',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Arena Vale Sports',
-    description: 'O palco do esporte é aqui. Acompanhe campeonatos e transmissões.',
-    images: ['/fundo-arena.jpg'],
+export const metadata = {
+  title: 'Arena Vale | Official Portal',
+  description: 'Ecosystem of competitions, championships, and sports in the Vale region.',
+  robots: {
+    index: true,
+    follow: true,
   },
 };
 
@@ -40,8 +15,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt-BR">
-      <body className="bg-[#070b13] text-white font-sans antialiased min-h-screen flex flex-col">
+    <html lang="en">
+      <body className="bg-[#07080c] text-white font-sans antialiased selection:bg-[#e50914] selection:text-white overflow-x-hidden">
         {children}
       </body>
     </html>
