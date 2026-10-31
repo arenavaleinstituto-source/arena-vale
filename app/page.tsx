@@ -222,12 +222,12 @@ export default function HomePage() {
         <header className="sticky top-0 z-40 border-b border-white/[0.08] bg-[#050505]/90 backdrop-blur-xl shadow-[0_10px_30px_rgba(0,0,0,0.6)]">
           <div className="mx-auto flex w-full max-w-[1750px] min-w-0 items-center justify-between gap-3 px-4 sm:px-6 lg:px-10 2xl:px-12 py-2.5 sm:py-3">
             <div className="flex items-center shrink-0">
-              <Link href="/" title="Início" className="group relative flex max-w-[180px] items-center rounded-2xl p-1 transition duration-300 hover:scale-[1.02] sm:max-w-[220px]">
+              <Link href="/" title="Início" className="group relative flex max-w-[170px] items-center rounded-2xl p-1 transition duration-300 hover:scale-[1.02] sm:max-w-[190px]">
                 <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-[#e50914]/30 via-white/10 to-transparent opacity-0 blur-lg transition duration-500 group-hover:opacity-100" />
-                <img src="/logo.png" alt="Arena Vale Oficial" className="relative h-11 sm:h-14 2xl:h-16 w-auto max-w-full object-contain rounded-xl mix-blend-lighten contrast-110 drop-shadow-[0_0_20px_rgba(229,9,20,0.3)]" />
+                <img src="/logo.png" alt="Arena Vale Oficial" className="relative h-11 sm:h-14 xl:h-16 w-auto max-w-full object-contain rounded-xl mix-blend-lighten contrast-110 drop-shadow-[0_0_20px_rgba(229,9,20,0.3)]" />
               </Link>
             </div>
-            <nav className="hidden 2xl:flex min-w-0 flex-1 items-center justify-center gap-4 2xl:gap-6 text-xs 2xl:text-sm font-black uppercase tracking-[0.1em] text-[#b8c0d4]">
+            <nav className="hidden xl:flex min-w-0 flex-1 items-center justify-center gap-3 2xl:gap-5 text-[11px] 2xl:text-xs font-black uppercase tracking-[0.08em] text-[#b8c0d4]">
               <Link href="#inicio" className="text-white hover:text-[#e50914] whitespace-nowrap transition">Início</Link>
               <Link href="/tv" className="flex items-center gap-2 text-white hover:text-[#e50914] whitespace-nowrap transition"><span className="h-2.5 w-2.5 rounded-full bg-[#e50914] animate-pulse shadow-[0_0_8px_#e50914] shrink-0" /> TV Arena Vale</Link>
               <Link href="#noticias" className="hover:text-white whitespace-nowrap transition">Notícias</Link>
@@ -236,7 +236,7 @@ export default function HomePage() {
               <Link href="/atletasdestaques" className="hover:text-white whitespace-nowrap transition">Atletas Destaque</Link>
               <Link href="/projetosocial" className="hover:text-white whitespace-nowrap transition">Projeto Social</Link>
             </nav>
-            <div className="hidden 2xl:flex items-center gap-2 shrink-0">
+            <div className="hidden xl:flex items-center gap-2 shrink-0">
               <a href="https://wa.me/5547988444404" target="_blank" rel="noreferrer" className="rounded-full bg-gradient-to-r from-[#e50914] to-[#ff1e27] px-5 py-2.5 text-[11px] font-black uppercase tracking-[0.12em] text-white shadow-lg shadow-[#e50914]/30 transition hover:scale-105 hover:shadow-[#e50914]/50 whitespace-nowrap">Anuncie</a>
               <div className="relative">
                 <button type="button" onClick={() => setMenuPainelAberto(!menuPainelAberto)} className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-4 py-2.5 text-[11px] font-black uppercase tracking-[0.12em] text-white transition hover:border-[#e50914] hover:bg-white/[0.08] whitespace-nowrap"><span>Painel</span> <span className="text-[10px] text-[#e50914]">▼</span></button>
@@ -250,7 +250,7 @@ export default function HomePage() {
                 )}
               </div>
             </div>
-            <div className="flex 2xl:hidden items-center gap-2">
+            <div className="flex xl:hidden items-center gap-2">
               <div className="relative">
                 <button type="button" onClick={() => setMenuPainelAberto(!menuPainelAberto)} className="inline-flex items-center gap-1.5 rounded-full border border-[#e50914]/50 bg-[#e50914]/10 px-3.5 py-2.5 text-[10px] font-black uppercase tracking-wider text-white whitespace-nowrap"><span>Painel</span><span className="text-[#e50914]">▼</span></button>
                 {menuPainelAberto && <div className="absolute right-0 mt-3 w-56 rounded-2xl border border-white/15 bg-[#111111]/95 p-2 shadow-2xl backdrop-blur-2xl z-50"><Link href="/login" onClick={() => setMenuPainelAberto(false)} className="block rounded-xl px-4 py-3 text-xs font-black uppercase tracking-wider text-white hover:bg-white/10">Acessar Portal →</Link></div>}
@@ -262,7 +262,7 @@ export default function HomePage() {
         </header>
 
         {menuMobileAberto && (
-          <div className="2xl:hidden fixed inset-0 z-[9999] bg-[#050505]/98 backdrop-blur-2xl flex flex-col justify-between p-6 overflow-y-auto">
+          <div className="xl:hidden fixed inset-0 z-[9999] bg-[#050505]/98 backdrop-blur-2xl flex flex-col justify-between p-6 overflow-y-auto">
             <div className="space-y-6">
               <div className="flex items-center justify-between pb-4 border-b border-white/10">
                 <img src="/logo.png" alt="Arena Vale" className="h-14 w-auto object-contain rounded-lg mix-blend-lighten" />
@@ -272,7 +272,7 @@ export default function HomePage() {
               <nav className="flex flex-col gap-3 text-lg font-black uppercase tracking-wide">
                 <Link href="#inicio" onClick={() => setMenuMobileAberto(false)} className="py-2.5 text-white border-b border-white/5">Início</Link>
                 <Link href="/tv" onClick={() => setMenuMobileAberto(false)} className="py-2.5 text-white border-b border-white/5 flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-[#e50914] animate-pulse" /> TV Arena Vale</Link>
-                <Link href="#app" onClick={() => setMenuMobileAberto(false)} className="py-2.5 text-[#e50914] border-b border-white/5 block 2xl:hidden">BAIXAR APP</Link>
+                <Link href="#app" onClick={() => setMenuMobileAberto(false)} className="py-2.5 text-[#e50914] border-b border-white/5 block xl:hidden">BAIXAR APP</Link>
                 <Link href="#noticias" onClick={() => setMenuMobileAberto(false)} className="py-2.5 text-[#cad0e0] border-b border-white/5">Notícias</Link>
                 <Link href="/agenda" onClick={() => setMenuMobileAberto(false)} className="py-2.5 text-[#cad0e0] border-b border-white/5">Agenda</Link>
                 <Link href="#campeonatos" onClick={() => setMenuMobileAberto(false)} className="py-2.5 text-[#cad0e0] border-b border-white/5">Campeonatos</Link>
