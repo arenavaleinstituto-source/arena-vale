@@ -218,16 +218,16 @@ export default function HomePage() {
 
   return (
     <>
-      <div id="topo" className="min-h-screen bg-[#050505] text-white selection:bg-[#e50914] selection:text-white font-sans">
+      <div id="topo" className="min-h-screen w-full max-w-full overflow-x-hidden bg-[#050505] text-white selection:bg-[#e50914] selection:text-white font-sans">
         <header className="sticky top-0 z-40 border-b border-white/[0.08] bg-[#050505]/90 backdrop-blur-xl shadow-[0_10px_30px_rgba(0,0,0,0.6)]">
-          <div className="mx-auto flex max-w-[1750px] items-center justify-between px-4 sm:px-6 lg:px-12 py-3 sm:py-4">
+          <div className="mx-auto flex w-full max-w-[1750px] min-w-0 items-center justify-between gap-3 px-4 sm:px-6 lg:px-10 2xl:px-12 py-2.5 sm:py-3">
             <div className="flex items-center shrink-0">
-              <Link href="/" title="Início" className="group relative flex items-center rounded-2xl p-1 transition duration-300 hover:scale-[1.02]">
+              <Link href="/" title="Início" className="group relative flex max-w-[180px] items-center rounded-2xl p-1 transition duration-300 hover:scale-[1.02] sm:max-w-[220px]">
                 <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-[#e50914]/30 via-white/10 to-transparent opacity-0 blur-lg transition duration-500 group-hover:opacity-100" />
-                <img src="/logo.png" alt="Arena Vale Oficial" className="relative h-12 sm:h-16 md:h-[80px] w-auto object-contain rounded-xl mix-blend-lighten contrast-110 drop-shadow-[0_0_20px_rgba(229,9,20,0.3)]" />
+                <img src="/logo.png" alt="Arena Vale Oficial" className="relative h-11 sm:h-14 2xl:h-16 w-auto max-w-full object-contain rounded-xl mix-blend-lighten contrast-110 drop-shadow-[0_0_20px_rgba(229,9,20,0.3)]" />
               </Link>
             </div>
-            <nav className="hidden xl:flex items-center gap-7 2xl:gap-9 text-sm font-black uppercase tracking-[0.12em] text-[#b8c0d4]">
+            <nav className="hidden 2xl:flex min-w-0 flex-1 items-center justify-center gap-4 2xl:gap-6 text-xs 2xl:text-sm font-black uppercase tracking-[0.1em] text-[#b8c0d4]">
               <Link href="#inicio" className="text-white hover:text-[#e50914] whitespace-nowrap transition">Início</Link>
               <Link href="/tv" className="flex items-center gap-2 text-white hover:text-[#e50914] whitespace-nowrap transition"><span className="h-2.5 w-2.5 rounded-full bg-[#e50914] animate-pulse shadow-[0_0_8px_#e50914] shrink-0" /> TV Arena Vale</Link>
               <Link href="#noticias" className="hover:text-white whitespace-nowrap transition">Notícias</Link>
@@ -236,10 +236,10 @@ export default function HomePage() {
               <Link href="/atletasdestaques" className="hover:text-white whitespace-nowrap transition">Atletas Destaque</Link>
               <Link href="/projetosocial" className="hover:text-white whitespace-nowrap transition">Projeto Social</Link>
             </nav>
-            <div className="hidden xl:flex items-center gap-4 shrink-0">
-              <a href="https://wa.me/5547988444404" target="_blank" rel="noreferrer" className="rounded-full bg-gradient-to-r from-[#e50914] to-[#ff1e27] px-7 py-3 text-xs font-black uppercase tracking-[0.15em] text-white shadow-lg shadow-[#e50914]/30 transition hover:scale-105 hover:shadow-[#e50914]/50 whitespace-nowrap">Anuncie</a>
+            <div className="hidden 2xl:flex items-center gap-2 shrink-0">
+              <a href="https://wa.me/5547988444404" target="_blank" rel="noreferrer" className="rounded-full bg-gradient-to-r from-[#e50914] to-[#ff1e27] px-5 py-2.5 text-[11px] font-black uppercase tracking-[0.12em] text-white shadow-lg shadow-[#e50914]/30 transition hover:scale-105 hover:shadow-[#e50914]/50 whitespace-nowrap">Anuncie</a>
               <div className="relative">
-                <button type="button" onClick={() => setMenuPainelAberto(!menuPainelAberto)} className="inline-flex items-center gap-2.5 rounded-full border border-white/15 bg-white/[0.04] px-6 py-3 text-xs font-black uppercase tracking-[0.15em] text-white transition hover:border-[#e50914] hover:bg-white/[0.08] whitespace-nowrap"><span>Painel</span> <span className="text-[10px] text-[#e50914]">▼</span></button>
+                <button type="button" onClick={() => setMenuPainelAberto(!menuPainelAberto)} className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-4 py-2.5 text-[11px] font-black uppercase tracking-[0.12em] text-white transition hover:border-[#e50914] hover:bg-white/[0.08] whitespace-nowrap"><span>Painel</span> <span className="text-[10px] text-[#e50914]">▼</span></button>
                 {menuPainelAberto && (
                   <div className="absolute right-0 mt-3 w-56 rounded-2xl border border-white/15 bg-[#111111]/95 p-2 shadow-2xl backdrop-blur-2xl z-50" onMouseLeave={() => setMenuPainelAberto(false)}>
                     <Link href="/login" onClick={() => setMenuPainelAberto(false)} className="flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-bold text-[#cad0e0] hover:bg-white/5 hover:text-white transition group">
@@ -250,15 +250,19 @@ export default function HomePage() {
                 )}
               </div>
             </div>
-            <div className="flex xl:hidden items-center gap-2.5">
+            <div className="flex 2xl:hidden items-center gap-2">
+              <div className="relative">
+                <button type="button" onClick={() => setMenuPainelAberto(!menuPainelAberto)} className="inline-flex items-center gap-1.5 rounded-full border border-[#e50914]/50 bg-[#e50914]/10 px-3.5 py-2.5 text-[10px] font-black uppercase tracking-wider text-white whitespace-nowrap"><span>Painel</span><span className="text-[#e50914]">▼</span></button>
+                {menuPainelAberto && <div className="absolute right-0 mt-3 w-56 rounded-2xl border border-white/15 bg-[#111111]/95 p-2 shadow-2xl backdrop-blur-2xl z-50"><Link href="/login" onClick={() => setMenuPainelAberto(false)} className="block rounded-xl px-4 py-3 text-xs font-black uppercase tracking-wider text-white hover:bg-white/10">Acessar Portal →</Link></div>}
+              </div>
               <a href="https://wa.me/5547988444404" target="_blank" rel="noreferrer" className="rounded-full bg-[#e50914] px-4 py-2 text-[11px] font-black uppercase tracking-wider text-white shadow-lg shadow-[#e50914]/30 whitespace-nowrap">Anuncie</a>
-              <button type="button" onClick={() => setMenuMobileAberto(true)} aria-label="Abrir Menu" className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/15 bg-white/5 text-white active:scale-95 transition-transform"><div className="flex flex-col gap-1.5 w-5 pointer-events-none"><span className="h-0.5 w-full bg-white rounded-full"></span><span className="h-0.5 w-full bg-[#e50914] rounded-full"></span><span className="h-0.5 w-full bg-white rounded-full"></span></div></button>
+              <button type="button" onClick={() => setMenuMobileAberto(true)} aria-label="Abrir Menu" className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/15 bg-white/5 text-white active:scale-95 transition-transform"><div className="flex flex-col gap-1.5 w-5 pointer-events-none"><span className="h-0.5 w-full bg-white rounded-full"></span><span className="h-0.5 w-full bg-[#e50914] rounded-full"></span><span className="h-0.5 w-full bg-white rounded-full"></span></div></button>
             </div>
           </div>
         </header>
 
         {menuMobileAberto && (
-          <div className="xl:hidden fixed inset-0 z-[9999] bg-[#050505]/98 backdrop-blur-2xl flex flex-col justify-between p-6 overflow-y-auto">
+          <div className="2xl:hidden fixed inset-0 z-[9999] bg-[#050505]/98 backdrop-blur-2xl flex flex-col justify-between p-6 overflow-y-auto">
             <div className="space-y-6">
               <div className="flex items-center justify-between pb-4 border-b border-white/10">
                 <img src="/logo.png" alt="Arena Vale" className="h-14 w-auto object-contain rounded-lg mix-blend-lighten" />
@@ -268,7 +272,7 @@ export default function HomePage() {
               <nav className="flex flex-col gap-3 text-lg font-black uppercase tracking-wide">
                 <Link href="#inicio" onClick={() => setMenuMobileAberto(false)} className="py-2.5 text-white border-b border-white/5">Início</Link>
                 <Link href="/tv" onClick={() => setMenuMobileAberto(false)} className="py-2.5 text-white border-b border-white/5 flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-[#e50914] animate-pulse" /> TV Arena Vale</Link>
-                <Link href="#app" onClick={() => setMenuMobileAberto(false)} className="py-2.5 text-[#e50914] border-b border-white/5 block xl:hidden">BAIXAR APP</Link>
+                <Link href="#app" onClick={() => setMenuMobileAberto(false)} className="py-2.5 text-[#e50914] border-b border-white/5 block 2xl:hidden">BAIXAR APP</Link>
                 <Link href="#noticias" onClick={() => setMenuMobileAberto(false)} className="py-2.5 text-[#cad0e0] border-b border-white/5">Notícias</Link>
                 <Link href="/agenda" onClick={() => setMenuMobileAberto(false)} className="py-2.5 text-[#cad0e0] border-b border-white/5">Agenda</Link>
                 <Link href="#campeonatos" onClick={() => setMenuMobileAberto(false)} className="py-2.5 text-[#cad0e0] border-b border-white/5">Campeonatos</Link>
@@ -290,7 +294,7 @@ export default function HomePage() {
             <div className="absolute inset-0 bg-gradient-to-r from-[#050505]/95 via-[#050505]/45 to-transparent" />
             <div className="relative z-10 max-w-4xl">
               <div className="inline-flex items-center gap-2 rounded-full border border-[#e50914]/50 bg-[#e50914]/15 px-3.5 py-1.5 text-[11px] sm:text-xs font-black uppercase tracking-[0.15em] text-white backdrop-blur-md"><span className="h-2 w-2 rounded-full bg-[#e50914] animate-ping" /> COBERTURA & TRANSMISSÃO OFICIAL</div>
-              <h1 className="mt-4 sm:mt-5 text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black uppercase tracking-tight text-white leading-tight"><span className="block whitespace-nowrap">O PALCO DO</span><span className="block whitespace-nowrap mt-1 sm:mt-2"><span className="text-[#e50914]">ESPORTE</span> É AQUI.</span></h1>
+              <h1 className="mt-4 sm:mt-5 text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black uppercase tracking-tight text-white leading-tight"><span className="block whitespace-normal sm:whitespace-nowrap">O PALCO DO</span><span className="block whitespace-normal sm:whitespace-nowrap mt-1 sm:mt-2"><span className="text-[#e50914]">ESPORTE</span> É AQUI.</span></h1>
               <p className="mt-4 sm:mt-5 max-w-2xl text-sm sm:text-xl text-[#cad0e0] leading-relaxed">Transmissões ao vivo, coberturas, análises e as grandes histórias de quem vive o jogo dentro e fora de quadra.</p>
               <div className="mt-6 sm:mt-8 flex flex-wrap items-center gap-3 sm:gap-4"><Link href="/tv" className="flex items-center gap-2 rounded-full bg-gradient-to-r from-[#e50914] to-[#ff1e27] px-6 sm:px-8 py-3.5 sm:py-4 text-xs font-black uppercase tracking-[0.15em] text-white shadow-xl shadow-[#e50914]/30 transition hover:scale-105"><span>▶</span> TRANSMISSÕES</Link><a href="#campeonatos" className="rounded-full border border-white/20 bg-white/5 px-6 sm:px-8 py-3.5 sm:py-4 text-xs font-black uppercase tracking-[0.15em] text-white backdrop-blur-md transition hover:bg-white/10 hover:border-white/40">VER CAMPEONATOS →</a></div>
             </div>
