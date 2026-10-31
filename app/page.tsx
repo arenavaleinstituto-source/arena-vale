@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
+import { OwnerLoginModal } from '@/components/auth/OwnerLoginModal';
 
 interface NoticiaItem {
   id: string;
@@ -97,6 +98,7 @@ const ATLETAS_PADRAO: AtletaItem[] = [
 export default function HomePage() {
   const [menuMobileAberto, setMenuMobileAberto] = useState(false);
   const [menuPainelAberto, setMenuPainelAberto] = useState(false);
+  const [ownerLoginOpen, setOwnerLoginOpen] = useState(false);
   const [campeonatoSelecionado, setCampeonatoSelecionado] = useState(0);
 
   const [noticiasPublicas, setNoticiasPublicas] = useState<NoticiaItem[]>(NOTICIAS_PADRAO);
@@ -222,10 +224,10 @@ export default function HomePage() {
         <header className="sticky top-0 z-40 border-b border-white/[0.08] bg-[#050505]/90 backdrop-blur-xl shadow-[0_10px_30px_rgba(0,0,0,0.6)]">
           <div className="mx-auto flex w-full max-w-[1750px] min-w-0 items-center justify-between gap-3 px-4 sm:px-6 lg:px-10 2xl:px-12 py-2.5 sm:py-3">
             <div className="flex items-center shrink-0">
-              <Link href="/" title="Início" className="group relative flex max-w-[170px] items-center rounded-2xl p-1 transition duration-300 hover:scale-[1.02] sm:max-w-[190px]">
+              <button type="button" onClick={() => setOwnerLoginOpen(true)} title="Acesso reservado do Proprietário" aria-label="Acesso reservado do Proprietário" className="group relative flex max-w-[170px] items-center rounded-2xl p-1 transition duration-300 hover:scale-[1.02] sm:max-w-[190px]">
                 <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-[#e50914]/30 via-white/10 to-transparent opacity-0 blur-lg transition duration-500 group-hover:opacity-100" />
                 <img src="/logo.png" alt="Arena Vale Oficial" className="relative h-11 sm:h-14 xl:h-16 w-auto max-w-full object-contain rounded-xl mix-blend-lighten contrast-110 drop-shadow-[0_0_20px_rgba(229,9,20,0.3)]" />
-              </Link>
+              </button>
             </div>
             <nav className="hidden xl:flex min-w-0 flex-1 items-center justify-center gap-3 2xl:gap-5 text-[11px] 2xl:text-xs font-black uppercase tracking-[0.08em] text-[#b8c0d4]">
               <Link href="#inicio" className="text-white hover:text-[#e50914] whitespace-nowrap transition">Início</Link>
@@ -619,6 +621,7 @@ export default function HomePage() {
             </div>
           </div>
         </footer>
+        <OwnerLoginModal open={ownerLoginOpen} onClose={() => setOwnerLoginOpen(false)} />
       </div>
     </>
   );
