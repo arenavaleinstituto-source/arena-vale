@@ -7,6 +7,9 @@ import { TabelaClassificacao } from '@/components/midia/TabelaClassificacao';
 import { MODALIDADES_SITE, modalidadePorSlug } from '@/lib/midia/modalidades';
 import { buscarAgenda } from '@/lib/midia/agenda';
 import { buscarCampeonatosDaModalidade, filtrarPorModalidade } from '@/lib/midia/campeonatos';
+import { buscarNoticiasPublicadas } from '@/lib/midia/noticias-busca';
+import { Fileira } from '@/components/midia/Fileira';
+import { CartazNoticia } from '@/components/midia/CartazNoticia';
 
 export const revalidate = 60;
 
@@ -25,7 +28,11 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 export default async function ModalidadePage({ params }: Params) {
   const m = modalidadePorSlug((await params).slug);
   if (!m) notFound();
-  const [agenda, campeonatos] = await Promise.all([buscarAgenda(60).catch(() => []), buscarCampeonatosDaModalidade(m.slug)]);
+  const [agenda, campeonatos, noticias] = await Promise.all([
+    buscarAgenda(60).catch(() => []),
+    buscarCampeonatosDaModalidade(m.slug),
+    buscarNoticiasPublicadas({ modalidade: m.slug, limite: 20 }),
+  ]);
   const jogos = filtrarPorModalidade(agenda, m.slug).slice(0, 6);
   const [antes, depois] = m.frase.split(m.nome.toLowerCase());
 
@@ -62,6 +69,15 @@ export default async function ModalidadePage({ params }: Params) {
           </div>
         )}
       </Faixa>
+      {noticias.length > 0 && (
+        <Faixa id="noticias" titulo={`Notícias do ${m.nome.toLowerCase()}`} alt>
+          <Fileira rotulo={`Notícias do ${m.nome}`}>
+            {noticias.map((n) => (
+              <CartazNoticia key={n.id} n={n} />
+            ))}
+          </Fileira>
+        </Faixa>
+      )}
     </main>
   );
 }

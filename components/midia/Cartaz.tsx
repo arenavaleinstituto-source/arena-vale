@@ -15,10 +15,12 @@ type Props = {
   externo?: boolean;
   /** Ponto focal da imagem no recorte 2:3 (CSS object-position), ex.: "50% 30%". */
   enquadramento?: string | null;
+  /** Fonte da notícia (Esporte Mundial), mostrada sobre o cartaz. */
+  fonte?: string | null;
 };
 
 /** Cartaz 2:3, como capa de filme (spec 2026-11-08, 4.1). */
-export function Cartaz({ href, titulo, imagem, selo, chapeu, novo, video, externo, enquadramento }: Props) {
+export function Cartaz({ href, titulo, imagem, selo, chapeu, novo, video, externo, enquadramento, fonte }: Props) {
   const conteudo = (
     <>
       {/* eslint-disable-next-line @next/next/no-img-element -- imagens de várias origens (Supabase, YouTube, Instagram) */}
@@ -35,6 +37,7 @@ export function Cartaz({ href, titulo, imagem, selo, chapeu, novo, video, extern
         {selo}
       </span>
       {novo && <span className="n">NOVO</span>}
+      {fonte && <span className="fonte">Fonte: {fonte}</span>}
       {video && (
         <span className="play" aria-label="Vídeo" role="img">
           ▶

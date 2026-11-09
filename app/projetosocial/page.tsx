@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import { ProjetoSocialHome } from '@/components/home/ProjetoSocialHome';
-import { Cartaz } from '@/components/midia/Cartaz';
+import { CartazNoticia } from '@/components/midia/CartazNoticia';
 import { Fileira } from '@/components/midia/Fileira';
 import { lerConfigSite } from '@/lib/midia/config';
-import { buscarResultadosProjeto } from '@/lib/midia/noticias-projeto';
+import { buscarNoticiasPublicadas } from '@/lib/midia/noticias-busca';
 
 export const revalidate = 60;
 export const metadata: Metadata = {
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 /** Página Projeto Social (spec Fase 3, seção 9): todo o conteúdo da página antiga + resultados dos projetos. */
 export default async function ProjetoSocialPage() {
-  const [config, resultados] = await Promise.all([lerConfigSite(), buscarResultadosProjeto().catch(() => [])]);
+  const [config, resultados] = await Promise.all([lerConfigSite(), buscarNoticiasPublicadas({ aba: 'arena', categoria: 'projeto_social', limite: 20 })]);
   return (
     <main className="w-full overflow-x-clip bg-av-preto text-av-branco">
       <ProjetoSocialHome
@@ -26,7 +26,7 @@ export default async function ProjetoSocialPage() {
               <p className="resultados-t">Resultados dos projetos</p>
               <Fileira rotulo="Resultados dos projetos">
                 {resultados.map((r) => (
-                  <Cartaz key={r.id} href={`/noticias/${r.id}`} titulo={r.titulo} imagem={r.imagem_url} selo={r.tipo_midia === 'video' ? 'Vídeo' : 'Foto'} video={r.tipo_midia === 'video'} chapeu="Projeto social" />
+                  <CartazNoticia key={r.id} n={r} />
                 ))}
               </Fileira>
             </>

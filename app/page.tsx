@@ -7,6 +7,8 @@ import { ProjetoSocialHome } from '@/components/home/ProjetoSocialHome';
 import { AtletasDestaques } from '@/components/home/AtletasDestaques';
 import { ParaMarcas } from '@/components/home/ParaMarcas';
 import { Patrocinadores } from '@/components/home/Patrocinadores';
+import { AgoraNaArena, EsporteMundial } from '@/components/home/NoticiasHome';
+import { buscarNoticiasPublicadas } from '@/lib/midia/noticias-busca';
 import { buscarPatrocinadores } from '@/lib/midia/patrocinadores';
 import { lerConfigSite, linkAssistirAoVivo } from '@/lib/midia/config';
 import { buscarVideosYT, embedAoVivo, estaAoVivo } from '@/lib/midia/youtube';
@@ -29,7 +31,7 @@ async function seguro<T>(p: Promise<T>, vazio: T): Promise<T> {
 /** Página inicial de mídia esportiva (spec Fase 3, seção 5). */
 export default async function Home() {
   const config = await lerConfigSite();
-  const [aoVivoDetectado, agenda, videos, externos, destaques, patrocinadores] = await Promise.all([
+  const [aoVivoDetectado, agenda, videos, externos, destaques, patrocinadores, arena, mundo] = await Promise.all([
     seguro(estaAoVivo(config.youtubeChannelId), false),
     seguro(buscarAgenda(6), []),
     seguro(buscarVideosYT(config.youtubeChannelId), []),
@@ -39,6 +41,8 @@ export default async function Home() {
       [],
     ),
     seguro(buscarPatrocinadores(), []),
+    seguro(buscarNoticiasPublicadas({ aba: 'arena', limite: 12 }), []),
+    seguro(buscarNoticiasPublicadas({ aba: 'mundo', limite: 12 }), []),
   ]);
   const aoVivo = config.aoVivoManual || aoVivoDetectado;
 
@@ -46,7 +50,8 @@ export default async function Home() {
     <main id="topo" className="w-full overflow-x-clip bg-av-preto text-av-branco">
       <Banner capaUrl={config.capaUrl} />
       <AoVivo aoVivo={aoVivo} embed={embedAoVivo(config.youtubeChannelId)} linkAssistir={linkAssistirAoVivo(config)} proxima={proximaTransmissao(agenda)} />
-      {/* Agora na Arena e Esporte Mundial: Task 12 (notícias em cartazes). */}
+      <AgoraNaArena noticias={arena} />
+      <EsporteMundial noticias={mundo} />
       <AgendaArena itens={agenda} />
       <UltimosVideos videos={videos} externos={externos} channelUrl={`https://www.youtube.com/${config.youtubeHandle}`} />
       <Modalidades />

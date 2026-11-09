@@ -8,7 +8,7 @@ vi.mock('@/lib/midia/config', async () => {
   const p = await import('@/lib/midia/config-padrao');
   return { ...p, lerConfigSite: async () => p.CONFIG_PADRAO };
 });
-vi.mock('@/lib/midia/noticias-projeto', () => ({ buscarResultadosProjeto: async () => [] }));
+vi.mock('@/lib/midia/noticias-busca', () => ({ buscarNoticiasPublicadas: async () => [] }));
 
 const v = (plataforma: ItemVideo['plataforma'], titulo: string): ItemVideo => ({
   id: titulo,

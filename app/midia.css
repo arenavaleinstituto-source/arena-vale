@@ -288,3 +288,21 @@
 .agenda { grid-template-columns: repeat(auto-fit, minmax(260px, 400px)); justify-content: center; }
 @media (max-width: 860px) { .agenda { grid-template-columns: 1fr; } }
 .social .intro h1 { margin: 0; font-family: var(--display); font-weight: 800; font-stretch: 112%; font-size: clamp(34px, 6vw, 64px); text-transform: uppercase; line-height: 1; text-wrap: balance; }
+
+/* banner de destaque das notícias */
+.destaque-noticia { position: relative; overflow: hidden; border-radius: 22px; min-height: clamp(320px, 46vw, 520px); display: grid; align-items: end; border: 1px solid var(--linha); background: var(--grafite-2); }
+.destaque-noticia .fundo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.destaque-noticia::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(0,0,0,.92), rgba(0,0,0,.35) 55%, transparent 80%), linear-gradient(90deg, rgba(0,0,0,.6), transparent 60%); }
+.destaque-noticia .conteudo { position: relative; z-index: 2; display: grid; gap: 12px; padding: clamp(20px, 4vw, 44px); max-width: 720px; }
+.destaque-noticia .s { display: flex; gap: 6px; align-items: center; font-family: var(--rotulo); font-weight: 700; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; }
+.destaque-noticia .s b { background: var(--vermelho); border-radius: 999px; padding: 1px 8px; font-family: var(--display); }
+.destaque-noticia h2 { margin: 0; font-family: var(--display); font-weight: 800; font-stretch: 112%; font-size: clamp(28px, 4.4vw, 52px); line-height: 1; text-transform: uppercase; text-wrap: balance; }
+.destaque-noticia p { margin: 0; color: #e4e4e7; }
+.ken-burns { animation: kenburns 24s ease-in-out infinite alternate; }
+@keyframes kenburns { from { transform: scale(1); } to { transform: scale(1.08); } }
+@media (prefers-reduced-motion: reduce) { .ken-burns { animation: none; } }
+.abas-noticias { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+.abas-noticias a { border: 1px solid var(--linha); border-radius: 999px; padding: 10px 20px; font-family: var(--rotulo); font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--cinza); }
+.abas-noticias a[aria-current="page"] { background: var(--vermelho); border-color: var(--vermelho); color: #fff; }
+.fileira-titulo { margin: 28px 0 12px; font-family: var(--display); font-weight: 800; font-size: 20px; text-transform: uppercase; }
+.trilho { justify-content: safe center; }
