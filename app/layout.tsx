@@ -2,6 +2,7 @@ import React from 'react';
 import type { Metadata } from 'next';
 import { Barlow, Barlow_Condensed, Saira } from 'next/font/google';
 import './globals.css';
+import './midia.css';
 import { SiteHeader } from '@/components/SiteHeader';
 
 /**

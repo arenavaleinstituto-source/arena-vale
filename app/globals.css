@@ -53,8 +53,6 @@ body {
   .eyebrow { @apply inline-block px-3.5 py-1.5 bg-[rgba(229,9,20,0.12)] text-[var(--vermelho-claro)] border border-[rgba(229,9,20,0.35)] rounded-full text-xs font-bold tracking-wider uppercase mb-6; }
   .heading { @apply font-display text-4xl md:text-5xl font-extrabold leading-tight; }
   .accent { @apply text-av-vermelho; }
-  .faixa { @apply py-16; }
-  .faixa-alt { @apply py-16 bg-av-grafite border-y border-[#1a1a1f]; }
   .titulo-secao { @apply text-center uppercase font-display font-extrabold leading-none text-3xl md:text-4xl; font-stretch: 112%; }
   .btn-forte { @apply btn bg-av-vermelho border-av-vermelho text-white font-rotulo uppercase tracking-wider hover:bg-[#ff1f2b]; }
   .btn-leve { @apply btn bg-transparent border-[#3a3a41] text-av-branco font-rotulo uppercase tracking-wider hover:border-av-vermelho; }
