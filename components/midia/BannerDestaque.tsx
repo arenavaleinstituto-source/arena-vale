@@ -27,8 +27,13 @@ export function BannerDestaque({ n }: { n: NoticiaMidia }) {
       {modo.tipo === 'arquivo' && animar ? (
         <video className="fundo" src={modo.src} poster={capa} muted loop playsInline autoPlay aria-hidden="true" />
       ) : (
-        // eslint-disable-next-line @next/next/no-img-element -- capas de várias origens
-        <img className="fundo ken-burns" src={capa} alt="" style={n.enquadramento ? { objectPosition: n.enquadramento } : undefined} />
+        <>
+          {/* A foto aparece inteira, sem corte; a mesma foto, desfocada, preenche o fundo. */}
+          {/* eslint-disable-next-line @next/next/no-img-element -- capas de várias origens */}
+          <img className="fundo-desfocado" src={capa} alt="" aria-hidden="true" />
+          {/* eslint-disable-next-line @next/next/no-img-element -- capas de várias origens */}
+          <img className="foto-inteira" src={capa} alt="" />
+        </>
       )}
       <div className="conteudo">
         <span className="s">

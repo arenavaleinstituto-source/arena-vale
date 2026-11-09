@@ -316,3 +316,12 @@
 /* banner: texto mais baixo para mostrar o rosto do atleta do meio (pedido do dono) */
 .hero { padding-block: clamp(150px, 17vw, 300px) 56px; background-position: center, center, center 18%; }
 @media (max-width: 760px) { .hero { padding-block: 120px 40px; } }
+
+/* banner de destaque: foto inteira à direita sobre fundo desfocado; título menor (pedido do dono) */
+.destaque-noticia .fundo-desfocado { position: absolute; inset: -40px; width: calc(100% + 80px); height: calc(100% + 80px); object-fit: cover; filter: blur(28px) brightness(.55); }
+.destaque-noticia .foto-inteira { position: absolute; top: 0; right: 0; height: 100%; width: 62%; object-fit: contain; object-position: right center; }
+.destaque-noticia::after { background: linear-gradient(90deg, rgba(0,0,0,.9) 0%, rgba(0,0,0,.65) 42%, transparent 70%), linear-gradient(0deg, rgba(0,0,0,.6), transparent 45%); }
+.destaque-noticia .conteudo { max-width: 560px; }
+.destaque-noticia h2 { font-size: clamp(22px, 2.6vw, 36px); line-height: 1.05; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.destaque-noticia p { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+@media (max-width: 760px) { .destaque-noticia .foto-inteira { width: 100%; object-position: center top; height: 62%; } .destaque-noticia::after { background: linear-gradient(0deg, rgba(0,0,0,.95) 30%, transparent 70%); } .destaque-noticia { min-height: 460px; } }
