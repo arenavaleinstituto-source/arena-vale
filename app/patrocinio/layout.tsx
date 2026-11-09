@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Patrocínios e Cotas Comerciais | Arena Vale Sports',
+  title: 'Patrocínios e Cotas Comerciais | Arena Vale',
   description: 'Associe a sua marca ao desporto. Conheça as nossas cotas de patrocínio.',
 };
 

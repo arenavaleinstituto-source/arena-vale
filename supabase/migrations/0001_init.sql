@@ -1,5 +1,5 @@
 -- ====================================================================
--- ARENA VALE SPORTS — Schema inicial completo + RLS Policies
+-- ARENA VALE — Schema inicial completo + RLS Policies
 -- ====================================================================
 -- Rode com:  supabase db push
 -- ====================================================================

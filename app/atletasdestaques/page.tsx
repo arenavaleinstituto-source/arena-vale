@@ -29,7 +29,7 @@ import { LogoSecreto } from '@/components/auth/LogoSecreto';
 export const revalidate = 60;
 
 export const metadata = {
-  title: 'Atletas em Destaque | Arena Vale Sports',
+  title: 'Atletas em Destaque | Arena Vale',
   description:
     'Os talentos, artilheiros e protagonistas das competições do ecossistema Arena Vale.',
   robots: {

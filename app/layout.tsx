@@ -16,7 +16,7 @@ import './globals.css';
  * A versão completa em pt-BR está restaurada abaixo.
  */
 export const metadata: Metadata = {
-  title: 'Arena Vale Sports',
+  title: 'Arena Vale',
   description: 'Plataforma de gestão de campeonatos e transmissões esportivas.',
   icons: {
     icon: '/logo.png',
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   },
   manifest: '/manifest.json',
   openGraph: {
-    title: 'Arena Vale Sports',
+    title: 'Arena Vale',
     description: 'O palco do esporte é aqui. Acompanhe campeonatos e transmissões.',
     siteName: 'Arena Vale',
     images: [
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
         url: '/fundo-arena.jpg',
         width: 1200,
         height: 630,
-        alt: 'Arena Vale Sports',
+        alt: 'Arena Vale',
       },
     ],
     locale: 'pt_BR',
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Arena Vale Sports',
+    title: 'Arena Vale',
     description: 'O palco do esporte é aqui. Acompanhe campeonatos e transmissões.',
     images: ['/fundo-arena.jpg'],
   },

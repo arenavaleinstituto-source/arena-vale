@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Arena Vale Sports — plataforma de gestão de campeonatos, comunicados e transmissões.",
+  "description": "Arena Vale — plataforma de gestão de campeonatos, comunicados e transmissões.",
   "engines": {
     "node": ">=20.9.0"
   },

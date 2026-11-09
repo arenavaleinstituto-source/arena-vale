@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Agenda de Jogos | Arena Vale Sports',
+  title: 'Agenda de Jogos | Arena Vale',
   description: 'Consulte o calendário oficial de confrontos, datas, horários e locais dos campeonatos da Arena Vale.',
   robots: {
     index: true,

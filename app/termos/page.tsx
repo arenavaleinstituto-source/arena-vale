@@ -4,7 +4,7 @@ import { Metadata } from 'next';
 import { LogoSecreto } from '@/components/auth/LogoSecreto';
 
 export const metadata: Metadata = {
-  title: 'Termos de Uso | Arena Vale Sports',
+  title: 'Termos de Uso | Arena Vale',
   description: 'Termos de uso, regras de competição e condições de serviço da plataforma Arena Vale.',
 };
 

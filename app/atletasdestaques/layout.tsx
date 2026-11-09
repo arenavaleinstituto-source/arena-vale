@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Atletas em Destaque | Arena Vale Sports',
+  title: 'Atletas em Destaque | Arena Vale',
   description: 'Conheça os protagonistas e os talentos que marcam o desporto na região.',
 };
 

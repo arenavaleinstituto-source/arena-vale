@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Canais Oficiais | Arena Vale Sports',
+  title: 'Canais Oficiais | Arena Vale',
   robots: {
     index: true,
     follow: true,
@@ -61,12 +61,12 @@ export default function LinksPage() {
           <div className="inline-block p-1 rounded-2xl bg-gradient-to-b from-[#e50914] to-transparent shadow-2xl shadow-[#e50914]/30">
             <img
               src="/logo.png"
-              alt="Arena Vale Sports"
+              alt="Arena Vale"
               className="h-24 w-auto object-contain rounded-xl bg-[#07080c] p-2"
             />
           </div>
           <div>
-            <h1 className="text-2xl font-black uppercase tracking-tight text-white mt-3">Arena Vale Sports</h1>
+            <h1 className="text-2xl font-black uppercase tracking-tight text-white mt-3">Arena Vale</h1>
             <p className="text-xs text-[#8a92a6] uppercase tracking-widest mt-1">O Palco do Esporte é Aqui · 2026</p>
           </div>
         </div>

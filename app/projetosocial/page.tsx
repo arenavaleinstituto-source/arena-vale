@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { LogoSecreto } from '@/components/auth/LogoSecreto';
 
 export const metadata = {
-  title: 'Projeto Social | Arena Vale Sports',
+  title: 'Projeto Social | Arena Vale',
   description: 'Conheça o nosso compromisso social com o esporte, inclusão e desenvolvimento de crianças, jovens e atletas na comunidade.',
   robots: {
     index: true,

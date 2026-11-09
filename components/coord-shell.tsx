@@ -208,7 +208,7 @@ export function CoordShell({ user, stats: initialStats, inscricoes: initialInsc,
         <>
           <div>
             <h2 className="font-serif text-xl font-bold mt-1">
-              Arena Vale Sports
+              Arena Vale
             </h2>
           </div>
 

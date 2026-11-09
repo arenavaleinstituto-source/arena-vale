@@ -4,7 +4,7 @@ import { Metadata } from 'next';
 import { LogoSecreto } from '@/components/auth/LogoSecreto';
 
 export const metadata: Metadata = {
-  title: 'Política de Privacidade | Arena Vale Sports',
+  title: 'Política de Privacidade | Arena Vale',
   description: 'Saiba como a Arena Vale coleta, usa e protege os seus dados pessoais e de navegação.',
 };
 

@@ -27,7 +27,7 @@ import { LogoSecreto } from '@/components/auth/LogoSecreto';
 export const revalidate = 60;
 
 export const metadata = {
-  title: 'Comunicados Oficiais | Arena Vale Sports',
+  title: 'Comunicados Oficiais | Arena Vale',
   description:
     'Mural oficial de comunicados da Arena Vale: inscrições, convocações de arbitragem, coberturas e novidades do portal.',
   robots: {

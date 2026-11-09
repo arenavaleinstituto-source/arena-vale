@@ -35,11 +35,11 @@ export async function generateMetadata(props: { params: Promise<{ id: string }> 
     .maybeSingle();
 
   if (!data) {
-    return { title: 'Comunicado não encontrado | Arena Vale Sports' };
+    return { title: 'Comunicado não encontrado | Arena Vale' };
   }
 
   return {
-    title: `${data.titulo} | Arena Vale Sports`,
+    title: `${data.titulo} | Arena Vale`,
     description: String(data.descricao || '').slice(0, 160),
     openGraph: {
       title: String(data.titulo),
