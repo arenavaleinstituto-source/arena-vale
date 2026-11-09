@@ -1,5 +1,6 @@
 import React from 'react';
 import type { Metadata } from 'next';
+import { Barlow, Barlow_Condensed, Saira } from 'next/font/google';
 import './globals.css';
 import { SiteHeader } from '@/components/SiteHeader';
 
@@ -16,6 +17,10 @@ import { SiteHeader } from '@/components/SiteHeader';
  *
  * A versão completa em pt-BR está restaurada abaixo.
  */
+const saira = Saira({ subsets: ['latin'], axes: ['wdth'], variable: '--font-saira', display: 'swap' });
+const barlow = Barlow({ subsets: ['latin'], weight: ['400', '600', '700'], variable: '--font-barlow', display: 'swap' });
+const barlowCondensed = Barlow_Condensed({ subsets: ['latin'], weight: ['600', '700'], variable: '--font-barlow-condensed', display: 'swap' });
+
 export const metadata: Metadata = {
   title: 'Arena Vale',
   description: 'Plataforma de gestão de campeonatos e transmissões esportivas.',
@@ -54,8 +59,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt-BR">
-      <body className="bg-[#070b13] text-white font-sans antialiased selection:bg-[#e50914] selection:text-white overflow-x-clip">
+    <html lang="pt-BR" className={`${saira.variable} ${barlow.variable} ${barlowCondensed.variable}`}>
+      <body className="bg-av-preto text-white font-sans antialiased selection:bg-[#e50914] selection:text-white overflow-x-clip">
         <SiteHeader />
         {children}
       </body>
