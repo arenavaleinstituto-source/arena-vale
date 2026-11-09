@@ -13,15 +13,25 @@ describe('bot do Telegram com o banco (portasBot)', () => {
     const { data: codigo } = await (await clienteComo(u)).rpc('gerar_codigo_telegram');
     const p = portasBot(admin());
     const tg = 900000 + Math.floor(Math.random() * 99999);
-    expect(await p.vincularCodigo(codigo as string, tg)).toBe(true);
+    expect(await p.vincularCodigo(codigo as string, tg)).toBe('ok');
     expect(await p.perfilPorTelegram(tg)).toEqual({ id: u.id, role: 'coordenador' });
-    expect(await p.vincularCodigo(codigo as string, tg)).toBe(false);
+    expect(await p.vincularCodigo(codigo as string, tg)).toBe('invalido');
   });
 
   it('código vencido não vincula', async () => {
     const u = await criarUsuario('coordenador');
-    await admin().from('telegram_codigos_vinculo').insert({ codigo: '777777', profile_id: u.id, expira_em: new Date(Date.now() - 60000).toISOString() });
-    expect(await portasBot(admin()).vincularCodigo('777777', 123)).toBe(false);
+    await admin().from('telegram_codigos_vinculo').insert({ codigo: 'VENCIDO7', profile_id: u.id, expira_em: new Date(Date.now() - 60000).toISOString() });
+    expect(await portasBot(admin()).vincularCodigo('VENCIDO7', 123)).toBe('invalido');
+  });
+
+  it('5 tentativas erradas bloqueiam por 1 hora, mesmo com o código certo depois', async () => {
+    const u = await criarUsuario('coordenador');
+    const { data: codigo } = await (await clienteComo(u)).rpc('gerar_codigo_telegram');
+    const p = portasBot(admin());
+    const tg = 800000 + Math.floor(Math.random() * 99999);
+    for (let i = 0; i < 5; i += 1) expect(await p.vincularCodigo('ERRADO99', tg)).toBe('invalido');
+    expect(await p.vincularCodigo(codigo as string, tg)).toBe('bloqueado');
+    expect(await p.perfilPorTelegram(tg)).toBeNull();
   });
 
   it('rascunho: nasce na aba mundo; repetido devolve "duplicado"', async () => {

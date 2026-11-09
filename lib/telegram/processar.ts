@@ -27,8 +27,8 @@ export type DadosRascunho = {
 
 export type PortasBot = {
   perfilPorTelegram(telegramId: number): Promise<{ id: string; role: string } | null>;
-  /** Confere o código (válido e não vencido), grava o telegram_user_id e apaga o código. */
-  vincularCodigo(codigo: string, telegramId: number): Promise<boolean>;
+  /** Confere o código (válido e não vencido), grava o telegram_user_id e apaga o código. 5 erros bloqueiam por 1 h. */
+  vincularCodigo(codigo: string, telegramId: number): Promise<'ok' | 'invalido' | 'bloqueado'>;
   modoVideo(): Promise<{ modo: ModoVideo; dias: number }>;
   /** Baixa pelo getFile; null se falhar ou passar do limite. */
   baixarArquivo(fileId: string, limiteBytes: number): Promise<Arquivo | null>;
@@ -48,8 +48,13 @@ export async function processarUpdate(update: unknown, p: PortasBot, origem: str
 
   const codigo = comandoVincular(msg.text ?? '');
   if (codigo) {
-    const ok = await p.vincularCodigo(codigo, msg.from.id);
-    await p.enviarMensagem(chat, ok ? 'Telegram vinculado ✅' : 'Código inválido ou vencido. Gere outro no painel.');
+    const r = await p.vincularCodigo(codigo, msg.from.id);
+    const resposta = {
+      ok: 'Telegram vinculado ✅',
+      invalido: 'Código inválido ou vencido. Gere outro no painel.',
+      bloqueado: 'Muitas tentativas. Tente de novo em 1 hora.',
+    } as const;
+    await p.enviarMensagem(chat, resposta[r]);
     return;
   }
 

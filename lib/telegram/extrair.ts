@@ -82,8 +82,8 @@ export function extrairRascunho(msg: TgMessage): RascunhoTelegram {
 }
 
 export function comandoVincular(texto: string): string | null {
-  const m = texto.trim().match(/^\/vincular(?:@\w+)?\s+(\d{6})$/);
-  return m ? m[1] : null;
+  const m = texto.trim().match(/^\/vincular(?:@\w+)?\s+([A-Za-z0-9]{8})$/);
+  return m ? m[1].toUpperCase() : null;
 }
 
 /** Resposta do bot depois de criar o rascunho (mensagens exatas do spec 4.4). */

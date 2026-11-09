@@ -54,9 +54,12 @@ alter table public.noticias add column if not exists telegram_message_ref text;
 alter table public.noticias add column if not exists modalidade text;
 alter table public.noticias add column if not exists enquadramento text;
 
--- dados existentes: categorias antigas → 'geral'; ativas → publicadas
+-- dados existentes: categorias antigas → novas (sem diferenciar maiúsculas); o resto → 'geral'; ativas → publicadas
+update public.noticias set categoria = 'campeonatos' where lower(btrim(categoria)) = 'campeonatos';
+update public.noticias set categoria = 'bastidores' where lower(btrim(categoria)) = 'bastidores';
+update public.noticias set categoria = 'projeto_social' where lower(btrim(categoria)) in ('projeto social', 'projeto_social');
 update public.noticias set categoria = 'geral'
- where categoria not in ('geral', 'campeonatos', 'bastidores', 'projeto_social');
+ where categoria is null or categoria not in ('geral', 'campeonatos', 'bastidores', 'projeto_social');
 update public.noticias set status = 'publicado', publicado_em = coalesce(publicado_em, created_at)
  where ativo = true and status = 'rascunho' and publicado_em is null;
 alter table public.noticias alter column categoria set default 'geral';
@@ -108,16 +111,32 @@ create table if not exists public.telegram_codigos_vinculo (
 );
 alter table public.telegram_codigos_vinculo enable row level security;  -- sem políticas: só a service role
 
+-- Tentativas erradas de /vincular por conta do Telegram (bloqueio de 1 h após 5 erros).
+create table if not exists public.telegram_tentativas_vinculo (
+  telegram_user_id bigint primary key,
+  falhas int not null default 0,
+  bloqueado_ate timestamptz
+);
+alter table public.telegram_tentativas_vinculo enable row level security;  -- sem políticas: só a service role
+
+-- Código de 8 caracteres (32^8 ≈ 1 trilhão), sorteado com o gerador seguro do gen_random_uuid().
 create or replace function public.gerar_codigo_telegram() returns text
 language plpgsql security definer set search_path = public as $$
-declare v text;
+declare
+  alfabeto constant text := 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  bytes bytea;
+  v text;
 begin
   if not public.is_staff() then
     raise exception 'Sem permissão.';
   end if;
   delete from public.telegram_codigos_vinculo where profile_id = auth.uid() or expira_em < now();
   loop
-    v := lpad((floor(random() * 1000000))::int::text, 6, '0');
+    bytes := decode(replace(gen_random_uuid()::text, '-', ''), 'hex');
+    v := '';
+    for i in 0..7 loop
+      v := v || substr(alfabeto, (get_byte(bytes, i) % 32) + 1, 1);
+    end loop;
     exit when not exists (select 1 from public.telegram_codigos_vinculo where codigo = v);
   end loop;
   insert into public.telegram_codigos_vinculo (codigo, profile_id, expira_em)
@@ -174,7 +193,7 @@ begin
 end $$;
 
 -- correção de dado: a marca é só ARENA VALE
-update public.agenda_jogos set local = 'Arena Vale' where local ilike '%arena vale sport%';
+update public.agenda_jogos set local = regexp_replace(local, 'arena vale sports?', 'Arena Vale', 'gi') where local ~* 'arena vale sports?';
 
 -- ─── Storage: bucket público "noticias" (fotos, cartazes, vídeos) ───
 insert into storage.buckets (id, name, public, file_size_limit)

@@ -60,9 +60,10 @@ describe('extrairRascunho', () => {
 });
 
 describe('comandoVincular', () => {
-  it('lê o código de 6 dígitos', () => {
-    expect(comandoVincular('/vincular 123456')).toBe('123456');
-    expect(comandoVincular('/vincular@ArenaValeBot 654321')).toBe('654321');
+  it('lê o código de 8 letras/números (maiúsculo)', () => {
+    expect(comandoVincular('/vincular AB23CD45')).toBe('AB23CD45');
+    expect(comandoVincular('/vincular@ArenaValeBot ab23cd45')).toBe('AB23CD45');
+    expect(comandoVincular('/vincular 123456')).toBeNull();
     expect(comandoVincular('/vincular abc')).toBeNull();
     expect(comandoVincular('oi')).toBeNull();
   });

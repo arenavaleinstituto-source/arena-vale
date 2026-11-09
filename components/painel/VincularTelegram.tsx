@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 
-/** Liga o Telegram de quem está logado ao bot (spec 2026-11-08, 4.4): código de 6 dígitos válido por 10 minutos. */
+/** Liga o Telegram de quem está logado ao bot (spec 2026-11-08, 4.4): código de 8 letras e números, válido por 10 minutos. */
 export function VincularTelegram() {
   const [codigo, setCodigo] = useState<string | null>(null);
   const [mensagem, setMensagem] = useState('');

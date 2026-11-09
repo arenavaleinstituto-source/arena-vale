@@ -4,7 +4,7 @@ import { processarUpdate, type PortasBot } from './processar';
 function portas(over: Partial<PortasBot> = {}) {
   const p: PortasBot = {
     perfilPorTelegram: vi.fn().mockResolvedValue({ id: 'coord-1', role: 'coordenador' }),
-    vincularCodigo: vi.fn().mockResolvedValue(false),
+    vincularCodigo: vi.fn().mockResolvedValue('invalido'),
     modoVideo: vi.fn().mockResolvedValue({ modo: 'guardar_arquivo', dias: 30 }),
     baixarArquivo: vi.fn().mockResolvedValue({ bytes: new Uint8Array([1, 2, 3]), ext: 'jpg', mime: 'image/jpeg' }),
     guardarArquivo: vi.fn().mockImplementation(async (caminho: string) => `https://cdn.test/${caminho}`),
@@ -90,14 +90,17 @@ describe('processarUpdate', () => {
     expect(p.enviarMensagem).toHaveBeenCalledWith(5, 'Não consegui criar o rascunho, tente de novo');
   });
 
-  it('/vincular com código válido e inválido', async () => {
-    const ok = portas({ vincularCodigo: vi.fn().mockResolvedValue(true) });
-    await processarUpdate({ message: { message_id: 1, chat: { id: 5 }, from: { id: 42 }, text: '/vincular 123456' } }, ok, ORIGEM);
-    expect(ok.vincularCodigo).toHaveBeenCalledWith('123456', 42);
+  it('/vincular: válido, inválido e bloqueado por tentativas', async () => {
+    const ok = portas({ vincularCodigo: vi.fn().mockResolvedValue('ok') });
+    await processarUpdate({ message: { message_id: 1, chat: { id: 5 }, from: { id: 42 }, text: '/vincular AB23CD45' } }, ok, ORIGEM);
+    expect(ok.vincularCodigo).toHaveBeenCalledWith('AB23CD45', 42);
     expect(ok.enviarMensagem).toHaveBeenCalledWith(5, 'Telegram vinculado ✅');
     const ruim = portas();
-    await processarUpdate({ message: { message_id: 1, chat: { id: 5 }, from: { id: 42 }, text: '/vincular 000000' } }, ruim, ORIGEM);
+    await processarUpdate({ message: { message_id: 1, chat: { id: 5 }, from: { id: 42 }, text: '/vincular ZZZZZZZZ' } }, ruim, ORIGEM);
     expect(ruim.enviarMensagem).toHaveBeenCalledWith(5, 'Código inválido ou vencido. Gere outro no painel.');
+    const bloq = portas({ vincularCodigo: vi.fn().mockResolvedValue('bloqueado') });
+    await processarUpdate({ message: { message_id: 1, chat: { id: 5 }, from: { id: 42 }, text: '/vincular ZZZZZZZZ' } }, bloq, ORIGEM);
+    expect(bloq.enviarMensagem).toHaveBeenCalledWith(5, 'Muitas tentativas. Tente de novo em 1 hora.');
   });
 
   it('update sem mensagem é ignorado', async () => {

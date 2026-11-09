@@ -108,11 +108,11 @@ describe('mídia esportiva (0011)', () => {
     expect(error?.code).toBe('23505');
   });
 
-  it('gerar_codigo_telegram: coordenador recebe 6 dígitos, capitão não', async () => {
+  it('gerar_codigo_telegram: coordenador recebe 8 letras/números, capitão não', async () => {
     const coord = await clienteComo(await criarUsuario('coordenador'));
     const { data: codigo, error } = await coord.rpc('gerar_codigo_telegram');
     expect(error).toBeNull();
-    expect(codigo).toMatch(/^\d{6}$/);
+    expect(codigo).toMatch(/^[A-HJ-NP-Z2-9]{8}$/);
     const cap = await clienteComo(await criarUsuario('capitao'));
     const r = await cap.rpc('gerar_codigo_telegram');
     expect(r.error?.message).toContain('Sem permissão.');
@@ -135,14 +135,41 @@ describe('mídia esportiva (0011)', () => {
     expect(data).toEqual({ youtube_channel_id: 'UCBTQ97bWA6VqK2a6qv80dIg', youtube_handle: '@TVArenaVale' });
   });
 
-  it('agenda: local "Arena Vale Sports" vira "Arena Vale"', async () => {
-    const { data: item } = await admin()
+  it('agenda: "Arena Vale Sports" vira "Arena Vale" sem apagar o resto do local', async () => {
+    const { data: itens } = await admin()
       .from('agenda_jogos')
-      .insert({ modalidade: 'Futsal', equipe_casa: 'A', equipe_fora: 'B', data_hora: '2026-12-01T19:00:00-03:00', local: 'Arena Vale Sports' })
-      .select('id')
-      .single();
+      .insert([
+        { modalidade: 'Futsal', equipe_casa: 'A', equipe_fora: 'B', data_hora: '2026-12-01T19:00:00-03:00', local: 'Arena Vale Sports' },
+        { modalidade: 'Futsal', equipe_casa: 'C', equipe_fora: 'D', data_hora: '2026-12-01T19:00:00-03:00', local: 'Ginásio ARENA VALE SPORT – Quadra 2' },
+      ])
+      .select('id, equipe_casa');
     await corrigirLocalAgenda();
-    const { data } = await visitante().from('agenda_jogos').select('local').eq('id', item!.id).single();
-    expect(data?.local).toBe('Arena Vale');
+    const { data } = await visitante().from('agenda_jogos').select('equipe_casa, local').in('id', itens!.map((i) => i.id)).order('equipe_casa');
+    expect(data).toEqual([
+      { equipe_casa: 'A', local: 'Arena Vale' },
+      { equipe_casa: 'C', local: 'Ginásio Arena Vale – Quadra 2' },
+    ]);
+  });
+
+  it('categorias antigas viram as novas sem perder Campeonatos e Projeto Social (qualquer caixa)', async () => {
+    const sql = readFileSync('supabase/migrations/0011_midia_esportiva.sql', 'utf8');
+    const ini = sql.indexOf('-- dados existentes: categorias antigas');
+    const fim = sql.indexOf("alter table public.noticias alter column categoria set default 'geral';");
+    const trecho = sql.slice(ini, fim);
+    const cli = new pg.Client({ connectionString: env.databaseUrl, ssl: { rejectUnauthorized: false } });
+    await cli.connect();
+    try {
+      await cli.query('begin');
+      await cli.query('alter table public.noticias drop constraint noticias_categoria_check');
+      const { rows } = await cli.query(
+        "insert into public.noticias (titulo, categoria) values ('a','Campeonatos'),('b','CAMPEONATOS'),('c','Projeto Social'),('d','Bastidores'),('e','Comunicado Oficial'),('f','TV Arena Vale') returning id",
+      );
+      await cli.query(trecho);
+      const r = await cli.query('select titulo, categoria from public.noticias where id = any($1) order by titulo', [rows.map((x) => x.id)]);
+      expect(r.rows.map((x) => x.categoria)).toEqual(['campeonatos', 'campeonatos', 'projeto_social', 'bastidores', 'geral', 'geral']);
+    } finally {
+      await cli.query('rollback');
+      await cli.end();
+    }
   });
 });

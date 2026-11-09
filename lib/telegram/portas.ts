@@ -30,18 +30,27 @@ export function portasBot(admin: SupabaseClient): PortasBot {
       return (data as { id: string; role: string } | null) ?? null;
     },
     async vincularCodigo(codigo, telegramId) {
-      const { data } = await admin
-        .from('telegram_codigos_vinculo')
-        .select('profile_id')
-        .eq('codigo', codigo)
-        .gt('expira_em', new Date().toISOString())
-        .maybeSingle();
+      const agora = new Date();
+      const { data: t } = await admin.from('telegram_tentativas_vinculo').select('falhas, bloqueado_ate').eq('telegram_user_id', telegramId).maybeSingle();
+      const tent = t as { falhas: number; bloqueado_ate: string | null } | null;
+      if (tent?.bloqueado_ate && Date.parse(tent.bloqueado_ate) > agora.getTime()) return 'bloqueado';
+
+      const { data } = await admin.from('telegram_codigos_vinculo').select('profile_id').eq('codigo', codigo).gt('expira_em', agora.toISOString()).maybeSingle();
       const perfil = (data as { profile_id: string } | null)?.profile_id;
-      if (!perfil) return false;
+      if (!perfil) {
+        const falhas = (tent?.bloqueado_ate ? 0 : (tent?.falhas ?? 0)) + 1;
+        await admin.from('telegram_tentativas_vinculo').upsert({
+          telegram_user_id: telegramId,
+          falhas: falhas >= 5 ? 0 : falhas,
+          bloqueado_ate: falhas >= 5 ? new Date(agora.getTime() + 3600_000).toISOString() : null,
+        });
+        return 'invalido';
+      }
       await admin.from('profiles').update({ telegram_user_id: null }).eq('telegram_user_id', telegramId);
       const { error } = await admin.from('profiles').update({ telegram_user_id: telegramId }).eq('id', perfil);
       await admin.from('telegram_codigos_vinculo').delete().eq('codigo', codigo);
-      return !error;
+      await admin.from('telegram_tentativas_vinculo').delete().eq('telegram_user_id', telegramId);
+      return error ? 'invalido' : 'ok';
     },
     async modoVideo() {
       const { data } = await admin.from('proprietario').select('modo_video, dias_validade_video').limit(1).maybeSingle();
