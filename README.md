@@ -67,11 +67,38 @@ npm run db:seed   # exige SUPABASE_SERVICE_ROLE_KEY no .env.local
 | `npm test` | testes (Vitest) |
 | `npm run db:seed` | popula o banco com dados de demonstração |
 
-## Acesso da equipe
+## Acesso da equipe e cargos
 
-- **Coordenadores, moderadores e capitães** entram por `/login`.
-- O logo no canto superior esquerdo leva ao início. **Três toques rápidos** nele abrem o acesso restrito.
-- As áreas `/painel`, `/coordenador` e `/proprietario` exigem login. A checagem por cargo chega na Fase 2.
+| Cargo | Entra em | Pode |
+|---|---|---|
+| Proprietário (aparece como "Coordenador") | tudo + área escondida (3 toques no logo) | gerir os coordenadores e o limite |
+| Coordenador | `/coordenador` | tudo no site, menos mexer em coordenadores |
+| Moderador | `/moderador` | resultados, eventos e súmulas dos SEUS campeonatos |
+| Capitão | `/capitao` | a própria equipe e o elenco |
+
+- Botão **Entrar** no cabeçalho (ou `/login`): o site lê o cargo no banco e leva ao painel certo.
+- As regras valem no banco (RLS, migrações `0009` e `0010`); as páginas só repetem a checagem.
+- Convites: a coordenação convida moderadores e capitães por campeonato; o proprietário convida coordenadores.
+
+### Configuração dos e-mails no Supabase (obrigatória para convites)
+
+Em **Authentication → URL Configuration**:
+- **Site URL:** `https://arena-vale.vercel.app`
+- **Redirect URLs:** `https://arena-vale.vercel.app/**`, `https://*-arena-vale.vercel.app/**` e `http://localhost:3000/**`
+
+Em **Authentication → Email Templates**, troque o link de cada modelo:
+
+| Modelo | Link |
+|---|---|
+| Invite user | `{{ .RedirectTo }}&token_hash={{ .TokenHash }}&type=invite` |
+| Magic Link | `{{ .RedirectTo }}&token_hash={{ .TokenHash }}&type=magiclink` |
+| Reset Password | `{{ .RedirectTo }}&token_hash={{ .TokenHash }}&type=recovery` |
+
+O site já envia `RedirectTo` como `<site>/auth/confirm?next=...`; a rota `/auth/confirm` cria a sessão e segue para o destino.
+
+## Testes de banco
+
+`npm run test:db` recria o banco do projeto **TESTES** do zero (credenciais em `.env.test.local`, nunca no git) e testa as regras de cada cargo. O script se recusa a rodar se apontar para o banco oficial.
 
 ## Deploy
 
