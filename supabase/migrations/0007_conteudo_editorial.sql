@@ -111,8 +111,6 @@ create policy "atletas_destaque_write_coord"
   using (public.is_coordenador())
   with check (public.is_coordenador());
 
--- Preenche a modalidade dos registros que já existiam, deduplicando pelo
--- nome do campeonato. `derivarModalidade` no app faz o mesmo em runtime.
 -- Corrige tabelas que têm o gatilho set_updated_at mas não têm a coluna
 -- updated_at (no banco de produção, atletas_destaque estava assim e
 -- qualquer UPDATE nela falhava com: record "new" has no field "updated_at").
@@ -139,6 +137,8 @@ begin
   end loop;
 end $$;
 
+-- Preenche a modalidade dos registros que já existiam, deduplicando pelo
+-- nome do campeonato. `derivarModalidade` no app faz o mesmo em runtime.
 update public.atletas_destaque
    set modalidade = case
      when upper(coalesce(campeonato_nome, '')) like '%FUTSAL%'  then 'FUTSAL'
@@ -261,7 +261,8 @@ update public.noticias
 -- ───────────────────────────────────────────────────────────────────
 -- 7) ORDEM DE EXIBIÇÃO DOS COMUNICADOS EXISTENTES
 -- ───────────────────────────────────────────────────────────────────
-update public.noticias set ordem = 1 where ordem is null or ordem = 999;
+-- Só os comunicados que já existiam antes desta migração (re-rodar não mexe nos novos).
+update public.noticias set ordem = 1 where (ordem is null or ordem = 999) and created_at < '2026-11-01';
 
 -- ====================================================================
 -- FIM
