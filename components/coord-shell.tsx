@@ -12,7 +12,8 @@ import { CoordConfig } from './coord-config';
 import { CoordJogos } from './coord-jogos';
 import { CoordCampeonatos } from './coord-campeonatos';
 import { AbaAoVivo } from './painel/AbaAoVivo';
-import { NoticiasLegado } from './painel/NoticiasLegado';
+import { AbaNoticias } from './painel/AbaNoticias';
+import { AbaVideos } from './painel/AbaVideos';
 import { ABAS_COORD, abaValida, type IdAba } from './painel/abas';
 import GestaoAtletasClient from '@/app/(coord)/coordenador/atletasdestaques/gestao-atletas-client';
 
@@ -225,17 +226,8 @@ export function CoordShell({ user, stats, inscricoes: initialInsc, patrocinadore
         )}
 
         {tab === 'aovivo' && <AbaAoVivo aoVivoDetectado={aoVivoDetectado} />}
-        {tab === 'noticias' && (
-          <div className="panel">
-            <NoticiasLegado />
-          </div>
-        )}
-        {tab === 'videos' && (
-          <div className="panel grid gap-2">
-            <h2 className="titulo-secao !text-left !text-2xl">Vídeos do Instagram</h2>
-            <p className="text-av-cinza">Os vídeos do YouTube entram sozinhos. O cadastro dos vídeos do Instagram chega junto com o novo editor de notícias.</p>
-          </div>
-        )}
+        {tab === 'noticias' && <AbaNoticias />}
+        {tab === 'videos' && <AbaVideos />}
         {tab === 'jogos' && <CoordJogos />}
         {tab === 'campeonatos' && <CoordCampeonatos />}
         {tab === 'inscricoes' && (

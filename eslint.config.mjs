@@ -11,7 +11,6 @@ const LEGADO = [
   'app/(public)/sumula/\\[id\\]/page.tsx', // colchetes escapados: no glob, [id] seria uma classe de caracteres
   'app/(public)/sumula/page.tsx',
   'app/not-found.tsx',
-  'components/painel/NoticiasLegado.tsx', // sai na Task 15 (editor novo),
   'app/termos/page.tsx',
   'components/capitao-elenco.tsx',
   'components/coord-destaques.tsx',
