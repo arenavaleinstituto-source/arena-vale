@@ -12,7 +12,7 @@ import { buscarNoticiasPublicadas } from '@/lib/midia/noticias-busca';
 import { buscarPatrocinadores } from '@/lib/midia/patrocinadores';
 import { lerConfigSite, linkAssistirAoVivo } from '@/lib/midia/config';
 import { buscarVideosYT, embedAoVivo, estaAoVivo } from '@/lib/midia/youtube';
-import { buscarAgenda, proximaTransmissao } from '@/lib/midia/agenda';
+import { buscarAgenda, resumoAgenda } from '@/lib/midia/agenda';
 import { buscarVideosExternos } from '@/lib/midia/videos-externos-busca';
 import { buscarDestaques } from '@/lib/content/destaques';
 import { createPublicClient } from '@/lib/supabase/server';
@@ -33,7 +33,7 @@ export default async function Home() {
   const config = await lerConfigSite();
   const [aoVivoDetectado, agenda, videos, externos, destaques, patrocinadores, arena, mundo] = await Promise.all([
     seguro(estaAoVivo(config.youtubeChannelId), false),
-    seguro(buscarAgenda(6), []),
+    seguro(buscarAgenda(30), []),
     seguro(buscarVideosYT(config.youtubeChannelId), []),
     seguro(buscarVideosExternos(8), []),
     seguro(
@@ -45,14 +45,15 @@ export default async function Home() {
     seguro(buscarNoticiasPublicadas({ aba: 'mundo', limite: 12 }), []),
   ]);
   const aoVivo = config.aoVivoManual || aoVivoDetectado;
+  const { lista: proximosJogos, proxima } = resumoAgenda(agenda, 6);
 
   return (
     <main id="topo" className="w-full overflow-x-clip bg-av-preto text-av-branco">
       <Banner capaUrl={config.capaUrl} />
-      <AoVivo aoVivo={aoVivo} embed={embedAoVivo(config.youtubeChannelId)} linkAssistir={linkAssistirAoVivo(config)} proxima={proximaTransmissao(agenda)} />
+      <AoVivo aoVivo={aoVivo} embed={embedAoVivo(config.youtubeChannelId)} linkAssistir={linkAssistirAoVivo(config)} proxima={proxima} />
       <AgoraNaArena noticias={arena} />
       <EsporteMundial noticias={mundo} />
-      <AgendaArena itens={agenda} />
+      <AgendaArena itens={proximosJogos} />
       <UltimosVideos videos={videos} externos={externos} channelUrl={`https://www.youtube.com/${config.youtubeHandle}`} />
       <Modalidades />
       <ProjetoSocialHome whatsapp={config.whatsapp} />

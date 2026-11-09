@@ -80,14 +80,14 @@ export function EntrarEquipe() {
     return () => document.removeEventListener('keydown', onKey);
   }, [cargoLogin, menuEntrar, fecharLogin]);
 
-  // Clique (ou toque) fora fecha o menu.
+  // Toque ou clique fora fecha o menu. `pointerdown`: o iPhone não dispara `click` em áreas sem link.
   useEffect(() => {
     if (!menuEntrar) return;
-    const onClick = (e: MouseEvent) => {
+    const fora = (e: Event) => {
       if (caixaRef.current && !caixaRef.current.contains(e.target as Node)) setMenuEntrar(false);
     };
-    document.addEventListener('click', onClick);
-    return () => document.removeEventListener('click', onClick);
+    document.addEventListener('pointerdown', fora);
+    return () => document.removeEventListener('pointerdown', fora);
   }, [menuEntrar]);
 
   async function sair() {

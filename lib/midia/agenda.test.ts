@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { deAgendaJogos, deJogos, juntarAgenda, proximaTransmissao, type ItemAgenda } from './agenda';
+import { deAgendaJogos, deJogos, juntarAgenda, proximaTransmissao, resumoAgenda, type ItemAgenda } from './agenda';
 
 const AGORA = new Date('2026-11-10T12:00:00-03:00');
 
@@ -49,6 +49,18 @@ describe('agenda unificada', () => {
   it('próxima transmissão é o primeiro item com transmissão', () => {
     const r = [item({ dataHora: '2026-11-11T20:00:00.000Z' }), item({ casa: 'X', dataHora: '2026-11-12T20:00:00.000Z', transmissao: true })];
     expect(proximaTransmissao(r)?.casa).toBe('X');
+  });
+});
+
+describe('resumoAgenda (página inicial)', () => {
+  it('acha a próxima transmissão mesmo depois dos 6 primeiros jogos', () => {
+    const itens = [
+      ...[1, 2, 3, 4, 5, 6, 7].map((d) => item({ casa: `T${d}`, dataHora: `2026-11-1${d}T20:00:00.000Z` })),
+      item({ casa: 'COM TV', dataHora: '2026-11-19T20:00:00.000Z', transmissao: true }),
+    ];
+    const r = resumoAgenda(itens, 6);
+    expect(r.lista).toHaveLength(6);
+    expect(r.proxima?.casa).toBe('COM TV');
   });
 });
 

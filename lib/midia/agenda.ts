@@ -111,6 +111,11 @@ export function proximaTransmissao(itens: ItemAgenda[]): ItemAgenda | null {
   return itens.find((i) => i.transmissao) ?? null;
 }
 
+/** Página inicial: lista curta, mas a próxima transmissão procurada em toda a agenda buscada. */
+export function resumoAgenda(itens: ItemAgenda[], tamanho = 6): { lista: ItemAgenda[]; proxima: ItemAgenda | null } {
+  return { lista: itens.slice(0, tamanho), proxima: proximaTransmissao(itens) };
+}
+
 /** "agora" no formato de `jogos.data` (sem fuso, horário de Brasília). */
 function agoraBrasiliaSemFuso(agora: Date): string {
   return new Date(agora.getTime() - 3 * UMA_HORA_MS).toISOString().slice(0, 19);

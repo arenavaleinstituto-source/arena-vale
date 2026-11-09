@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { fakeSupabase } from './fake-supabase';
@@ -55,6 +55,14 @@ describe('EntrarEquipe', () => {
     await u.click(screen.getByRole('button', { name: 'Entrar na área da equipe' }));
     expect(screen.getByRole('menu')).toBeInTheDocument();
     await u.click(document.body);
+    expect(screen.queryByRole('menu')).toBeNull();
+  });
+
+  it('toque fora (iPhone: só pointerdown, sem click) fecha o menu', async () => {
+    sb = fakeSupabase();
+    render(<EntrarEquipe />);
+    await abrirMenu();
+    fireEvent.pointerDown(document.body);
     expect(screen.queryByRole('menu')).toBeNull();
   });
 
