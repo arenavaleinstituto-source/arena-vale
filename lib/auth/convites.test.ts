@@ -27,24 +27,31 @@ describe('regra da marca', () => {
 describe('cadastro com senha', () => {
   it('com senha: cria a conta com e-mail e senha, sem mandar convite', async () => {
     const p = portas();
-    const r = await convidar({ email: 'Cap@Exemplo.com', cargo: 'capitao', campeonatoId: 'c1', senha: 'senha-forte-1' }, { quemChama: coord, origem: ORIGEM, ...p });
+    const r = await convidar({ email: 'Cap@Exemplo.com', cargo: 'capitao', campeonatoId: 'c1', senha: 'senha-forte-1', nome: '  Carlos Souza ' }, { quemChama: coord, origem: ORIGEM, ...p });
     expect(r).toEqual({ ok: true, jaTinhaConta: false });
-    expect(p.criarComSenha).toHaveBeenCalledWith('cap@exemplo.com', 'senha-forte-1');
+    expect(p.criarComSenha).toHaveBeenCalledWith('cap@exemplo.com', 'senha-forte-1', 'Carlos Souza');
     expect(p.convidarPorEmail).not.toHaveBeenCalled();
     expect(p.definirCargo).toHaveBeenCalledWith('novo-id', 'capitao');
     expect(p.vincular).toHaveBeenCalledWith('capitao', 'novo-id', 'c1');
   });
 
+  it('conta nova com senha exige o nome da pessoa', async () => {
+    const p = portas();
+    const r = await convidar({ email: 'a@b.com', cargo: 'moderador', campeonatoId: 'c1', senha: 'senha-forte-1', nome: '  ' }, { quemChama: coord, origem: ORIGEM, ...p });
+    expect(r).toEqual({ ok: false, status: 400, erro: 'Informe o nome da pessoa.' });
+    expect(p.criarComSenha).not.toHaveBeenCalled();
+  });
+
   it('senha com menos de 8 caracteres é recusada', async () => {
     const p = portas();
-    const r = await convidar({ email: 'a@b.com', cargo: 'moderador', campeonatoId: 'c1', senha: '1234567' }, { quemChama: coord, origem: ORIGEM, ...p });
+    const r = await convidar({ email: 'a@b.com', cargo: 'moderador', campeonatoId: 'c1', senha: '1234567', nome: 'Ana' }, { quemChama: coord, origem: ORIGEM, ...p });
     expect(r).toEqual({ ok: false, status: 400, erro: 'A senha precisa ter pelo menos 8 caracteres.' });
     expect(p.criarComSenha).not.toHaveBeenCalled();
   });
 
   it('quem já tem conta não tem a senha trocada: só ganha o cargo e o vínculo', async () => {
     const p = portas({}, { id: 'velho', role: 'autenticado' });
-    const r = await convidar({ email: 'a@b.com', cargo: 'moderador', campeonatoId: 'c1', senha: 'senha-forte-1' }, { quemChama: coord, origem: ORIGEM, ...p });
+    const r = await convidar({ email: 'a@b.com', cargo: 'moderador', campeonatoId: 'c1', senha: 'senha-forte-1', nome: 'Ana' }, { quemChama: coord, origem: ORIGEM, ...p });
     expect(r).toEqual({ ok: true, jaTinhaConta: true });
     expect(p.criarComSenha).not.toHaveBeenCalled();
     expect(p.definirCargo).toHaveBeenCalledWith('velho', 'moderador');
@@ -56,7 +63,7 @@ describe('convidar', () => {
     const p = portas();
     const r = await convidar({ email: 'Mod@Exemplo.com ', cargo: 'moderador', campeonatoId: 'c1' }, { quemChama: coord, origem: ORIGEM, ...p });
     expect(r).toEqual({ ok: true, jaTinhaConta: false });
-    expect(p.convidarPorEmail).toHaveBeenCalledWith('mod@exemplo.com', `${ORIGEM}/criar-senha`);
+    expect(p.convidarPorEmail).toHaveBeenCalledWith('mod@exemplo.com', `${ORIGEM}/criar-senha`, null);
     expect(p.definirCargo).toHaveBeenCalledWith('novo-id', 'moderador');
     expect(p.vincular).toHaveBeenCalledWith('moderador', 'novo-id', 'c1');
   });

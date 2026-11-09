@@ -4,12 +4,13 @@ import { useId, useState, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { CapitaoElenco } from '@/components/capitao-elenco';
+import type { Jogador } from '@/lib/atletas/colunas';
 
 export type ConviteCapitao = {
   campeonatoId: string;
   campeonatoNome: string;
   time: { id: string; nome: string } | null;
-  jogadores: unknown[];
+  jogadores: Jogador[];
 };
 
 function CadastrarEquipe({ convite }: { convite: ConviteCapitao }) {

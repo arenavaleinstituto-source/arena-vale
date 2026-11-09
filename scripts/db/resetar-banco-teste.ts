@@ -40,7 +40,9 @@ export async function resetarBancoTeste(): Promise<void> {
         throw new Error(`Migração ${arquivo} falhou no banco de testes: ${(e as Error).message}`);
       }
     }
-    await cliente.query(GRANTS_PADRAO);
+    // Sem reaplicar os grants aqui: como no banco oficial, as permissões são as
+    // padrão (dadas antes) MENOS o que as migrações retiram (ex.: CPF na 0012,
+    // execução de funções restritas na 0009–0011). Reaplicar desfazia essas restrições.
     await cliente.query("notify pgrst, 'reload schema';");
   } finally {
     await cliente.end();

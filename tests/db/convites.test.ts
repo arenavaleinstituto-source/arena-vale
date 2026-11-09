@@ -24,13 +24,13 @@ describe('convites com o banco (portasSupabase)', () => {
 
   it('capitão cadastrado com senha entra com e-mail e senha e já é capitão do campeonato', async () => {
     const email = `teste+capsenha-${Date.now()}@arenavale.test`;
-    const r = await convidar({ email, cargo: 'capitao', campeonatoId: c.campA, senha: 'Senha-forte-123' }, { quemChama: coord, origem: 'http://x', ...portasSupabase(admin()) });
+    const r = await convidar({ email, cargo: 'capitao', campeonatoId: c.campA, senha: 'Senha-forte-123', nome: 'Carlos Capitão' }, { quemChama: coord, origem: 'http://x', ...portasSupabase(admin()) });
     expect(r).toEqual({ ok: true, jaTinhaConta: false });
     const cli = visitante();
     const { data, error } = await cli.auth.signInWithPassword({ email, password: 'Senha-forte-123' });
     expect(error).toBeNull();
-    const { data: perfil } = await admin().from('profiles').select('role').eq('id', data.user!.id).single();
-    expect(perfil?.role).toBe('capitao');
+    const { data: perfil } = await admin().from('profiles').select('role, full_name').eq('id', data.user!.id).single();
+    expect(perfil).toEqual({ role: 'capitao', full_name: 'Carlos Capitão' });
     const { data: vinculo } = await admin().from('time_capitaes').select('id').eq('profile_id', data.user!.id).eq('campeonato_id', c.campA);
     expect(vinculo).toHaveLength(1);
   });

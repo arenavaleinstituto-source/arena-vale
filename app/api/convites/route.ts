@@ -28,7 +28,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   const quemChama = await lerCargo(await createClient());
   try {
     const resultado = await convidar(
-      { email: corpo.email, cargo: corpo.cargo, campeonatoId: corpo.campeonatoId ?? null, senha: typeof corpo.senha === 'string' ? corpo.senha : null },
+      { email: corpo.email, cargo: corpo.cargo, campeonatoId: corpo.campeonatoId ?? null, senha: typeof corpo.senha === 'string' ? corpo.senha : null, nome: typeof corpo.nome === 'string' ? corpo.nome : null },
       { quemChama, origem: req.nextUrl.origin, ...portasSupabase(createAdminClient()) },
     );
     if (!resultado.ok) return responder({ ok: false, erro: resultado.erro }, resultado.status);

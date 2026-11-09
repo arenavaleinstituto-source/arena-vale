@@ -19,6 +19,7 @@ export function GestaoCoordenadores({ coordenadores, limite, donoId }: Props) {
   const id = useId();
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
+  const [nomeNovo, setNomeNovo] = useState('');
   const [novoLimite, setNovoLimite] = useState(String(limite));
   const [confirmarRemocao, setConfirmarRemocao] = useState<string | null>(null);
   const [escolhendoQuemSai, setEscolhendoQuemSai] = useState(false);
@@ -51,19 +52,21 @@ export function GestaoCoordenadores({ coordenadores, limite, donoId }: Props) {
   function convidar(e: FormEvent) {
     e.preventDefault();
     const alvo = email.trim();
+    if (!nomeNovo.trim()) return setMsg({ tipo: 'erro', texto: 'Informe o nome da pessoa.' });
     if (senha.length < 8) return setMsg({ tipo: 'erro', texto: 'A senha precisa ter pelo menos 8 caracteres.' });
     let jaTinhaConta = false;
     void rodar(async () => {
       const resp = await fetch('/api/convites', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: alvo, cargo: 'coordenador', senha }),
+        body: JSON.stringify({ email: alvo, cargo: 'coordenador', senha, nome: nomeNovo.trim() }),
       });
       const corpo = (await resp.json()) as { ok: boolean; erro?: string; jaTinhaConta?: boolean };
       if (!corpo.ok) return corpo.erro ?? 'Não foi possível cadastrar.';
       jaTinhaConta = corpo.jaTinhaConta === true;
       setEmail('');
       setSenha('');
+      setNomeNovo('');
       return null;
     }, '').then(() => {
       setMsg((m) =>
@@ -140,6 +143,16 @@ export function GestaoCoordenadores({ coordenadores, limite, donoId }: Props) {
         <h2 className="text-xl font-black uppercase text-white">Cadastrar coordenador</h2>
         <p className="mt-1 text-sm text-white/60">A pessoa entra pelo botão Entrar do site com este e-mail e a senha. Passe a senha a ela pelo WhatsApp.</p>
         <form onSubmit={convidar} className="mt-4 flex flex-wrap gap-3">
+          <label htmlFor={`${id}-nome`} className="sr-only">Nome do novo coordenador</label>
+          <input
+            id={`${id}-nome`}
+            type="text"
+            value={nomeNovo}
+            onChange={(e) => setNomeNovo(e.target.value)}
+            placeholder="Nome completo"
+            disabled={noLimite}
+            className="min-w-0 flex-1 rounded-2xl border border-white/10 bg-[#08080a] px-4 py-3 text-white focus:border-[#e50914] focus:outline-none"
+          />
           <label htmlFor={`${id}-email`} className="sr-only">E-mail do novo coordenador</label>
           <input
             id={`${id}-email`}

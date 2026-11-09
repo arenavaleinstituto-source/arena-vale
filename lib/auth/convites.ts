@@ -3,7 +3,7 @@ import type { Cargo } from './rotas';
 import { ROTULO_CARGO } from './mensagens';
 
 export type CargoConvite = 'coordenador' | 'moderador' | 'capitao';
-export type EntradaConvite = { email: string; cargo: CargoConvite; campeonatoId?: string | null; senha?: string | null };
+export type EntradaConvite = { email: string; cargo: CargoConvite; campeonatoId?: string | null; senha?: string | null; nome?: string | null };
 export type ResultadoConvite =
   | { ok: true; jaTinhaConta: boolean }
   | { ok: false; status: 400 | 403; erro: string };
@@ -11,9 +11,9 @@ export type ResultadoConvite =
 /** Operações de banco usadas pelo convite (injetadas para poder testar sem banco). */
 export type PortasConvite = {
   buscarPerfilPorEmail(email: string): Promise<{ id: string; role: string } | null>;
-  convidarPorEmail(email: string, redirectTo: string): Promise<string>;
+  convidarPorEmail(email: string, redirectTo: string, nome?: string | null): Promise<string>;
   /** Cria a conta já confirmada, com a senha definida pela coordenação. */
-  criarComSenha(email: string, senha: string): Promise<string>;
+  criarComSenha(email: string, senha: string, nome: string): Promise<string>;
   /** Retorna a mensagem de erro do banco, ou null se deu certo. */
   definirCargo(id: string, cargo: CargoConvite): Promise<string | null>;
   vincular(cargo: 'moderador' | 'capitao', id: string, campeonatoId: string): Promise<string | null>;
@@ -39,6 +39,7 @@ export async function convidar(entrada: EntradaConvite, deps: Deps): Promise<Res
   if (entrada.cargo !== 'coordenador' && !campeonatoId) return { ok: false, status: 400, erro: 'Escolha o campeonato.' };
   const senha = entrada.senha ?? null;
   if (senha !== null && senha.length < 8) return { ok: false, status: 400, erro: 'A senha precisa ter pelo menos 8 caracteres.' };
+  const nome = (entrada.nome ?? '').trim().replace(/\s+/g, ' ').slice(0, 120);
 
   const existente = await deps.buscarPerfilPorEmail(email);
   if (existente?.role === 'coordenador' || existente?.role === 'proprietario') {
@@ -50,7 +51,8 @@ export async function convidar(entrada: EntradaConvite, deps: Deps): Promise<Res
   }
 
   // Quem já tem conta mantém a própria senha: a coordenação nunca troca a senha de uma conta existente.
-  const id = existente?.id ?? (senha ? await deps.criarComSenha(email, senha) : await deps.convidarPorEmail(email, `${deps.origem}/criar-senha`));
+  if (!existente && senha && !nome) return { ok: false, status: 400, erro: 'Informe o nome da pessoa.' };
+  const id = existente?.id ?? (senha ? await deps.criarComSenha(email, senha, nome) : await deps.convidarPorEmail(email, `${deps.origem}/criar-senha`, nome || null));
 
   if (existente?.role !== entrada.cargo) {
     const erroCargo = await deps.definirCargo(id, entrada.cargo);
@@ -72,13 +74,14 @@ export function portasSupabase(admin: SupabaseClient): PortasConvite {
       if (error) throw new Error(error.message);
       return (data as { id: string; role: string }[] | null)?.[0] ?? null;
     },
-    async convidarPorEmail(email, redirectTo) {
-      const { data, error } = await admin.auth.admin.inviteUserByEmail(email, { redirectTo });
+    async convidarPorEmail(email, redirectTo, nome) {
+      const { data, error } = await admin.auth.admin.inviteUserByEmail(email, { redirectTo, data: nome ? { full_name: nome } : undefined });
       if (error || !data.user) throw new Error(error?.message ?? 'Não foi possível enviar o convite.');
       return data.user.id;
     },
-    async criarComSenha(email, senha) {
-      const { data, error } = await admin.auth.admin.createUser({ email, password: senha, email_confirm: true });
+    async criarComSenha(email, senha, nome) {
+      // O nome vai nos metadados: o gatilho handle_new_user (0001) grava em profiles.full_name.
+      const { data, error } = await admin.auth.admin.createUser({ email, password: senha, email_confirm: true, user_metadata: { full_name: nome } });
       if (error || !data.user) throw new Error(error?.message ?? 'Não foi possível criar a conta.');
       return data.user.id;
     },

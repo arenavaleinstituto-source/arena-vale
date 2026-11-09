@@ -38,18 +38,20 @@ describe('GestaoCoordenadores', () => {
   it('cadastra coordenador com e-mail e senha em /api/convites', async () => {
     render(<GestaoCoordenadores coordenadores={[DONO]} limite={3} donoId="dono" />);
     const u = userEvent.setup();
+    await u.type(screen.getByLabelText('Nome do novo coordenador'), 'Novo Coordenador');
     await u.type(screen.getByLabelText('E-mail do novo coordenador'), 'novo@exemplo.com');
     await u.type(screen.getByLabelText('Senha do novo coordenador'), 'senha-forte-1');
     await u.click(screen.getByRole('button', { name: 'Cadastrar coordenador' }));
     await waitFor(() => expect(fetch).toHaveBeenCalledWith('/api/convites', expect.objectContaining({ method: 'POST' })));
     const corpo = JSON.parse((fetch as unknown as ReturnType<typeof vi.fn>).mock.calls[0][1].body);
-    expect(corpo).toEqual({ email: 'novo@exemplo.com', cargo: 'coordenador', senha: 'senha-forte-1' });
+    expect(corpo).toEqual({ email: 'novo@exemplo.com', cargo: 'coordenador', senha: 'senha-forte-1', nome: 'Novo Coordenador' });
     expect(await screen.findByText('Pronto: novo@exemplo.com já pode entrar com o e-mail e a senha cadastrada.')).toBeInTheDocument();
   });
 
   it('senha curta nem chega ao servidor', async () => {
     render(<GestaoCoordenadores coordenadores={[DONO]} limite={3} donoId="dono" />);
     const u = userEvent.setup();
+    await u.type(screen.getByLabelText('Nome do novo coordenador'), 'Novo');
     await u.type(screen.getByLabelText('E-mail do novo coordenador'), 'novo@exemplo.com');
     await u.type(screen.getByLabelText('Senha do novo coordenador'), '123');
     await u.click(screen.getByRole('button', { name: 'Cadastrar coordenador' }));

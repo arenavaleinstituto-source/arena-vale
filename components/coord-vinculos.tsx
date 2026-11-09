@@ -36,6 +36,7 @@ export function CoordVinculos({ cargo }: { cargo: Cargo }) {
   const [campeonatoId, setCampeonatoId] = useState('');
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
+  const [nomePessoa, setNomePessoa] = useState('');
   const [vinculos, setVinculos] = useState<Vinculo[]>([]);
   const [msg, setMsg] = useState<{ tipo: 'ok' | 'erro'; texto: string } | null>(null);
   const [ocupado, setOcupado] = useState(false);
@@ -88,6 +89,10 @@ export function CoordVinculos({ cargo }: { cargo: Cargo }) {
   async function convidar(e: FormEvent) {
     e.preventDefault();
     setMsg(null);
+    if (!nomePessoa.trim()) {
+      setMsg({ tipo: 'erro', texto: 'Informe o nome da pessoa.' });
+      return;
+    }
     if (senha.length < 8) {
       setMsg({ tipo: 'erro', texto: 'A senha precisa ter pelo menos 8 caracteres.' });
       return;
@@ -98,7 +103,7 @@ export function CoordVinculos({ cargo }: { cargo: Cargo }) {
       const resp = await fetch('/api/convites', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: alvo, cargo, campeonatoId, senha }),
+        body: JSON.stringify({ email: alvo, cargo, campeonatoId, senha, nome: nomePessoa.trim() }),
       });
       const corpo = (await resp.json()) as { ok: boolean; erro?: string; jaTinhaConta?: boolean };
       if (!corpo.ok) setMsg({ tipo: 'erro', texto: corpo.erro ?? 'Não foi possível cadastrar.' });
@@ -111,6 +116,7 @@ export function CoordVinculos({ cargo }: { cargo: Cargo }) {
         });
         setEmail('');
         setSenha('');
+        setNomePessoa('');
         await carregar();
       }
     } catch {
@@ -141,12 +147,16 @@ export function CoordVinculos({ cargo }: { cargo: Cargo }) {
         <p className="mt-1 text-sm text-[var(--text-dim)]">A pessoa entra pelo botão Entrar do site com este e-mail e a senha. Passe a senha a ela pelo WhatsApp.</p>
       </div>
 
-      <form onSubmit={convidar} className="grid gap-3 md:grid-cols-[1fr_1fr_1fr_auto] md:items-end">
+      <form onSubmit={convidar} className="grid gap-3 md:grid-cols-2 xl:grid-cols-[1fr_1fr_1fr_1fr_auto] xl:items-end">
         <label htmlFor={`${id}-camp`} className="grid gap-1.5 text-sm">
           Campeonato
           <select id={`${id}-camp`} value={campeonatoId} onChange={(e) => setCampeonatoId(e.target.value)} className="input">
             {campeonatos.map((c) => <option key={c.id} value={c.id}>{c.nome} ({c.ano})</option>)}
           </select>
+        </label>
+        <label htmlFor={`${id}-nome`} className="grid gap-1.5 text-sm">
+          Nome completo
+          <input id={`${id}-nome`} type="text" value={nomePessoa} onChange={(e) => setNomePessoa(e.target.value)} className="input" placeholder="Nome de quem vai usar a conta" />
         </label>
         <label htmlFor={`${id}-email`} className="grid gap-1.5 text-sm">
           E-mail

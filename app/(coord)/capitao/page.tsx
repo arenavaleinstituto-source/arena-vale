@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { lerCargo } from '@/lib/auth/cargo';
 import { CabecalhoEquipe } from '@/components/painel/CabecalhoEquipe';
 import { MinhaEquipe, type ConviteCapitao } from '@/components/capitao/MinhaEquipe';
+import { COLUNAS_JOGADOR } from '@/lib/atletas/colunas';
 
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Minha equipe | ARENA VALE', robots: { index: false, follow: false } };
@@ -25,7 +26,7 @@ export default async function CapitaoPage() {
       .map(async (v) => {
         const time = (v.times as { id: string; nome: string } | null) ?? null;
         const { data: jogadores } = time
-          ? await supabase.from('jogadores').select('*').eq('time_id', time.id).order('nome')
+          ? await supabase.from('jogadores').select(COLUNAS_JOGADOR).eq('time_id', time.id).order('nome')
           : { data: [] };
         return {
           campeonatoId: v.campeonato_id as string,
