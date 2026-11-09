@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Metadata } from 'next';
 import './globals.css';
+import { SiteHeader } from '@/components/SiteHeader';
 
 /**
  * METADADOS GLOBAIS
@@ -54,7 +55,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-BR">
-      <body className="bg-[#070b13] text-white font-sans antialiased selection:bg-[#e50914] selection:text-white overflow-x-hidden">
+      <body className="bg-[#070b13] text-white font-sans antialiased selection:bg-[#e50914] selection:text-white overflow-x-clip">
+        <SiteHeader />
         {children}
       </body>
     </html>

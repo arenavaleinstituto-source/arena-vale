@@ -16,7 +16,7 @@ import {
 } from '@/lib/content';
 
 /**
- * PAINEL — Publicar Notícias & Comunicados
+ * PAINEL — Publicar Notícias
  *
  * Usa o mesmo padrão editorial do site público:
  *   • o vocabulário vem de `lib/content/vocabulario` (categorias e selos
@@ -203,7 +203,7 @@ export default function NoticiasPage() {
         ← Voltar ao Centro de Comando
       </Link>
 
-      <h1 className="text-2xl font-bold mt-4 uppercase">Publicar Notícias & Comunicados</h1>
+      <h1 className="text-2xl font-bold mt-4 uppercase">Publicar Notícias</h1>
       <p className="text-sm text-slate-400 mb-6">
         Lance notas oficiais, convocações de arbitragem e novidades do portal. Tudo que você publicar
         aqui aparece no mural de comunicados e na Home, no mesmo formato.

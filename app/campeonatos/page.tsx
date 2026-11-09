@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
-import { LogoSecreto } from '@/components/auth/LogoSecreto';
 
 interface Campeonato {
   id: string;
@@ -59,21 +58,6 @@ export default function PublicCampeonatosPage() {
     <div className="min-h-screen bg-[#07080c] text-white selection:bg-[#d4af37] selection:text-[#07080c]">
       
       {/* CABEÇALHO (Idêntico ao da Home e Notícias) */}
-      <header className="sticky top-0 z-40 border-b border-white/[0.08] bg-[#07080c]/90 backdrop-blur-xl shadow-[0_10px_30px_rgba(0,0,0,0.6)]">
-        <div className="mx-auto flex max-w-[1750px] items-center justify-between px-4 sm:px-6 lg:px-12 py-3 sm:py-4">
-          <div className="flex items-center shrink-0">
-            <LogoSecreto className="group relative flex items-center rounded-2xl p-1 transition duration-300 hover:scale-[1.02]">
-              <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-[#d4af37]/30 via-white/10 to-transparent opacity-0 blur-lg transition duration-500 group-hover:opacity-100" />
-              <img src="/logo.png" alt="Arena Vale Oficial" className="relative h-12 sm:h-16 w-auto object-contain rounded-xl mix-blend-lighten contrast-110 drop-shadow-[0_0_20px_rgba(212,175,55,0.3)]" />
-            </LogoSecreto>
-          </div>
-          <div className="flex items-center gap-4 shrink-0">
-            <Link href="/" className="inline-flex items-center gap-2.5 rounded-full border border-white/15 bg-white/[0.04] px-6 py-3 text-xs font-black uppercase tracking-[0.15em] text-white transition hover:border-[#d4af37] hover:bg-white/[0.08] whitespace-nowrap">
-              ← VOLTAR À HOME
-            </Link>
-          </div>
-        </div>
-      </header>
 
       {/* TÍTULO DA PÁGINA */}
       <section className="relative mx-auto max-w-7xl px-4 sm:px-6 pt-16 pb-8">

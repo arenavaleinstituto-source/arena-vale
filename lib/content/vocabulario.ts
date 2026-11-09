@@ -110,7 +110,7 @@ export const FILTROS_MODALIDADE = ['TODOS', ...MODALIDADES] as const;
  */
 export function rotuloCategoria(categoria: string): string {
   const mapa: Record<string, string> = {
-    'Comunicado Oficial': 'COMUNICADO',
+    'Comunicado Oficial': 'NOTÍCIA',
     Campeonatos: 'CAMPEONATOS',
     Arbitragem: 'ARBITRAGEM',
     'TV Arena Vale': 'TV ARENA VALE',

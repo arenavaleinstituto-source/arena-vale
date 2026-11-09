@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
-import { LogoSecreto } from '@/components/auth/LogoSecreto';
 import CartaoComunicado from '@/components/CartaoComunicado';
 import CartaoDestaque from '@/components/CartaoDestaque';
 import {
@@ -18,8 +17,6 @@ import {
 } from '@/lib/content';
 
 export default function HomePage() {
-  const [menuMobileAberto, setMenuMobileAberto] = useState(false);
-  const [menuPainelAberto, setMenuPainelAberto] = useState(false);
   const [campeonatoSelecionado, setCampeonatoSelecionado] = useState(0);
 
   const [noticiasPublicas, setNoticiasPublicas] = useState<Noticia[]>(NOTICIAS_PADRAO);
@@ -116,71 +113,8 @@ export default function HomePage() {
 
   return (
     <>
-      <div id="topo" className="min-h-screen w-full max-w-full overflow-x-hidden bg-[#050505] text-white selection:bg-[#e50914] selection:text-white font-sans">
-        <header className="sticky top-0 z-40 border-b border-white/[0.08] bg-[#050505]/90 backdrop-blur-xl shadow-[0_10px_30px_rgba(0,0,0,0.6)]">
-          <div className="mx-auto flex w-full max-w-[1750px] min-w-0 items-center justify-between gap-3 px-4 sm:px-6 lg:px-10 2xl:px-12 py-2.5 sm:py-3">
-            <div className="flex items-center shrink-0">
-              <LogoSecreto className="group relative flex max-w-[170px] items-center rounded-2xl p-1 transition duration-300 hover:scale-[1.02] sm:max-w-[190px]" imgClassName="relative h-11 sm:h-14 xl:h-16 w-auto max-w-full object-contain rounded-xl mix-blend-lighten contrast-110 drop-shadow-[0_0_20px_rgba(229,9,20,0.3)]" />
-            </div>
-            <nav className="hidden xl:flex min-w-0 flex-1 items-center justify-center gap-3 2xl:gap-5 text-[11px] 2xl:text-xs font-black uppercase tracking-[0.08em] text-[#b8c0d4]">
-              <Link href="#inicio" className="text-white hover:text-[#e50914] whitespace-nowrap transition">Início</Link>
-              <Link href="/tv" className="flex items-center gap-2 text-white hover:text-[#e50914] whitespace-nowrap transition"><span className="h-2.5 w-2.5 rounded-full bg-[#e50914] animate-pulse shadow-[0_0_8px_#e50914] shrink-0" /> TV Arena Vale</Link>
-              <Link href="#noticias" className="hover:text-white whitespace-nowrap transition">Notícias</Link>
-              <Link href="/agenda" className="hover:text-white whitespace-nowrap transition">Agenda</Link>
-              <Link href="#campeonatos" className="hover:text-white whitespace-nowrap transition">Campeonatos</Link>
-              <Link href="/atletasdestaques" className="hover:text-white whitespace-nowrap transition">Atletas Destaque</Link>
-              <Link href="/projetosocial" className="hover:text-white whitespace-nowrap transition">Projeto Social</Link>
-            </nav>
-            <div className="hidden xl:flex items-center gap-2 shrink-0">
-              <a href="https://wa.me/5547988444404" target="_blank" rel="noreferrer" className="rounded-full bg-gradient-to-r from-[#e50914] to-[#ff1e27] px-5 py-2.5 text-[11px] font-black uppercase tracking-[0.12em] text-white shadow-lg shadow-[#e50914]/30 transition hover:scale-105 hover:shadow-[#e50914]/50 whitespace-nowrap">Anuncie</a>
-              <div className="relative">
-                <button type="button" onClick={() => setMenuPainelAberto(!menuPainelAberto)} className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-4 py-2.5 text-[11px] font-black uppercase tracking-[0.12em] text-white transition hover:border-[#e50914] hover:bg-white/[0.08] whitespace-nowrap"><span>Painel</span> <span className="text-[10px] text-[#e50914]">▼</span></button>
-                {menuPainelAberto && (
-                  <div className="absolute right-0 mt-3 w-56 rounded-2xl border border-white/15 bg-[#111111]/95 p-2 shadow-2xl backdrop-blur-2xl z-50" onMouseLeave={() => setMenuPainelAberto(false)}>
-                    <Link href="/login" onClick={() => setMenuPainelAberto(false)} className="flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-bold text-[#cad0e0] hover:bg-white/5 hover:text-white transition group">
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/20 bg-[#050505] p-1 shadow-md group-hover:border-[#e50914]"><img src="/logo.png" alt="Acesso" className="h-full w-full object-contain mix-blend-lighten" /></div>
-                      <div className="flex flex-col"><span className="font-black text-white group-hover:text-[#e50914] transition text-xs uppercase tracking-wider">Acessar Portal</span><span className="text-[10px] text-gray-400 font-medium">Gestão & Inscrições</span></div>
-                    </Link>
-                  </div>
-                )}
-              </div>
-            </div>
-            <div className="flex xl:hidden items-center gap-2">
-              <div className="relative">
-                <button type="button" onClick={() => setMenuPainelAberto(!menuPainelAberto)} className="inline-flex items-center gap-1.5 rounded-full border border-[#e50914]/50 bg-[#e50914]/10 px-3.5 py-2.5 text-[10px] font-black uppercase tracking-wider text-white whitespace-nowrap"><span>Painel</span><span className="text-[#e50914]">▼</span></button>
-                {menuPainelAberto && <div className="absolute right-0 mt-3 w-56 rounded-2xl border border-white/15 bg-[#111111]/95 p-2 shadow-2xl backdrop-blur-2xl z-50"><Link href="/login" onClick={() => setMenuPainelAberto(false)} className="block rounded-xl px-4 py-3 text-xs font-black uppercase tracking-wider text-white hover:bg-white/10">Acessar Portal →</Link></div>}
-              </div>
-              <a href="https://wa.me/5547988444404" target="_blank" rel="noreferrer" className="rounded-full bg-[#e50914] px-4 py-2 text-[11px] font-black uppercase tracking-wider text-white shadow-lg shadow-[#e50914]/30 whitespace-nowrap">Anuncie</a>
-              <button type="button" onClick={() => setMenuMobileAberto(true)} aria-label="Abrir Menu" className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/15 bg-white/5 text-white active:scale-95 transition-transform"><div className="flex flex-col gap-1.5 w-5 pointer-events-none"><span className="h-0.5 w-full bg-white rounded-full"></span><span className="h-0.5 w-full bg-[#e50914] rounded-full"></span><span className="h-0.5 w-full bg-white rounded-full"></span></div></button>
-            </div>
-          </div>
-        </header>
+      <div id="topo" className="min-h-screen w-full max-w-full overflow-x-clip bg-[#050505] text-white selection:bg-[#e50914] selection:text-white font-sans">
 
-        {menuMobileAberto && (
-          <div className="xl:hidden fixed inset-0 z-[9999] bg-[#050505]/98 backdrop-blur-2xl flex flex-col justify-between p-6 overflow-y-auto">
-            <div className="space-y-6">
-              <div className="flex items-center justify-between pb-4 border-b border-white/10">
-                <img src="/logo.png" alt="Arena Vale" className="h-14 w-auto object-contain rounded-lg mix-blend-lighten" />
-                <button type="button" onClick={() => setMenuMobileAberto(false)} aria-label="Fechar Menu" className="flex h-11 w-11 items-center justify-center rounded-xl border border-white/20 bg-white/10 text-white text-2xl font-bold active:scale-95 transition-transform">✕</button>
-              </div>
-              <p className="text-xs font-black uppercase tracking-widest text-[#e50914]">Navegação Oficial</p>
-              <nav className="flex flex-col gap-3 text-lg font-black uppercase tracking-wide">
-                <Link href="#inicio" onClick={() => setMenuMobileAberto(false)} className="py-2.5 text-white border-b border-white/5">Início</Link>
-                <Link href="/tv" onClick={() => setMenuMobileAberto(false)} className="py-2.5 text-white border-b border-white/5 flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-[#e50914] animate-pulse" /> TV Arena Vale</Link>
-                <Link href="#app" onClick={() => setMenuMobileAberto(false)} className="py-2.5 text-[#e50914] border-b border-white/5 block xl:hidden">BAIXAR APP</Link>
-                <Link href="#noticias" onClick={() => setMenuMobileAberto(false)} className="py-2.5 text-[#cad0e0] border-b border-white/5">Notícias</Link>
-                <Link href="/agenda" onClick={() => setMenuMobileAberto(false)} className="py-2.5 text-[#cad0e0] border-b border-white/5">Agenda</Link>
-                <Link href="#campeonatos" onClick={() => setMenuMobileAberto(false)} className="py-2.5 text-[#cad0e0] border-b border-white/5">Campeonatos</Link>
-                <Link href="/atletasdestaques" onClick={() => setMenuMobileAberto(false)} className="py-2.5 text-[#cad0e0] border-b border-white/5">Atletas Destaque</Link>
-                <Link href="/projetosocial" onClick={() => setMenuMobileAberto(false)} className="py-2.5 text-[#cad0e0] border-b border-white/5">Projeto Social</Link>
-              </nav>
-            </div>
-            <div className="pt-6 mt-6 border-t border-white/10 space-y-4">
-              <Link href="/login" onClick={() => setMenuMobileAberto(false)} className="block text-center w-full rounded-full border border-white/30 bg-[#050505] py-4 text-xs font-black uppercase tracking-wider text-white shadow-xl mt-2">Acesso ao Portal 🔒</Link>
-              <a href="https://wa.me/5547988444404" target="_blank" rel="noreferrer" className="block text-center w-full rounded-full bg-[#e50914] py-4 text-xs font-black uppercase tracking-wider text-white shadow-xl shadow-[#e50914]/30 mt-2">Falar no WhatsApp Oficial ↗</a>
-            </div>
-          </div>
-        )}
 
         <section id="inicio" className="relative mx-auto max-w-7xl px-4 sm:px-6 pt-6 sm:pt-8 pb-12">
           <div className="relative min-h-[520px] sm:min-h-[600px] overflow-hidden rounded-[2rem] sm:rounded-[2.5rem] border border-white/10 bg-[#111111] shadow-2xl flex flex-col justify-end p-6 sm:p-14">
@@ -202,12 +136,12 @@ export default function HomePage() {
             <div className="flex flex-wrap items-center justify-between gap-4 mb-10">
               <div>
                 <p className="text-xs font-black tracking-[0.25em] text-[#e50914] uppercase">TV ARENA VALE · BROADCAST</p>
-                <h2 className="mt-2 text-3xl sm:text-4xl font-black italic uppercase tracking-tighter text-white">SINAL AO VIVO & <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#e50914] to-[#ff4b52]">VÍDEOS</span></h2>
+                <h2 className="mt-2 text-3xl sm:text-4xl font-black italic uppercase tracking-tighter text-white">TRANSMISSÃO AO VIVO & <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#e50914] to-[#ff4b52]">VÍDEOS</span></h2>
               </div>
               <a href="https://www.youtube.com/@TVArenaVale" target="_blank" rel="noreferrer" className="flex items-center gap-2 rounded-full border border-[#e50914]/60 bg-[#e50914]/10 px-6 py-2.5 text-xs font-black uppercase tracking-wider text-white hover:bg-[#e50914] transition shadow-lg shadow-[#e50914]/15"><span>▶</span> Canal YouTube ↗</a>
             </div>
             <div className="mb-10">
-              <div className="flex items-center justify-between mb-3"><span className="inline-flex items-center gap-2 rounded-full bg-[#e50914]/20 border border-[#e50914]/40 px-3.5 py-1 text-[11px] font-black uppercase tracking-wider text-white"><span className="h-2.5 w-2.5 rounded-full bg-[#e50914] animate-ping" /> SINAL AO VIVO</span></div>
+              <div className="flex items-center justify-between mb-3"><span className="inline-flex items-center gap-2 rounded-full bg-[#e50914]/20 border border-[#e50914]/40 px-3.5 py-1 text-[11px] font-black uppercase tracking-wider text-white"><span className="h-2.5 w-2.5 rounded-full bg-[#e50914] animate-ping" /> TRANSMISSÃO AO VIVO</span></div>
               <div className="relative mx-auto max-w-4xl aspect-video overflow-hidden rounded-3xl border border-white/10 bg-[#050505] shadow-2xl flex flex-col items-center justify-center p-6 text-center group">
                 <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/50 to-transparent" />
                 <div className="relative z-10 flex flex-col items-center max-w-md">
@@ -260,7 +194,7 @@ export default function HomePage() {
             </div>
             <div className="flex items-center gap-3 self-start sm:self-end">
               <Link href="/noticias" className="rounded-full border border-white/20 bg-white/5 px-6 py-2.5 text-xs font-black uppercase tracking-wider text-white hover:bg-white/10 transition whitespace-nowrap">
-                Ver Todos os Comunicados ↗
+                Ver todas as notícias ↗
               </Link>
               <span className="text-[11px] font-black uppercase tracking-widest text-gray-400">EDIÇÃO 2026</span>
               <span className="h-2 w-2 rounded-full bg-[#e50914]" />

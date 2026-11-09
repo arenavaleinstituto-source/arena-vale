@@ -4,7 +4,6 @@ import React, { Suspense, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
-import { LogoSecreto } from '@/components/auth/LogoSecreto';
 
 /**
  * PORTAL DE ACESSO
@@ -95,19 +94,8 @@ function FormularioLogin() {
   }
 
   return (
-    <div className="min-h-screen bg-[#07080c] text-white selection:bg-[#e50914] selection:text-white flex flex-col justify-between font-sans overflow-x-hidden">
+    <div className="min-h-screen bg-[#07080c] text-white selection:bg-[#e50914] selection:text-white flex flex-col justify-between font-sans overflow-x-clip">
       {/* CABEÇALHO */}
-      <header className="border-b border-white/[0.08] bg-[#07080c]/90 backdrop-blur-xl sticky top-0 z-40">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <LogoSecreto className="flex items-center gap-3">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.png" alt="Arena Vale" className="h-10 w-auto object-contain rounded-lg mix-blend-lighten" />
-          </LogoSecreto>
-          <Link href="/" className="rounded-full border border-white/20 bg-white/5 px-6 py-2 text-xs font-black uppercase tracking-wider text-white hover:bg-white/10 transition">
-            ← Início
-          </Link>
-        </div>
-      </header>
 
       {/* CONTEÚDO */}
       <main className="mx-auto max-w-md w-full px-6 py-12 flex-grow">

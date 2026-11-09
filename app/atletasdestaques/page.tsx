@@ -7,7 +7,6 @@ import {
   buscarDestaques,
   comFallbackDestaques,
 } from '@/lib/content';
-import { LogoSecreto } from '@/components/auth/LogoSecreto';
 
 /**
  * GALERIA OFICIAL DE ATLETAS EM DESTAQUE — /atletasdestaques
@@ -44,34 +43,8 @@ export default async function AtletasDestaquesPage() {
   const atletas = comFallbackDestaques(linhas);
 
   return (
-    <div className="min-h-screen bg-[#07080c] text-white selection:bg-[#e50914] selection:text-white flex flex-col justify-between font-sans overflow-x-hidden">
+    <div className="min-h-screen bg-[#07080c] text-white selection:bg-[#e50914] selection:text-white flex flex-col justify-between font-sans overflow-x-clip">
       {/* CABEÇALHO */}
-      <header className="border-b border-white/[0.08] bg-[#07080c]/90 backdrop-blur-xl sticky top-0 z-40">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <LogoSecreto className="flex items-center gap-3">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/logo.png"
-              alt="Arena Vale"
-              className="h-12 w-auto object-contain rounded-lg mix-blend-lighten"
-            />
-          </LogoSecreto>
-          <div className="flex items-center gap-3">
-            <Link
-              href="/noticias"
-              className="rounded-full border border-white/20 bg-white/5 px-5 py-2 text-xs font-black uppercase tracking-wider text-white hover:bg-white/10 transition"
-            >
-              Notícias
-            </Link>
-            <Link
-              href="/"
-              className="rounded-full border border-white/20 bg-white/5 px-6 py-2 text-xs font-black uppercase tracking-wider text-white hover:bg-white/10 transition"
-            >
-              ← Voltar ao Início
-            </Link>
-          </div>
-        </div>
-      </header>
 
       {/* CONTEÚDO PRINCIPAL */}
       <main className="mx-auto max-w-7xl w-full px-6 py-12 flex-grow space-y-10">

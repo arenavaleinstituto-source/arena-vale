@@ -10,7 +10,6 @@ import {
   mapearNoticia,
   NOTICIAS_PADRAO,
 } from '@/lib/content';
-import { LogoSecreto } from '@/components/auth/LogoSecreto';
 
 /**
  * LEITURA DE COMUNICADO — /noticias/[id]
@@ -35,7 +34,7 @@ export async function generateMetadata(props: { params: Promise<{ id: string }> 
     .maybeSingle();
 
   if (!data) {
-    return { title: 'Comunicado não encontrado | Arena Vale' };
+    return { title: 'Notícia não encontrada | Arena Vale' };
   }
 
   return {
@@ -82,13 +81,13 @@ export default async function ComunicadoDetalhePage(props: { params: Promise<{ i
         <p className="text-6xl font-black text-[#e50914] tracking-widest">404</p>
         <h1 className="text-xl font-black uppercase tracking-wider">Comunicado não encontrado</h1>
         <p className="text-sm text-gray-400 max-w-md">
-          Este comunicado pode ter sido despublicado pelo painel. Veja todos os comunicados oficiais.
+          Esta notícia pode ter sido despublicada pelo painel. Veja todas as notícias.
         </p>
         <Link
           href="/noticias"
           className="rounded-full bg-[#e50914] px-7 py-3 text-xs font-black uppercase tracking-widest text-white hover:bg-[#ff1e27] transition"
         >
-          VER TODOS OS COMUNICADOS
+          VER TODAS AS NOTÍCIAS
         </Link>
       </div>
     );
@@ -97,29 +96,6 @@ export default async function ComunicadoDetalhePage(props: { params: Promise<{ i
   return (
     <div className="min-h-screen bg-[#050505] text-white selection:bg-[#e50914] selection:text-white font-sans flex flex-col">
       {/* CABEÇALHO */}
-      <header className="sticky top-0 z-40 border-b border-white/[0.08] bg-[#050505]/90 backdrop-blur-xl shadow-2xl">
-        <div className="mx-auto flex max-w-[1750px] items-center justify-between px-4 sm:px-6 lg:px-12 py-3 sm:py-4">
-          <div className="flex items-center shrink-0">
-            <LogoSecreto className="group relative flex items-center rounded-2xl p-1 transition duration-300 hover:scale-[1.02]">
-              <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-[#e50914]/30 via-white/10 to-transparent opacity-0 blur-lg transition duration-500 group-hover:opacity-100" />
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/logo.png"
-                alt="Arena Vale Oficial"
-                className="relative h-12 sm:h-16 md:h-[80px] w-auto object-contain rounded-xl mix-blend-lighten contrast-110 drop-shadow-[0_0_20px_rgba(229,9,20,0.3)]"
-              />
-            </LogoSecreto>
-          </div>
-          <div className="flex items-center gap-4 shrink-0">
-            <Link
-              href="/noticias"
-              className="inline-flex items-center gap-2.5 rounded-full border border-white/15 bg-white/[0.04] px-6 py-3 text-xs font-black uppercase tracking-[0.15em] text-white transition hover:border-[#e50914] hover:bg-white/[0.08] whitespace-nowrap"
-            >
-              ← TODOS OS COMUNICADOS
-            </Link>
-          </div>
-        </div>
-      </header>
 
       {/* COMUNICADO */}
       <main className="mx-auto max-w-4xl w-full px-4 sm:px-6 py-14 flex-grow">
@@ -159,7 +135,7 @@ export default async function ComunicadoDetalhePage(props: { params: Promise<{ i
             <div className="flex items-center gap-2 mb-6">
               <span className="h-1 w-10 bg-[#e50914]" />
               <span className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400">
-                COMUNICADO OFICIAL
+                NOTÍCIA
               </span>
             </div>
 

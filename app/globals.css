@@ -47,3 +47,12 @@ html,
 body {
   overflow-x: hidden;
 }
+
+/* Títulos sempre em CAIXA ALTA (pedido do proprietário, 09/11/2026). */
+@layer base {
+  h1, h2, h3 { text-transform: uppercase; }
+}
+
+/* Âncoras da página inicial (/#noticias etc.) não ficam escondidas atrás do cabeçalho preso no topo. */
+section[id] { scroll-margin-top: 6rem; }
+html { scroll-behavior: smooth; }

@@ -51,7 +51,7 @@ export default function LinksPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#07080c] text-white selection:bg-[#e50914] selection:text-white flex flex-col justify-between font-sans px-6 py-12 overflow-x-hidden">
+    <div className="min-h-screen bg-[#07080c] text-white selection:bg-[#e50914] selection:text-white flex flex-col justify-between font-sans px-6 py-12 overflow-x-clip">
 
       {/* CONTEÚDO CENTRALIZADO */}
       <main className="mx-auto max-w-md w-full flex flex-col items-center space-y-8 my-auto">

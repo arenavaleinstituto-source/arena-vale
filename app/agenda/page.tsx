@@ -35,20 +35,9 @@ export default function AgendaPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#07080c] text-white selection:bg-[#e50914] selection:text-white flex flex-col justify-between font-sans overflow-x-hidden">
+    <div className="min-h-screen bg-[#07080c] text-white selection:bg-[#e50914] selection:text-white flex flex-col justify-between font-sans overflow-x-clip">
       
       {/* CABEÇALHO */}
-      <header className="border-b border-white/[0.08] bg-[#07080c]/90 backdrop-blur-xl sticky top-0 z-40">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
-          <Link href="/" className="flex items-center gap-3">
-            <span className="text-sm font-black uppercase tracking-widest text-white">ARENA VALE</span>
-            <span className="text-[10px] font-bold text-[#8a92a6] uppercase tracking-wider">| Agenda Oficial</span>
-          </Link>
-          <Link href="/" className="rounded-full border border-white/20 bg-white/5 px-5 py-2 text-xs font-black uppercase tracking-wider text-white hover:bg-white/10 transition">
-            ← Voltar ao Início
-          </Link>
-        </div>
-      </header>
 
       {/* CONTEÚDO PRINCIPAL */}
       <main className="mx-auto max-w-7xl w-full px-6 py-12 space-y-12">

@@ -1,7 +1,6 @@
 // Índice das súmulas digitais disponíveis (Server Component)
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
-import { LogoSecreto } from '@/components/auth/LogoSecreto';
 
 export const dynamic = 'force-dynamic';
 
@@ -34,23 +33,6 @@ export default async function SumulasIndexPage() {
 
   return (
     <main className="min-h-screen bg-[#050505] text-white font-sans">
-      <header className="border-b border-white/[0.08] bg-[#050505]/90 backdrop-blur-xl sticky top-0 z-40">
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
-          <LogoSecreto className="flex items-center gap-3">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo.png" alt="Arena Vale" className="h-10 w-auto object-contain rounded-lg mix-blend-lighten" />
-            <span className="text-sm font-black uppercase tracking-widest text-white">
-              SÚMULAS DIGITAIS
-            </span>
-          </LogoSecreto>
-          <Link
-            href="/"
-            className="rounded-full border border-white/20 bg-white/5 px-5 py-2 text-xs font-black uppercase tracking-wider text-white hover:bg-white/10 transition"
-          >
-            ← Voltar
-          </Link>
-        </div>
-      </header>
 
       <div className="mx-auto max-w-5xl w-full px-6 py-12 space-y-8">
         <section>

@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { createPublicClient } from '@/lib/supabase/server';
 import CartaoComunicado from '@/components/CartaoComunicado';
 import { buscarNoticias, comFallback } from '@/lib/content';
-import { LogoSecreto } from '@/components/auth/LogoSecreto';
 
 /**
  * MURAL DE COMUNICADOS OFICIAIS — /noticias
@@ -27,7 +26,7 @@ import { LogoSecreto } from '@/components/auth/LogoSecreto';
 export const revalidate = 60;
 
 export const metadata = {
-  title: 'Comunicados Oficiais | Arena Vale',
+  title: 'Notícias | Arena Vale',
   description:
     'Mural oficial de comunicados da Arena Vale: inscrições, convocações de arbitragem, coberturas e novidades do portal.',
   robots: {
@@ -44,29 +43,6 @@ export default async function PublicNoticiasPage() {
   return (
     <div className="min-h-screen bg-[#050505] text-white selection:bg-[#e50914] selection:text-white font-sans flex flex-col">
       {/* CABEÇALHO */}
-      <header className="sticky top-0 z-40 border-b border-white/[0.08] bg-[#050505]/90 backdrop-blur-xl shadow-2xl">
-        <div className="mx-auto flex max-w-[1750px] items-center justify-between px-4 sm:px-6 lg:px-12 py-3 sm:py-4">
-          <div className="flex items-center shrink-0">
-            <LogoSecreto className="group relative flex items-center rounded-2xl p-1 transition duration-300 hover:scale-[1.02]">
-              <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-[#e50914]/30 via-white/10 to-transparent opacity-0 blur-lg transition duration-500 group-hover:opacity-100" />
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/logo.png"
-                alt="Arena Vale Oficial"
-                className="relative h-12 sm:h-16 md:h-[80px] w-auto object-contain rounded-xl mix-blend-lighten contrast-110 drop-shadow-[0_0_20px_rgba(229,9,20,0.3)]"
-              />
-            </LogoSecreto>
-          </div>
-          <div className="flex items-center gap-4 shrink-0">
-            <Link
-              href="/"
-              className="inline-flex items-center gap-2.5 rounded-full border border-white/15 bg-white/[0.04] px-6 py-3 text-xs font-black uppercase tracking-[0.15em] text-white transition hover:border-[#e50914] hover:bg-white/[0.08] whitespace-nowrap"
-            >
-              ← VOLTAR À HOME
-            </Link>
-          </div>
-        </div>
-      </header>
 
       {/* TÍTULO DO MURAL */}
       <section className="relative mx-auto max-w-7xl px-4 sm:px-6 pt-16 pb-8">
@@ -79,9 +55,8 @@ export default async function PublicNoticiasPage() {
               </span>
             </div>
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-black italic uppercase tracking-tighter text-white leading-none">
-              COMUNICADOS{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#e50914] to-[#ff4b52]">
-                OFICIAIS
+                NOTÍCIAS
               </span>
             </h1>
           </div>
