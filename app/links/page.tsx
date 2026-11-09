@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Canais Oficiais | Arena Vale',
+  title: 'Canais Oficiais | ARENA VALE',
   robots: {
     index: true,
     follow: true,
@@ -61,7 +61,7 @@ export default function LinksPage() {
           <div className="inline-block p-1 rounded-2xl bg-gradient-to-b from-[#e50914] to-transparent shadow-2xl shadow-[#e50914]/30">
             <img
               src="/logo.png"
-              alt="Arena Vale"
+              alt="ARENA VALE"
               className="h-24 w-auto object-contain rounded-xl bg-[#0b0b0c] p-2"
             />
           </div>
@@ -104,10 +104,6 @@ export default function LinksPage() {
 
       </main>
 
-      {/* RODAPÉ */}
-      <footer className="mt-12 text-center text-[10px] text-[#71717a] uppercase tracking-wider">
-        © 2026 Arena Vale · Todos os direitos reservados.Todos os direitos reservados.
-      </footer>
     </div>
   );
 }

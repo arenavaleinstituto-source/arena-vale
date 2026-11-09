@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Termos de Uso | Arena Vale',
+  title: 'Termos de Uso | ARENA VALE',
   description: 'Termos de uso, regras de competição e condições de serviço da plataforma Arena Vale.',
 };
 
@@ -14,7 +14,7 @@ export default function TermosDeUsoPage() {
 
       {/* CONTEÚDO DOS TERMOS */}
       <main className="mx-auto max-w-4xl px-6 py-16 space-y-10">
-        <div className="border-b border-white/10 pb-8 text-center sm:text-left">
+        <div className="border-b border-white/10 pb-8 text-center flex flex-col items-center">
           <span className="inline-flex items-center gap-2 rounded-full border border-[#e50914]/50 bg-[#e50914]/15 px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-[#ff4b52] mb-4">DOCUMENTO OFICIAL</span>
           <h1 className="text-3xl sm:text-5xl font-black uppercase tracking-tight text-white mb-4">Termos de Uso</h1>
           <p className="text-xs font-mono text-[#a1a1aa]">Última atualização: 22 de outubro de 2026</p>

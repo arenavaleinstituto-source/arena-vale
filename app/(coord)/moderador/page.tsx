@@ -5,7 +5,7 @@ import { CabecalhoEquipe } from '@/components/painel/CabecalhoEquipe';
 import { ResultadosCampeonato, type CampeonatoDoModerador, type JogoDoModerador, type LinhaClassificacao } from '@/components/moderador/ResultadosCampeonato';
 
 export const dynamic = 'force-dynamic';
-export const metadata = { title: 'Resultados | Arena Vale', robots: { index: false, follow: false } };
+export const metadata = { title: 'Resultados | ARENA VALE', robots: { index: false, follow: false } };
 
 /** Painel do moderador: lança resultados só dos campeonatos ligados a ele (coordenação vê todos). */
 export default async function ModeradorPage() {

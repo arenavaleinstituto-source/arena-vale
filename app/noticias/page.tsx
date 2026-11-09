@@ -26,7 +26,7 @@ import { buscarNoticias, comFallback } from '@/lib/content';
 export const revalidate = 60;
 
 export const metadata = {
-  title: 'Notícias | Arena Vale',
+  title: 'Notícias | ARENA VALE',
   description:
     'Mural oficial de comunicados da Arena Vale: inscrições, convocações de arbitragem, coberturas e novidades do portal.',
   robots: {

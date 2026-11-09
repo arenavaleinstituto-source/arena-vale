@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { FormCriarSenha } from '@/components/auth/FormCriarSenha';
 
 export const metadata: Metadata = {
-  title: 'Criar sua senha | Arena Vale',
+  title: 'Criar sua senha | ARENA VALE',
   robots: { index: false, follow: false },
 };
 

@@ -34,7 +34,7 @@ export async function generateMetadata(props: { params: Promise<{ id: string }> 
     .maybeSingle();
 
   if (!data) {
-    return { title: 'Notícia não encontrada | Arena Vale' };
+    return { title: 'Notícia não encontrada | ARENA VALE' };
   }
 
   return {

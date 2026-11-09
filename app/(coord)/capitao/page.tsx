@@ -5,7 +5,7 @@ import { CabecalhoEquipe } from '@/components/painel/CabecalhoEquipe';
 import { MinhaEquipe, type ConviteCapitao } from '@/components/capitao/MinhaEquipe';
 
 export const dynamic = 'force-dynamic';
-export const metadata = { title: 'Minha equipe | Arena Vale', robots: { index: false, follow: false } };
+export const metadata = { title: 'Minha equipe | ARENA VALE', robots: { index: false, follow: false } };
 
 /** Painel do capitão: cadastra a própria equipe e o elenco em cada campeonato convidado. */
 export default async function CapitaoPage() {

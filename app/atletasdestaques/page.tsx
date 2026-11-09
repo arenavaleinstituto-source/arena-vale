@@ -28,7 +28,7 @@ import {
 export const revalidate = 60;
 
 export const metadata = {
-  title: 'Atletas em Destaque | Arena Vale',
+  title: 'Atletas em Destaque | ARENA VALE',
   description:
     'Os talentos, artilheiros e protagonistas das competições do ecossistema Arena Vale.',
   robots: {
@@ -48,7 +48,7 @@ export default async function AtletasDestaquesPage() {
 
       {/* CONTEÚDO PRINCIPAL */}
       <main className="mx-auto max-w-7xl w-full px-6 py-12 flex-grow space-y-10">
-        <div className="text-center sm:text-left border-b border-white/10 pb-8">
+        <div className="text-center flex flex-col items-center border-b border-white/10 pb-8">
           <span className="inline-block rounded-full bg-[#e50914]/15 border border-[#e50914]/30 px-3.5 py-1 text-[10px] font-black uppercase tracking-[0.2em] text-[#ff2a35] mb-3">
             GALERIA OFICIAL · 2026
           </span>
@@ -63,10 +63,6 @@ export default async function AtletasDestaquesPage() {
         <GaleriaDestaques destaques={atletas} />
       </main>
 
-      {/* RODAPÉ */}
-      <footer className="border-t border-white/10 bg-[#0b0b0c] py-6 text-center text-xs text-[#71717a]">
-        © 2026 Arena Vale · Todos os direitos reservados.
-      </footer>
     </div>
   );
 }

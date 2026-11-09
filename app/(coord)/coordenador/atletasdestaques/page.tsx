@@ -3,7 +3,7 @@ import Link from 'next/link';
 import GestaoAtletasClient from './gestao-atletas-client';
 
 export const metadata = {
-  title: 'Atletas em Destaque | Arena Vale',
+  title: 'Atletas em Destaque | ARENA VALE',
   description: 'Gestão editorial e aprovação de atletas da Arena Vale'
 };
 

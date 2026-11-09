@@ -5,7 +5,7 @@ import { lerCargo } from '@/lib/auth/cargo';
 import { GestaoCoordenadores, type Coordenador } from '@/components/proprietario/GestaoCoordenadores';
 
 export const dynamic = 'force-dynamic';
-export const metadata = { title: 'Arena Vale', robots: { index: false, follow: false } };
+export const metadata = { title: 'ARENA VALE', robots: { index: false, follow: false } };
 
 /**
  * Área escondida do proprietário (aberta pelo toque triplo no logo).

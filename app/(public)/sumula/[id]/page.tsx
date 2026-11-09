@@ -238,9 +238,7 @@ export default async function SumulaPage(props: { params: Promise<{ id: string }
         )}
       </div>
 
-      <footer className="border-t border-white/10 bg-[#050505] px-6 py-8 text-center text-xs text-[#71717a]">
-        © 2026 Arena Vale · Súmula digital oficial · CNPJ 40.694.741/0001-34
-      </footer>
+      
     </main>
   );
 }

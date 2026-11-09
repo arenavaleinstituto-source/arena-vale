@@ -14,7 +14,7 @@ export default function PatrocinioPage() {
         {/* APRESENTAÇÃO */}
         <div className="text-center max-w-4xl mx-auto space-y-4">
           <span className="inline-flex items-center gap-2 rounded-full border border-[#e50914]/40 bg-[#e50914]/10 px-4 py-1.5 text-xs font-black uppercase tracking-[0.2em] text-[#ff3b44]">OPORTUNIDADE COMERCIAL EXCLUSIVA</span>
-          <h1 className="text-3xl sm:text-5xl md:text-6xl font-black italic uppercase tracking-tight text-white leading-tight">
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-black uppercase tracking-tight text-white leading-tight">
             Por que patrocinar a <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#e50914] via-[#e50914] to-[#e50914]">Arena Vale</span>
           </h1>
           <p className="text-sm sm:text-base text-[#d4d4d8] leading-relaxed uppercase pt-2">
@@ -63,20 +63,20 @@ export default function PatrocinioPage() {
           </div>
 
           {/* Cota Institucional */}
-          <div className="flex flex-col justify-between rounded-3xl border border-emerald-500/40 bg-gradient-to-b from-emerald-500/10 via-[#141417] to-[#0b0b0c] p-8 shadow-2xl relative overflow-hidden group hover:border-emerald-400 transition">
+          <div className="flex flex-col justify-between rounded-3xl border border-[#e50914]/40 bg-gradient-to-b from-[#e50914]/10 via-[#141417] to-[#0b0b0c] p-8 shadow-2xl relative overflow-hidden group hover:border-[#ff3b44] transition">
             <div>
               <h3 className="text-2xl font-black uppercase text-white tracking-wider mb-2">Cota Institucional</h3>
-              <p className="text-xs font-bold text-emerald-400 uppercase tracking-widest mb-6">Parceiros de Apoio ao Desporto</p>
+              <p className="text-xs font-bold text-[#ff3b44] uppercase tracking-widest mb-6">Parceiros de Apoio ao Esporte</p>
               <p className="text-xs sm:text-sm text-[#c3c3cb] leading-relaxed mb-6 uppercase">
                 Para entidades, federações e parceiros de apoio ao esporte regional. Reconhecimento como parceiro institucional oficial da Arena Vale.
               </p>
               <ul className="space-y-2.5 text-xs text-[#d4d4d8] mb-8">
-                <li className="flex items-start gap-2"><span className="text-emerald-400 font-bold">✓</span> Logo fixa na seção de parceiros do site</li>
-                <li className="flex items-start gap-2"><span className="text-emerald-400 font-bold">✓</span> Associação ao Projeto Social Arena Vale</li>
-                <li className="flex items-start gap-2"><span className="text-emerald-400 font-bold">✓</span> Menção em releases e materiais institucionais</li>
+                <li className="flex items-start gap-2"><span className="text-[#ff3b44] font-bold">✓</span> Logo fixa na seção de parceiros do site</li>
+                <li className="flex items-start gap-2"><span className="text-[#ff3b44] font-bold">✓</span> Associação ao Projeto Social Arena Vale</li>
+                <li className="flex items-start gap-2"><span className="text-[#ff3b44] font-bold">✓</span> Menção em releases e materiais institucionais</li>
               </ul>
             </div>
-            <a href="https://wa.me/5547988444404?text=Olá,%20tenho%20interesse%20na%20Cota%20Institucional%20da%20Arena%20Vale!" target="_blank" rel="noreferrer" className="w-full text-center rounded-full border border-emerald-500/40 bg-emerald-500/15 py-3 text-xs font-black uppercase tracking-widest text-emerald-300 hover:bg-emerald-500 hover:text-black transition">Garantir Cota Institucional ↗</a>
+            <a href="https://wa.me/5547988444404?text=Olá,%20tenho%20interesse%20na%20Cota%20Institucional%20da%20Arena%20Vale!" target="_blank" rel="noreferrer" className="w-full text-center rounded-full border border-[#e50914]/40 bg-[#e50914]/15 py-3 text-xs font-black uppercase tracking-widest text-[#ff3b44] hover:bg-[#e50914] hover:text-black transition">Garantir Cota Institucional ↗</a>
           </div>
 
         </div>
@@ -87,7 +87,7 @@ export default function PatrocinioPage() {
           <p className="text-xs sm:text-sm text-[#a1a1aa] uppercase leading-relaxed max-w-2xl mx-auto">
             Todo interesse em patrocínio é direcionado para contato direto via WhatsApp, onde a equipe Arena Vale apresenta valores atualizados e disponibilidade de cada cota por temporada.
           </p>
-          <a href="https://wa.me/5547988444404?text=Olá,%20quero%20conversar%20sobre%20patrocínio%20na%20Arena%20Vale!" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-emerald-600 to-emerald-500 px-10 py-4 text-xs font-black uppercase tracking-widest text-white hover:scale-105 transition shadow-lg shadow-emerald-600/30">
+          <a href="https://wa.me/5547988444404?text=Olá,%20quero%20conversar%20sobre%20patrocínio%20na%20Arena%20Vale!" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#e50914] to-[#e50914] px-10 py-4 text-xs font-black uppercase tracking-widest text-white hover:scale-105 transition shadow-lg shadow-[#e50914]/30">
             💬 WhatsApp Patrocínios: (47) 98844-4404 ↗
           </a>
         </div>

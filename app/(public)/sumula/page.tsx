@@ -32,18 +32,18 @@ export default async function SumulasIndexPage() {
   const lista = (jogos ?? []) as any[];
 
   return (
-    <main className="min-h-screen bg-[#050505] text-white font-sans">
+    <main className="min-h-screen bg-[#0b0b0c] text-white font-sans">
 
       <div className="mx-auto max-w-5xl w-full px-6 py-12 space-y-8">
         <section>
-          <div className="mb-8 border-b border-white/10 pb-6">
+          <div className="mb-8 flex flex-col items-center border-b border-white/10 pb-6 text-center">
             <div className="inline-flex items-center gap-2 mb-2">
               <span className="h-3 w-1.5 bg-[#e50914] -skew-x-12" />
               <span className="text-xs font-black tracking-[0.3em] text-[#e50914] uppercase">
                 ARENA VALE · DOCUMENTOS
               </span>
             </div>
-            <h1 className="text-3xl sm:text-5xl font-black italic uppercase tracking-tighter leading-none">
+            <h1 className="text-3xl sm:text-5xl font-black uppercase tracking-tighter leading-none">
               SÚMULAS{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#e50914] to-[#ff4b52]">
                 DIGITAIS
@@ -130,9 +130,7 @@ export default async function SumulasIndexPage() {
         )}
       </div>
 
-      <footer className="border-t border-white/10 bg-[#050505] px-6 py-8 text-center text-xs text-[#71717a]">
-        © 2026 Arena Vale · Súmula digital oficial · CNPJ 40.694.741/0001-34
-      </footer>
+      
     </main>
   );
 }

@@ -2,7 +2,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Acesso negado | Arena Vale',
+  title: 'Acesso negado | ARENA VALE',
   robots: { index: false, follow: false },
 };
 

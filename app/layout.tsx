@@ -34,15 +34,15 @@ export const metadata: Metadata = {
   },
   manifest: '/manifest.json',
   openGraph: {
-    title: 'Arena Vale',
+    title: 'ARENA VALE',
     description: 'O palco do esporte é aqui. Acompanhe campeonatos e transmissões.',
-    siteName: 'Arena Vale',
+    siteName: 'ARENA VALE',
     images: [
       {
         url: '/fundo-arena.jpg',
         width: 1200,
         height: 630,
-        alt: 'Arena Vale',
+        alt: 'ARENA VALE',
       },
     ],
     locale: 'pt_BR',
@@ -50,7 +50,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Arena Vale',
+    title: 'ARENA VALE',
     description: 'O palco do esporte é aqui. Acompanhe campeonatos e transmissões.',
     images: ['/fundo-arena.jpg'],
   },
