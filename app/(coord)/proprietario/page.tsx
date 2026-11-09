@@ -35,9 +35,14 @@ export default async function ProprietarioPage() {
           <p className="text-xs font-black uppercase tracking-widest text-[#ff6b73]">Acesso restrito</p>
           <h1 className="text-4xl font-black uppercase tracking-tight text-white">Gestão da equipe</h1>
         </div>
-        <Link href="/coordenador" className="rounded-full border border-white/20 px-5 py-2.5 text-sm font-black uppercase tracking-wider text-white hover:border-[#e50914]">
-          Painel da coordenação →
-        </Link>
+        <div className="flex flex-wrap gap-2">
+          <Link href="/" className="rounded-full border border-white/20 px-5 py-2.5 text-sm font-black uppercase tracking-wider text-white hover:border-[#e50914]">
+            ← Voltar ao site
+          </Link>
+          <Link href="/coordenador" className="rounded-full bg-[#e50914] px-5 py-2.5 text-sm font-black uppercase tracking-wider text-white hover:bg-[#ff1f2b]">
+            Painel da coordenação →
+          </Link>
+        </div>
       </div>
       <GestaoCoordenadores coordenadores={coordenadores} limite={limite} donoId={userId} />
     </main>
