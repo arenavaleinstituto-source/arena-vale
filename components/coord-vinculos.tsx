@@ -39,35 +39,50 @@ export function CoordVinculos({ cargo }: { cargo: Cargo }) {
   const [msg, setMsg] = useState<{ tipo: 'ok' | 'erro'; texto: string } | null>(null);
   const [ocupado, setOcupado] = useState(false);
 
-  const carregar = useCallback(async () => {
+  /** Busca campeonatos e vínculos (sem mexer no estado — quem chama aplica). */
+  const buscar = useCallback(async (): Promise<{ lista: Campeonato[]; vinculos: Vinculo[] }> => {
     const supabase = createClient();
     const { data: camps } = await supabase.from('campeonatos').select('id, nome, ano').order('ano', { ascending: false });
     const lista = (camps ?? []) as Campeonato[];
-    setCampeonatos(lista);
-    setCampeonatoId((atual) => atual || lista[0]?.id || '');
-
     if (cargo === 'moderador') {
       const { data } = await supabase.from('campeonato_moderadores').select('profile_id, campeonato_id, profiles(full_name, email)');
-      setVinculos(((data ?? []) as Record<string, unknown>[]).map((v) => ({
-        chave: `${v.profile_id}-${v.campeonato_id}`,
-        profileId: v.profile_id as string,
-        campeonatoId: v.campeonato_id as string,
-        pessoa: v.profiles as Pessoa,
-      })));
-    } else {
-      const { data } = await supabase.from('time_capitaes').select('id, profile_id, campeonato_id, time_id, profiles(full_name, email), times(nome)');
-      setVinculos(((data ?? []) as Record<string, unknown>[]).map((v) => ({
+      return {
+        lista,
+        vinculos: ((data ?? []) as Record<string, unknown>[]).map((v) => ({
+          chave: `${v.profile_id}-${v.campeonato_id}`,
+          profileId: v.profile_id as string,
+          campeonatoId: v.campeonato_id as string,
+          pessoa: v.profiles as Pessoa,
+        })),
+      };
+    }
+    const { data } = await supabase.from('time_capitaes').select('id, profile_id, campeonato_id, time_id, profiles(full_name, email), times(nome)');
+    return {
+      lista,
+      vinculos: ((data ?? []) as Record<string, unknown>[]).map((v) => ({
         chave: v.id as string,
         capitaoId: v.id as string,
         profileId: v.profile_id as string,
         campeonatoId: v.campeonato_id as string,
         pessoa: v.profiles as Pessoa,
         equipe: (v.times as { nome?: string } | null)?.nome ?? null,
-      })));
-    }
+      })),
+    };
   }, [cargo]);
 
-  useEffect(() => { void carregar(); }, [carregar]);
+  const aplicar = useCallback((d: { lista: Campeonato[]; vinculos: Vinculo[] }) => {
+    setCampeonatos(d.lista);
+    setCampeonatoId((atual) => atual || d.lista[0]?.id || '');
+    setVinculos(d.vinculos);
+  }, []);
+
+  const carregar = useCallback(async () => aplicar(await buscar()), [aplicar, buscar]);
+
+  useEffect(() => {
+    let vivo = true;
+    buscar().then((d) => { if (vivo) aplicar(d); });
+    return () => { vivo = false; };
+  }, [buscar, aplicar]);
 
   async function convidar(e: FormEvent) {
     e.preventDefault();
