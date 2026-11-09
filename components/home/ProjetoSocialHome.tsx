@@ -14,10 +14,10 @@ export const INICIATIVAS_SOCIAIS = [
   { icone: '🏟️', titulo: 'Infraestrutura comunitária', texto: 'Projetos de melhoria em pistas e espaços públicos para a prática de atletismo e futebol.' },
 ];
 
-type Props = { whatsapp: string; resultados?: ReactNode; titulo?: 'h1' | 'h2'; id?: string; children?: ReactNode };
+type Props = { whatsapp: string; resultados?: ReactNode; titulo?: 'h1' | 'h2'; id?: string; children?: ReactNode; /** Página própria: mostra o subtítulo das iniciativas. */ completo?: boolean };
 
 /** Bloco do Projeto Social (home e página /projetosocial). `children` entra antes do apoio. */
-export function ProjetoSocialHome({ whatsapp, resultados, titulo = 'h2', id = 'projetosocial', children }: Props) {
+export function ProjetoSocialHome({ whatsapp, resultados, titulo = 'h2', id = 'projetosocial', children, completo = false }: Props) {
   const Titulo = titulo;
   const apoiar = `https://wa.me/${whatsapp}?text=${encodeURIComponent('Olá! Quero apoiar o Projeto Social da ARENA VALE.')}`;
   return (
@@ -36,6 +36,14 @@ export function ProjetoSocialHome({ whatsapp, resultados, titulo = 'h2', id = 'p
             </div>
           ))}
         </div>
+        {completo && (
+          <div className="cab">
+            <div>
+              <h2>Iniciativas e apoio direto</h2>
+              <p>Como estruturamos o nosso impacto na comunidade.</p>
+            </div>
+          </div>
+        )}
         <div className="iniciativas">
           {INICIATIVAS_SOCIAIS.map((i) => (
             <div className="ini" key={i.titulo}>

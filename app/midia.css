@@ -287,3 +287,4 @@
 .topo-pagina p { margin: 0; max-width: 60ch; color: #cfcfd6; font-size: 18px; }
 .agenda { grid-template-columns: repeat(auto-fit, minmax(260px, 400px)); justify-content: center; }
 @media (max-width: 860px) { .agenda { grid-template-columns: 1fr; } }
+.social .intro h1 { margin: 0; font-family: var(--display); font-weight: 800; font-stretch: 112%; font-size: clamp(34px, 6vw, 64px); text-transform: uppercase; line-height: 1; text-wrap: balance; }
