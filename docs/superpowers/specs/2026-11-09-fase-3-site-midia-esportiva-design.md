@@ -82,7 +82,7 @@ Evolução do `SiteHeader` atual (preso no topo, o mesmo em todas as páginas).
   - Modalidades `/modalidades`
   - Vídeos `/videos`
   - Projeto Social `/projetosocial`
-  - Sobre `/sobre`
+  - Atletas Destaques `/atletas` (no lugar de "Sobre"; a página `/sobre` continua, com link no rodapé)
 - **Direita:**
   - **Anuncie** (`/patrocinio`);
   - **Entrar**, que abre o menu "ÁREA DA EQUIPE" com Coordenação, Moderador e Capitão.
@@ -102,10 +102,10 @@ Evolução do `SiteHeader` atual (preso no topo, o mesmo em todas as páginas).
 | 6 | **Últimos vídeos** | 8 mais recentes | YouTube RSS + vídeos do Instagram cadastrados |
 | 7 | **Modalidades** | Futsal, Futebol 7, Basquete, Vôlei ("O palco do <modalidade> é aqui.") | fixas → `/modalidades/[slug]` |
 | 8 | **Projeto Social** | título, texto, 4 números, 3 iniciativas, resultados, apoio (3 botões vermelhos: Apoiar, Cotas, Inscrever criança/atleta) | textos da página antiga + `noticias` (categoria `projeto_social`) |
-| 9 | **Histórias da Arena** | atletas destaque e bastidores | `atletas_destaque` + `noticias` (categoria `bastidores`) |
-| 10 | **Números da Arena** | campeonatos, equipes, jogos, vídeos | contagens no banco + RSS |
+| 9 | **Atletas Destaques** | cartazes dos atletas destaque (rodada, artilheiro, revelação) | `atletas_destaque` |
+| 10 | ~~Números da Arena~~ | **saiu do site público**: as contagens (campeonatos, equipes, jogos, vídeos) ficam só no painel da coordenação, para conhecimento; talvez voltem ao público no futuro | contagens no banco + RSS |
 | 11 | **Para marcas** | "Coloque sua marca no palco do esporte.", com as propriedades de mídia e o botão para o WhatsApp | fixo |
-| 12 | **Rodapé** | logo + slogan, menu completo, botões **WhatsApp** (wa.me/5547988444404), **Instagram** (@arenavaleoficial) e **YouTube** (@TVArenaVale), **CNPJ 40.694.741/0001-34**, © ARENA VALE · Mídia Esportiva, Privacidade e Termos | fixo (links editáveis em Configurações) |
+| 12 | **Rodapé** | logo + slogan, menu completo (com link "Sobre a ARENA VALE"), botões **WhatsApp** (wa.me/5547988444404), **Instagram** (@arenavaleoficial) e **YouTube** (@TVArenaVale), **CNPJ 40.694.741/0001-34**, © ARENA VALE · Mídia Esportiva, Privacidade e Termos | fixo (links editáveis em Configurações) |
 
 - **Blocos sem conteúdo** (sem notícias publicadas, sem jogos futuros) mostram um estado vazio curto, por exemplo "Nenhum jogo agendado — volte em breve.". A página nunca quebra.
 - **Renderização:** Server Components com `revalidate = 60`. O YouTube revalida a cada 30 min.
@@ -242,5 +242,5 @@ Cada parte termina com build verde e o site de teste atualizado:
 
 - O app de celular das patotas (projeto separado).
 - Servidor de e-mail próprio (SMTP) para os convites. Fica para quando o dono decidir.
-- Estatísticas avançadas por jogador. "Números da Arena" usa só contagens.
+- Estatísticas avançadas por jogador. Os números do painel usam só contagens.
 - A reconstrução em Vite (`app-arenavale`).
