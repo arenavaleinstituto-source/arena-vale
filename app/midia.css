@@ -312,3 +312,7 @@
 .topo .logo-topo-img { height: 60px; }
 @media (max-width: 1280px) { .topo .logo-topo-img { height: 50px; } }
 @media (max-width: 760px) { .topo .logo-topo-img { height: 40px; } }
+
+/* banner: texto mais baixo para mostrar o rosto do atleta do meio (pedido do dono) */
+.hero { padding-block: clamp(150px, 17vw, 300px) 56px; background-position: center, center, center 18%; }
+@media (max-width: 760px) { .hero { padding-block: 120px 40px; } }
