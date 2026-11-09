@@ -11,7 +11,7 @@ import { buscarPatrocinadores } from '@/lib/midia/patrocinadores';
 import { lerConfigSite, linkAssistirAoVivo } from '@/lib/midia/config';
 import { buscarVideosYT, embedAoVivo, estaAoVivo } from '@/lib/midia/youtube';
 import { buscarAgenda, proximaTransmissao } from '@/lib/midia/agenda';
-import { buscarVideosExternos } from '@/lib/midia/videos-externos';
+import { buscarVideosExternos } from '@/lib/midia/videos-externos-busca';
 import { buscarDestaques } from '@/lib/content/destaques';
 import { createPublicClient } from '@/lib/supabase/server';
 

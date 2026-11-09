@@ -4,7 +4,7 @@ import { FiltroVideos } from '@/components/midia/FiltroVideos';
 import { juntarVideos } from '@/components/home/UltimosVideos';
 import { lerConfigSite } from '@/lib/midia/config';
 import { buscarVideosYT } from '@/lib/midia/youtube';
-import { buscarVideosExternos } from '@/lib/midia/videos-externos';
+import { buscarVideosExternos } from '@/lib/midia/videos-externos-busca';
 
 export const revalidate = 60;
 export const metadata: Metadata = {
