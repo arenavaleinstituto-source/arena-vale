@@ -29,6 +29,12 @@ describe('feed do YouTube', () => {
     expect(parsearFeed(xml)[0].titulo).toBe('Gol & festa "AV"');
   });
 
+  it('tira as hashtags do título (mas não deixa o título vazio)', () => {
+    const xml = (t: string) => `<feed><entry><yt:videoId>abcdefghijk</yt:videoId><title>${t}</title><published>2026-11-01T10:00:00+00:00</published></entry></feed>`;
+    expect(parsearFeed(xml('Grande final #futebol #loucosporfutebol #esporte'))[0].titulo).toBe('Grande final');
+    expect(parsearFeed(xml('#futebol #esporte'))[0].titulo).toBe('#futebol #esporte');
+  });
+
   it('feed vazio ou inválido vira lista vazia', () => {
     expect(parsearFeed('')).toEqual([]);
     expect(parsearFeed('<html>nada')).toEqual([]);

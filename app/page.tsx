@@ -1,442 +1,55 @@
-'use client';
+import { Banner } from '@/components/home/Banner';
+import { AoVivo } from '@/components/home/AoVivo';
+import { AgendaArena } from '@/components/home/AgendaArena';
+import { UltimosVideos } from '@/components/home/UltimosVideos';
+import { Modalidades } from '@/components/home/Modalidades';
+import { ProjetoSocialHome } from '@/components/home/ProjetoSocialHome';
+import { AtletasDestaques } from '@/components/home/AtletasDestaques';
+import { ParaMarcas } from '@/components/home/ParaMarcas';
+import { lerConfigSite, linkAssistirAoVivo } from '@/lib/midia/config';
+import { buscarVideosYT, embedAoVivo, estaAoVivo } from '@/lib/midia/youtube';
+import { buscarAgenda, proximaTransmissao } from '@/lib/midia/agenda';
+import { buscarVideosExternos } from '@/lib/midia/videos-externos';
+import { buscarDestaques } from '@/lib/content/destaques';
+import { createPublicClient } from '@/lib/supabase/server';
 
-import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { createClient } from '@/lib/supabase/client';
-import CartaoComunicado from '@/components/CartaoComunicado';
-import CartaoDestaque from '@/components/CartaoDestaque';
-import {
-  buscarNoticias,
-  comFallback,
-  buscarDestaques,
-  comFallbackDestaques,
-  NOTICIAS_PADRAO,
-  DESTAQUES_PADRAO,
-  type Noticia,
-  type Destaque,
-} from '@/lib/content';
+export const revalidate = 60;
 
-export default function HomePage() {
-  const [campeonatoSelecionado, setCampeonatoSelecionado] = useState(0);
+/** Cada bloco tem seu próprio "vazio": uma fonte fora do ar nunca derruba a página. */
+async function seguro<T>(p: Promise<T>, vazio: T): Promise<T> {
+  try {
+    return await p;
+  } catch {
+    return vazio;
+  }
+}
 
-  const [noticiasPublicas, setNoticiasPublicas] = useState<Noticia[]>(NOTICIAS_PADRAO);
-  const [destaquesPublicos, setDestaquesPublicos] = useState<Destaque[]>(DESTAQUES_PADRAO);
-
-  useEffect(() => {
-    let cancelado = false;
-
-    async function carregarConteudo() {
-      try {
-        const supabase = createClient();
-
-        const [comunicados, atletas] = await Promise.all([
-          buscarNoticias(supabase, { limite: 3, ordem: 'ordem' }),
-          buscarDestaques(supabase, { limite: 3 }),
-        ]);
-
-        if (cancelado) return;
-
-        // Mesmo conjunto de fallback do mural /noticias — antes cada tela
-        // tinha o seu, por isso a Home e o mural mostravam conteúdo diferente.
-        setNoticiasPublicas(comFallback(comunicados.noticias));
-        setDestaquesPublicos(comFallbackDestaques(atletas.destaques));
-      } catch {
-        // Mantém os itens padrão se houver falha na ligação
-      }
-    }
-
-    carregarConteudo();
-    return () => {
-      cancelado = true;
-    };
-  }, []);
-
-  const modalidades = [
-    {
-      id: 'futsal',
-      nome: 'Futsal',
-      tituloOficial: 'Circuito Arena Vale de Futsal 2026',
-      fase: 'Em Breve · Temporada 2026',
-      descricao: 'O futsal é a modalidade mais tradicional da região do Vale, reunindo equipes de clubes, bairros e empresas em disputas de alto nível técnico dentro de quadra. O Circuito Arena Vale organiza a temporada em fase de grupos seguida de mata-mata, com transmissão ao vivo das principais partidas pela TV Arena Vale.',
-      statusBadge: 'CIRCUITO 2026',
-      detalhes: [
-        'Categorias: Sub-15, Sub-20, Livre (adulto) e Master (35+)',
-        'Formato: fase de grupos + mata-mata eliminatório',
-        'Duração da partida: 2 tempos de 20 minutos (base) ou 25 minutos (Livre/Master)',
-        'Local: ginásios parceiros da região do Vale'
-      ]
-    },
-    {
-      id: 'fut7',
-      nome: 'Futebol 7',
-      tituloOficial: 'Copa Arena Vale de Futebol 7',
-      fase: 'Em Breve · Temporada 2026',
-      descricao: 'Disputado em campos society, o futebol 7 é ideal para quem busca um futebol mais dinâmico, com espaços reduzidos e jogadas rápidas. A Copa reúne times amadores e semiprofissionais em uma disputa equilibrada ao longo da temporada.',
-      statusBadge: 'PRÉ-TEMPORADA',
-      detalhes: [
-        'Categorias: Livre (adulto) e Sub-17',
-        'Formato: fase de grupos + mata-mata eliminatório',
-        'Duração da partida: 2 tempos de 25 minutos',
-        'Local: campos society parceiros'
-      ]
-    },
-    {
-      id: 'basquete',
-      nome: 'Basquetebol',
-      tituloOficial: 'Liga Arena Vale de Basquete',
-      fase: 'Em Breve · Temporada 2026',
-      descricao: 'A liga de basquete valoriza o preparo físico e técnico dos atletas, com jogos disputados em quadras cobertas e cronometragem oficial. É uma das modalidades com maior crescimento de público nas transmissões da Arena Vale.',
-      statusBadge: 'EM PLANEAMENTO',
-      detalhes: [
-        'Categorias: Sub-17 e Livre (adulto)',
-        'Formato: pontos corridos (turno único) + fase final com os 4 melhores',
-        'Duração da partida: 4 quartos de 10 minutos',
-        'Local: ginásios parceiros da região do Vale'
-      ]
-    },
-    {
-      id: 'volei',
-      nome: 'Voleibol',
-      tituloOficial: 'Torneio Arena Vale de Vôlei',
-      fase: 'Em Breve · Temporada 2026',
-      descricao: 'O vôlei reúne equipes masculinas e femininas em um torneio disputado em sistema de melhor de 3 ou 5 sets, com arbitragem oficial e cobertura completa das principais partidas.',
-      statusBadge: 'PROJETOS ABERTOS',
-      detalhes: [
-        'Categorias: Masculino e Feminino, Livre (adulto)',
-        'Formato: fase de grupos + mata-mata (melhor de 3 sets) + final (melhor de 5 sets)',
-        'Local: ginásios parceiros da região do Vale'
-      ]
-    }
-  ];
-
-  const ativo = modalidades[campeonatoSelecionado];
+/** Página inicial de mídia esportiva (spec Fase 3, seção 5). */
+export default async function Home() {
+  const config = await lerConfigSite();
+  const [aoVivoDetectado, agenda, videos, externos, destaques] = await Promise.all([
+    seguro(estaAoVivo(config.youtubeChannelId), false),
+    seguro(buscarAgenda(6), []),
+    seguro(buscarVideosYT(config.youtubeChannelId), []),
+    seguro(buscarVideosExternos(8), []),
+    seguro(
+      buscarDestaques(createPublicClient(), { limite: 12 }).then((r) => r.destaques),
+      [],
+    ),
+  ]);
+  const aoVivo = config.aoVivoManual || aoVivoDetectado;
 
   return (
-    <>
-      <div id="topo" className="min-h-screen w-full max-w-full overflow-x-clip bg-[#050505] text-white selection:bg-[#e50914] selection:text-white font-sans">
-
-
-        <section id="inicio" className="relative mx-auto max-w-7xl px-4 sm:px-6 pt-6 sm:pt-8 pb-12">
-          <div className="relative min-h-[520px] sm:min-h-[600px] overflow-hidden rounded-[2rem] sm:rounded-[2.5rem] border border-white/10 bg-[#111111] shadow-2xl flex flex-col justify-end p-6 sm:p-14">
-            <img src="/fundo-arena.jpg" alt="Arena Vale" className="absolute inset-0 h-full w-full object-cover object-center brightness-60 contrast-110" />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/70 to-transparent" />
-            <div className="absolute inset-0 bg-gradient-to-r from-[#050505]/95 via-[#050505]/45 to-transparent" />
-            <div className="relative z-10 max-w-4xl">
-              <div className="inline-flex items-center gap-2 rounded-full border border-[#e50914]/50 bg-[#e50914]/15 px-3.5 py-1.5 text-[11px] sm:text-xs font-black uppercase tracking-[0.15em] text-white backdrop-blur-md"><span className="h-2 w-2 rounded-full bg-[#e50914] animate-ping" /> COBERTURA & TRANSMISSÃO OFICIAL</div>
-              <h1 className="mt-4 sm:mt-5 text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black uppercase tracking-tight text-white leading-tight"><span className="block whitespace-normal sm:whitespace-nowrap">O PALCO DO</span><span className="block whitespace-normal sm:whitespace-nowrap mt-1 sm:mt-2"><span className="text-[#e50914]">ESPORTE</span> É AQUI.</span></h1>
-              <p className="mt-4 sm:mt-5 max-w-2xl text-sm sm:text-xl text-[#cad0e0] leading-relaxed">Transmissões ao vivo, coberturas, análises e as grandes histórias de quem vive o jogo dentro e fora de quadra.</p>
-              <div className="mt-6 sm:mt-8 flex flex-wrap items-center gap-3 sm:gap-4"><Link href="/tv" className="flex items-center gap-2 rounded-full bg-gradient-to-r from-[#e50914] to-[#ff1e27] px-6 sm:px-8 py-3.5 sm:py-4 text-xs font-black uppercase tracking-[0.15em] text-white shadow-xl shadow-[#e50914]/30 transition hover:scale-105"><span>▶</span> TRANSMISSÕES</Link><a href="#campeonatos" className="rounded-full border border-white/20 bg-white/5 px-6 sm:px-8 py-3.5 sm:py-4 text-xs font-black uppercase tracking-[0.15em] text-white backdrop-blur-md transition hover:bg-white/10 hover:border-white/40">VER CAMPEONATOS →</a></div>
-            </div>
-          </div>
-        </section>
-
-        {/* SECÇÃO TV ARENA VALE */}
-        <section className="border-t border-white/5 bg-[#0a0a0a] px-4 sm:px-6 py-16">
-          <div className="mx-auto max-w-7xl">
-            <div className="flex flex-wrap items-center justify-between gap-4 mb-10">
-              <div>
-                <p className="text-xs font-black tracking-[0.25em] text-[#e50914] uppercase">TV ARENA VALE · BROADCAST</p>
-                <h2 className="mt-2 text-3xl sm:text-4xl font-black italic uppercase tracking-tighter text-white">TRANSMISSÃO AO VIVO & <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#e50914] to-[#ff4b52]">VÍDEOS</span></h2>
-              </div>
-              <a href="https://www.youtube.com/@TVArenaVale" target="_blank" rel="noreferrer" className="flex items-center gap-2 rounded-full border border-[#e50914]/60 bg-[#e50914]/10 px-6 py-2.5 text-xs font-black uppercase tracking-wider text-white hover:bg-[#e50914] transition shadow-lg shadow-[#e50914]/15"><span>▶</span> Canal YouTube ↗</a>
-            </div>
-            <div className="mb-10">
-              <div className="flex items-center justify-between mb-3"><span className="inline-flex items-center gap-2 rounded-full bg-[#e50914]/20 border border-[#e50914]/40 px-3.5 py-1 text-[11px] font-black uppercase tracking-wider text-white"><span className="h-2.5 w-2.5 rounded-full bg-[#e50914] animate-ping" /> TRANSMISSÃO AO VIVO</span></div>
-              <div className="relative mx-auto max-w-4xl aspect-video overflow-hidden rounded-3xl border border-white/10 bg-[#050505] shadow-2xl flex flex-col items-center justify-center p-6 text-center group">
-                <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/50 to-transparent" />
-                <div className="relative z-10 flex flex-col items-center max-w-md">
-                  <img src="/logo.png" alt="TV Arena Vale" className="h-24 sm:h-32 w-auto object-contain mb-4 mix-blend-lighten group-hover:scale-105 transition-transform duration-300" />
-                  <h3 className="text-xl sm:text-2xl font-black uppercase text-white tracking-tight">TRANSMISSAO AO VIVO</h3>
-                  <a href="https://www.youtube.com/@TVArenaVale" target="_blank" rel="noreferrer" className="mt-5 rounded-full bg-gradient-to-r from-[#e50914] to-[#ff1e27] px-7 py-3 text-xs font-black uppercase tracking-wider text-white hover:scale-105 transition shadow-lg shadow-[#e50914]/30">ASSISTIR A TRANSMISSAO ↗</a>
-                </div>
-              </div>
-            </div>
-            <div className="text-center pt-8 border-t border-white/5">
-               <Link href="/tv" className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-8 py-4 text-sm font-black uppercase tracking-[0.15em] text-white hover:bg-white/10 transition shadow-lg">
-                 ACESSE O CATÁLOGO COMPLETO DA TV ARENA VALE ↗
-               </Link>
-            </div>
-          </div>
-        </section>
-
-        {/* SECÇÃO APP */}
-        <section id="app" className="border-t border-white/5 bg-gradient-to-br from-[#0a0a0a] via-[#050505] to-[#050505] px-4 sm:px-6 py-20 text-center">
-          <div className="mx-auto max-w-5xl flex flex-col items-center">
-            <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-4 py-1.5 text-xs font-black uppercase tracking-[0.2em] text-white mb-4">NOVIDADE NA ÁREA · APLICATIVO OFICIAL</span>
-            <h2 className="text-3xl sm:text-5xl font-black italic uppercase tracking-tight text-white leading-tight">CONHEÇA O APLICATIVO <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-300 to-[#e50914]">ARENA VALE</span></h2>
-            <p className="mt-4 text-sm sm:text-base text-[#cad0e0] leading-relaxed max-w-2xl mx-auto uppercase">Tudo o que você precisa para gerir equipes, acompanhar campeonatos e solicitar serviços diretamente na palma da sua mão.</p>
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-              <a href="https://wa.me/5547988444404?text=Olá,%20quero%20saber%20mais%20sobre%20o%20aplicativo%20da%20Arena%20Vale!" target="_blank" rel="noreferrer" className="rounded-full bg-white text-black px-8 py-4 text-xs font-black uppercase tracking-widest shadow-xl hover:bg-gray-200 transition">SAIBA MAIS PELO WHATSAPP ↗</a>
-            </div>
-            <div className="mt-14 grid gap-6 sm:grid-cols-3 w-full">
-              <div className="group rounded-2xl border border-white/10 bg-white/[0.02] p-6 shadow-xl transition hover:border-white/40 text-center flex flex-col items-center justify-center">
-                <h4 className="text-base font-black uppercase tracking-wider text-white">GESTÃO DE EQUIPES</h4>
-                <p className="mt-2 text-xs text-gray-400 leading-relaxed uppercase">Sorteador por estrelas, cronômetro oficial, registro de gols, assistências e tabela anual.</p>
-              </div>
-              <div className="group rounded-2xl border border-white/10 bg-white/[0.02] p-6 shadow-xl transition hover:border-white/40 text-center flex flex-col items-center justify-center">
-                <h4 className="text-base font-black uppercase tracking-wider text-white">MENSALIDADES ESCOLINHA</h4>
-                <p className="mt-2 text-xs text-gray-400 leading-relaxed uppercase">Matrícula de alunos, vencimentos e cobrança via WhatsApp aos pais com chave PIX.</p>
-              </div>
-              <div className="group rounded-2xl border border-white/10 bg-white/[0.02] p-6 shadow-xl transition hover:border-white/40 text-center flex flex-col items-center justify-center">
-                <h4 className="text-base font-black uppercase tracking-wider text-white">SOLICITAR EQUIPE DE ARBITRAGEM</h4>
-                <p className="mt-2 text-xs text-gray-400 leading-relaxed uppercase">Delegado, árbitro principal e auxiliares para futebol, futsal, basquete e vôlei.</p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* SECÇÃO NOTICIAS */}
-        <section id="noticias" className="relative mx-auto max-w-7xl px-4 sm:px-6 py-20 overflow-hidden">
-          <div className="mb-12 flex flex-col sm:flex-row sm:items-end justify-between gap-6 border-b border-white/10 pb-6">
-            <div className="relative">
-              <div className="inline-flex items-center gap-2 mb-2"><span className="h-3 w-1.5 bg-[#e50914] -skew-x-12" /><span className="text-xs font-black tracking-[0.3em] text-[#e50914] uppercase">AGORA NA ARENA · BROADCAST</span></div>
-              <h2 className="text-4xl sm:text-5xl font-black italic uppercase tracking-tighter text-white leading-none">CONTEÚDO & <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#e50914] to-[#ff4b52]">COBERTURA</span></h2>
-            </div>
-            <div className="flex items-center gap-3 self-start sm:self-end">
-              <Link href="/noticias" className="rounded-full border border-white/20 bg-white/5 px-6 py-2.5 text-xs font-black uppercase tracking-wider text-white hover:bg-white/10 transition whitespace-nowrap">
-                Ver todas as notícias ↗
-              </Link>
-              <span className="text-[11px] font-black uppercase tracking-widest text-gray-400">EDIÇÃO 2026</span>
-              <span className="h-2 w-2 rounded-full bg-[#e50914]" />
-            </div>
-          </div>
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {noticiasPublicas.map((noticia, indice) => (
-              <CartaoComunicado key={noticia.id} noticia={noticia} indice={indice} />
-            ))}
-          </div>
-        </section>
-
-        {/* SECÇÃO AGENDA */}
-        <section className="border-t border-white/5 bg-[#0a0a0a] px-4 sm:px-6 py-20">
-          <div className="mx-auto max-w-7xl">
-            <div className="mb-12 flex flex-col sm:flex-row sm:items-end justify-between gap-6 border-b border-white/10 pb-6">
-              <div className="relative">
-                <div className="inline-flex items-center gap-2 mb-2"><span className="h-3 w-1.5 bg-[#e50914] -skew-x-12" /><span className="text-xs font-black tracking-[0.3em] text-[#e50914] uppercase">CALENDÁRIO ESPORTIVO</span></div>
-                <h2 className="text-4xl sm:text-5xl font-black italic uppercase tracking-tighter text-white leading-none">AGENDA DE <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#e50914] to-[#ff4b52]">JOGOS</span></h2>
-              </div>
-              <Link href="/agenda" className="rounded-full border border-white/20 bg-white/5 px-6 py-2.5 text-xs font-black uppercase tracking-wider text-white hover:bg-white/10 transition">Ver Agenda Completa ↗</Link>
-            </div>
-
-            <div className="rounded-[2.5rem] border border-white/10 bg-gradient-to-br from-[#111111] via-[#050505] to-[#050505] p-10 sm:p-16 shadow-2xl text-center flex flex-col items-center justify-center relative overflow-hidden">
-               <div className="absolute -right-20 -bottom-20 h-72 w-72 rounded-full bg-[#e50914]/10 blur-3xl pointer-events-none" />
-               <div className="h-20 w-20 rounded-full bg-[#e50914]/20 border border-[#e50914]/40 flex items-center justify-center text-4xl mb-6 shadow-2xl">📅</div>
-               <h3 className="text-2xl sm:text-4xl font-black uppercase text-white tracking-tight">CONFIRA O CALENDÁRIO COMPLETO DE CONFRONTOS</h3>
-               <p className="mt-4 text-sm sm:text-base text-gray-400 max-w-2xl uppercase">Acesse a nossa agenda oficial para conferir datas, horários, equipes e locais de todas as partidas de Futsal, Futebol 7, Basquetebol e Voleibol.</p>
-               <Link href="/agenda" className="mt-10 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#e50914] to-[#ff1e27] px-10 py-4 text-sm font-black uppercase tracking-[0.15em] text-white hover:scale-105 transition shadow-lg shadow-[#e50914]/30">
-                   VER AGENDA COMPLETA ↗
-               </Link>
-            </div>
-          </div>
-        </section>
-
-        {/* SECÇÃO ATLETAS */}
-        <section className="bg-[#050505] px-6 py-14">
-          <div className="mx-auto max-w-7xl">
-            <div className="relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-[#111111] shadow-2xl">
-              <img src="/fundo-arena.jpg" alt="Atletas em Destaque" className="absolute inset-0 h-full w-full object-cover object-center brightness-60 transition duration-700 hover:scale-105" />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/80 to-transparent sm:bg-gradient-to-r sm:from-[#050505]/95 sm:via-[#050505]/70 sm:to-transparent" />
-              <div className="relative z-10 flex min-h-[380px] flex-col justify-end p-8 sm:min-h-[440px] sm:max-w-2xl sm:p-14">
-                <span className="inline-flex items-center gap-2 self-start rounded-full bg-[#e50914]/20 px-3.5 py-1 text-xs font-black uppercase tracking-wider text-[#ff1e27] backdrop-blur-md">HISTÓRIAS DA ARENA</span>
-                <h3 className="mt-4 text-3xl font-black uppercase leading-tight text-white sm:text-5xl">
-                  CONHEÇA TODOS OS<br />
-                  <span className="text-[#e50914]">ATLETAS EM DESTAQUE</span>
-                </h3>
-                <p className="mt-4 text-sm sm:text-base text-[#cad0e0] leading-relaxed uppercase">
-                  OS TALENTOS, ARTILHEIROS E PROTAGONISTAS QUE TRANSFORMARÃO CADA CONFRONTO ESPORTIVO NUM GRANDE ESPETÁCULO NO VALE.
-                </p>
-                <div className="mt-8 flex flex-wrap items-center gap-4"><Link href="/atletasdestaques" className="rounded-full bg-[#e50914] px-7 py-3.5 text-xs font-black uppercase tracking-wider text-white shadow-lg shadow-[#e50914]/30 transition hover:bg-[#ff1e27] hover:scale-105">GALERIA OFICIAL →</Link></div>
-              </div>
-            </div>
-
-            {/* Grade de destaques — MESMO cartão e MESMOS dados da galeria
-                /atletasdestaques. Antes esta busca era feita e o resultado
-                era descartado: os atletas publicados nunca apareciam aqui. */}
-            <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-              {destaquesPublicos.map((destaque) => (
-                <CartaoDestaque key={destaque.id} destaque={destaque} />
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* SECÇÃO CAMPEONATOS E MODALIDADES */}
-        <section id="campeonatos" className="mx-auto max-w-7xl px-6 py-16">
-          <div className="mb-8">
-            <p className="text-xs font-black tracking-[0.25em] text-[#e50914] uppercase">COMPETIÇÕES OFICIAIS</p>
-            <h2 className="mt-2 text-3xl font-black uppercase tracking-tight sm:text-4xl">CAMPEONATOS DA TEMPORADA 2026</h2>
-          </div>
-          <div className="flex flex-wrap gap-3 mb-8">
-            {modalidades.map((c, index) => (
-              <button key={c.id} type="button" onClick={() => setCampeonatoSelecionado(index)} className={`rounded-full px-6 py-2.5 text-xs font-black uppercase tracking-wider transition ${campeonatoSelecionado === index ? 'bg-[#e50914] text-white shadow-lg shadow-[#e50914]/30' : 'border border-white/15 bg-white/5 text-[#cad0e0] hover:text-white'}`}>{c.nome}</button>
-            ))}
-          </div>
-          <div className="rounded-[2.5rem] border border-white/10 bg-[#111111] p-8 sm:p-12 shadow-2xl">
-            <div className="flex flex-col md:flex-row items-center justify-between gap-8 pb-8 border-b border-white/10">
-              <div className="flex flex-col sm:flex-row items-center sm:items-start gap-8 w-full md:w-auto text-center sm:text-left">
-                <div className="flex h-36 w-36 sm:h-44 sm:w-44 shrink-0 items-center justify-center rounded-3xl border border-white/15 bg-[#050505] p-4 shadow-2xl">
-                  <img src="/logo.png" alt="Modalidade Arena Vale" className="h-full w-full object-contain mix-blend-lighten" />
-                </div>
-                <div className="flex flex-col justify-center">
-                  <span className="self-center sm:self-start rounded-full bg-[#e50914]/15 px-3.5 py-1 text-xs font-black uppercase tracking-wider text-[#e50914]">{ativo.statusBadge}</span>
-                  <h3 className="mt-3 text-2xl sm:text-3xl lg:text-4xl font-black uppercase text-white leading-tight">{ativo.tituloOficial}</h3>
-                  <p className="text-sm text-emerald-400 font-bold mt-2">{ativo.fase}</p>
-                  <p className="mt-3 text-xs sm:text-sm text-gray-400 max-w-2xl leading-relaxed">{ativo.descricao}</p>
-                </div>
-              </div>
-              <a href="https://wa.me/5547988444404" target="_blank" rel="noreferrer" className="rounded-full border border-[#e50914]/40 bg-[#e50914]/15 px-8 py-3.5 text-xs font-black uppercase tracking-wider text-[#ff1e27] hover:bg-[#e50914] hover:text-white transition shadow-lg shadow-[#e50914]/25 shrink-0">Inscrever Equipe ↗</a>
-            </div>
-
-            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {ativo.detalhes.map((detalhe, idx) => {
-                const [titulo, ...resto] = detalhe.split(':');
-                const texto = resto.join(':');
-                return (
-                  <div key={idx} className="rounded-2xl border border-white/10 bg-white/[0.02] p-5 flex flex-col justify-between">
-                    <span className="text-[10px] font-black uppercase tracking-wider text-[#e50914] mb-1">{titulo}</span>
-                    <p className="text-xs font-bold text-white uppercase">{texto.trim()}</p>
-                  </div>
-                );
-              })}
-            </div>
-
-            <div className="mt-10 pt-8 border-t border-white/10">
-              <p className="text-xs font-black uppercase tracking-widest text-gray-400 mb-5">PARCERIAS & COTAS DE APOIO</p>
-              <div className="grid gap-4 sm:grid-cols-3">
-                <div className="flex flex-col items-center justify-center rounded-2xl border border-white/20 bg-white/5 p-6 text-center">
-                  <span className="text-xs font-black uppercase tracking-wider text-white">ACADESF</span>
-                  <span className="text-[10px] font-bold text-gray-300 mt-1">Parceiro Institucional</span>
-                </div>
-                <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-white/15 bg-[#050505]/60 p-6 text-center hover:border-[#e50914]/50 transition">
-                  <span className="text-xs font-black uppercase tracking-wider text-white">Cota Master do Torneio</span>
-                  <span className="text-[10px] font-bold text-gray-400 mt-1">Disponível para Captação</span>
-                </div>
-                <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-white/15 bg-[#050505]/60 p-6 text-center hover:border-[#e50914]/50 transition">
-                  <span className="text-xs font-black uppercase tracking-wider text-white">Apoio Regional</span>
-                  <span className="text-[10px] font-bold text-gray-400 mt-1">Disponível para Captação</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* PAVILHÃO DE PATROCINADORES & COTAS */}
-        <section className="mx-auto max-w-7xl px-4 sm:px-6 py-16">
-          <div className="relative overflow-hidden rounded-[2.5rem] border border-white/20 bg-gradient-to-br from-[#111111] via-[#0a0a0a] to-[#050505] p-8 sm:p-16 shadow-2xl">
-            <div className="absolute -right-20 -top-20 h-72 w-72 rounded-full bg-[#e50914]/10 blur-3xl pointer-events-none" />
-            <div className="absolute -left-20 -bottom-20 h-72 w-72 rounded-full bg-[#e50914]/10 blur-3xl pointer-events-none" />
-
-            <div className="relative z-10 max-w-4xl mx-auto text-center mb-16">
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-black uppercase tracking-[0.2em] text-white mb-4">OPORTUNIDADE COMERCIAL EXCLUSIVA</span>
-              <h2 className="text-3xl sm:text-5xl md:text-6xl font-black italic uppercase tracking-tight text-white leading-tight">
-                POR QUE PATROCINAR A <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-300 to-[#e50914]">ARENA VALE</span>
-              </h2>
-              <p className="mt-5 text-sm sm:text-base text-[#cad0e0] leading-relaxed max-w-3xl mx-auto uppercase">
-                A Arena Vale conecta sua marca a um público engajado e apaixonado por esporte na região do Vale. Visibilidade garantida em transmissões ao vivo em alta definição, placares eletrônicos, redes sociais oficiais e backdrops de campo — em futsal, futebol 7, basquete e vôlei, o ano inteiro.
-              </p>
-            </div>
-
-            <div className="relative z-10 grid gap-8 lg:grid-cols-3 mb-16">
-              <div className="flex flex-col justify-between rounded-3xl border border-[#e50914]/60 bg-gradient-to-b from-[#e50914]/15 via-[#111111] to-[#050505] p-8 shadow-2xl relative overflow-hidden group hover:border-[#e50914] transition">
-                <div className="absolute top-0 right-0 bg-[#e50914] text-white text-[10px] font-black uppercase px-4 py-1 rounded-bl-2xl tracking-wider">DESTAQUE</div>
-                <div>
-                  <h3 className="text-2xl font-black uppercase text-white tracking-wider mb-2">Cota Master</h3>
-                  <p className="text-xs font-bold text-[#e50914] uppercase tracking-widest mb-6">Exposição Principal em TV e Campo</p>
-                  <p className="text-xs sm:text-sm text-[#b8c0d4] leading-relaxed mb-6 uppercase">
-                    A cota de maior visibilidade da Arena Vale. Sua marca aparece como patrocinadora oficial em todas as transmissões ao vivo da temporada, com presença fixa no placar eletrônico e em todo material de campo (backdrop, faixas).
-                  </p>
-                  <ul className="space-y-2.5 text-xs text-[#cad0e0] mb-8">
-                    <li className="flex items-start gap-2"><span className="text-[#e50914] font-bold">✓</span> Logo em destaque na abertura e no intervalo de todas as transmissões</li>
-                    <li className="flex items-start gap-2"><span className="text-[#e50914] font-bold">✓</span> Presença fixa no placar eletrônico durante os jogos</li>
-                    <li className="flex items-start gap-2"><span className="text-[#e50914] font-bold">✓</span> Backdrop de campo em todos os jogos da temporada</li>
-                    <li className="flex items-start gap-2"><span className="text-[#e50914] font-bold">✓</span> Menção nas redes sociais oficiais a cada rodada</li>
-                    <li className="flex items-start gap-2"><span className="text-[#e50914] font-bold">✓</span> Selo de &quot;Patrocinador Master&quot; no site</li>
-                  </ul>
-                </div>
-                <a href="https://wa.me/5547988444404?text=Olá,%20tenho%20interesse%20na%20Cota%20Master%20da%20Arena%20Vale!" target="_blank" rel="noreferrer" className="w-full text-center rounded-full bg-[#e50914] py-3 text-xs font-black uppercase tracking-widest text-white hover:bg-[#ff1e27] transition shadow-lg shadow-[#e50914]/20">Garantir Cota Master ↗</a>
-              </div>
-
-              <div className="flex flex-col justify-between rounded-3xl border border-white/20 bg-gradient-to-b from-white/[0.05] via-[#111111] to-[#050505] p-8 shadow-2xl relative overflow-hidden group hover:border-white/50 transition">
-                <div>
-                  <h3 className="text-2xl font-black uppercase text-white tracking-wider mb-2">Cota Apoio Regional</h3>
-                  <p className="text-xs font-bold text-gray-300 uppercase tracking-widest mb-6">Cota de Transmissão Ao Vivo</p>
-                  <p className="text-xs sm:text-sm text-[#b8c0d4] leading-relaxed mb-6 uppercase">
-                    Ideal para marcas regionais que querem presença constante nas transmissões, com um investimento mais acessível que a Cota Master.
-                  </p>
-                  <ul className="space-y-2.5 text-xs text-[#cad0e0] mb-8">
-                    <li className="flex items-start gap-2"><span className="text-white font-bold">✓</span> Logo exibida durante as transmissões ao vivo (inserção periódica)</li>
-                    <li className="flex items-start gap-2"><span className="text-white font-bold">✓</span> Menção no início e encerramento de cada transmissão</li>
-                    <li className="flex items-start gap-2"><span className="text-white font-bold">✓</span> Presença no site, na seção de parceiros</li>
-                  </ul>
-                </div>
-                <a href="https://wa.me/5547988444404?text=Olá,%20tenho%20interesse%20na%20Cota%20Apoio%20Regional%20da%20Arena%20Vale!" target="_blank" rel="noreferrer" className="w-full text-center rounded-full border border-white/20 bg-white/5 py-3 text-xs font-black uppercase tracking-widest text-white hover:bg-white/10 hover:border-white/40 transition">Garantir Apoio Regional ↗</a>
-              </div>
-
-              <div className="flex flex-col justify-between rounded-3xl border border-white/20 bg-gradient-to-b from-white/[0.05] via-[#111111] to-[#050505] p-8 shadow-2xl relative overflow-hidden group hover:border-white/50 transition">
-                <div>
-                  <h3 className="text-2xl font-black uppercase text-white tracking-wider mb-2">Cota Institucional</h3>
-                  <p className="text-xs font-bold text-gray-300 uppercase tracking-widest mb-6">Parceiros de Apoio ao Esporte</p>
-                  <p className="text-xs sm:text-sm text-[#b8c0d4] leading-relaxed mb-6 uppercase">
-                    Para entidades, federações e parceiros de apoio ao esporte regional. Reconhecimento como parceiro institucional oficial da Arena Vale.
-                  </p>
-                  <ul className="space-y-2.5 text-xs text-[#cad0e0] mb-8">
-                    <li className="flex items-start gap-2"><span className="text-white font-bold">✓</span> Logo fixa na seção de parceiros do site</li>
-                    <li className="flex items-start gap-2"><span className="text-white font-bold">✓</span> Associação ao Projeto Social Arena Vale</li>
-                    <li className="flex items-start gap-2"><span className="text-white font-bold">✓</span> Menção em releases e materiais institucionais</li>
-                  </ul>
-                </div>
-                <a href="https://wa.me/5547988444404?text=Olá,%20tenho%20interesse%20na%20Cota%20Institucional%20da%20Arena%20Vale!" target="_blank" rel="noreferrer" className="w-full text-center rounded-full border border-white/20 bg-white/10 py-3 text-xs font-black uppercase tracking-widest text-white hover:bg-white/20 transition">Garantir Cota Institucional ↗</a>
-              </div>
-            </div>
-
-            <div className="relative z-10 pt-10 border-t border-white/10 text-center max-w-2xl mx-auto">
-              <h4 className="text-sm font-black uppercase tracking-widest text-white mb-2">Como fechar uma cota</h4>
-              <p className="text-xs sm:text-sm text-gray-400 uppercase leading-relaxed mb-6">
-                Todo interesse em patrocínio é direcionado para contato direto via WhatsApp, onde a equipe Arena Vale apresenta valores atualizados e disponibilidade de cada cota por temporada.
-              </p>
-              <a href="https://wa.me/5547988444404?text=Olá,%20quero%20conversar%20sobre%20patrocínio%20na%20Arena%20Vale!" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-emerald-600 to-emerald-500 px-8 py-4 text-xs font-black uppercase tracking-widest text-white hover:scale-105 transition shadow-lg shadow-emerald-600/30">
-                💬 WhatsApp Patrocínios: (47) 98844-4404 ↗
-              </a>
-            </div>
-
-          </div>
-        </section>
-
-        {/* SECÇÃO PROJETO SOCIAL */}
-        <section id="projetosocial" className="border-t border-white/5 bg-[#0a0a0a] px-6 py-16">
-          <div className="mx-auto max-w-7xl">
-            <div className="rounded-[2.5rem] border border-white/10 bg-[#050505] p-8 sm:p-14 shadow-2xl">
-              <span className="text-xs font-black uppercase tracking-[0.25em] text-[#e50914]">IMPACTO & INCLUSÃO</span>
-              <h2 className="mt-3 text-3xl font-black uppercase sm:text-5xl leading-tight">PROJETO SOCIAL <br /><span className="text-[#e50914]">ARENA VALE</span></h2>
-              <p className="mt-4 max-w-2xl text-base text-[#cad0e0] leading-relaxed">O esporte como ferramenta de transformação comunitária. Apoio para formação de jovens talentos, integração social e cooperação nas comunidades do Vale.</p>
-              <div className="mt-8 flex flex-wrap gap-4"><a href="https://wa.me/5547988444404" target="_blank" rel="noreferrer" className="rounded-full bg-[#e50914] px-8 py-3.5 text-xs font-black uppercase tracking-wider text-white shadow-lg shadow-[#e50914]/25 transition hover:bg-[#ff1e27]">💼 Apoiar o Projeto Social</a></div>
-            </div>
-          </div>
-        </section>
-
-        {/* RODAPÉ */}
-        <footer className="border-t border-white/10 bg-[#050505] px-6 py-14">
-          <div className="mx-auto flex max-w-7xl flex-col items-center justify-center text-center">
-            <img src="/logo.png" alt="Arena Vale Oficial" className="h-16 sm:h-20 w-auto object-contain mb-6 mix-blend-lighten drop-shadow-[0_0_20px_rgba(229,9,20,0.25)]" />
-            <div className="flex items-center justify-center gap-5 mb-6">
-              <a href="https://www.instagram.com/arenavaleoficial/" target="_blank" rel="noreferrer" title="Instagram Oficial" className="flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-white/5 text-[#cad0e0] transition hover:border-[#e50914] hover:bg-[#e50914] hover:text-white shadow-lg"><svg className="h-5 w-5 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a>
-              <a href="https://wa.me/5547988444404" target="_blank" rel="noreferrer" title="WhatsApp Oficial" className="flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-white/5 text-[#cad0e0] transition hover:border-emerald-500 hover:bg-emerald-600 hover:text-white shadow-lg"><svg className="h-5 w-5 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg></a>
-            </div>
-            <p className="text-sm font-semibold text-gray-400">O palco do esporte é aqui.</p>
-            <p className="text-xs text-gray-500 mt-1 font-mono">CNPJ: 40.694.741/0001-34</p>
-
-            <div className="pt-8 mt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-center gap-4 text-xs text-gray-500">
-              <span>© 2026 Arena Vale · Mídia Esportiva & Eventos. Todos os direitos reservados.</span>
-              <span className="hidden sm:inline">|</span>
-              <div className="flex items-center gap-4">
-                <Link href="/privacidade" className="hover:text-white transition underline underline-offset-4 decoration-white/20">Política de Privacidade</Link>
-                <Link href="/termos" className="hover:text-white transition underline underline-offset-4 decoration-white/20">Termos de Uso</Link>
-              </div>
-            </div>
-          </div>
-        </footer>
-      </div>
-    </>
+    <main id="topo" className="w-full overflow-x-clip bg-av-preto text-av-branco">
+      <Banner capaUrl={config.capaUrl} />
+      <AoVivo aoVivo={aoVivo} embed={embedAoVivo(config.youtubeChannelId)} linkAssistir={linkAssistirAoVivo(config)} proxima={proximaTransmissao(agenda)} />
+      {/* Agora na Arena e Esporte Mundial: Task 12 (notícias em cartazes). */}
+      <AgendaArena itens={agenda} />
+      <UltimosVideos videos={videos} externos={externos} channelUrl={`https://www.youtube.com/${config.youtubeHandle}`} />
+      <Modalidades />
+      <ProjetoSocialHome whatsapp={config.whatsapp} />
+      <AtletasDestaques destaques={destaques} />
+      <ParaMarcas whatsapp={config.whatsapp} />
+    </main>
   );
 }

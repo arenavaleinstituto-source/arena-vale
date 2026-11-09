@@ -14,6 +14,12 @@ function desfazerEntidades(t: string): string {
     .replace(/&(amp|lt|gt|quot|#39|apos);/g, (m) => ENTIDADES[m] ?? m);
 }
 
+/** Títulos dos Shorts vêm cheios de hashtags: some com elas, mas nunca deixa o título vazio. */
+function semHashtags(t: string): string {
+  const limpo = t.replace(/(^|\s)#[^\s#]+/g, ' ').replace(/\s+/g, ' ').trim();
+  return limpo || t;
+}
+
 function campo(bloco: string, tag: string): string | null {
   const m = bloco.match(new RegExp(`<${tag}[^>]*>([\\s\\S]*?)</${tag}>`));
   return m ? m[1].trim() : null;
@@ -29,7 +35,7 @@ export function parsearFeed(xml: string): VideoYT[] {
     if (!id || !titulo || !publicadoEm) continue;
     videos.push({
       id,
-      titulo: desfazerEntidades(titulo),
+      titulo: semHashtags(desfazerEntidades(titulo)),
       publicadoEm,
       capa: `https://i.ytimg.com/vi/${id}/hqdefault.jpg`,
       link: `https://www.youtube.com/watch?v=${id}`,
