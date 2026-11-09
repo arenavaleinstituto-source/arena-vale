@@ -122,7 +122,7 @@ export function CapitaoElenco({ timeId, jogadoresIniciais }: Props) {
             />
           </label>
         </div>
-        <p className="text-xs text-av-cinza">O CPF fica protegido: só a coordenação e você veem, e na lista aparecem apenas os 2 últimos números.</p>
+        <p className="text-xs text-av-cinza">O CPF completo fica guardado e protegido: só a coordenação e você têm acesso. Na lista aparecem apenas os 3 primeiros números.</p>
         <button type="button" onClick={adicionarJogador} disabled={salvando} className="btn-forte w-fit disabled:opacity-50">
           {salvando ? 'Salvando...' : '+ Adicionar atleta'}
         </button>

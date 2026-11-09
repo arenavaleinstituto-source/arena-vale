@@ -48,7 +48,7 @@ describe('CapitaoElenco', () => {
 
   it('lista os atletas com o CPF mascarado', async () => {
     render(<CapitaoElenco timeId={T} jogadoresIniciais={[{ id: 'j1', nome: 'Atleta Um', numero_camisa: 7, posicao: 'Pivô', foto_url: null }]} />);
-    expect(await screen.findByText('CPF ***.***.***-25')).toBeInTheDocument();
+    expect(await screen.findByText('CPF 529...')).toBeInTheDocument();
     expect(screen.getByText('Atleta Um')).toBeInTheDocument();
   });
 
@@ -66,7 +66,7 @@ describe('CapitaoElenco', () => {
     expect(screen.getByLabelText('CPF')).toHaveValue('529.982.247-25');
     await u.click(screen.getByRole('button', { name: '+ Adicionar atleta' }));
     await waitFor(() => expect(inserts[0]).toMatchObject({ nome: 'Gabriel Mendes', cpf: '52998224725', time_id: T, numero_camisa: 10 }));
-    expect(await screen.findByText('CPF ***.***.***-25')).toBeInTheDocument();
+    expect(await screen.findByText('CPF 529...')).toBeInTheDocument();
   });
 
   it('foto vai para a pasta da própria equipe', async () => {

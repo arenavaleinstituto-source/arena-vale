@@ -17,7 +17,7 @@ describe('CPF', () => {
   });
 
   it('mostra mascarado na lista', () => {
-    expect(mascararCpf('52998224725')).toBe('***.***.***-25');
+    expect(mascararCpf('52998224725')).toBe('529...');
     expect(mascararCpf(null)).toBe('—');
   });
 });

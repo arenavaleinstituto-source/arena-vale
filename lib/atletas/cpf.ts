@@ -24,8 +24,8 @@ export function formatarCpf(v: string): string {
     .replace(/\.(\d{3})(\d)/, '.$1-$2');
 }
 
-/** Na lista, só os 2 últimos dígitos aparecem. */
+/** Na lista, só os 3 primeiros dígitos e reticências (o CPF completo fica guardado no banco). */
 export function mascararCpf(v: string | null | undefined): string {
   const d = soDigitos(v ?? '');
-  return d.length === 11 ? `***.***.***-${d.slice(9)}` : '—';
+  return d.length === 11 ? `${d.slice(0, 3)}...` : '—';
 }
