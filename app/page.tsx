@@ -6,6 +6,8 @@ import { Modalidades } from '@/components/home/Modalidades';
 import { ProjetoSocialHome } from '@/components/home/ProjetoSocialHome';
 import { AtletasDestaques } from '@/components/home/AtletasDestaques';
 import { ParaMarcas } from '@/components/home/ParaMarcas';
+import { Patrocinadores } from '@/components/home/Patrocinadores';
+import { buscarPatrocinadores } from '@/lib/midia/patrocinadores';
 import { lerConfigSite, linkAssistirAoVivo } from '@/lib/midia/config';
 import { buscarVideosYT, embedAoVivo, estaAoVivo } from '@/lib/midia/youtube';
 import { buscarAgenda, proximaTransmissao } from '@/lib/midia/agenda';
@@ -27,7 +29,7 @@ async function seguro<T>(p: Promise<T>, vazio: T): Promise<T> {
 /** Página inicial de mídia esportiva (spec Fase 3, seção 5). */
 export default async function Home() {
   const config = await lerConfigSite();
-  const [aoVivoDetectado, agenda, videos, externos, destaques] = await Promise.all([
+  const [aoVivoDetectado, agenda, videos, externos, destaques, patrocinadores] = await Promise.all([
     seguro(estaAoVivo(config.youtubeChannelId), false),
     seguro(buscarAgenda(6), []),
     seguro(buscarVideosYT(config.youtubeChannelId), []),
@@ -36,6 +38,7 @@ export default async function Home() {
       buscarDestaques(createPublicClient(), { limite: 12 }).then((r) => r.destaques),
       [],
     ),
+    seguro(buscarPatrocinadores(), []),
   ]);
   const aoVivo = config.aoVivoManual || aoVivoDetectado;
 
@@ -49,6 +52,7 @@ export default async function Home() {
       <Modalidades />
       <ProjetoSocialHome whatsapp={config.whatsapp} />
       <AtletasDestaques destaques={destaques} />
+      <Patrocinadores patrocinadores={patrocinadores} />
       <ParaMarcas whatsapp={config.whatsapp} />
     </main>
   );
