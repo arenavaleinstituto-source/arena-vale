@@ -21,10 +21,16 @@ create table if not exists public.solicitacoes_inscricao (
 alter table public.solicitacoes_inscricao add column if not exists equipe_sigla varchar(4);
 alter table public.solicitacoes_inscricao add column if not exists cidade text;
 alter table public.solicitacoes_inscricao enable row level security;
+drop policy if exists "solicitacoes_public_insert" on public.solicitacoes_inscricao;
 create policy "solicitacoes_public_insert" on public.solicitacoes_inscricao for insert to anon, authenticated with check (autorizacao_responsavel = true);
+drop policy if exists "solicitacoes_staff_read" on public.solicitacoes_inscricao;
 create policy "solicitacoes_staff_read" on public.solicitacoes_inscricao for select to authenticated using (public.is_coordenador() or exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'moderador'));
+drop policy if exists "solicitacoes_staff_update" on public.solicitacoes_inscricao;
 create policy "solicitacoes_staff_update" on public.solicitacoes_inscricao for update to authenticated using (public.is_coordenador() or exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'moderador')) with check (true);
 insert into storage.buckets (id, name, public) values ('atletas-privado', 'atletas-privado', false) on conflict (id) do update set public = false;
+drop policy if exists "atletas_private_read_staff" on storage.objects;
 create policy "atletas_private_read_staff" on storage.objects for select to authenticated using (bucket_id = 'atletas-privado' and (public.is_coordenador() or exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'moderador')));
+drop policy if exists "atletas_private_insert_authenticated" on storage.objects;
 create policy "atletas_private_insert_authenticated" on storage.objects for insert to authenticated with check (bucket_id = 'atletas-privado');
+drop policy if exists "atletas_private_delete_staff" on storage.objects;
 create policy "atletas_private_delete_staff" on storage.objects for delete to authenticated using (bucket_id = 'atletas-privado' and public.is_coordenador());

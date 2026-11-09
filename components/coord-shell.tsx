@@ -1,57 +1,64 @@
 'use client';
-import { useState, useTransition, useRef } from 'react';
-import { Shield } from './shield';
+
+import { useRef, useState, useTransition } from 'react';
+import Link from 'next/link';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
-import type { Profile, Inscricao, Patrocinador } from '@/lib/supabase/types';
+import type { Profile, Patrocinador } from '@/lib/supabase/types';
 import { CoordSumulas } from './coord-sumulas';
 import { CoordModeradores } from './coord-moderadores';
 import { CoordCapitaes } from './coord-capitaes';
 import { CoordConfig } from './coord-config';
 import { CoordJogos } from './coord-jogos';
+import { CoordCampeonatos } from './coord-campeonatos';
+import { AbaAoVivo } from './painel/AbaAoVivo';
+import { AbaNoticias } from './painel/AbaNoticias';
+import { AbaVideos } from './painel/AbaVideos';
+import { ABAS_COORD, abaValida, type IdAba } from './painel/abas';
+import GestaoAtletasClient from '@/app/(coord)/coordenador/atletasdestaques/gestao-atletas-client';
 
-type Stats = {
+export type StatsPainel = {
+  campeonatos: number;
+  equipes: number;
+  jogos: number;
+  videos: number;
   inscricoes_pendentes: number;
-  total_times: number;
-  total_jogos: number;
-  receita_mensal: number;
 };
 
 interface Props {
   user: Profile;
-  stats: Stats;
+  stats: StatsPainel;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- formato legado vindo de getInscricoes (com joins)
   inscricoes: any[];
   patrocinadores: Patrocinador[];
+  aoVivoDetectado: boolean;
 }
 
-const TABS = [
-  { id: 'site', label: '🌐 Abrir site' },
-  { id: 'inscricoes', label: '📝 Inscrições' },
-  { id: 'moderadores', label: '🛡️ Moderadores' },
-  { id: 'capitaes', label: '👑 Capitães' },
-  { id: 'sumulas', label: '📄 Súmulas' },
-  { id: 'patrocinadores', label: '🤝 Patrocinadores' },
-  { id: 'destaques', label: '⭐ Atletas Destaque', href: '/coordenador/atletasdestaques' },
-  { id: 'config', label: '⚙️ Config' },
-  { id: 'jogos', label: '⚽ Jogos e Placar' },
-];
+const CAMPO = 'w-full rounded-2xl border border-av-linha bg-[#08080a] px-4 py-3 text-sm text-av-branco outline-none focus:border-av-vermelho';
+const ROTULO = 'mb-1 block text-[11px] font-bold uppercase tracking-widest text-av-cinza';
 
-export function CoordShell({ user, stats: initialStats, inscricoes: initialInsc, patrocinadores: initialPat }: Props) {
-  const [tab, setTab] = useState('visao');
-  const [stats] = useState(initialStats);
+/** Painel da coordenação no visual da mídia esportiva (spec Fase 3, seção 12). */
+export function CoordShell({ user, stats, inscricoes: initialInsc, patrocinadores: initialPat, aoVivoDetectado }: Props) {
+  const router = useRouter();
+  const pathname = usePathname() ?? '/coordenador';
+  const params = useSearchParams();
+  const [tab, setTab] = useState<IdAba>(() => abaValida(params?.get('aba') ?? null));
   const [inscricoes, setInscricoes] = useState(initialInsc);
   const [patrocinadores, setPatrocinadores] = useState(initialPat);
   const [, startTransition] = useTransition();
   const supabase = createClient();
 
   const [showAddModal, setShowAddModal] = useState(false);
-  const [newPat, setNewPat] = useState({
-    nome: '', valor_mensal: '', cota: 'Bronze', logo_initials: '',
-    logo_cor: '#c9a338', categoria: '', descricao: '', site_url: '',
-  });
+  const [newPat, setNewPat] = useState({ nome: '', valor_mensal: '', cota: 'Bronze', logo_initials: '', logo_cor: '#e50914', categoria: '', descricao: '', site_url: '' });
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  function abrir(id: IdAba) {
+    setTab(id);
+    router.replace(`${pathname}?aba=${id}`, { scroll: false });
+  }
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -60,18 +67,16 @@ export function CoordShell({ user, stats: initialStats, inscricoes: initialInsc,
 
   const approveInscricao = async (id: string) => {
     startTransition(async () => {
-      await supabase.from('inscricoes').update({
-        status: 'aprovada', approved_at: new Date().toISOString(), approved_by: user.id,
-      }).eq('id', id);
-      setInscricoes(prev => prev.filter(i => i.id !== id));
+      await supabase.from('inscricoes').update({ status: 'aprovada', approved_at: new Date().toISOString(), approved_by: user.id }).eq('id', id);
+      setInscricoes((prev) => prev.filter((i) => i.id !== id));
     });
   };
 
   const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    if (!file.type.startsWith('image/')) { alert('Selecione uma imagem.'); return; }
-    if (file.size > 5 * 1024 * 1024) { alert('Max 5MB.'); return; }
+    if (!file.type.startsWith('image/')) return alert('Selecione uma imagem.');
+    if (file.size > 5 * 1024 * 1024) return alert('Imagem de até 5 MB.');
     setLogoFile(file);
     const reader = new FileReader();
     reader.onloadend = () => setLogoPreview(reader.result as string);
@@ -82,44 +87,49 @@ export function CoordShell({ user, stats: initialStats, inscricoes: initialInsc,
     if (!logoFile) return null;
     setUploading(true);
     try {
-      const fileExt = logoFile.name.split('.').pop();
-      const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${fileExt}`;
-      const filePath = `logos/${fileName}`;
-      const { error: uploadError } = await supabase.storage
-        .from('patrocinadores').upload(filePath, logoFile, { cacheControl: '3600', upsert: false });
-      if (uploadError) { alert('Erro: ' + uploadError.message); return null; }
-      const { data } = supabase.storage.from('patrocinadores').getPublicUrl(filePath);
-      return data.publicUrl;
-    } catch (err) { return null; }
-    finally { setUploading(false); }
+      const filePath = `logos/${Date.now()}-${Math.random().toString(36).slice(2)}.${logoFile.name.split('.').pop()}`;
+      const { error } = await supabase.storage.from('patrocinadores').upload(filePath, logoFile, { cacheControl: '3600', upsert: false });
+      if (error) {
+        alert('Erro: ' + error.message);
+        return null;
+      }
+      return supabase.storage.from('patrocinadores').getPublicUrl(filePath).data.publicUrl;
+    } catch {
+      return null;
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleAddPatrocinador = async () => {
-    if (!newPat.nome.trim()) { alert('Informe o nome.'); return; }
+    if (!newPat.nome.trim()) return alert('Informe o nome.');
     startTransition(async () => {
       let logo_url = null;
       if (logoFile) {
         logo_url = await uploadLogo();
         if (!logo_url) return;
       }
-      const initials = newPat.logo_initials || newPat.nome.slice(0, 4).toUpperCase();
-      const { data, error } = await supabase.from('patrocinadores').insert({
-        nome: newPat.nome.trim(),
-        valor_mensal: parseFloat(newPat.valor_mensal) || 0,
-        cota: newPat.cota,
-        logo_initials: initials,
-        logo_url,
-        logo_cor: newPat.logo_cor,
-        categoria: newPat.categoria || null,
-        descricao: newPat.descricao || null,
-        site_url: newPat.site_url || null,
-        ativo: true,
-        created_by: user.id,
-      }).select().single();
-      if (error) { alert('Erro: ' + error.message); return; }
+      const { data, error } = await supabase
+        .from('patrocinadores')
+        .insert({
+          nome: newPat.nome.trim(),
+          valor_mensal: parseFloat(newPat.valor_mensal) || 0,
+          cota: newPat.cota,
+          logo_initials: newPat.logo_initials || newPat.nome.slice(0, 4).toUpperCase(),
+          logo_url,
+          logo_cor: newPat.logo_cor,
+          categoria: newPat.categoria || null,
+          descricao: newPat.descricao || null,
+          site_url: newPat.site_url || null,
+          ativo: true,
+          created_by: user.id,
+        })
+        .select()
+        .single();
+      if (error) return alert('Erro: ' + error.message);
       if (data) {
-        setPatrocinadores(prev => [...prev, data]);
-        setNewPat({ nome: '', valor_mensal: '', cota: 'Bronze', logo_initials: '', logo_cor: '#c9a338', categoria: '', descricao: '', site_url: '' });
+        setPatrocinadores((prev) => [...prev, data]);
+        setNewPat({ nome: '', valor_mensal: '', cota: 'Bronze', logo_initials: '', logo_cor: '#e50914', categoria: '', descricao: '', site_url: '' });
         setLogoFile(null);
         setLogoPreview(null);
         setShowAddModal(false);
@@ -131,239 +141,235 @@ export function CoordShell({ user, stats: initialStats, inscricoes: initialInsc,
     if (!confirm('Excluir patrocinador?')) return;
     startTransition(async () => {
       await supabase.from('patrocinadores').delete().eq('id', id);
-      setPatrocinadores(prev => prev.filter(p => p.id !== id));
+      setPatrocinadores((prev) => prev.filter((p) => p.id !== id));
     });
   };
 
+  const iniciais = user.full_name
+    .split(' ')
+    .map((n) => n[0])
+    .slice(0, 2)
+    .join('')
+    .toUpperCase();
+
   return (
-    <div>
-      {/* Header */}
-      <div className="panel mb-6 flex justify-between items-center flex-wrap gap-4 bg-gradient-to-br from-[var(--surface-2)] to-[var(--bg-alt)] border-[var(--primary)]/20 relative overflow-hidden">
-        <div className="relative z-10">
-          <span className="eyebrow">🔐 Área restrita</span>
-          <h1 className="font-serif text-2xl font-extrabold">Painel do Coordenador</h1>
-          <p className="text-[var(--text-dim)] text-sm">Bem-vindo, {user.full_name}.</p>
-        </div>
-        <div className="flex gap-3 items-center relative z-10">
-          <div className="flex items-center gap-3 pr-4 border-r border-white/10">
-            <div className="w-9 h-9 rounded-full grid place-items-center bg-gradient-to-br from-[var(--primary)] to-[var(--primary-dark)] text-[#0a1530] font-serif font-black">
-              {user.full_name.split(' ').map(n => n[0]).slice(0, 2).join('')}
-            </div>
-            <div>
-              <strong className="block text-sm">{user.full_name}</strong>
-              <small className="text-xs text-[var(--text-mute)]">Coordenador Geral</small>
-            </div>
-          </div>
-          <button onClick={handleLogout} className="btn-outline">Sair</button>
-        </div>
-      </div>
-
-      {/* Tabs */}
-      <div className="flex gap-1 border-b border-white/10 mb-7 overflow-x-auto">
-        {TABS.map(t => {
-          if (t.id === 'site') {
-            return (
-              <a
-                key={t.id}
-                href="https://arena-vale.vercel.app/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-4 py-3 text-sm font-semibold border-b-2 border-transparent text-[var(--text-dim)] hover:text-white whitespace-nowrap"
-              >
-                {t.label}
-              </a>
-            );
-          }
-
-          if (t.id === 'destaques' && t.href) {
-            return (
-              <a
-                key={t.id}
-                href={t.href}
-                className="px-4 py-3 text-sm font-semibold border-b-2 border-transparent text-[var(--primary)] hover:text-white whitespace-nowrap"
-              >
-                {t.label}
-              </a>
-            );
-          }
-
-          return (
-            <button
-              key={t.id}
-              onClick={() => setTab(t.id)}
-              className={`px-4 py-3 text-sm font-semibold border-b-2 transition whitespace-nowrap ${
-                tab === t.id
-                  ? 'text-[var(--primary)] border-[var(--primary)]'
-                  : 'text-[var(--text-dim)] border-transparent hover:text-white'
-              }`}
-            >
-              {t.label}
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Visão */}
-      {tab === 'visao' && (
-        <>
+    <div className="grid gap-6">
+      {/* Cabeçalho */}
+      <header className="flex flex-wrap items-center justify-between gap-4 rounded-[22px] border border-av-linha bg-av-grafite p-5">
+        <div className="flex items-center gap-4">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo.png" alt="ARENA VALE" className="h-12 w-auto" />
           <div>
-            <h2 className="font-serif text-xl font-bold mt-1">
-              Arena Vale Sports
-            </h2>
+            <h1 className="font-display text-2xl font-extrabold uppercase leading-none">Painel da coordenação</h1>
+            <p className="mt-1 text-sm text-av-cinza">Bem-vindo, {user.full_name}.</p>
           </div>
+        </div>
+        <div className="flex flex-wrap items-center gap-3">
+          <Link href="/" className="btn-leve">
+            Ver o site
+          </Link>
+          <div className="flex items-center gap-3 rounded-full border border-av-linha py-1.5 pl-1.5 pr-4">
+            <span className="grid h-9 w-9 place-items-center rounded-full bg-av-vermelho font-display text-sm font-black">{iniciais}</span>
+            <span className="grid leading-tight">
+              <strong className="text-sm">{user.full_name}</strong>
+              <small className="text-xs text-av-cinza">Coordenador</small>
+            </span>
+          </div>
+          <button type="button" onClick={handleLogout} className="btn-leve">
+            Sair
+          </button>
+        </div>
+      </header>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
-            {[
-              { icone: '⏳', label: 'Pendentes', value: stats.inscricoes_pendentes },
-              { icone: '👥', label: 'Times', value: stats.total_times },
-              { icone: '⚽', label: 'Jogos', value: stats.total_jogos },
-              { icone: '💰', label: 'Receita/mês', value: 'R$ ' + stats.receita_mensal.toLocaleString('pt-BR') },
-            ].map((s, i) => (
-              <div key={i} className="panel flex items-center gap-3">
-                <div className="w-11 h-11 rounded-xl grid place-items-center text-xl bg-[rgba(245,215,110,0.12)]">{s.icone}</div>
+      {/* Abas */}
+      <div role="tablist" aria-label="Seções do painel" className="flex flex-wrap justify-center gap-2.5 rounded-[22px] border border-av-linha bg-av-grafite p-4">
+        {ABAS_COORD.map((a) => (
+          <button
+            key={a.id}
+            type="button"
+            role="tab"
+            aria-selected={tab === a.id}
+            onClick={() => abrir(a.id)}
+            className={`w-[calc(50%-5px)] truncate rounded-full border px-3 py-2.5 sm:w-[158px] text-center font-rotulo text-sm font-bold uppercase tracking-wider transition ${
+              tab === a.id ? 'border-av-vermelho bg-av-vermelho text-white shadow-[0_8px_20px_rgba(229,9,20,.35)]' : 'border-av-linha bg-av-preto text-av-cinza hover:border-av-vermelho hover:text-white'
+            }`}
+          >
+            {a.rotulo}
+          </button>
+        ))}
+      </div>
+
+      <div role="tabpanel">
+        {tab === 'visao' && (
+          <div className="panel grid gap-4">
+            <h2 className="titulo-secao !text-left !text-2xl">Números da Arena</h2>
+            <p className="text-sm text-av-cinza">Para conhecimento da equipe — não aparece no site.</p>
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {[
+                { rotulo: 'Campeonatos', valor: stats.campeonatos },
+                { rotulo: 'Equipes', valor: stats.equipes },
+                { rotulo: 'Jogos', valor: stats.jogos },
+                { rotulo: 'Vídeos no canal', valor: stats.videos },
+              ].map((s) => (
+                <div key={s.rotulo} className="border-l-[3px] border-av-vermelho py-1.5 pl-4">
+                  <strong className="block font-display text-5xl font-extrabold leading-none">{s.valor}</strong>
+                  <span className="font-rotulo text-sm font-bold uppercase tracking-widest text-av-cinza">{s.rotulo}</span>
+                </div>
+              ))}
+            </div>
+            {stats.inscricoes_pendentes > 0 && (
+              <button type="button" onClick={() => abrir('inscricoes')} className="btn-forte w-fit">
+                {stats.inscricoes_pendentes} inscrição(ões) aguardando aprovação
+              </button>
+            )}
+          </div>
+        )}
+
+        {tab === 'aovivo' && <AbaAoVivo aoVivoDetectado={aoVivoDetectado} />}
+        {tab === 'noticias' && <AbaNoticias />}
+        {tab === 'videos' && <AbaVideos />}
+        {tab === 'jogos' && <CoordJogos />}
+        {tab === 'campeonatos' && <CoordCampeonatos />}
+        {tab === 'inscricoes' && (
+          <div className="panel">
+            <h2 className="mb-4 font-rotulo text-sm font-bold uppercase tracking-widest text-av-cinza">Times aguardando aprovação · {inscricoes.length}</h2>
+            {inscricoes.length === 0 && <p className="py-8 text-center text-av-cinza">Nenhuma inscrição pendente.</p>}
+            {inscricoes.map((i) => (
+              <div key={i.id} className="flex items-center justify-between gap-3 border-b border-white/5 py-3.5 last:border-0">
                 <div>
-                  <strong className="block font-serif text-2xl font-black">{s.value}</strong>
-                  <span className="text-xs text-[var(--text-mute)] uppercase tracking-wider">{s.label}</span>
+                  <strong className="block text-sm font-bold">{i.time?.nome ?? '—'}</strong>
+                  <p className="text-xs text-av-cinza">
+                    {i.campeonato?.nome} · {i.categoria}
+                  </p>
                 </div>
+                <button type="button" onClick={() => approveInscricao(i.id)} className="btn-forte !px-4 !py-1.5 !text-xs">
+                  ✓ Aprovar
+                </button>
               </div>
             ))}
           </div>
-        </>
-      )}
-
-      {tab === 'jogos' && <CoordJogos />}
-      
-      {tab === 'inscricoes' && (
-        <div className="panel">
-          <h3 className="text-[11px] tracking-widest text-[var(--text-mute)] uppercase font-bold mb-4">
-            Times aguardando aprovação · {inscricoes.length}
-          </h3>
-          {inscricoes.length === 0 && <p className="text-center text-[var(--text-mute)] py-8">Nenhuma inscrição pendente 🎉</p>}
-          {inscricoes.map((i: any) => (
-            <div key={i.id} className="flex justify-between items-center gap-3 py-3.5 border-b border-white/5 last:border-0">
-              <div>
-                <strong className="block text-sm font-bold">{i.time?.nome ?? '—'}</strong>
-                <p className="text-xs text-[var(--text-mute)]">{i.campeonato?.nome} · {i.categoria}</p>
-              </div>
-              <button onClick={() => approveInscricao(i.id)} className="px-3 py-1.5 text-xs rounded-full bg-[rgba(95,219,149,0.15)] border border-[rgba(95,219,149,0.4)] text-[#5fdb95] font-bold">✓ Aprovar</button>
+        )}
+        {tab === 'sumulas' && <CoordSumulas userId={user.id} />}
+        {tab === 'moderadores' && <CoordModeradores />}
+        {tab === 'capitaes' && <CoordCapitaes />}
+        {tab === 'patrocinadores' && (
+          <div className="grid gap-5">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <p className="text-sm text-av-cinza">Cadastre, edite ou remova patrocinadores.</p>
+              <button type="button" onClick={() => setShowAddModal(true)} className="btn-forte">
+                + Adicionar
+              </button>
             </div>
-          ))}
-        </div>
-      )}
-
-      {tab === 'patrocinadores' && (
-        <div>
-          <div className="flex justify-between items-center mb-5 flex-wrap gap-3">
-            <p className="text-[var(--text-dim)] text-sm">Cadastre, edite ou remova patrocinadores.</p>
-            <button onClick={() => setShowAddModal(true)} className="btn-primary">+ Adicionar</button>
-          </div>
-          <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-            {patrocinadores.map(p => (
-              <div key={p.id} className="panel flex flex-col items-center text-center">
-                <div className="w-full h-20 grid place-items-center rounded-[10px] border border-white/10 bg-gradient-to-br from-[rgba(245,215,110,0.08)] to-[rgba(120,160,255,0.08)] overflow-hidden" style={{ borderColor: p.logo_cor || '#f5d76e' }}>
-                  {p.logo_url ? (
-                    <img src={p.logo_url} alt={p.nome} className="max-h-full max-w-full object-contain p-1" />
-                  ) : (
-                    <span className="font-serif font-black text-lg" style={{ color: p.logo_cor || '#f5d76e' }}>{p.logo_initials}</span>
-                  )}
-                </div>
-                <strong className="mt-3 text-sm">{p.nome}</strong>
-                <small className="text-xs text-[var(--text-mute)]">Cota {p.cota} · R$ {Number(p.valor_mensal).toLocaleString('pt-BR')}/mês</small>
-                <button onClick={() => deletePatrocinador(p.id)} className="mt-3 text-xs px-3 py-1 rounded-full border border-red-500/30 bg-red-500/10 text-red-300">🗑️ Excluir</button>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {tab === 'moderadores' && <CoordModeradores />}
-      {tab === 'capitaes' && <CoordCapitaes />}
-      {tab === 'sumulas' && <CoordSumulas userId={user.id} />}
-      {tab === 'config' && <CoordConfig />}
-
-      {/* MODAL Adicionar Patrocinador */}
-      {showAddModal && (
-        <div
-          className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 grid place-items-center p-4"
-          onClick={() => setShowAddModal(false)}
-        >
-          <div className="bg-gradient-to-br from-[var(--surface-2)] to-[var(--bg)] border border-[var(--primary)]/30 rounded-2xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-2xl" onClick={e => e.stopPropagation()}>
-            <div className="flex justify-between items-center mb-5">
-              <h2 className="font-serif text-xl font-extrabold">Novo Patrocinador</h2>
-              <button onClick={() => setShowAddModal(false)} className="w-8 h-8 grid place-items-center rounded-full border border-white/10 text-[var(--text-dim)] hover:border-[var(--primary)] hover:text-[var(--primary)]">✕</button>
-            </div>
-
-            <div className="mb-5">
-              <label className="block text-[11px] tracking-widest text-[var(--text-mute)] uppercase font-bold mb-2">Logo do Patrocinador</label>
-              <input ref={fileInputRef} type="file" accept="image/*" onChange={handleLogoChange} className="hidden" />
-              <div className="w-full h-32 rounded-xl border-2 border-dashed border-[var(--primary)]/30 grid place-items-center cursor-pointer hover:border-[var(--primary)] hover:bg-[var(--primary)]/5 transition" onClick={() => fileInputRef.current?.click()}>
-                {logoPreview ? (
-                  <img src={logoPreview} alt="Preview" className="max-h-28 max-w-full object-contain" />
-                ) : (
-                  <div className="text-center">
-                    <div className="text-3xl mb-2">📷</div>
-                    <p className="text-sm text-[var(--text-dim)]">Clique para fazer upload</p>
-                    <p className="text-xs text-[var(--text-mute)] mt-1">PNG, JPG ou SVG (max 5MB)</p>
+            <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+              {patrocinadores.map((p) => (
+                <div key={p.id} className="panel flex flex-col items-center text-center">
+                  <div className="grid h-20 w-full place-items-center overflow-hidden rounded-xl border border-av-linha bg-white/[0.03]">
+                    {p.logo_url ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={p.logo_url} alt={p.nome} className="max-h-full max-w-full object-contain p-1" />
+                    ) : (
+                      <span className="font-display text-lg font-black" style={{ color: p.logo_cor || '#e50914' }}>
+                        {p.logo_initials}
+                      </span>
+                    )}
                   </div>
-                )}
-              </div>
+                  <strong className="mt-3 text-sm">{p.nome}</strong>
+                  <small className="text-xs text-av-cinza">
+                    Cota {p.cota} · R$ {Number(p.valor_mensal).toLocaleString('pt-BR')}/mês
+                  </small>
+                  <button type="button" onClick={() => deletePatrocinador(p.id)} className="mt-3 rounded-full border border-av-vermelho/40 px-3 py-1 text-xs text-[#ff8a8f]">
+                    Excluir
+                  </button>
+                </div>
+              ))}
             </div>
+          </div>
+        )}
+        {tab === 'destaques' && <GestaoAtletasClient />}
+        {tab === 'config' && <CoordConfig />}
+      </div>
 
+      {showAddModal && (
+        <div className="fixed inset-0 z-50 grid place-items-center bg-black/70 p-4 backdrop-blur-sm" onClick={() => setShowAddModal(false)}>
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Novo patrocinador"
+            className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-[22px] border border-av-linha bg-av-grafite p-6 shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="mb-5 flex items-center justify-between">
+              <h2 className="font-display text-xl font-extrabold uppercase">Novo patrocinador</h2>
+              <button type="button" onClick={() => setShowAddModal(false)} aria-label="Fechar" className="grid h-9 w-9 place-items-center rounded-full border border-av-linha">
+                ✕
+              </button>
+            </div>
+            <div className="mb-5">
+              <span className={ROTULO}>Logo do patrocinador</span>
+              <input ref={fileInputRef} type="file" accept="image/*" onChange={handleLogoChange} className="hidden" />
+              <button
+                type="button"
+                className="grid h-32 w-full place-items-center rounded-2xl border-2 border-dashed border-av-linha hover:border-av-vermelho"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                {logoPreview ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={logoPreview} alt="Prévia do logo" className="max-h-28 max-w-full object-contain" />
+                ) : (
+                  <span className="text-sm text-av-cinza">Clique para enviar (PNG, JPG ou SVG, até 5 MB)</span>
+                )}
+              </button>
+            </div>
             {!logoFile && (
-              <div className="grid grid-cols-2 gap-3 mb-3">
-                <div>
-                  <label className="block text-[11px] tracking-widest text-[var(--text-mute)] uppercase font-bold mb-1">Iniciais</label>
-                  <input type="text" maxLength={4} value={newPat.logo_initials} onChange={e => setNewPat({ ...newPat, logo_initials: e.target.value.toUpperCase() })} placeholder="Ex: AC" className="w-full px-3 py-2.5 rounded-[10px] bg-[rgba(8,22,58,0.6)] border border-white/10 focus:border-[var(--primary)] outline-none text-sm" />
-                </div>
-                <div>
-                  <label className="block text-[11px] tracking-widest text-[var(--text-mute)] uppercase font-bold mb-1">Cor</label>
-                  <input type="color" value={newPat.logo_cor} onChange={e => setNewPat({ ...newPat, logo_cor: e.target.value })} className="w-full h-10 rounded-[10px] bg-[rgba(8,22,58,0.6)] border border-white/10 cursor-pointer" />
-                </div>
+              <div className="mb-3 grid grid-cols-2 gap-3">
+                <label>
+                  <span className={ROTULO}>Iniciais</span>
+                  <input type="text" maxLength={4} value={newPat.logo_initials} onChange={(e) => setNewPat({ ...newPat, logo_initials: e.target.value.toUpperCase() })} className={CAMPO} />
+                </label>
+                <label>
+                  <span className={ROTULO}>Cor</span>
+                  <input type="color" value={newPat.logo_cor} onChange={(e) => setNewPat({ ...newPat, logo_cor: e.target.value })} className="h-11 w-full cursor-pointer rounded-2xl border border-av-linha bg-[#08080a]" />
+                </label>
               </div>
             )}
-
-            <div className="mb-3">
-              <label className="block text-[11px] tracking-widest text-[var(--text-mute)] uppercase font-bold mb-1">Nome *</label>
-              <input type="text" value={newPat.nome} onChange={e => setNewPat({ ...newPat, nome: e.target.value })} placeholder="Ex: ACADESF" className="w-full px-3 py-2.5 rounded-[10px] bg-[rgba(8,22,58,0.6)] border border-white/10 focus:border-[var(--primary)] outline-none text-sm" />
-            </div>
-
-            <div className="grid grid-cols-2 gap-3 mb-3">
-              <div>
-                <label className="block text-[11px] tracking-widest text-[var(--text-mute)] uppercase font-bold mb-1">Cota *</label>
-                <select value={newPat.cota} onChange={e => setNewPat({ ...newPat, cota: e.target.value })} className="w-full px-3 py-2.5 rounded-[10px] bg-[rgba(8,22,58,0.6)] border border-white/10 focus:border-[var(--primary)] outline-none text-sm">
-                  <option value="Master">Master</option>
-                  <option value="Ouro">Ouro</option>
-                  <option value="Prata">Prata</option>
-                  <option value="Bronze">Bronze</option>
-                  <option value="Apoio">Apoio</option>
+            <label className="mb-3 block">
+              <span className={ROTULO}>Nome *</span>
+              <input type="text" value={newPat.nome} onChange={(e) => setNewPat({ ...newPat, nome: e.target.value })} className={CAMPO} />
+            </label>
+            <div className="mb-3 grid grid-cols-2 gap-3">
+              <label>
+                <span className={ROTULO}>Cota *</span>
+                <select value={newPat.cota} onChange={(e) => setNewPat({ ...newPat, cota: e.target.value })} className={CAMPO}>
+                  {['Master', 'Ouro', 'Prata', 'Bronze', 'Apoio'].map((c) => (
+                    <option key={c}>{c}</option>
+                  ))}
                 </select>
-              </div>
-              <div>
-                <label className="block text-[11px] tracking-widest text-[var(--text-mute)] uppercase font-bold mb-1">Valor Mensal (R$)</label>
-                <input type="number" step="0.01" value={newPat.valor_mensal} onChange={e => setNewPat({ ...newPat, valor_mensal: e.target.value })} placeholder="500.00" className="w-full px-3 py-2.5 rounded-[10px] bg-[rgba(8,22,58,0.6)] border border-white/10 focus:border-[var(--primary)] outline-none text-sm" />
-              </div>
+              </label>
+              <label>
+                <span className={ROTULO}>Valor mensal (R$)</span>
+                <input type="number" step="0.01" value={newPat.valor_mensal} onChange={(e) => setNewPat({ ...newPat, valor_mensal: e.target.value })} className={CAMPO} />
+              </label>
             </div>
-
-            <div className="grid grid-cols-2 gap-3 mb-3">
-              <div>
-                <label className="block text-[11px] tracking-widest text-[var(--text-mute)] uppercase font-bold mb-1">Categoria</label>
-                <input type="text" value={newPat.categoria} onChange={e => setNewPat({ ...newPat, categoria: e.target.value })} placeholder="Ex: Master" className="w-full px-3 py-2.5 rounded-[10px] bg-[rgba(8,22,58,0.6)] border border-white/10 focus:border-[var(--primary)] outline-none text-sm" />
-              </div>
-              <div>
-                <label className="block text-[11px] tracking-widest text-[var(--text-mute)] uppercase font-bold mb-1">Site</label>
-                <input type="url" value={newPat.site_url} onChange={e => setNewPat({ ...newPat, site_url: e.target.value })} placeholder="https://..." className="w-full px-3 py-2.5 rounded-[10px] bg-[rgba(8,22,58,0.6)] border border-white/10 focus:border-[var(--primary)] outline-none text-sm" />
-              </div>
+            <div className="mb-3 grid grid-cols-2 gap-3">
+              <label>
+                <span className={ROTULO}>Categoria</span>
+                <input type="text" value={newPat.categoria} onChange={(e) => setNewPat({ ...newPat, categoria: e.target.value })} className={CAMPO} />
+              </label>
+              <label>
+                <span className={ROTULO}>Site</span>
+                <input type="url" value={newPat.site_url} onChange={(e) => setNewPat({ ...newPat, site_url: e.target.value })} placeholder="https://..." className={CAMPO} />
+              </label>
             </div>
-
-            <div className="mb-5">
-              <label className="block text-[11px] tracking-widest text-[var(--text-mute)] uppercase font-bold mb-1">Descrição</label>
-              <textarea value={newPat.descricao} onChange={e => setNewPat({ ...newPat, descricao: e.target.value })} placeholder="Descrição opcional" rows={2} className="w-full px-3 py-2.5 rounded-[10px] bg-[rgba(8,22,58,0.6)] border border-white/10 focus:border-[var(--primary)] outline-none text-sm resize-none" />
-            </div>
-
-            <div className="flex gap-2 justify-end">
-              <button onClick={() => setShowAddModal(false)} className="px-4 py-2.5 rounded-[10px] border border-white/10 text-sm font-semibold">Cancelar</button>
-              <button onClick={handleAddPatrocinador} disabled={uploading} className="btn-primary disabled:opacity-50">
-                {uploading ? '⏳ Enviando...' : '✓ Salvar'}
+            <label className="mb-5 block">
+              <span className={ROTULO}>Descrição</span>
+              <textarea value={newPat.descricao} onChange={(e) => setNewPat({ ...newPat, descricao: e.target.value })} rows={2} className={`${CAMPO} resize-none`} />
+            </label>
+            <div className="flex justify-end gap-2">
+              <button type="button" onClick={() => setShowAddModal(false)} className="btn-leve">
+                Cancelar
+              </button>
+              <button type="button" onClick={handleAddPatrocinador} disabled={uploading} className="btn-forte disabled:opacity-50">
+                {uploading ? 'Enviando...' : 'Salvar'}
               </button>
             </div>
           </div>

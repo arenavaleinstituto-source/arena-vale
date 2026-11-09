@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Canais Oficiais | Arena Vale Sports',
+  title: 'Canais Oficiais | ARENA VALE',
   robots: {
     index: true,
     follow: true,
@@ -18,7 +18,7 @@ export default function LinksPage() {
     },
     {
       nome: '📺 TV Arena Vale (Transmissões & Jogos)',
-      url: '/tv',
+      url: '/ao-vivo',
       destaque: false,
     },
     {
@@ -29,7 +29,7 @@ export default function LinksPage() {
     },
     {
       nome: '🏆 Campeonatos & Inscrições Abertas',
-      url: '/campeonatos',
+      url: '/modalidades',
       destaque: false,
     },
     {
@@ -51,7 +51,7 @@ export default function LinksPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#07080c] text-white selection:bg-[#e50914] selection:text-white flex flex-col justify-between font-sans px-6 py-12 overflow-x-hidden">
+    <div className="min-h-screen bg-[#0b0b0c] text-white selection:bg-[#e50914] selection:text-white flex flex-col justify-between font-sans px-6 py-12 overflow-x-clip">
 
       {/* CONTEÚDO CENTRALIZADO */}
       <main className="mx-auto max-w-md w-full flex flex-col items-center space-y-8 my-auto">
@@ -61,13 +61,13 @@ export default function LinksPage() {
           <div className="inline-block p-1 rounded-2xl bg-gradient-to-b from-[#e50914] to-transparent shadow-2xl shadow-[#e50914]/30">
             <img
               src="/logo.png"
-              alt="Arena Vale Sports"
-              className="h-24 w-auto object-contain rounded-xl bg-[#07080c] p-2"
+              alt="ARENA VALE"
+              className="h-24 w-auto object-contain rounded-xl bg-[#0b0b0c] p-2"
             />
           </div>
           <div>
-            <h1 className="text-2xl font-black uppercase tracking-tight text-white mt-3">Arena Vale Sports</h1>
-            <p className="text-xs text-[#8a92a6] uppercase tracking-widest mt-1">O Palco do Esporte é Aqui · 2026</p>
+            <h1 className="text-2xl font-black uppercase tracking-tight text-white mt-3">Arena Vale</h1>
+            <p className="text-xs text-[#a1a1aa] uppercase tracking-widest mt-1">O Palco do Esporte é Aqui · 2026</p>
           </div>
         </div>
 
@@ -80,7 +80,7 @@ export default function LinksPage() {
               <div className={`w-full rounded-2xl p-4 text-center text-xs font-black uppercase tracking-wider transition-all duration-300 flex items-center justify-center shadow-xl ${
                 item.destaque
                   ? 'bg-[#e50914] text-white hover:bg-red-600 shadow-[#e50914]/30 hover:scale-[1.02]'
-                  : 'border border-white/15 bg-[#11141d] text-[#cad0e0] hover:border-[#e50914]/60 hover:text-white hover:bg-[#181d2a] hover:scale-[1.02]'
+                  : 'border border-white/15 bg-[#141417] text-[#d4d4d8] hover:border-[#e50914]/60 hover:text-white hover:bg-[#26262c] hover:scale-[1.02]'
               }`}>
                 {item.nome}
               </div>
@@ -104,10 +104,6 @@ export default function LinksPage() {
 
       </main>
 
-      {/* RODAPÉ */}
-      <footer className="mt-12 text-center text-[10px] text-[#555d6e] uppercase tracking-wider">
-        © 2026 Arena Vale · Configuração Registada sob a etiqueta **CFG6**.
-      </footer>
     </div>
   );
 }

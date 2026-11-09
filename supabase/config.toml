@@ -1,6 +1,6 @@
 # A string length limitation on the project ref prevents it from being directly
 # used in the config, so we use a separate project_id here.
-project_id = "arena-vale-sports"
+project_id = "arena-vale"
 
 [api]
 enabled = true

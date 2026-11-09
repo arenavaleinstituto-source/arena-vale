@@ -1,6 +1,6 @@
 create table public.site_config (
   id text primary key default 'main',
-  nome_site text not null default 'Arena Vale Sports',
+  nome_site text not null default 'Arena Vale',
   whatsapp text,
   youtube_url text,
   video_destaque_url text,

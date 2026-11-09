@@ -3,34 +3,24 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Termos de Uso | Arena Vale Sports',
+  title: 'Termos de Uso | ARENA VALE',
   description: 'Termos de uso, regras de competição e condições de serviço da plataforma Arena Vale.',
 };
 
 export default function TermosDeUsoPage() {
   return (
-    <div className="min-h-screen bg-[#07080c] text-[#cad0e0] selection:bg-[#e50914] selection:text-white font-sans">
+    <div className="min-h-screen bg-[#0b0b0c] text-[#d4d4d8] selection:bg-[#e50914] selection:text-white font-sans">
       {/* CABEÇALHO */}
-      <header className="sticky top-0 z-40 border-b border-white/[0.08] bg-[#07080c]/90 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <Link href="/" className="flex items-center gap-3">
-            <img src="/logo.png" alt="Arena Vale" className="h-12 w-auto object-contain rounded-lg mix-blend-lighten" />
-          </Link>
-          <Link href="/" className="rounded-full border border-white/20 bg-white/5 px-6 py-2 text-xs font-black uppercase tracking-wider text-white hover:bg-white/10 transition">
-            ← Voltar ao Início
-          </Link>
-        </div>
-      </header>
 
       {/* CONTEÚDO DOS TERMOS */}
       <main className="mx-auto max-w-4xl px-6 py-16 space-y-10">
-        <div className="border-b border-white/10 pb-8 text-center sm:text-left">
+        <div className="border-b border-white/10 pb-8 text-center flex flex-col items-center">
           <span className="inline-flex items-center gap-2 rounded-full border border-[#e50914]/50 bg-[#e50914]/15 px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-[#ff4b52] mb-4">DOCUMENTO OFICIAL</span>
           <h1 className="text-3xl sm:text-5xl font-black uppercase tracking-tight text-white mb-4">Termos de Uso</h1>
-          <p className="text-xs font-mono text-[#8a92a6]">Última atualização: 22 de outubro de 2026</p>
+          <p className="text-xs font-mono text-[#a1a1aa]">Última atualização: 22 de outubro de 2026</p>
         </div>
 
-        <div className="space-y-8 text-sm sm:text-base leading-relaxed text-[#b8c0d4]">
+        <div className="space-y-8 text-sm sm:text-base leading-relaxed text-[#c3c3cb]">
           <p>Bem-vindo(a) à Arena Vale (CNPJ 40.694.741/0001-34). Estes Termos de Uso regulam o acesso e a utilização do nosso site, aplicativo e canais de atendimento relacionados à organização de campeonatos, transmissões esportivas e serviços correlatos ("Serviços"). Ao acessar ou usar os Serviços, você concorda integralmente com estes Termos. Caso não concorde, recomendamos que não utilize os Serviços.</p>
 
           <section>
@@ -40,7 +30,7 @@ export default function TermosDeUsoPage() {
 
           <section>
             <h2 className="text-xl font-black uppercase text-white mb-3 mt-8 flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-[#e50914]" /> 2. Cadastro e conta</h2>
-            <ul className="list-disc pl-5 space-y-1.5 text-[#8a92a6]">
+            <ul className="list-disc pl-5 space-y-1.5 text-[#a1a1aa]">
               <li>Você é responsável por fornecer informações verdadeiras, completas e atualizadas no cadastro de atletas, equipes e usuários</li>
               <li>Você é responsável por manter a confidencialidade de login e senha de acesso ao Painel</li>
               <li>Inscrições de equipes ficam sujeitas à aprovação da coordenação da Arena Vale antes de passarem a constar publicamente no site</li>
@@ -55,7 +45,7 @@ export default function TermosDeUsoPage() {
 
           <section>
             <h2 className="text-xl font-black uppercase text-white mb-3 mt-8 flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-[#e50914]" /> 4. Mensalidades, inscrições e pagamentos</h2>
-            <ul className="list-disc pl-5 space-y-1.5 text-[#8a92a6]">
+            <ul className="list-disc pl-5 space-y-1.5 text-[#a1a1aa]">
               <li>Valores de inscrição em campeonatos e mensalidades da Escolinha são informados previamente à confirmação</li>
               <li>Pagamentos podem ser processados via PIX ou outro meio informado no momento da cobrança</li>
               <li>Cancelamentos e reembolsos seguem a política específica informada no momento da contratação de cada serviço; na ausência de política específica, entre em contato pelos canais da seção 11 para análise caso a caso</li>
@@ -65,7 +55,7 @@ export default function TermosDeUsoPage() {
 
           <section>
             <h2 className="text-xl font-black uppercase text-white mb-3 mt-8 flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-[#e50914]" /> 5. Regras de competição e conduta</h2>
-            <ul className="list-disc pl-5 space-y-1.5 text-[#8a92a6]">
+            <ul className="list-disc pl-5 space-y-1.5 text-[#a1a1aa]">
               <li>Atletas, técnicos e equipes devem seguir os regulamentos específicos de cada campeonato, divulgados separadamente</li>
               <li>Não toleramos conduta antidesportiva, discriminatória, violenta ou que coloque em risco a integridade de participantes, árbitros ou público</li>
               <li>A Arena Vale pode advertir, suspender ou desclassificar atletas/equipes que violem as regras de conduta ou os regulamentos das competições</li>
@@ -100,7 +90,7 @@ export default function TermosDeUsoPage() {
           <section className="bg-white/5 border border-white/10 rounded-2xl p-6 mt-12">
             <h2 className="text-xl font-black uppercase text-[#e50914] mb-3">11. Contato</h2>
             <p className="mb-4">Para dúvidas sobre estes Termos de Uso, entre em contato:</p>
-            <div className="space-y-2 font-mono text-sm text-[#cad0e0]">
+            <div className="space-y-2 font-mono text-sm text-[#d4d4d8]">
               <p>📱 <strong className="text-white">WhatsApp:</strong> (47) 98844-4404</p>
               <p>📸 <strong className="text-white">Instagram:</strong> @arenavaleoficial</p>
               <p>🏢 <strong className="text-white">CNPJ:</strong> 40.694.741/0001-34</p>

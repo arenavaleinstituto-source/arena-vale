@@ -1,231 +1,164 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
+import { cpfValido, formatarCpf, mascararCpf, soDigitos } from '@/lib/atletas/cpf';
+import { reduzirImagem } from '@/lib/ui/imagem';
+import { COLUNAS_JOGADOR, type Jogador } from '@/lib/atletas/colunas';
 
-type Props = {
-  timeId: string;
-  jogadoresIniciais: any[];
-};
 
-export function CapitaoElenco({
-  timeId,
-  jogadoresIniciais,
-}: Props) {
+type Props = { timeId: string; jogadoresIniciais: Jogador[] };
+
+const CAMPO = 'w-full rounded-2xl border border-av-linha bg-[#08080a] px-4 py-3 text-base text-av-branco outline-none focus:border-av-vermelho';
+const ROTULO = 'grid gap-1.5 text-sm text-av-cinza';
+
+/** Elenco da equipe do capitão: cadastra atletas com nome, CPF e foto (só na própria equipe). */
+export function CapitaoElenco({ timeId, jogadoresIniciais }: Props) {
   const supabase = createClient();
+  const id = useId();
   const fileRef = useRef<HTMLInputElement>(null);
-
-  const [jogadores, setJogadores] = useState(jogadoresIniciais);
+  const [jogadores, setJogadores] = useState<Jogador[]>(jogadoresIniciais);
+  const [cpfs, setCpfs] = useState<Record<string, string>>({});
   const [nome, setNome] = useState('');
   const [cpf, setCpf] = useState('');
   const [posicao, setPosicao] = useState('');
   const [numero, setNumero] = useState('');
   const [foto, setFoto] = useState<File | null>(null);
-  const [mensagem, setMensagem] = useState('');
+  const [mensagem, setMensagem] = useState<{ tipo: 'ok' | 'erro'; texto: string } | null>(null);
   const [salvando, setSalvando] = useState(false);
 
+  // CPFs só pela função protegida; na tela aparecem mascarados.
+  useEffect(() => {
+    let vivo = true;
+    (async () => {
+      const { data } = await supabase.rpc('cpfs_do_time', { t: timeId });
+      if (vivo && Array.isArray(data)) setCpfs(Object.fromEntries((data as { id: string; cpf: string }[]).map((x) => [x.id, x.cpf])));
+    })();
+    return () => {
+      vivo = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- carrega uma vez por equipe
+  }, [timeId]);
+
   async function adicionarJogador() {
-    if (!nome.trim() || !cpf.trim() || !numero) {
-      setMensagem('Informe nome, documento e número da camisa.');
-      return;
-    }
+    setMensagem(null);
+    if (!nome.trim()) return setMensagem({ tipo: 'erro', texto: 'Informe o nome completo do atleta.' });
+    if (!cpfValido(cpf)) return setMensagem({ tipo: 'erro', texto: 'CPF inválido. Confira os números.' });
+    if (foto && (!foto.type.startsWith('image/') || foto.size > 5 * 1024 * 1024)) return setMensagem({ tipo: 'erro', texto: 'A foto precisa ser uma imagem de até 5 MB.' });
 
     setSalvando(true);
-    setMensagem('');
-
     let fotoUrl: string | null = null;
-
     if (foto) {
-      const extensao = foto.name.split('.').pop();
-      const nomeArquivo = `${timeId}-${Date.now()}.${extensao}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from('jogadores')
-        .upload(nomeArquivo, foto, {
-          cacheControl: '3600',
-          upsert: false,
-        });
-
-      if (uploadError) {
-        setMensagem(`Erro no upload: ${uploadError.message}`);
+      const caminho = `${timeId}/${Date.now()}.jpg`;
+      const { error } = await supabase.storage.from('atletas-fotos').upload(caminho, await reduzirImagem(foto, 800), { contentType: 'image/jpeg' });
+      if (error) {
         setSalvando(false);
-        return;
+        return setMensagem({ tipo: 'erro', texto: `Não consegui enviar a foto: ${error.message}` });
       }
-
-      const { data } = supabase.storage
-        .from('jogadores')
-        .getPublicUrl(nomeArquivo);
-
-      fotoUrl = data.publicUrl;
+      fotoUrl = supabase.storage.from('atletas-fotos').getPublicUrl(caminho).data.publicUrl;
     }
 
+    const digitos = soDigitos(cpf);
     const { data, error } = await supabase
       .from('jogadores')
-      .insert({
-        nome: nome.trim(),
-        cpf: cpf.trim(),
-        posicao: posicao || null,
-        numero_camisa: Number(numero),
-        foto_url: fotoUrl,
-        time_id: timeId,
-      })
-      .select()
+      .insert({ nome: nome.trim(), cpf: digitos, posicao: posicao.trim() || null, numero_camisa: numero ? Number(numero) : null, foto_url: fotoUrl, time_id: timeId })
+      .select(COLUNAS_JOGADOR)
       .single();
-
-    if (error) {
-      setMensagem(`Erro: ${error.message}`);
-    } else {
-      setJogadores((lista) => [...lista, data]);
-      setNome('');
-      setCpf('');
-      setPosicao('');
-      setNumero('');
-      setFoto(null);
-
-      if (fileRef.current) {
-        fileRef.current.value = '';
-      }
-
-      setMensagem('Atleta adicionado.');
-    }
-
     setSalvando(false);
+    if (error) {
+      const texto = error.code === '23505' ? 'Este CPF já está cadastrado em outra equipe. Fale com a coordenação.' : `Erro: ${error.message}`;
+      return setMensagem({ tipo: 'erro', texto });
+    }
+    const novo = data as unknown as Jogador;
+    setJogadores((l) => [...l, novo]);
+    setCpfs((c) => ({ ...c, [novo.id]: digitos }));
+    setNome('');
+    setCpf('');
+    setPosicao('');
+    setNumero('');
+    setFoto(null);
+    if (fileRef.current) fileRef.current.value = '';
+    setMensagem({ tipo: 'ok', texto: 'Atleta adicionado.' });
   }
 
-  async function excluirJogador(id: string) {
-    if (!confirm('Excluir este atleta?')) return;
-
-    const { error } = await supabase
-      .from('jogadores')
-      .delete()
-      .eq('id', id);
-
-    if (error) {
-      setMensagem(`Erro: ${error.message}`);
-      return;
-    }
-
-    setJogadores((lista) =>
-      lista.filter((jogador) => jogador.id !== id)
-    );
-
-    setMensagem('Atleta excluído.');
+  async function excluirJogador(j: Jogador) {
+    if (!confirm(`Excluir ${j.nome} da equipe?`)) return;
+    const { error } = await supabase.from('jogadores').delete().eq('id', j.id);
+    if (error) return setMensagem({ tipo: 'erro', texto: `Erro: ${error.message}` });
+    setJogadores((l) => l.filter((x) => x.id !== j.id));
+    setMensagem({ tipo: 'ok', texto: 'Atleta excluído.' });
   }
 
   return (
     <div className="grid gap-6">
-      <div className="panel">
-        <h2 className="font-serif text-xl font-bold mb-5">
-          👤 Adicionar atleta
-        </h2>
-
-        <div className="grid md:grid-cols-2 gap-4">
-          <input
-            value={nome}
-            onChange={(e) => setNome(e.target.value)}
-            placeholder="Nome completo"
-            className="px-3 py-3 rounded-[10px] bg-[rgba(8,22,58,0.6)] border border-white/10"
-          />
-
-          <input
-            value={cpf}
-            onChange={(e) => setCpf(e.target.value)}
-            placeholder="Número do documento"
-            className="px-3 py-3 rounded-[10px] bg-[rgba(8,22,58,0.6)] border border-white/10"
-          />
-
-          <input
-            value={posicao}
-            onChange={(e) => setPosicao(e.target.value)}
-            placeholder="Posição"
-            className="px-3 py-3 rounded-[10px] bg-[rgba(8,22,58,0.6)] border border-white/10"
-          />
-
-          <input
-            type="number"
-            min="0"
-            max="99"
-            value={numero}
-            onChange={(e) => setNumero(e.target.value)}
-            placeholder="Número da camisa"
-            className="px-3 py-3 rounded-[10px] bg-[rgba(8,22,58,0.6)] border border-white/10"
-          />
-
-          <input
-            ref={fileRef}
-            type="file"
-            accept="image/png,image/jpeg,image/webp"
-            onChange={(e) => setFoto(e.target.files?.[0] || null)}
-            className="md:col-span-2 text-sm"
-          />
+      <div className="panel grid gap-4">
+        <h2 className="font-display text-2xl font-extrabold uppercase">Adicionar atleta</h2>
+        <div className="grid gap-4 md:grid-cols-2">
+          <label htmlFor={`${id}-nome`} className={ROTULO}>
+            Nome completo do atleta
+            <input id={`${id}-nome`} value={nome} onChange={(e) => setNome(e.target.value)} className={CAMPO} />
+          </label>
+          <label htmlFor={`${id}-cpf`} className={ROTULO}>
+            CPF
+            <input id={`${id}-cpf`} inputMode="numeric" value={cpf} onChange={(e) => setCpf(formatarCpf(e.target.value))} placeholder="000.000.000-00" className={CAMPO} />
+          </label>
+          <label htmlFor={`${id}-pos`} className={ROTULO}>
+            Posição (opcional)
+            <input id={`${id}-pos`} value={posicao} onChange={(e) => setPosicao(e.target.value)} placeholder="Ex.: Ala, Pivô, Goleiro" className={CAMPO} />
+          </label>
+          <label htmlFor={`${id}-num`} className={ROTULO}>
+            Número da camisa
+            <input id={`${id}-num`} type="number" min={0} max={99} value={numero} onChange={(e) => setNumero(e.target.value)} className={CAMPO} />
+          </label>
+          <label htmlFor={`${id}-foto`} className={`${ROTULO} md:col-span-2`}>
+            Foto do atleta
+            <input
+              id={`${id}-foto`}
+              ref={fileRef}
+              type="file"
+              accept="image/png,image/jpeg,image/webp"
+              onChange={(e) => setFoto(e.target.files?.[0] ?? null)}
+              className="text-sm text-av-branco file:mr-3 file:rounded-full file:border-0 file:bg-av-vermelho file:px-4 file:py-2 file:font-rotulo file:font-bold file:uppercase file:text-white"
+            />
+          </label>
         </div>
-
-        <button
-          onClick={adicionarJogador}
-          disabled={salvando}
-          className="btn-primary mt-5"
-        >
+        <p className="text-xs text-av-cinza">O CPF completo fica guardado e protegido: só a coordenação e você têm acesso. Na lista aparecem apenas os 3 primeiros números.</p>
+        <button type="button" onClick={adicionarJogador} disabled={salvando} className="btn-forte w-fit disabled:opacity-50">
           {salvando ? 'Salvando...' : '+ Adicionar atleta'}
         </button>
-
         {mensagem && (
-          <p className="text-sm text-[var(--primary)] mt-4">
-            {mensagem}
+          <p role={mensagem.tipo === 'erro' ? 'alert' : 'status'} className={`text-sm ${mensagem.tipo === 'erro' ? 'text-[#ff8a8f]' : 'text-av-branco'}`}>
+            {mensagem.texto}
           </p>
         )}
       </div>
 
-      <div className="panel">
-        <h2 className="font-serif text-xl font-bold mb-5">
-          Atletas do time
-        </h2>
-
-        {jogadores.length === 0 && (
-          <p className="text-[var(--text-mute)]">
-            Nenhum atleta cadastrado.
-          </p>
-        )}
-
-        <div className="grid gap-3">
-          {jogadores.map((jogador) => (
-            <div
-              key={jogador.id}
-              className="flex items-center justify-between gap-4 border-b border-white/10 py-4"
-            >
-              <div className="flex items-center gap-3">
-                {jogador.foto_url ? (
-                  <img
-                    src={jogador.foto_url}
-                    alt={jogador.nome}
-                    className="w-12 h-12 rounded-full object-cover"
-                  />
-                ) : (
-                  <div className="w-12 h-12 rounded-full grid place-items-center bg-white/10">
-                    👤
-                  </div>
-                )}
-
-                <div>
-                  <strong className="block">
-                    {jogador.nome}
-                  </strong>
-
-                  <small className="text-[var(--text-mute)]">
-                    Camisa {jogador.numero_camisa} ·{' '}
-                    {jogador.posicao || 'Posição não informada'}
-                  </small>
-                </div>
+      <div className="panel grid gap-3">
+        <h2 className="font-display text-2xl font-extrabold uppercase">Atletas da equipe · {jogadores.length}</h2>
+        {jogadores.length === 0 && <p className="text-av-cinza">Nenhum atleta cadastrado.</p>}
+        {jogadores.map((j) => (
+          <div key={j.id} className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-av-linha bg-av-grafite-2 p-3">
+            <div className="flex items-center gap-3">
+              {j.foto_url ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={j.foto_url} alt={j.nome} className="h-12 w-12 rounded-full object-cover" />
+              ) : (
+                <div className="grid h-12 w-12 place-items-center rounded-full bg-white/10 font-display font-black">{j.nome.slice(0, 1).toUpperCase()}</div>
+              )}
+              <div>
+                <strong className="block">{j.nome}</strong>
+                <small className="text-av-cinza">
+                  {j.numero_camisa != null ? `Camisa ${j.numero_camisa} · ` : ''}
+                  {j.posicao || 'Posição não informada'}
+                </small>
+                <small className="block text-av-cinza">CPF {mascararCpf(cpfs[j.id])}</small>
               </div>
-
-              <button
-                onClick={() => excluirJogador(jogador.id)}
-                className="text-xs px-3 py-2 rounded-full border border-red-500/30 bg-red-500/10 text-red-300"
-              >
-                🗑️ Excluir
-              </button>
             </div>
-          ))}
-        </div>
+            <button type="button" onClick={() => excluirJogador(j)} className="btn-leve !py-1.5 !text-xs">
+              Excluir
+            </button>
+          </div>
+        ))}
       </div>
     </div>
   );

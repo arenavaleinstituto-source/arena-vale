@@ -84,7 +84,7 @@ export function CoordSumulas({ userId }: Props) {
       <select
         value={jogoId}
         onChange={(e) => setJogoId(e.target.value)}
-        className="w-full px-3 py-3 rounded-[10px] bg-[rgba(8,22,58,0.6)] border border-white/10 mb-5"
+        className="w-full px-3 py-3 rounded-[10px] bg-[#08080a] border border-white/10 mb-5"
       >
         <option value="">Selecione um jogo</option>
 
@@ -105,7 +105,7 @@ export function CoordSumulas({ userId }: Props) {
         value={arbitro}
         onChange={(e) => setArbitro(e.target.value)}
         placeholder="Nome do árbitro"
-        className="w-full px-3 py-3 rounded-[10px] bg-[rgba(8,22,58,0.6)] border border-white/10 mb-5"
+        className="w-full px-3 py-3 rounded-[10px] bg-[#08080a] border border-white/10 mb-5"
       />
 
       <label className="block text-sm font-semibold mb-2">
@@ -117,7 +117,7 @@ export function CoordSumulas({ userId }: Props) {
         onChange={(e) => setObservacoes(e.target.value)}
         placeholder="Observações da partida"
         rows={5}
-        className="w-full px-3 py-3 rounded-[10px] bg-[rgba(8,22,58,0.6)] border border-white/10 mb-5"
+        className="w-full px-3 py-3 rounded-[10px] bg-[#08080a] border border-white/10 mb-5"
       />
 
       <button

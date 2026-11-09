@@ -1,23 +1,73 @@
+import React from 'react';
+import type { Metadata } from 'next';
+import { Barlow, Barlow_Condensed, Saira } from 'next/font/google';
 import './globals.css';
+import './midia.css';
+import { SiteHeader } from '@/components/SiteHeader';
+import { SiteFooter } from '@/components/SiteFooter';
+import { lerConfigSite } from '@/lib/midia/config';
 
-export const metadata = {
-  title: 'Arena Vale | Official Portal',
-  description: 'Ecosystem of competitions, championships, and sports in the Vale region.',
-  robots: {
-    index: true,
-    follow: true,
+/**
+ * METADADOS GLOBAIS
+ *
+ * ⚠️ O commit 41ec830 ("Update layout.tsx") tinha substituído este bloco
+ * por uma versão mínima em INGLÊS: trocava `lang="pt-BR"` por `lang="en"`
+ * e apagava as tags OpenGraph, Twitter Card, manifest e ícones. Como o
+ * site é 100% em português, isso quebrava:
+ *   • o idioma declarado para buscadores e leitores de tela;
+ *   • a prévia de compartilhamento no WhatsApp/Instagram/X;
+ *   • a instalação como PWA.
+ *
+ * A versão completa em pt-BR está restaurada abaixo.
+ */
+const saira = Saira({ subsets: ['latin'], axes: ['wdth'], variable: '--font-saira', display: 'swap' });
+const barlow = Barlow({ subsets: ['latin'], weight: ['400', '600', '700'], variable: '--font-barlow', display: 'swap' });
+const barlowCondensed = Barlow_Condensed({ subsets: ['latin'], weight: ['600', '700'], variable: '--font-barlow-condensed', display: 'swap' });
+
+export const metadata: Metadata = {
+  title: 'ARENA VALE · Mídia Esportiva',
+  description: 'O palco do esporte é aqui. Transmissões, notícias, agenda e histórias de quem vive o esporte.',
+  icons: {
+    icon: '/logo.png',
+    shortcut: '/logo.png',
+    apple: '/logo.png',
+  },
+  manifest: '/manifest.json',
+  openGraph: {
+    title: 'ARENA VALE',
+    description: 'O palco do esporte é aqui. Acompanhe campeonatos e transmissões.',
+    siteName: 'ARENA VALE',
+    images: [
+      {
+        url: '/fundo-arena.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'ARENA VALE',
+      },
+    ],
+    locale: 'pt_BR',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'ARENA VALE',
+    description: 'O palco do esporte é aqui. Acompanhe campeonatos e transmissões.',
+    images: ['/fundo-arena.jpg'],
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const config = await lerConfigSite();
   return (
-    <html lang="en">
-      <body className="bg-[#07080c] text-white font-sans antialiased selection:bg-[#e50914] selection:text-white overflow-x-hidden">
+    <html lang="pt-BR" className={`${saira.variable} ${barlow.variable} ${barlowCondensed.variable}`}>
+      <body className="bg-av-preto text-white font-sans antialiased selection:bg-[#e50914] selection:text-white overflow-x-clip">
+        <SiteHeader />
         {children}
+        <SiteFooter whatsapp={config.whatsapp} instagramUrl={config.instagramUrl} />
       </body>
     </html>
   );

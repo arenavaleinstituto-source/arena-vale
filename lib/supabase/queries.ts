@@ -10,18 +10,18 @@ export async function getDashboardStats() {
   const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single();
   if (profile?.role !== 'coordenador') throw new Error('Sem permissão');
 
-  const [insc, times, jogos, patrocinadores] = await Promise.all([
+  const [insc, campeonatos, times, jogos] = await Promise.all([
     supabase.from('inscricoes').select('id', { count: 'exact', head: true }).eq('status', 'pendente'),
+    supabase.from('campeonatos').select('id', { count: 'exact', head: true }),
     supabase.from('times').select('id', { count: 'exact', head: true }),
     supabase.from('jogos').select('id', { count: 'exact', head: true }),
-    supabase.from('patrocinadores').select('valor_mensal').eq('ativo', true),
   ]);
 
   return {
     inscricoes_pendentes: insc.count ?? 0,
-    total_times: times.count ?? 0,
-    total_jogos: jogos.count ?? 0,
-    receita_mensal: (patrocinadores.data ?? []).reduce((acc, p) => acc + Number(p.valor_mensal || 0), 0),
+    campeonatos: campeonatos.count ?? 0,
+    equipes: times.count ?? 0,
+    jogos: jogos.count ?? 0,
   };
 }
 
