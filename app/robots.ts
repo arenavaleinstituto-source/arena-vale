@@ -13,12 +13,13 @@ import { MetadataRoute } from 'next';
  *    fallback no domínio que está no ar.
  *
  * 2. As áreas administrativas. Antes só /login e /painel eram bloqueados.
- *    /coordenador, /capitao, /moderador e /proprietario também são áreas
- *    restritas e não devem ser indexadas.
+ *    /coordenador, /capitao e /moderador também são áreas restritas e não
+ *    devem ser indexadas. A área do proprietário fica de FORA desta lista de
+ *    propósito: listá-la revelaria que ela existe (ela responde 404).
  *
  * Observação: robots.txt NÃO é controle de acesso — é apenas uma dica
- * para os buscadores. A proteção real é o `middleware.ts`, que exige
- * sessão Supabase válida e devolve 307 para /login.
+ * para os buscadores. A proteção real é o `proxy.ts` (cargo lido do banco)
+ * e o RLS do Supabase.
  */
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://arena-vale.vercel.app';
 
@@ -33,7 +34,7 @@ export default function robots(): MetadataRoute.Robots {
         '/coordenador',
         '/capitao',
         '/moderador',
-        '/proprietario',
+        '/acesso-negado',
       ],
     },
     sitemap: `${baseUrl}/sitemap.xml`,

@@ -1,71 +1,60 @@
-import { createServerClient } from '@supabase/ssr';
+import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
-import type { CookieOptions } from '@supabase/ssr';
+import { lerCargo } from '@/lib/auth/cargo';
+import { decidirRota } from '@/lib/auth/rotas';
 
 /**
- * PROTEÇÃO DAS ROTAS ADMINISTRATIVAS
- *
- * ANTES, o matcher cobria apenas `/painel/:path*`. As rotas
- * `/coordenador`, `/coordenador/atletasdestaques` e `/proprietario`
- * respondiam HTTP 200 para qualquer visitante — o painel do coordenador e
- * o painel do proprietário eram servidos publicamente.
- *
- * (`/capitao` e `/moderador` já faziam a checagem de sessão dentro do
- * próprio Server Component, então não entram no matcher para não
- * duplicar o redirecionamento e perder o parâmetro `?next=`.)
- *
- * O middleware agora cobre todas as áreas restritas.
+ * Porteiro das áreas da equipe (spec 5.5). O cargo vem sempre do banco.
+ *  - sem login          → /login?next=<rota>
+ *  - cargo insuficiente → /acesso-negado
+ *  - /proprietario para quem não é o dono → 404 comum (a área "não existe")
+ * Cada página repete a checagem no servidor e o RLS é a barreira final.
  */
 export async function proxy(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({
-    request,
-  });
+  const { pathname } = request.nextUrl;
+  const naoEncontrado = () => NextResponse.rewrite(new URL('/_nao-existe', request.url));
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll();
-        },
-        setAll(cookiesToSet: { name: string; value: string; options?: CookieOptions }[]) {
-          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
-          supabaseResponse = NextResponse.next({
-            request,
-          });
-          cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
-          );
-        },
-      },
-    }
-  );
-
-  // Verifica se o utilizador está autenticado
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  // Sem sessão válida → redireciona para o portal de acesso, preservando
-  // o destino para depois do login.
-  if (!user) {
-    const url = request.nextUrl.clone();
-    url.pathname = '/login';
-    url.search = `?next=${encodeURIComponent(request.nextUrl.pathname)}`;
-    return NextResponse.redirect(url);
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const chave = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!url || !chave) {
+    if (pathname.startsWith('/proprietario')) return naoEncontrado();
+    return NextResponse.redirect(new URL('/login', request.url));
   }
 
-  return supabaseResponse;
+  let resposta = NextResponse.next({ request });
+  const supabase = createServerClient(url, chave, {
+    cookies: {
+      getAll() {
+        return request.cookies.getAll();
+      },
+      setAll(cookies: { name: string; value: string; options?: CookieOptions }[]) {
+        cookies.forEach(({ name, value }) => request.cookies.set(name, value));
+        resposta = NextResponse.next({ request });
+        cookies.forEach(({ name, value, options }) => resposta.cookies.set(name, value, options));
+      },
+    },
+  });
+
+  const { cargo, ehDono } = await lerCargo(supabase);
+  const decisao = decidirRota(pathname, cargo, ehDono);
+
+  if (decisao === 'nao-encontrado') return naoEncontrado();
+  if (decisao === 'login') {
+    const destino = request.nextUrl.clone();
+    destino.pathname = '/login';
+    destino.search = `?next=${encodeURIComponent(pathname)}`;
+    return NextResponse.redirect(destino);
+  }
+  if (decisao === 'negado') return NextResponse.redirect(new URL('/acesso-negado', request.url));
+  return resposta;
 }
 
-/**
- * Matcher: todas as áreas administrativas do Arena Vale.
- */
 export const config = {
   matcher: [
     '/painel/:path*',
     '/coordenador/:path*',
     '/proprietario/:path*',
+    '/moderador/:path*',
+    '/capitao/:path*',
   ],
 };
