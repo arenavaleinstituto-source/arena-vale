@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import type { LinhaClassificacao } from '@/lib/midia/campeonatos';
 
 /** Classificação calculada pelo banco (v_classificacao): nunca editada à mão. */
@@ -21,7 +22,11 @@ export function TabelaClassificacao({ linhas }: { linhas: LinhaClassificacao[] }
           {linhas.map((l, i) => (
             <tr key={l.time_id} className="border-t border-av-linha">
               <td className="py-2 pr-2 font-display font-extrabold text-av-vermelho">{i + 1}</td>
-              <td className="py-2 font-bold">{l.time_nome}</td>
+              <td className="py-2 font-bold">
+                <Link href={`/equipes/${l.time_id}`} className="hover:text-av-vermelho-claro hover:underline">
+                  {l.time_nome}
+                </Link>
+              </td>
               <td className="py-2 text-center font-display font-extrabold">{l.pontos}</td>
               <td className="py-2 text-center">{l.jogos}</td>
               <td className="py-2 text-center">{l.vitorias}</td>

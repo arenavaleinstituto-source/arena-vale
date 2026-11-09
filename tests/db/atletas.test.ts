@@ -23,6 +23,25 @@ describe('atletas: CPF protegido e fotos por equipe (0012)', () => {
     expect(semCpf.data?.map((j) => j.nome)).toEqual(['Atleta Público']);
   });
 
+  it('visitante vê o CPF mascarado (3 primeiros números + ...), calculado pelo banco', async () => {
+    await admin().from('jogadores').insert([
+      { nome: 'Com CPF', cpf: '52998224725', time_id: c.casa },
+      { nome: 'CPF formatado antigo', cpf: '111.444.777-35', time_id: c.casa },
+      { nome: 'Sem CPF', cpf: null, time_id: c.casa },
+    ]);
+    const { data, error } = await visitante().from('jogadores').select('nome, cpf_mascarado').eq('time_id', c.casa).order('nome');
+    expect(error).toBeNull();
+    expect(data).toEqual(
+      expect.arrayContaining([
+        { nome: 'CPF formatado antigo', cpf_mascarado: '111...' },
+        { nome: 'Com CPF', cpf_mascarado: '529...' },
+        { nome: 'Sem CPF', cpf_mascarado: null },
+      ]),
+    );
+    expect(data).toHaveLength(3);
+    await admin().from('jogadores').delete().eq('time_id', c.casa);
+  });
+
   it('outro usuário logado (moderador) também não lê o CPF', async () => {
     const mod = await clienteComo(c.moderador);
     expect((await mod.from('jogadores').select('cpf').limit(1)).error?.code).toBe('42501');

@@ -19,6 +19,9 @@ import { createClient } from '@/lib/supabase/server';
  * buscada por `jogo_id`, exatamente como em `getSumula()`.
  */
 
+import { ElencoEquipe } from '@/components/atletas/ElencoEquipe';
+import { buscarElenco } from '@/lib/atletas/elenco';
+
 export const dynamic = 'force-dynamic';
 
 interface LinhaSumula {
@@ -59,7 +62,7 @@ export default async function SumulaPage(props: { params: Promise<{ id: string }
       `
         id, fase, rodada, data, local, status,
         placar_casa, placar_visitante, placar_casa_1t, placar_visitante_1t,
-        arbitro,
+        arbitro, time_casa_id, time_visitante_id,
         time_casa:times!time_casa_id(nome, sigla, escudo_url, escudo_cor),
         time_visitante:times!time_visitante_id(nome, sigla, escudo_url, escudo_cor),
         campeonato:campeonatos(nome, ano)
@@ -98,6 +101,10 @@ export default async function SumulaPage(props: { params: Promise<{ id: string }
     .maybeSingle();
 
   const linha = (sumula ?? null) as LinhaSumula | null;
+  const [elencoCasa, elencoFora] = await Promise.all([
+    jogo.time_casa_id ? buscarElenco(jogo.time_casa_id) : Promise.resolve([]),
+    jogo.time_visitante_id ? buscarElenco(jogo.time_visitante_id) : Promise.resolve([]),
+  ]);
   const status = rotuloStatus(linha?.status ?? 'rascunho');
   const dataJogo = jogo.data ? new Date(jogo.data) : null;
 
@@ -175,6 +182,22 @@ export default async function SumulaPage(props: { params: Promise<{ id: string }
                   {dado.rotulo}
                 </span>
                 <p className="mt-1 text-sm font-bold text-white uppercase">{dado.valor}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ELENCOS (pedido do dono: atletas com o CPF mascarado) */}
+        <section className="rounded-[2rem] border border-white/10 bg-[#0a0a0a] p-6 sm:p-10 shadow-2xl">
+          <h2 className="text-sm font-black uppercase tracking-[0.2em] text-[#e50914] mb-6">Elencos</h2>
+          <div className="grid gap-8 lg:grid-cols-2">
+            {[
+              { lado: 'casa', nome: jogo.time_casa?.nome ?? 'Time da casa', atletas: elencoCasa },
+              { lado: 'fora', nome: jogo.time_visitante?.nome ?? 'Time visitante', atletas: elencoFora },
+            ].map((eq) => (
+              <div key={eq.lado} className="grid gap-3">
+                <strong className="font-display text-lg uppercase">{eq.nome}</strong>
+                <ElencoEquipe atletas={eq.atletas} />
               </div>
             ))}
           </div>
