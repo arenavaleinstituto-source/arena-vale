@@ -181,7 +181,7 @@ export function CoordShell({ user, stats, inscricoes: initialInsc, patrocinadore
       </header>
 
       {/* Abas */}
-      <div role="tablist" aria-label="Seções do painel" className="flex flex-wrap gap-2">
+      <div role="tablist" aria-label="Seções do painel" className="flex flex-wrap justify-center gap-2.5 rounded-[22px] border border-av-linha bg-av-grafite p-4">
         {ABAS_COORD.map((a) => (
           <button
             key={a.id}
@@ -189,8 +189,8 @@ export function CoordShell({ user, stats, inscricoes: initialInsc, patrocinadore
             role="tab"
             aria-selected={tab === a.id}
             onClick={() => abrir(a.id)}
-            className={`shrink-0 rounded-full border px-4 py-2 font-rotulo text-sm font-bold uppercase tracking-wider transition ${
-              tab === a.id ? 'border-av-vermelho bg-av-vermelho text-white' : 'border-av-linha text-av-cinza hover:border-av-vermelho hover:text-white'
+            className={`w-[calc(50%-5px)] truncate rounded-full border px-3 py-2.5 sm:w-[158px] text-center font-rotulo text-sm font-bold uppercase tracking-wider transition ${
+              tab === a.id ? 'border-av-vermelho bg-av-vermelho text-white shadow-[0_8px_20px_rgba(229,9,20,.35)]' : 'border-av-linha bg-av-preto text-av-cinza hover:border-av-vermelho hover:text-white'
             }`}
           >
             {a.rotulo}
