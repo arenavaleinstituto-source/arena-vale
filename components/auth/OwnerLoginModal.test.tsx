@@ -73,6 +73,30 @@ describe('OwnerLoginModal', () => {
     expect(push).not.toHaveBeenCalled();
   });
 
+  it('e-mail não confirmado mostra a mensagem certa', async () => {
+    signInWithPassword.mockResolvedValue({ data: { user: null }, error: { code: 'email_not_confirmed', status: 400, message: 'Email not confirmed' } });
+    render(<OwnerLoginModal open onClose={() => {}} />);
+    await preencherEEntrar();
+    expect(await screen.findByText('Confirme seu e-mail antes de entrar.')).toBeInTheDocument();
+  });
+
+  it('erro retornado com status 0 mostra a mensagem de conexão', async () => {
+    signInWithPassword.mockResolvedValue({ data: { user: null }, error: { name: 'AuthRetryableFetchError', status: 0, message: 'Failed to fetch' } });
+    render(<OwnerLoginModal open onClose={() => {}} />);
+    await preencherEEntrar();
+    expect(await screen.findByText('Não foi possível entrar. Verifique sua conexão e tente de novo.')).toBeInTheDocument();
+  });
+
+  it('reabrir não mostra a senha antiga', async () => {
+    signInWithPassword.mockResolvedValue({ data: { user: null }, error: { code: 'invalid_credentials', status: 400 } });
+    const { rerender } = render(<OwnerLoginModal open onClose={() => {}} />);
+    await preencherEEntrar();
+    rerender(<OwnerLoginModal open={false} onClose={() => {}} />);
+    rerender(<OwnerLoginModal open onClose={() => {}} />);
+    expect(screen.getByLabelText('Senha')).toHaveValue('');
+    expect(screen.queryByText('E-mail ou senha inválidos')).toBeNull();
+  });
+
   it('Esc chama onClose', async () => {
     const onClose = vi.fn();
     render(<OwnerLoginModal open onClose={onClose} />);

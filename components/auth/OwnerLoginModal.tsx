@@ -4,17 +4,12 @@ import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
 import { createPortal } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
+import { MSG, mensagemDeErroLogin } from '@/lib/auth/mensagens';
 
-const MSG_CREDENCIAL = 'E-mail ou senha inválidos';
-const MSG_CONEXAO = 'Não foi possível entrar. Verifique sua conexão e tente de novo.';
 /** Toques no fundo logo após abrir (ex.: 4º toque no logo) não fecham o modal. */
 const CARENCIA_FECHAR_MS = 300;
 
 type Props = { open: boolean; onClose: () => void };
-
-function ehErroDeCredencial(error: { message?: string; status?: number }) {
-  return error.status === 400 || /invalid login/i.test(error.message ?? '');
-}
 
 /**
  * Modal de acesso aberto pelo toque triplo no logo.
@@ -22,6 +17,12 @@ function ehErroDeCredencial(error: { message?: string; status?: number }) {
  * A proteção real da rota fica no proxy, nos Server Components e no RLS.
  */
 export function OwnerLoginModal({ open, onClose }: Props) {
+  // Desmonta ao fechar: senha e erro nunca reaparecem na próxima abertura.
+  if (!open || typeof document === 'undefined') return null;
+  return <ModalAberto onClose={onClose} />;
+}
+
+function ModalAberto({ onClose }: { onClose: () => void }) {
   const router = useRouter();
   const tituloId = useId();
   const emailRef = useRef<HTMLInputElement>(null);
@@ -32,15 +33,13 @@ export function OwnerLoginModal({ open, onClose }: Props) {
   const abertoEm = useRef(0);
 
   useEffect(() => {
-    if (!open) return;
     abertoEm.current = Date.now();
     emailRef.current?.focus();
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
-  }, [open, onClose]);
+  }, [onClose]);
 
-  if (!open || typeof document === 'undefined') return null;
 
   async function entrar(e: FormEvent) {
     e.preventDefault();
@@ -49,12 +48,12 @@ export function OwnerLoginModal({ open, onClose }: Props) {
     try {
       const { error } = await createClient().auth.signInWithPassword({ email, password: senha });
       if (error) {
-        setErro(ehErroDeCredencial(error) ? MSG_CREDENCIAL : MSG_CONEXAO);
+        setErro(mensagemDeErroLogin(error));
         return;
       }
       router.push('/proprietario');
     } catch {
-      setErro(MSG_CONEXAO);
+      setErro(MSG.conexao);
     } finally {
       setEnviando(false);
     }

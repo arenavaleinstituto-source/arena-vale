@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { LogoSecreto } from '@/components/auth/LogoSecreto';
+import { EntrarEquipe } from '@/components/auth/EntrarEquipe';
 
 /** Rotas da equipe têm o próprio menu (coord-shell etc.) — o cabeçalho público não aparece nelas. */
 const ROTAS_DA_EQUIPE = ['/painel', '/coordenador', '/proprietario', '/moderador', '/capitao'];
@@ -32,7 +33,6 @@ function PontoAoVivo() {
 export function SiteHeader() {
   const pathname = usePathname() ?? '/';
   const [menuMobileAberto, setMenuMobileAberto] = useState(false);
-  const [menuPainelAberto, setMenuPainelAberto] = useState(false);
 
   if (ROTAS_DA_EQUIPE.some((r) => pathname === r || pathname.startsWith(`${r}/`))) return null;
 
@@ -69,30 +69,11 @@ export function SiteHeader() {
             <a href={WHATSAPP} target="_blank" rel="noreferrer" className="whitespace-nowrap rounded-full bg-gradient-to-r from-[#e50914] to-[#ff1e27] px-5 py-2.5 text-[11px] font-black uppercase tracking-[0.12em] text-white shadow-lg shadow-[#e50914]/30 transition hover:scale-105 hover:shadow-[#e50914]/50">
               Anuncie
             </a>
-            <div className="relative">
-              <button
-                type="button"
-                onClick={() => setMenuPainelAberto((v) => !v)}
-                aria-expanded={menuPainelAberto}
-                className="inline-flex items-center gap-2 whitespace-nowrap rounded-full border border-white/15 bg-white/[0.04] px-4 py-2.5 text-[11px] font-black uppercase tracking-[0.12em] text-white transition hover:border-[#e50914] hover:bg-white/[0.08]"
-              >
-                <span>Painel</span> <span className="text-[10px] text-[#e50914]">▼</span>
-              </button>
-              {menuPainelAberto && (
-                <div className="absolute right-0 z-50 mt-3 w-56 rounded-2xl border border-white/15 bg-[#111111]/95 p-2 shadow-2xl backdrop-blur-2xl" onMouseLeave={() => setMenuPainelAberto(false)}>
-                  <Link href="/login" onClick={() => setMenuPainelAberto(false)} className="group flex flex-col rounded-xl px-3.5 py-2.5 transition hover:bg-white/5">
-                    <span className="text-xs font-black uppercase tracking-wider text-white transition group-hover:text-[#e50914]">Acessar Portal</span>
-                    <span className="text-[10px] font-medium text-gray-400">Coordenadores, moderadores e capitães</span>
-                  </Link>
-                </div>
-              )}
-            </div>
+            <EntrarEquipe />
           </div>
 
           <div className="flex items-center gap-2 xl:hidden">
-            <Link href="/login" className="whitespace-nowrap rounded-full border border-[#e50914]/50 bg-[#e50914]/10 px-3.5 py-2.5 text-[10px] font-black uppercase tracking-wider text-white">
-              Painel
-            </Link>
+            <EntrarEquipe />
             <a href={WHATSAPP} target="_blank" rel="noreferrer" className="whitespace-nowrap rounded-full bg-[#e50914] px-4 py-2 text-[11px] font-black uppercase tracking-wider text-white shadow-lg shadow-[#e50914]/30">
               Anuncie
             </a>
@@ -126,7 +107,7 @@ export function SiteHeader() {
             </nav>
           </div>
           <div className="mt-6 space-y-4 border-t border-white/10 pt-6">
-            <Link href="/login" onClick={fecharMobile} className="mt-2 block w-full rounded-full border border-white/30 bg-[#050505] py-4 text-center text-xs font-black uppercase tracking-wider text-white shadow-xl">Acesso ao Portal 🔒</Link>
+            <Link href="/login" onClick={fecharMobile} className="mt-2 block w-full rounded-full border border-white/30 bg-[#050505] py-4 text-center text-xs font-black uppercase tracking-wider text-white shadow-xl">Área da equipe 🔒</Link>
             <a href={WHATSAPP} target="_blank" rel="noreferrer" className="mt-2 block w-full rounded-full bg-[#e50914] py-4 text-center text-xs font-black uppercase tracking-wider text-white shadow-xl shadow-[#e50914]/30">Falar no WhatsApp Oficial ↗</a>
           </div>
         </div>

@@ -6,9 +6,10 @@ vi.mock('next/navigation', () => ({
   useRouter: () => ({ push: vi.fn() }),
   usePathname: () => pathname,
 }));
-vi.mock('@/lib/supabase/client', () => ({
-  createClient: () => ({ auth: { signInWithPassword: vi.fn() } }),
-}));
+vi.mock('@/lib/supabase/client', async () => {
+  const { fakeSupabase } = await import('./auth/fake-supabase');
+  return { createClient: () => fakeSupabase() };
+});
 
 import { SiteHeader } from './SiteHeader';
 
@@ -36,6 +37,12 @@ describe('SiteHeader', () => {
   it('tem o logo com toque triplo', () => {
     render(<SiteHeader />);
     expect(screen.getByRole('button', { name: 'Arena Vale — início' })).toBeInTheDocument();
+  });
+
+  it('tem o botão "Entrar" da equipe no lugar do "Painel"', async () => {
+    render(<SiteHeader />);
+    expect((await screen.findAllByRole('button', { name: 'Entrar na área da equipe' })).length).toBeGreaterThan(0);
+    expect(screen.queryByText('Painel')).toBeNull();
   });
 
   it.each(['/painel', '/painel/noticias', '/coordenador', '/proprietario', '/moderador', '/capitao'])(
