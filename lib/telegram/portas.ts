@@ -82,6 +82,14 @@ export function portasBot(admin: SupabaseClient): PortasBot {
       if (error || !data) throw new Error(error?.message ?? 'falha ao gravar');
       return { id: (data as { id: string }).id };
     },
+    async completarAlbum(ref, titulo, descricao) {
+      await admin
+        .from('noticias')
+        .update({ titulo, descricao })
+        .eq('telegram_message_ref', ref)
+        .eq('status', 'rascunho')
+        .eq('titulo', 'Notícia do Telegram');
+    },
     async enviarMensagem(chatId, texto) {
       await tg('sendMessage', { chat_id: chatId, text: texto, disable_web_page_preview: true });
     },

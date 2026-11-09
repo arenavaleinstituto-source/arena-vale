@@ -60,6 +60,21 @@ describe('bot do Telegram com o banco (portasBot)', () => {
     expect(data).toEqual({ aba: 'mundo', status: 'rascunho', ativo: false });
   });
 
+  it('álbum: completa o título do rascunho padrão, mas não mexe em rascunho já editado', async () => {
+    const ref = `grupo:5:${Date.now()}`;
+    const ref2 = `${ref}-editado`;
+    await admin().from('noticias').insert([
+      { titulo: 'Notícia do Telegram', origem: 'telegram', aba: 'mundo', telegram_message_ref: ref },
+      { titulo: 'Já editado pela coordenação', origem: 'telegram', aba: 'mundo', telegram_message_ref: ref2 },
+    ]);
+    const p = portasBot(admin());
+    await p.completarAlbum(ref, 'STJD pune Maripán', 'Um jogo de suspensão.');
+    await p.completarAlbum(ref2, 'Não deve trocar', '');
+    const { data } = await admin().from('noticias').select('telegram_message_ref, titulo, descricao').in('telegram_message_ref', [ref, ref2]);
+    expect(data?.find((n) => n.telegram_message_ref === ref)).toMatchObject({ titulo: 'STJD pune Maripán', descricao: 'Um jogo de suspensão.' });
+    expect(data?.find((n) => n.telegram_message_ref === ref2)?.titulo).toBe('Já editado pela coordenação');
+  });
+
   it('modo de vídeo padrão sem dono cadastrado', async () => {
     expect(await portasBot(admin()).modoVideo()).toEqual({ modo: 'guardar_arquivo', dias: 30 });
   });

@@ -10,6 +10,7 @@ function portas(over: Partial<PortasBot> = {}) {
     guardarArquivo: vi.fn().mockImplementation(async (caminho: string) => `https://cdn.test/${caminho}`),
     inserirRascunho: vi.fn().mockResolvedValue({ id: 'n-1' }),
     enviarMensagem: vi.fn().mockResolvedValue(undefined),
+    completarAlbum: vi.fn().mockResolvedValue(undefined),
     ...over,
   };
   return p;
@@ -82,6 +83,19 @@ describe('processarUpdate', () => {
     await processarUpdate(foto({ media_group_id: 'g9' }), p, ORIGEM);
     expect((p.inserirRascunho as ReturnType<typeof vi.fn>).mock.calls[0][0].telegram_message_ref).toBe('grupo:5:g9');
     expect(p.enviarMensagem).not.toHaveBeenCalled();
+  });
+
+  it('álbum: a parte que traz o texto completa o rascunho criado pela primeira foto (sem texto)', async () => {
+    const p = portas({ inserirRascunho: vi.fn().mockResolvedValue('duplicado') });
+    await processarUpdate(foto({ media_group_id: 'g9', message_id: 8, caption: 'STJD pune Maripán\nUm jogo de suspensão.' }), p, ORIGEM);
+    expect(p.completarAlbum).toHaveBeenCalledWith('grupo:5:g9', 'STJD pune Maripán', 'Um jogo de suspensão.');
+    expect(p.enviarMensagem).not.toHaveBeenCalled();
+  });
+
+  it('álbum: parte sem texto não mexe no rascunho', async () => {
+    const p = portas({ inserirRascunho: vi.fn().mockResolvedValue('duplicado') });
+    await processarUpdate(foto({ media_group_id: 'g9', message_id: 9, caption: undefined }), p, ORIGEM);
+    expect(p.completarAlbum).not.toHaveBeenCalled();
   });
 
   it('falha ao gravar: pede para tentar de novo', async () => {

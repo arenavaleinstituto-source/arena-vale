@@ -4,7 +4,7 @@
  */
 import { servicoDoLink } from '@/lib/midia/links';
 import type { ModoVideo } from '@/lib/midia/noticias';
-import { comandoVincular, extrairRascunho, LIMITE_VIDEO, respostaRascunho, type TgMessage } from './extrair';
+import { comandoVincular, extrairRascunho, LIMITE_VIDEO, respostaRascunho, TITULO_PADRAO, type TgMessage } from './extrair';
 
 export type Arquivo = { bytes: Uint8Array; ext: string; mime: string };
 
@@ -37,6 +37,8 @@ export type PortasBot = {
   /** 'duplicado' quando o telegram_message_ref já existe. */
   inserirRascunho(dados: DadosRascunho): Promise<{ id: string } | 'duplicado'>;
   enviarMensagem(chatId: number, texto: string): Promise<void>;
+  /** Álbum: preenche título e texto do rascunho do grupo se ele ainda estiver com o título padrão. */
+  completarAlbum(ref: string, titulo: string, descricao: string): Promise<void>;
 };
 
 const LIMITE_FOTO = 5 * 1024 * 1024;
@@ -110,6 +112,10 @@ export async function processarUpdate(update: unknown, p: PortasBot, origem: str
     await p.enviarMensagem(chat, 'Não consegui criar o rascunho, tente de novo');
     return;
   }
-  if (criado === 'duplicado') return;
+  if (criado === 'duplicado') {
+    // No álbum o texto vem em só uma das fotos: se for esta, completa o rascunho do grupo.
+    if (r.mediaGroupId && r.titulo !== TITULO_PADRAO) await p.completarAlbum(dados.telegram_message_ref, r.titulo, r.descricao);
+    return;
+  }
   await p.enviarMensagem(chat, respostaRascunho(r, modo, Boolean(video_url), erroMidia, `${origem}/coordenador?aba=noticias&editar=${criado.id}`));
 }

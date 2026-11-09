@@ -49,6 +49,12 @@ describe('extrairRascunho', () => {
     expect(extrairRascunho(CANAL)).toMatchObject({ tipo_midia: 'video', videoFileId: 'd1', video_link: 'https://t.me/canalesportes/321', fonte: 'Canal Esportes' });
   });
 
+  it('título sem a hashtag de editoria nem emoji no começo; o texto inteiro vai para a descrição', () => {
+    const r = extrairRascunho({ ...base, caption: '#Futebol: 🔴 O STJD puniu Maripán com um jogo de suspensão.\n\nO zagueiro cumprirá suspensão automática.\n\n📰Juliano Machado' });
+    expect(r.titulo).toBe('O STJD puniu Maripán com um jogo de suspensão.');
+    expect(r.descricao).toBe('O zagueiro cumprirá suspensão automática.\n\n📰Juliano Machado');
+  });
+
   it('título longo é cortado em 120; sem texto, título padrão', () => {
     expect(extrairRascunho({ ...base, text: 'x'.repeat(200) }).titulo).toHaveLength(120);
     expect(extrairRascunho({ ...base, photo: FOTO.photo }).titulo).toBe('Notícia do Telegram');
