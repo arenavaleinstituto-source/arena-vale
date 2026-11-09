@@ -45,7 +45,7 @@ export async function convidar(entrada: EntradaConvite, deps: Deps): Promise<Res
     return { ok: false, status: 400, erro: `Essa pessoa já é ${ROTULO_CARGO[existente.role].toLowerCase()}. Use outro e-mail.` };
   }
 
-  const id = existente?.id ?? (await deps.convidarPorEmail(email, `${deps.origem}/criar-senha`));
+  const id = existente?.id ?? (await deps.convidarPorEmail(email, `${deps.origem}/auth/confirm?next=/criar-senha`));
 
   if (existente?.role !== entrada.cargo) {
     const erroCargo = await deps.definirCargo(id, entrada.cargo);
@@ -62,8 +62,10 @@ export async function convidar(entrada: EntradaConvite, deps: Deps): Promise<Res
 export function portasSupabase(admin: SupabaseClient): PortasConvite {
   return {
     async buscarPerfilPorEmail(email) {
-      const { data } = await admin.from('profiles').select('id, role').ilike('email', email).maybeSingle();
-      return (data as { id: string; role: string } | null) ?? null;
+      // E-mail exato do Auth (o do perfil pode não ser confiável; ilike trataria _ e % como curinga).
+      const { data, error } = await admin.rpc('perfil_por_email', { e: email });
+      if (error) throw new Error(error.message);
+      return (data as { id: string; role: string }[] | null)?.[0] ?? null;
     },
     async convidarPorEmail(email, redirectTo) {
       const { data, error } = await admin.auth.admin.inviteUserByEmail(email, { redirectTo });

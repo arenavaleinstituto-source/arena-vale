@@ -97,9 +97,9 @@ describe('cargos (0009)', () => {
     expect(await cargoDe(sai.id)).toBe('autenticado');
   });
 
-  it('dono aparece com role coordenador para qualquer leitor', async () => {
+  it('dono aparece com role coordenador para quem pode ler perfis (a coordenação)', async () => {
     const dono = await criarUsuario('coordenador', { dono: true });
-    const leitor = await clienteComo(await criarUsuario('autenticado'));
+    const leitor = await clienteComo(await criarUsuario('coordenador'));
     const { data } = await leitor.from('profiles').select('role').eq('id', dono.id).single();
     expect(data?.role).toBe('coordenador');
   });

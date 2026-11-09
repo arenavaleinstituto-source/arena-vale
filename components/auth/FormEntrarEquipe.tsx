@@ -60,7 +60,7 @@ export function FormEntrarEquipe({ next = null, autoFocus = false }: Props) {
     try {
       const { error } = await createClient().auth.signInWithOtp({
         email,
-        options: { emailRedirectTo: `${origem()}/login`, shouldCreateUser: false },
+        options: { emailRedirectTo: `${origem()}/auth/confirm?next=/login`, shouldCreateUser: false },
       });
       if (error) setErro(mensagemDeErroLogin(error));
       else setAviso(MSG.linkEnviado);
@@ -74,7 +74,7 @@ export function FormEntrarEquipe({ next = null, autoFocus = false }: Props) {
     setAviso(null);
     if (!email.trim()) return setErro(MSG.informeEmail);
     try {
-      const { error } = await createClient().auth.resetPasswordForEmail(email, { redirectTo: `${origem()}/criar-senha` });
+      const { error } = await createClient().auth.resetPasswordForEmail(email, { redirectTo: `${origem()}/auth/confirm?next=/criar-senha` });
       if (error) setErro(MSG.conexao);
       else setAviso(MSG.resetEnviado);
     } catch {

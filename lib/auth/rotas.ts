@@ -39,14 +39,50 @@ export function decidirRota(pathname: string, cargo: Cargo, ehDono: boolean): De
   return regra.permite.includes(cargo) ? 'livre' : 'negado';
 }
 
+/** Prefixos para onde um `next` pode levar depois do login (só a área da equipe). */
+const PREFIXOS_EQUIPE = ['/coordenador', '/painel', '/moderador', '/capitao', '/proprietario'];
+const BASE_FALSA = 'https://arena-vale.invalid';
+
+/**
+ * Normaliza um destino interno vindo de URL (`next`). Recusa qualquer coisa que
+ * o navegador possa transformar em outro site: barras invertidas, caracteres de
+ * controle (inclusive codificados), protocolo, `//host`.
+ */
+function caminhoInterno(next: string | null | undefined, origem?: string): string | null {
+  if (typeof next !== 'string' || next === '') return null;
+  let bruto = next;
+  if (origem && bruto.startsWith(origem)) bruto = bruto.slice(origem.length) || '/';
+  let decodificado: string;
+  try {
+    decodificado = decodeURIComponent(bruto);
+  } catch {
+    return null;
+  }
+  for (const v of [bruto, decodificado]) {
+    if (!v.startsWith('/') || v.startsWith('//') || v.includes('\\') || /[\u0000-\u001f\u007f]/.test(v)) return null;
+  }
+  const url = new URL(bruto, BASE_FALSA);
+  if (url.origin !== BASE_FALSA) return null;
+  return url.pathname + url.search;
+}
+
+const dentroDaEquipe = (caminho: string) => PREFIXOS_EQUIPE.some((p) => dentroDe(caminho.split('?')[0], p));
+
 /**
  * Para onde mandar a pessoa depois do login. `next` só vale se for um caminho
- * interno que o cargo pode abrir. Sem cargo de equipe → `null`.
+ * da área da equipe que o cargo pode abrir. Sem cargo de equipe → `null`.
  */
 export function destinoPorCargo(cargo: Cargo, next?: string | null, ehDono = false): string | null {
   const padrao = PAINEL[cargo] ?? null;
   if (!padrao) return null;
-  const interno = typeof next === 'string' && next.startsWith('/') && !next.startsWith('//');
-  if (interno && decidirRota(next, cargo, ehDono) === 'livre') return next;
+  const caminho = caminhoInterno(next);
+  if (caminho && dentroDaEquipe(caminho) && decidirRota(caminho.split('?')[0], cargo, ehDono) === 'livre') return caminho;
   return padrao;
+}
+
+/** Destino depois de confirmar um link de e-mail (convite, link de acesso, nova senha). */
+export function destinoConfirmacao(next: string | null | undefined, origem?: string): string {
+  const caminho = caminhoInterno(next, origem);
+  if (caminho && (dentroDe(caminho.split('?')[0], '/criar-senha') || dentroDaEquipe(caminho))) return caminho;
+  return '/login';
 }

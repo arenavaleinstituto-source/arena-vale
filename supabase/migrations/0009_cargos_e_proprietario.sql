@@ -54,7 +54,7 @@ on conflict do nothing;
 
 -- 4) Limite de coordenadores (substitui o "coordenador único") ---------------
 drop trigger if exists tr_guard_single_coordenador on public.profiles;
-drop function if exists public.guard_single_coordenador();
+drop function if exists public.guard_single_coordenador() cascade;
 
 create or replace function public.guard_coordenadores()
 returns trigger language plpgsql security definer set search_path = public as $$
@@ -80,15 +80,21 @@ create trigger tr_guard_coordenadores
 
 update public.profiles set role = 'coordenador' where role = 'proprietario';
 
--- 5) Ninguém muda o próprio cargo ------------------------------------------
+-- 5) Ninguém muda o próprio cargo nem o e-mail do perfil -------------------
+-- O e-mail do perfil identifica a pessoa nos convites; se o usuário pudesse
+-- trocá-lo, poderia "assumir" o convite de outra pessoa.
 create or replace function public.proteger_cargo()
 returns trigger language plpgsql as $$
 begin
+  if current_user in ('service_role', 'postgres', 'supabase_admin') then
+    return new;
+  end if;
   if new.role is distinct from old.role
-     and coalesce(current_setting('arena.permitir_cargo', true), '') <> 'on'
-     and coalesce(auth.role(), '') <> 'service_role'
-     and current_user not in ('postgres', 'supabase_admin') then
+     and coalesce(current_setting('arena.permitir_cargo', true), '') <> 'on' then
     raise exception 'O cargo só pode ser alterado pela coordenação.';
+  end if;
+  if new.email is distinct from old.email then
+    raise exception 'O e-mail da conta não pode ser alterado por aqui.';
   end if;
   return new;
 end;
@@ -96,47 +102,11 @@ $$;
 
 drop trigger if exists tr_proteger_cargo on public.profiles;
 create trigger tr_proteger_cargo
-  before update of role on public.profiles
+  before update of role, email on public.profiles
   for each row execute function public.proteger_cargo();
 
--- 6) Mudança de cargo pela hierarquia --------------------------------------
-create or replace function public.definir_cargo(perfil uuid, cargo public.user_role)
-returns void language plpgsql security definer set search_path = public as $$
-declare
-  cargo_alvo public.user_role;
-  alvo_e_dono boolean;
-  sou_dono boolean := public.is_proprietario();
-begin
-  if not public.is_staff() then
-    raise exception 'Só a coordenação altera cargos.';
-  end if;
-  if cargo = 'proprietario' then
-    raise exception 'Cargo inválido.';
-  end if;
-
-  select role into cargo_alvo from public.profiles where id = perfil;
-  if not found then
-    raise exception 'Usuário não encontrado.';
-  end if;
-  select exists (select 1 from public.proprietario where profile_id = perfil) into alvo_e_dono;
-
-  if alvo_e_dono then
-    raise exception 'Ninguém altera o cargo do proprietário.';
-  end if;
-  if not sou_dono then
-    if cargo = 'coordenador' then
-      raise exception 'Só o proprietário define coordenadores.';
-    end if;
-    if cargo_alvo = 'coordenador' then
-      raise exception 'Só o proprietário altera coordenadores.';
-    end if;
-  end if;
-
-  perform set_config('arena.permitir_cargo', 'on', true);
-  update public.profiles set role = cargo where id = perfil;
-  perform set_config('arena.permitir_cargo', 'off', true);
-end;
-$$;
+-- 6) Mudança de cargo pela hierarquia: `definir_cargo` é criada na 0010, que
+--    também apaga os vínculos que não combinam mais com o cargo novo.
 
 create or replace function public.definir_limite_coordenadores(n int, remover uuid[] default '{}')
 returns void language plpgsql security definer set search_path = public as $$
@@ -169,5 +139,5 @@ begin
 end;
 $$;
 
-revoke execute on function public.definir_cargo(uuid, public.user_role) from anon;
-revoke execute on function public.definir_limite_coordenadores(int, uuid[]) from anon;
+revoke execute on function public.definir_limite_coordenadores(int, uuid[]) from public, anon;
+grant execute on function public.definir_limite_coordenadores(int, uuid[]) to authenticated;

@@ -21,7 +21,7 @@ describe('convidar', () => {
     const p = portas();
     const r = await convidar({ email: 'Mod@Exemplo.com ', cargo: 'moderador', campeonatoId: 'c1' }, { quemChama: coord, origem: ORIGEM, ...p });
     expect(r).toEqual({ ok: true, jaTinhaConta: false });
-    expect(p.convidarPorEmail).toHaveBeenCalledWith('mod@exemplo.com', `${ORIGEM}/criar-senha`);
+    expect(p.convidarPorEmail).toHaveBeenCalledWith('mod@exemplo.com', `${ORIGEM}/auth/confirm?next=/criar-senha`);
     expect(p.definirCargo).toHaveBeenCalledWith('novo-id', 'moderador');
     expect(p.vincular).toHaveBeenCalledWith('moderador', 'novo-id', 'c1');
   });

@@ -3,6 +3,7 @@
 import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { FormEntrarEquipe } from '@/components/auth/FormEntrarEquipe';
+import { RedirecionarSeLogado } from '@/components/auth/RedirecionarSeLogado';
 
 /**
  * Área da equipe em tela cheia — para quem chega por redirecionamento
@@ -11,7 +12,12 @@ import { FormEntrarEquipe } from '@/components/auth/FormEntrarEquipe';
  */
 function Conteudo() {
   const next = useSearchParams().get('next');
-  return <FormEntrarEquipe next={next} autoFocus />;
+  return (
+    <>
+      <RedirecionarSeLogado next={next} />
+      <FormEntrarEquipe next={next} autoFocus />
+    </>
+  );
 }
 
 export default function LoginPage() {

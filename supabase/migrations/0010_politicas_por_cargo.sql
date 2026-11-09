@@ -11,15 +11,26 @@
 --  visitante → leitura do que é público
 -- ====================================================================
 
--- 1) Zera as políticas e liga o RLS em todas as tabelas públicas ------------
+set lock_timeout = '5s';
+
+-- 1) Zera as políticas e liga o RLS nas tabelas públicas da aplicação ---------
+--    (só tabelas do dono atual que não pertencem a extensões, como PostGIS)
 do $$
 declare r record;
 begin
   for r in select tablename, policyname from pg_policies where schemaname = 'public' loop
     execute format('drop policy if exists %I on public.%I', r.policyname, r.tablename);
   end loop;
-  for r in select tablename from pg_tables where schemaname = 'public' loop
-    execute format('alter table public.%I enable row level security', r.tablename);
+  for r in
+    select c.relname
+      from pg_class c
+      join pg_namespace n on n.oid = c.relnamespace
+     where n.nspname = 'public'
+       and c.relkind in ('r', 'p')
+       and pg_get_userbyid(c.relowner) = current_user
+       and not exists (select 1 from pg_depend d where d.objid = c.oid and d.deptype = 'e')
+  loop
+    execute format('alter table public.%I enable row level security', r.relname);
   end loop;
 end $$;
 
@@ -34,8 +45,12 @@ alter table public.campeonato_moderadores enable row level security;
 
 -- vínculos antigos (moderador por time + campeonato) continuam valendo
 insert into public.campeonato_moderadores (profile_id, campeonato_id)
-select distinct profile_id, campeonato_id from public.time_moderadores where campeonato_id is not null
+select distinct tm.profile_id, tm.campeonato_id
+  from public.time_moderadores tm
+  join public.profiles p on p.id = tm.profile_id and p.role = 'moderador'
+ where tm.campeonato_id is not null
 on conflict do nothing;
+update public.time_moderadores set campeonato_id = null where campeonato_id is not null;
 
 -- 3) Capitão convidado por campeonato (a equipe chega depois) ---------------
 alter table public.time_capitaes add column if not exists campeonato_id uuid references public.campeonatos(id) on delete cascade;
@@ -47,9 +62,11 @@ create unique index if not exists time_capitaes_um_por_campeonato
   on public.time_capitaes (profile_id, campeonato_id) where campeonato_id is not null;
 
 -- 4) Funções de vínculo ----------------------------------------------------
+-- Vínculo E cargo: tirar o cargo ou o vínculo tira o acesso.
 create or replace function public.is_moderador_do_campeonato(c uuid)
 returns boolean language sql stable security definer set search_path = public as $$
-  select exists (select 1 from public.campeonato_moderadores where profile_id = auth.uid() and campeonato_id = c);
+  select public.cargo_atual() = 'moderador'
+     and exists (select 1 from public.campeonato_moderadores where profile_id = auth.uid() and campeonato_id = c);
 $$;
 
 create or replace function public.is_moderador_do_jogo(j uuid)
@@ -57,13 +74,69 @@ returns boolean language sql stable security definer set search_path = public as
   select exists (
     select 1 from public.jogos g
       join public.campeonato_moderadores cm on cm.campeonato_id = g.campeonato_id
-     where g.id = j and cm.profile_id = auth.uid());
+     where g.id = j and cm.profile_id = auth.uid())
+     and public.cargo_atual() = 'moderador';
 $$;
 
 create or replace function public.is_capitao_do_time(t uuid)
 returns boolean language sql stable security definer set search_path = public as $$
-  select exists (select 1 from public.time_capitaes where profile_id = auth.uid() and time_id = t);
+  select public.cargo_atual() = 'capitao'
+     and exists (select 1 from public.time_capitaes where profile_id = auth.uid() and time_id = t);
 $$;
+
+-- Busca a conta pelo e-mail EXATO do Auth (o e-mail do perfil não é confiável
+-- para isso). Só a service role (rota de convites no servidor) pode chamar.
+create or replace function public.perfil_por_email(e text)
+returns table (id uuid, role text) language sql stable security definer set search_path = public, auth as $$
+  select p.id, p.role::text
+    from auth.users u
+    join public.profiles p on p.id = u.id
+   where lower(u.email) = lower(btrim(e))
+   limit 1;
+$$;
+revoke execute on function public.perfil_por_email(text) from public, anon, authenticated;
+grant execute on function public.perfil_por_email(text) to service_role;
+
+-- Mudança de cargo pela hierarquia (spec 5.2). Mensagem única para quem não é
+-- o dono, para que ninguém descubra quem é o dono pelo erro. Ao mudar o cargo,
+-- apaga os vínculos que não combinam mais.
+create or replace function public.definir_cargo(perfil uuid, cargo public.user_role)
+returns void language plpgsql security definer set search_path = public as $$
+declare
+  cargo_alvo public.user_role;
+  sou_dono boolean := public.is_proprietario();
+begin
+  if not public.is_staff() then
+    raise exception 'Só a coordenação altera cargos.';
+  end if;
+  if cargo = 'proprietario' then
+    raise exception 'Cargo inválido.';
+  end if;
+  select role into cargo_alvo from public.profiles where id = perfil;
+  if not found then
+    raise exception 'Usuário não encontrado.';
+  end if;
+  if not sou_dono and (cargo = 'coordenador' or cargo_alvo = 'coordenador') then
+    raise exception 'Só o proprietário altera a coordenação.';
+  end if;
+  if exists (select 1 from public.proprietario where profile_id = perfil) then
+    raise exception 'Ninguém altera o cargo do proprietário.';
+  end if;
+
+  perform set_config('arena.permitir_cargo', 'on', true);
+  update public.profiles set role = cargo where id = perfil;
+  perform set_config('arena.permitir_cargo', 'off', true);
+
+  if cargo <> 'moderador' then
+    delete from public.campeonato_moderadores where profile_id = perfil;
+  end if;
+  if cargo <> 'capitao' then
+    delete from public.time_capitaes where profile_id = perfil;
+  end if;
+end;
+$$;
+revoke execute on function public.definir_cargo(uuid, public.user_role) from public, anon;
+grant execute on function public.definir_cargo(uuid, public.user_role) to authenticated;
 
 -- 5) Capitão cadastra a própria equipe ---------------------------------------
 create or replace function public.criar_minha_equipe(campeonato uuid, nome text, sigla text, escudo_url text default null)
@@ -75,7 +148,9 @@ declare
 begin
   select tc.id, tc.time_id into convite
     from public.time_capitaes tc
-   where tc.profile_id = auth.uid() and tc.campeonato_id = campeonato;
+   where tc.profile_id = auth.uid() and tc.campeonato_id = campeonato
+     and public.cargo_atual() = 'capitao'
+   for update;
   if not found then
     raise exception 'Você não foi convidado como capitão neste campeonato.';
   end if;
@@ -97,15 +172,15 @@ begin
   return novo_time;
 end;
 $$;
-revoke execute on function public.criar_minha_equipe(uuid, text, text, text) from anon;
+revoke execute on function public.criar_minha_equipe(uuid, text, text, text) from public, anon;
+grant execute on function public.criar_minha_equipe(uuid, text, text, text) to authenticated;
 
 -- 6) Moderador só mexe em resultado ----------------------------------------
 create or replace function public.moderador_so_resultado()
 returns trigger language plpgsql as $$
 begin
   if public.is_staff()
-     or coalesce(auth.role(), '') = 'service_role'
-     or current_user in ('postgres', 'supabase_admin') then
+     or current_user in ('service_role', 'postgres', 'supabase_admin') then
     return new;
   end if;
   if new.data is distinct from old.data
@@ -127,9 +202,11 @@ create trigger tr_moderador_so_resultado
 
 -- 7) Políticas ----------------------------------------------------------------
 -- profiles (o cargo é protegido pelo trigger da 0009)
-create policy profiles_leitura on public.profiles for select using (true);
+create policy profiles_leitura on public.profiles for select using (id = auth.uid() or public.is_staff());
 create policy profiles_proprio on public.profiles for update using (id = auth.uid()) with check (id = auth.uid());
-create policy profiles_staff on public.profiles for update using (public.is_staff()) with check (public.is_staff());
+create policy profiles_staff on public.profiles for update
+  using (public.is_staff() and role <> 'coordenador')
+  with check (public.is_staff() and role <> 'coordenador');
 
 -- marca do dono
 create policy proprietario_le_a_propria_linha on public.proprietario for select using (profile_id = auth.uid());
@@ -166,9 +243,9 @@ create policy times_atualiza on public.times for update
   with check (public.is_staff() or public.is_capitao_do_time(id));
 create policy times_apaga_staff on public.times for delete using (public.is_staff());
 
--- inscrições: formulário público insere; coordenação aprova
+-- inscrições: coordenação cria e aprova (capitão cria pela função criar_minha_equipe)
 create policy inscricoes_leitura on public.inscricoes for select using (true);
-create policy inscricoes_insere on public.inscricoes for insert with check (true);
+create policy inscricoes_insere_staff on public.inscricoes for insert with check (public.is_staff());
 create policy inscricoes_atualiza_staff on public.inscricoes for update using (public.is_staff()) with check (public.is_staff());
 create policy inscricoes_apaga_staff on public.inscricoes for delete using (public.is_staff());
 
@@ -215,10 +292,15 @@ create policy notificacoes_proprias on public.notificacoes for all
 create policy solicitacoes_insere on public.solicitacoes_inscricao for insert to anon, authenticated
   with check (autorizacao_responsavel = true);
 create policy solicitacoes_leitura on public.solicitacoes_inscricao for select to authenticated
-  using (public.is_staff() or public.cargo_atual() = 'moderador');
+  using (public.is_staff() or public.is_moderador_do_campeonato(campeonato_id));
 create policy solicitacoes_atualiza on public.solicitacoes_inscricao for update to authenticated
-  using (public.is_staff() or public.cargo_atual() = 'moderador')
-  with check (public.is_staff() or public.cargo_atual() = 'moderador');
+  using (public.is_staff() or public.is_moderador_do_campeonato(campeonato_id))
+  with check (public.is_staff() or public.is_moderador_do_campeonato(campeonato_id));
+
+-- fotos privadas dos atletas: só a coordenação
+drop policy if exists "atletas_private_read_staff" on storage.objects;
+create policy "atletas_private_read_staff" on storage.objects for select to authenticated
+  using (bucket_id = 'atletas-privado' and public.is_staff());
 
 -- 8) Classificação calculada pelos resultados ---------------------------------
 drop view if exists public.v_classificacao;
@@ -249,6 +331,7 @@ select
 from public.inscricoes i
 join public.times t on t.id = i.time_id
 left join lados l on l.campeonato_id = i.campeonato_id and l.time_id = i.time_id
+where i.status = 'aprovada'
 group by i.campeonato_id, i.time_id, t.nome, t.sigla;
 
 grant select on public.v_classificacao to anon, authenticated;

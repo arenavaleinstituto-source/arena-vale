@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { decidirRota, destinoPorCargo, cargoDoBanco } from './rotas';
+import { decidirRota, destinoPorCargo, cargoDoBanco, destinoConfirmacao } from './rotas';
 
 describe('decidirRota', () => {
   it.each([
@@ -51,6 +51,17 @@ describe('destinoPorCargo', () => {
     expect(destinoPorCargo('coordenador', 'https://site.com')).toBe('/coordenador');
   });
 
+  it.each(['/\\evil.com','/%5Cevil.com', '/%09/evil.com', '/	/evil.com', '/%2F/evil.com', 'javascript:alert(1)'])(
+    'next perigoso %j é ignorado',
+    (next) => {
+      expect(destinoPorCargo('coordenador', next)).toBe('/coordenador');
+    },
+  );
+
+  it('next fora da área da equipe é ignorado', () => {
+    expect(destinoPorCargo('coordenador', '/noticias')).toBe('/coordenador');
+  });
+
   it('next=/moderador para capitão é ignorado', () => {
     expect(destinoPorCargo('capitao', '/moderador')).toBe('/capitao');
   });
@@ -69,5 +80,20 @@ describe('cargoDoBanco', () => {
     expect(cargoDoBanco('proprietario')).toBe('coordenador');
     expect(cargoDoBanco('moderador')).toBe('moderador');
     expect(cargoDoBanco('capitao')).toBe('capitao');
+  });
+});
+
+describe('destinoConfirmacao (links de e-mail)', () => {
+  it('aceita /criar-senha e áreas da equipe', () => {
+    expect(destinoConfirmacao('/criar-senha')).toBe('/criar-senha');
+    expect(destinoConfirmacao('https://arena-vale.vercel.app/criar-senha', 'https://arena-vale.vercel.app')).toBe('/criar-senha');
+    expect(destinoConfirmacao('/capitao')).toBe('/capitao');
+  });
+
+  it('recusa destino externo ou estranho e cai em /login', () => {
+    expect(destinoConfirmacao('https://evil.com/criar-senha', 'https://arena-vale.vercel.app')).toBe('/login');
+    expect(destinoConfirmacao('//evil.com')).toBe('/login');
+    expect(destinoConfirmacao(null)).toBe('/login');
+    expect(destinoConfirmacao('/noticias')).toBe('/login');
   });
 });
