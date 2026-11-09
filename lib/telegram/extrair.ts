@@ -40,6 +40,9 @@ export type RascunhoTelegram = {
   mediaGroupId: string | null;
 };
 
+/** Título usado quando a mensagem não tem texto. */
+export const TITULO_PADRAO = 'Notícia do Telegram';
+
 /** Limite de download da API de bots do Telegram. */
 export const LIMITE_VIDEO = 20 * 1024 * 1024;
 
@@ -55,7 +58,15 @@ export function extrairRascunho(msg: TgMessage): RascunhoTelegram {
   const texto = (msg.text ?? msg.caption ?? '').trim();
   const linhas = texto.split('\n');
   const i = linhas.findIndex((l) => l.trim());
-  const titulo = i === -1 ? 'Notícia do Telegram' : linhas[i].trim().slice(0, 120);
+  // "#Futebol: 🔴 O STJD..." → "O STJD...": tira a hashtag de editoria e os emojis do começo.
+  const limpo =
+    i === -1
+      ? ''
+      : linhas[i]
+          .replace(/^(?:\s*#[\p{L}\p{N}_]+:?)+/u, '')
+          .replace(/^[\s\p{Extended_Pictographic}️‍:–-]+/u, '')
+          .trim();
+  const titulo = (limpo || (i === -1 ? '' : linhas[i].trim()) || TITULO_PADRAO).slice(0, 120);
   const descricao = i === -1 ? '' : linhas.slice(i + 1).join('\n').trim();
 
   const foto = msg.photo?.length ? [...msg.photo].sort((a, b) => (b.file_size ?? b.width ?? 0) - (a.file_size ?? a.width ?? 0))[0] : null;
