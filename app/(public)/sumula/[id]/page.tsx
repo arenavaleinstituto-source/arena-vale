@@ -37,7 +37,7 @@ function rotuloStatus(status: string): { texto: string; classe: string } {
     case 'validada':
       return { texto: 'VALIDADA', classe: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/40' };
     case 'pendente_assinatura':
-      return { texto: 'AGUARDANDO ASSINATURAS', classe: 'bg-amber-500/15 text-amber-300 border-amber-500/40' };
+      return { texto: 'AGUARDANDO ASSINATURAS', classe: 'bg-[#e50914]/15 text-[#ff3b44] border-[#e50914]/40' };
     case 'contestada':
       return { texto: 'CONTESTADA', classe: 'bg-red-500/15 text-red-300 border-red-500/40' };
     default:
@@ -212,7 +212,7 @@ export default async function SumulaPage(props: { params: Promise<{ id: string }
               <span className="text-[10px] font-black uppercase tracking-wider text-[#e50914]">
                 Observações
               </span>
-              <p className="mt-2 text-sm text-[#cad0e0] leading-relaxed">{linha.observacoes}</p>
+              <p className="mt-2 text-sm text-[#d4d4d8] leading-relaxed">{linha.observacoes}</p>
             </div>
           )}
         </section>
@@ -226,7 +226,7 @@ export default async function SumulaPage(props: { params: Promise<{ id: string }
             <p className="text-[11px] text-gray-400 uppercase mb-3">
               Hash SHA-256 imutável do conteúdo desta súmula
             </p>
-            <code className="block break-all text-[11px] text-[#8a92a6] bg-black/40 border border-white/5 rounded-lg p-3">
+            <code className="block break-all text-[11px] text-[#a1a1aa] bg-black/40 border border-white/5 rounded-lg p-3">
               {linha.hash_conteudo}
             </code>
             {linha.validada_em && (
@@ -238,7 +238,7 @@ export default async function SumulaPage(props: { params: Promise<{ id: string }
         )}
       </div>
 
-      <footer className="border-t border-white/10 bg-[#050505] px-6 py-8 text-center text-xs text-[#555d6e]">
+      <footer className="border-t border-white/10 bg-[#050505] px-6 py-8 text-center text-xs text-[#71717a]">
         © 2026 Arena Vale · Súmula digital oficial · CNPJ 40.694.741/0001-34
       </footer>
     </main>

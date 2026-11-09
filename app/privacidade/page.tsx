@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 };
 
 export default function PrivacidadePage() {
-  return (<div className="min-h-screen bg-[#07080c] text-[#cad0e0] selection:bg-[#e50914] selection:text-white font-sans">
+  return (<div className="min-h-screen bg-[#0b0b0c] text-[#d4d4d8] selection:bg-[#e50914] selection:text-white font-sans">
       {/* CABEÇALHO */}
 
       {/* CONTEÚDO DA POLÍTICA */}
@@ -16,10 +16,10 @@ export default function PrivacidadePage() {
         <div className="border-b border-white/10 pb-8 text-center sm:text-left">
           <span className="inline-flex items-center gap-2 rounded-full border border-[#e50914]/50 bg-[#e50914]/15 px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-[#ff4b52] mb-4">DOCUMENTO OFICIAL</span>
           <h1 className="text-3xl sm:text-5xl font-black uppercase tracking-tight text-white mb-4">Política de Privacidade</h1>
-          <p className="text-xs font-mono text-[#8a92a6]">Última atualização: 22 de outubro de 2026</p>
+          <p className="text-xs font-mono text-[#a1a1aa]">Última atualização: 22 de outubro de 2026</p>
         </div>
 
-        <div className="space-y-8 text-sm sm:text-base leading-relaxed text-[#b8c0d4]">
+        <div className="space-y-8 text-sm sm:text-base leading-relaxed text-[#c3c3cb]">
           <p>A Arena Vale, inscrita sob o CNPJ 40.694.741/0001-34, respeita a privacidade dos usuários do site, do aplicativo e dos canais de atendimento (incluindo WhatsApp) relacionados aos nossos campeonatos, transmissões e serviços esportivos. Esta Política de Privacidade explica como coletamos, usamos, armazenamos e protegemos os dados pessoais, em conformidade com a Lei Geral de Proteção de Dados (Lei nº 13.709/2018 — LGPD).</p>
           <p>Ao utilizar nosso site, aplicativo ou entrar em contato pelos nossos canais, você concorda com os termos descritos nesta política.</p>
 
@@ -31,20 +31,20 @@ export default function PrivacidadePage() {
           <section>
             <h2 className="text-xl font-black uppercase text-white mb-3 mt-8 flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-[#e50914]" /> 2. Quais dados coletamos</h2>
             <p className="mb-2">Dependendo de como você interage conosco, podemos coletar:</p>
-            <ul className="list-disc pl-5 space-y-1.5 text-[#8a92a6]">
-              <li><strong className="text-[#cad0e0]">Dados de identificação:</strong> nome completo, data de nascimento, e-mail, telefone/WhatsApp</li>
-              <li><strong className="text-[#cad0e0]">Dados de atletas e equipes:</strong> time, categoria, posição, estatísticas de jogo, fotos e vídeos de partidas</li>
-              <li><strong className="text-[#cad0e0]">Dados de responsáveis</strong> (para atletas menores de idade, na Escolinha): nome do responsável, CPF, endereço, dados de contato</li>
-              <li><strong className="text-[#cad0e0]">Dados financeiros:</strong> informações de pagamento de mensalidades e inscrições (processadas via chave PIX ou meios de pagamento informados; não armazenamos dados completos de cartão de crédito)</li>
-              <li><strong className="text-[#cad0e0]">Dados de navegação:</strong> endereço IP, tipo de dispositivo, páginas visitadas, cookies e identificadores semelhantes</li>
-              <li><strong className="text-[#cad0e0]">Comunicações:</strong> mensagens trocadas pelo WhatsApp ou formulários do site</li>
+            <ul className="list-disc pl-5 space-y-1.5 text-[#a1a1aa]">
+              <li><strong className="text-[#d4d4d8]">Dados de identificação:</strong> nome completo, data de nascimento, e-mail, telefone/WhatsApp</li>
+              <li><strong className="text-[#d4d4d8]">Dados de atletas e equipes:</strong> time, categoria, posição, estatísticas de jogo, fotos e vídeos de partidas</li>
+              <li><strong className="text-[#d4d4d8]">Dados de responsáveis</strong> (para atletas menores de idade, na Escolinha): nome do responsável, CPF, endereço, dados de contato</li>
+              <li><strong className="text-[#d4d4d8]">Dados financeiros:</strong> informações de pagamento de mensalidades e inscrições (processadas via chave PIX ou meios de pagamento informados; não armazenamos dados completos de cartão de crédito)</li>
+              <li><strong className="text-[#d4d4d8]">Dados de navegação:</strong> endereço IP, tipo de dispositivo, páginas visitadas, cookies e identificadores semelhantes</li>
+              <li><strong className="text-[#d4d4d8]">Comunicações:</strong> mensagens trocadas pelo WhatsApp ou formulários do site</li>
             </ul>
           </section>
 
           <section>
             <h2 className="text-xl font-black uppercase text-white mb-3 mt-8 flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-[#e50914]" /> 3. Para que usamos seus dados</h2>
             <p className="mb-2">Utilizamos os dados coletados para:</p>
-            <ul className="list-disc pl-5 space-y-1.5 text-[#8a92a6]">
+            <ul className="list-disc pl-5 space-y-1.5 text-[#a1a1aa]">
               <li>Organizar campeonatos, jogos, inscrições de equipes e escalações</li>
               <li>Emitir cobranças de mensalidades e controlar pagamentos</li>
               <li>Divulgar resultados, estatísticas, tabelas de classificação e conteúdo de atletas em destaque</li>
@@ -58,7 +58,7 @@ export default function PrivacidadePage() {
           <section>
             <h2 className="text-xl font-black uppercase text-white mb-3 mt-8 flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-[#e50914]" /> 4. Base legal para o tratamento</h2>
             <p className="mb-2">Tratamos seus dados com base em uma ou mais das seguintes hipóteses previstas na LGPD:</p>
-            <ul className="list-disc pl-5 space-y-1.5 text-[#8a92a6]">
+            <ul className="list-disc pl-5 space-y-1.5 text-[#a1a1aa]">
               <li>Consentimento do titular (por exemplo, ao se cadastrar em um time ou na escolinha)</li>
               <li>Execução de contrato (prestação do serviço de organização esportiva)</li>
               <li>Cumprimento de obrigação legal ou regulatória</li>
@@ -69,7 +69,7 @@ export default function PrivacidadePage() {
           <section>
             <h2 className="text-xl font-black uppercase text-white mb-3 mt-8 flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-[#e50914]" /> 5. Com quem compartilhamos seus dados</h2>
             <p className="mb-2">Não vendemos seus dados pessoais. Podemos compartilhar informações com:</p>
-            <ul className="list-disc pl-5 space-y-1.5 text-[#8a92a6] mb-4">
+            <ul className="list-disc pl-5 space-y-1.5 text-[#a1a1aa] mb-4">
               <li>Patrocinadores e parceiros institucionais, de forma agregada ou conforme autorização específica (ex: exposição de marca em transmissões)</li>
               <li>Prestadores de serviço que nos auxiliam (hospedagem, processamento de pagamento, envio de mensagens via WhatsApp Business)</li>
               <li>Autoridades públicas, quando exigido por lei, ordem judicial ou para proteção de direitos</li>
@@ -103,7 +103,7 @@ export default function PrivacidadePage() {
           <section>
             <h2 className="text-xl font-black uppercase text-white mb-3 mt-8 flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-[#e50914]" /> 10. Seus direitos como titular de dados</h2>
             <p className="mb-2">Conforme a LGPD, você tem direito a:</p>
-            <ul className="list-disc pl-5 space-y-1.5 text-[#8a92a6]">
+            <ul className="list-disc pl-5 space-y-1.5 text-[#a1a1aa]">
               <li>Confirmar a existência de tratamento de dados</li>
               <li>Acessar seus dados</li>
               <li>Corrigir dados incompletos, inexatos ou desatualizados</li>
@@ -123,7 +123,7 @@ export default function PrivacidadePage() {
           <section className="bg-white/5 border border-white/10 rounded-2xl p-6 mt-12">
             <h2 className="text-xl font-black uppercase text-[#e50914] mb-3">12. Contato</h2>
             <p className="mb-4">Para dúvidas, solicitações ou exercício de direitos relacionados a esta Política de Privacidade, entre em contato:</p>
-            <div className="space-y-2 font-mono text-sm text-[#cad0e0]">
+            <div className="space-y-2 font-mono text-sm text-[#d4d4d8]">
               <p>📱 <strong className="text-white">WhatsApp:</strong> (47) 98844-4404</p>
               <p>📸 <strong className="text-white">Instagram:</strong> @arenavaleoficial</p>
               <p>🏢 <strong className="text-white">CNPJ:</strong> 40.694.741/0001-34</p>

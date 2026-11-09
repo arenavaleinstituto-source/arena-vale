@@ -70,7 +70,7 @@ export default function CartaoComunicado({
             <span className="inline-block skew-x-12">{noticia.categoria}</span>
           </span>
           {noticia.tag && (
-            <span className="inline-block -skew-x-12 border border-white/20 bg-black/60 backdrop-blur-md px-3 py-1 text-[10px] font-black uppercase tracking-widest text-[#cad0e0]">
+            <span className="inline-block -skew-x-12 border border-white/20 bg-black/60 backdrop-blur-md px-3 py-1 text-[10px] font-black uppercase tracking-widest text-[#d4d4d8]">
               <span className="inline-block skew-x-12">{noticia.tag}</span>
             </span>
           )}
@@ -103,7 +103,7 @@ export default function CartaoComunicado({
           {noticia.titulo}
         </h3>
 
-        <p className="mt-3 text-xs sm:text-sm text-[#b8c0d4] leading-relaxed line-clamp-3 font-medium">
+        <p className="mt-3 text-xs sm:text-sm text-[#c3c3cb] leading-relaxed line-clamp-3 font-medium">
           {noticia.descricao}
         </p>
 

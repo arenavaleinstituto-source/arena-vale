@@ -43,7 +43,7 @@ export default async function AtletasDestaquesPage() {
   const atletas = comFallbackDestaques(linhas);
 
   return (
-    <div className="min-h-screen bg-[#07080c] text-white selection:bg-[#e50914] selection:text-white flex flex-col justify-between font-sans overflow-x-clip">
+    <div className="min-h-screen bg-[#0b0b0c] text-white selection:bg-[#e50914] selection:text-white flex flex-col justify-between font-sans overflow-x-clip">
       {/* CABEÇALHO */}
 
       {/* CONTEÚDO PRINCIPAL */}
@@ -55,7 +55,7 @@ export default async function AtletasDestaquesPage() {
           <h1 className="text-3xl sm:text-5xl font-black uppercase tracking-tight text-white">
             Atletas em Destaque
           </h1>
-          <p className="text-xs sm:text-sm text-[#8a92a6] mt-2 uppercase max-w-2xl">
+          <p className="text-xs sm:text-sm text-[#a1a1aa] mt-2 uppercase max-w-2xl">
             Os talentos, artilheiros e protagonistas das competições do ecossistema Arena Vale.
           </p>
         </div>
@@ -64,7 +64,7 @@ export default async function AtletasDestaquesPage() {
       </main>
 
       {/* RODAPÉ */}
-      <footer className="border-t border-white/10 bg-[#050609] py-6 text-center text-xs text-[#555d6e]">
+      <footer className="border-t border-white/10 bg-[#0b0b0c] py-6 text-center text-xs text-[#71717a]">
         © 2026 Arena Vale · Todos os direitos reservados.
       </footer>
     </div>

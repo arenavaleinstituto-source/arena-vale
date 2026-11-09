@@ -37,7 +37,7 @@ export default function ProjetoSocialPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#07080c] text-white selection:bg-[#e50914] selection:text-white flex flex-col justify-between font-sans overflow-x-clip">
+    <div className="min-h-screen bg-[#0b0b0c] text-white selection:bg-[#e50914] selection:text-white flex flex-col justify-between font-sans overflow-x-clip">
       
       {/* CABEÇALHO */}
 
@@ -52,7 +52,7 @@ export default function ProjetoSocialPage() {
           <h1 className="text-3xl sm:text-5xl font-black uppercase tracking-tight text-white">
             Projeto Social Arena Vale
           </h1>
-          <p className="text-xs sm:text-sm text-[#8a92a6] uppercase tracking-wide leading-relaxed">
+          <p className="text-xs sm:text-sm text-[#a1a1aa] uppercase tracking-wide leading-relaxed">
             O esporte como ferramenta de transformação social, apoio à formação de jovens talentos e integração comunitária no vale.
           </p>
         </div>
@@ -60,10 +60,10 @@ export default function ProjetoSocialPage() {
         {/* ESTATÍSTICAS DE IMPACTO */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {impactoNumeros.map((item, index) => (
-            <div key={index} className="rounded-2xl border border-white/10 bg-[#11141d] p-6 text-center shadow-xl relative overflow-hidden">
+            <div key={index} className="rounded-2xl border border-white/10 bg-[#141417] p-6 text-center shadow-xl relative overflow-hidden">
               <div className="absolute -right-10 -top-10 h-24 w-24 rounded-full bg-[#e50914]/10 blur-2xl pointer-events-none" />
               <div className="text-2xl sm:text-4xl font-black text-[#e50914]">{item.dado}</div>
-              <div className="text-[11px] font-bold text-[#b8c0d4] uppercase tracking-wider mt-2">{item.rotulo}</div>
+              <div className="text-[11px] font-bold text-[#c3c3cb] uppercase tracking-wider mt-2">{item.rotulo}</div>
             </div>
           ))}
         </div>
@@ -72,17 +72,17 @@ export default function ProjetoSocialPage() {
         <div className="space-y-8">
           <div className="text-center">
             <h2 className="text-xl sm:text-2xl font-black uppercase tracking-tight text-white">Iniciativas e Apoio Direto</h2>
-            <p className="text-xs text-[#8a92a6] uppercase mt-1">Como estruturamos o nosso impacto na comunidade</p>
+            <p className="text-xs text-[#a1a1aa] uppercase mt-1">Como estruturamos o nosso impacto na comunidade</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {pilaresSociais.map((pilar, index) => (
-              <div key={index} className="rounded-3xl border border-white/15 bg-[#11141d] p-8 shadow-xl flex flex-col justify-between relative group hover:border-[#e50914]/50 transition duration-300">
+              <div key={index} className="rounded-3xl border border-white/15 bg-[#141417] p-8 shadow-xl flex flex-col justify-between relative group hover:border-[#e50914]/50 transition duration-300">
                 <div className="absolute -right-12 -bottom-12 h-36 w-36 rounded-full bg-[#e50914]/10 blur-3xl pointer-events-none" />
                 <div>
                   <div className="text-3xl mb-4 p-3 inline-block rounded-2xl bg-white/5 border border-white/10">{pilar.icone}</div>
                   <h3 className="text-lg font-black uppercase tracking-tight text-white mb-2">{pilar.titulo}</h3>
-                  <p className="text-xs text-[#8a92a6] uppercase leading-relaxed">{pilar.descricao}</p>
+                  <p className="text-xs text-[#a1a1aa] uppercase leading-relaxed">{pilar.descricao}</p>
                 </div>
               </div>
             ))}
@@ -90,10 +90,10 @@ export default function ProjetoSocialPage() {
         </div>
 
         {/* CTA DE APOIO / PARCERIA */}
-        <div className="rounded-[2.5rem] border border-[#e50914]/30 bg-gradient-to-r from-[#11141d] via-[#181d2a] to-[#11141d] p-8 sm:p-12 text-center relative overflow-hidden shadow-2xl">
+        <div className="rounded-[2.5rem] border border-[#e50914]/30 bg-gradient-to-r from-[#141417] via-[#26262c] to-[#141417] p-8 sm:p-12 text-center relative overflow-hidden shadow-2xl">
           <div className="absolute right-0 top-0 h-64 w-64 rounded-full bg-[#e50914]/10 blur-3xl pointer-events-none" />
           <h2 className="text-2xl sm:text-3xl font-black uppercase tracking-tight text-white mb-3">Quer Apoiar o Nosso Projeto Social?</h2>
-          <p className="text-xs sm:text-sm text-[#b8c0d4] max-w-xl mx-auto uppercase tracking-wide mb-8 leading-relaxed">
+          <p className="text-xs sm:text-sm text-[#c3c3cb] max-w-xl mx-auto uppercase tracking-wide mb-8 leading-relaxed">
             Junte-se a nós como parceiro ou patrocinador e ajude a expandir o acesso ao esporte para mais crianças e atletas da região.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -117,7 +117,7 @@ export default function ProjetoSocialPage() {
       </main>
 
       {/* RODAPÉ */}
-      <footer className="border-t border-white/10 bg-[#050609] py-8 text-center text-xs text-[#555d6e]">
+      <footer className="border-t border-white/10 bg-[#0b0b0c] py-8 text-center text-xs text-[#71717a]">
         © 2026 Arena Vale · Todos os direitos reservados. CNPJ: 40.694.741/0001-34
       </footer>
     </div>

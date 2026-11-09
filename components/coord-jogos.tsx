@@ -132,7 +132,7 @@ export function CoordJogos() {
           <select
             value={campeonatoId}
             onChange={(e) => setCampeonatoId(e.target.value)}
-            className="px-3 py-3 rounded-[10px] bg-[rgba(8,22,58,0.6)] border border-white/10"
+            className="px-3 py-3 rounded-[10px] bg-[#08080a] border border-white/10"
           >
             <option value="">Selecione o campeonato</option>
             {campeonatos.map((campeonato) => (
@@ -146,13 +146,13 @@ export function CoordJogos() {
             type="datetime-local"
             value={data}
             onChange={(e) => setData(e.target.value)}
-            className="px-3 py-3 rounded-[10px] bg-[rgba(8,22,58,0.6)] border border-white/10"
+            className="px-3 py-3 rounded-[10px] bg-[#08080a] border border-white/10"
           />
 
           <select
             value={timeCasaId}
             onChange={(e) => setTimeCasaId(e.target.value)}
-            className="px-3 py-3 rounded-[10px] bg-[rgba(8,22,58,0.6)] border border-white/10"
+            className="px-3 py-3 rounded-[10px] bg-[#08080a] border border-white/10"
           >
             <option value="">Time da casa</option>
             {times.map((time) => (
@@ -165,7 +165,7 @@ export function CoordJogos() {
           <select
             value={timeVisitanteId}
             onChange={(e) => setTimeVisitanteId(e.target.value)}
-            className="px-3 py-3 rounded-[10px] bg-[rgba(8,22,58,0.6)] border border-white/10"
+            className="px-3 py-3 rounded-[10px] bg-[#08080a] border border-white/10"
           >
             <option value="">Time visitante</option>
             {times.map((time) => (
@@ -179,7 +179,7 @@ export function CoordJogos() {
             value={local}
             onChange={(e) => setLocal(e.target.value)}
             placeholder="Local da partida"
-            className="md:col-span-2 px-3 py-3 rounded-[10px] bg-[rgba(8,22,58,0.6)] border border-white/10"
+            className="md:col-span-2 px-3 py-3 rounded-[10px] bg-[#08080a] border border-white/10"
           />
         </div>
 

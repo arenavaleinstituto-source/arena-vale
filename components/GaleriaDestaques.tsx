@@ -42,7 +42,7 @@ export default function GaleriaDestaques({ destaques }: GaleriaDestaquesProps) {
             className={`rounded-full px-6 py-2.5 text-xs font-black uppercase tracking-wider transition ${
               filtro === mod
                 ? 'bg-[#e50914] text-white shadow-lg shadow-[#e50914]/30'
-                : 'border border-white/15 bg-white/5 text-[#cad0e0] hover:text-white'
+                : 'border border-white/15 bg-white/5 text-[#d4d4d8] hover:text-white'
             }`}
           >
             {mod}

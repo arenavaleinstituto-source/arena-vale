@@ -141,7 +141,7 @@ export function GestaoCoordenadores({ coordenadores, limite, donoId }: Props) {
           />
           <button type="submit" disabled={noLimite || ocupado} className={`${botao} bg-[#e50914] text-white`}>Convidar coordenador</button>
         </form>
-        {noLimite && <p className="mt-3 text-sm text-amber-300">Limite de {limite} coordenadores atingido — aumente o limite para convidar mais.</p>}
+        {noLimite && <p className="mt-3 text-sm text-[#ff3b44]">Limite de {limite} coordenadores atingido — aumente o limite para convidar mais.</p>}
       </section>
 
       <section className={cartao}>
@@ -163,8 +163,8 @@ export function GestaoCoordenadores({ coordenadores, limite, donoId }: Props) {
         </form>
 
         {escolhendoQuemSai && (
-          <div className="mt-5 grid gap-3 rounded-2xl border border-amber-400/30 bg-amber-400/5 p-4">
-            <p className="text-sm text-amber-200">Marque quem deixa de ser coordenador ({precisaSair} {precisaSair === 1 ? 'pessoa' : 'pessoas'}).</p>
+          <div className="mt-5 grid gap-3 rounded-2xl border border-[#e50914]/30 bg-[#e50914]/5 p-4">
+            <p className="text-sm text-[#ff3b44]">Marque quem deixa de ser coordenador ({precisaSair} {precisaSair === 1 ? 'pessoa' : 'pessoas'}).</p>
             {outros.map((c) => (
               <label key={c.id} className="flex items-center gap-3 text-white">
                 <input

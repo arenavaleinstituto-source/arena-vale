@@ -122,20 +122,20 @@ export default function GestaoAtletasClient() {
 
   return (
     <div className="space-y-10">
-      <div className="rounded-[2.5rem] border border-white/10 bg-[#161a24] p-6 sm:p-8 shadow-xl">
+      <div className="rounded-[2.5rem] border border-white/10 bg-[#1d1d22] p-6 sm:p-8 shadow-xl">
         <span className="text-xs font-black uppercase tracking-widest text-[#e50914]">
           NOVO REGISTO EDITORIAL
         </span>
         <h2 className="mt-2 text-xl font-black uppercase text-white">
           Registar Atleta em Destaque
         </h2>
-        <p className="mt-1 text-xs text-[#8a92a6]">
+        <p className="mt-1 text-xs text-[#a1a1aa]">
           Adicione um atleta diretamente à galeria com estatísticas e dados de homologação.
         </p>
 
         <form onSubmit={adicionarAtleta} className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
           <div>
-            <label className="block text-[11px] font-bold uppercase text-[#cad0e0] mb-1">
+            <label className="block text-[11px] font-bold uppercase text-[#d4d4d8] mb-1">
               Nome Completo
             </label>
             <input
@@ -144,18 +144,18 @@ export default function GestaoAtletasClient() {
               value={novoNome}
               onChange={(e) => setNovoNome(e.target.value)}
               placeholder="Ex: Gabriel Mendes"
-              className="w-full rounded-xl border border-white/10 bg-[#0b0d12] px-3.5 py-2 text-xs text-white outline-none focus:border-[#e50914]"
+              className="w-full rounded-xl border border-white/10 bg-[#0b0b0c] px-3.5 py-2 text-xs text-white outline-none focus:border-[#e50914]"
             />
           </div>
 
           <div>
-            <label className="block text-[11px] font-bold uppercase text-[#cad0e0] mb-1">
+            <label className="block text-[11px] font-bold uppercase text-[#d4d4d8] mb-1">
               Modalidade
             </label>
             <select
               value={novaModalidade}
               onChange={(e) => setNovaModalidade(e.target.value)}
-              className="w-full rounded-xl border border-white/10 bg-[#0b0d12] px-3.5 py-2 text-xs text-white outline-none focus:border-[#e50914]"
+              className="w-full rounded-xl border border-white/10 bg-[#0b0b0c] px-3.5 py-2 text-xs text-white outline-none focus:border-[#e50914]"
             >
               <option value="Futsal">Futsal</option>
               <option value="Voleibol">Voleibol</option>
@@ -165,7 +165,7 @@ export default function GestaoAtletasClient() {
           </div>
 
           <div>
-            <label className="block text-[11px] font-bold uppercase text-[#cad0e0] mb-1">
+            <label className="block text-[11px] font-bold uppercase text-[#d4d4d8] mb-1">
               Posição
             </label>
             <input
@@ -174,12 +174,12 @@ export default function GestaoAtletasClient() {
               value={novaPosicao}
               onChange={(e) => setNovaPosicao(e.target.value)}
               placeholder="Ex: Ala / Pivô"
-              className="w-full rounded-xl border border-white/10 bg-[#0b0d12] px-3.5 py-2 text-xs text-white outline-none focus:border-[#e50914]"
+              className="w-full rounded-xl border border-white/10 bg-[#0b0b0c] px-3.5 py-2 text-xs text-white outline-none focus:border-[#e50914]"
             />
           </div>
 
           <div>
-            <label className="block text-[11px] font-bold uppercase text-[#cad0e0] mb-1">
+            <label className="block text-[11px] font-bold uppercase text-[#d4d4d8] mb-1">
               Cidade / Clube
             </label>
             <input
@@ -188,12 +188,12 @@ export default function GestaoAtletasClient() {
               value={novaCidade}
               onChange={(e) => setNovaCidade(e.target.value)}
               placeholder="Ex: Blumenau"
-              className="w-full rounded-xl border border-white/10 bg-[#0b0d12] px-3.5 py-2 text-xs text-white outline-none focus:border-[#e50914]"
+              className="w-full rounded-xl border border-white/10 bg-[#0b0b0c] px-3.5 py-2 text-xs text-white outline-none focus:border-[#e50914]"
             />
           </div>
 
           <div>
-            <label className="block text-[11px] font-bold uppercase text-[#cad0e0] mb-1">
+            <label className="block text-[11px] font-bold uppercase text-[#d4d4d8] mb-1">
               Idade
             </label>
             <input
@@ -202,7 +202,7 @@ export default function GestaoAtletasClient() {
               value={novaIdade}
               onChange={(e) => setNovaIdade(e.target.value)}
               placeholder="Ex: 19"
-              className="w-full rounded-xl border border-white/10 bg-[#0b0d12] px-3.5 py-2 text-xs text-white outline-none focus:border-[#e50914]"
+              className="w-full rounded-xl border border-white/10 bg-[#0b0b0c] px-3.5 py-2 text-xs text-white outline-none focus:border-[#e50914]"
             />
           </div>
 
@@ -227,7 +227,7 @@ export default function GestaoAtletasClient() {
               className={`rounded-full px-4 py-1.5 text-xs font-black uppercase tracking-wider transition ${
                 filtroModalidade === mod
                   ? 'bg-[#e50914] text-white shadow-lg shadow-[#e50914]/30'
-                  : 'border border-white/15 bg-white/5 text-[#cad0e0] hover:text-white'
+                  : 'border border-white/15 bg-white/5 text-[#d4d4d8] hover:text-white'
               }`}
             >
               {mod}
@@ -240,7 +240,7 @@ export default function GestaoAtletasClient() {
           value={pesquisa}
           onChange={(e) => setPesquisa(e.target.value)}
           placeholder="Pesquisar por nome ou cidade..."
-          className="rounded-full border border-white/15 bg-[#0b0d12] px-4 py-1.5 text-xs text-white outline-none focus:border-[#e50914] w-64"
+          className="rounded-full border border-white/15 bg-[#0b0b0c] px-4 py-1.5 text-xs text-white outline-none focus:border-[#e50914] w-64"
         />
       </div>
 
@@ -250,8 +250,8 @@ export default function GestaoAtletasClient() {
             key={atleta.id}
             className={`flex flex-col justify-between rounded-[2rem] border p-6 shadow-xl transition ${
               atleta.destaque
-                ? 'border-[#e50914]/50 bg-gradient-to-b from-[#1c1417] to-[#13161f]'
-                : 'border-white/10 bg-[#13161f]'
+                ? 'border-[#e50914]/50 bg-gradient-to-b from-[#1c1417] to-[#1d1d22]'
+                : 'border-white/10 bg-[#1d1d22]'
             }`}
           >
             <div>
@@ -261,7 +261,7 @@ export default function GestaoAtletasClient() {
                 </span>
                 <span
                   className={`text-[10px] font-black ${
-                    atleta.status === 'APROVADO' ? 'text-emerald-400' : 'text-amber-400'
+                    atleta.status === 'APROVADO' ? 'text-emerald-400' : 'text-[#ff3b44]'
                   }`}
                 >
                   ● {atleta.status}
@@ -274,7 +274,7 @@ export default function GestaoAtletasClient() {
               <p className="text-xs font-bold text-[#e50914] mt-0.5 uppercase tracking-wider">
                 {atleta.posicao} · {atleta.idade} anos
               </p>
-              <p className="mt-2 text-xs text-[#8a92a6]">
+              <p className="mt-2 text-xs text-[#a1a1aa]">
                 📍 {atleta.cidade}
               </p>
             </div>
@@ -286,8 +286,8 @@ export default function GestaoAtletasClient() {
                   onClick={() => alternarDestaque(atleta.id)}
                   className={`flex-1 rounded-full py-1.5 text-[11px] font-black uppercase tracking-wider transition ${
                     atleta.destaque
-                      ? 'bg-amber-500 text-black shadow-lg shadow-amber-500/20'
-                      : 'border border-amber-500/30 bg-amber-500/10 text-amber-300 hover:bg-amber-500/20'
+                      ? 'bg-[#e50914] text-black shadow-lg shadow-[#e50914]/20'
+                      : 'border border-[#e50914]/30 bg-[#e50914]/10 text-[#ff3b44] hover:bg-[#e50914]/20'
                   }`}
                 >
                   {atleta.destaque ? '★ Em Destaque na Home' : '☆ Destacar na Home'}
@@ -296,7 +296,7 @@ export default function GestaoAtletasClient() {
                 <button
                   type="button"
                   onClick={() => alternarStatus(atleta.id)}
-                  className="rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-[11px] font-bold text-[#cad0e0] hover:text-white transition"
+                  className="rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-[11px] font-bold text-[#d4d4d8] hover:text-white transition"
                 >
                   {atleta.status === 'APROVADO' ? 'Pausar' : 'Aprovar'}
                 </button>
@@ -314,7 +314,7 @@ export default function GestaoAtletasClient() {
         ))}
 
         {atletasFiltrados.length === 0 && (
-          <div className="col-span-full py-12 text-center text-xs text-[#8a92a6]">
+          <div className="col-span-full py-12 text-center text-xs text-[#a1a1aa]">
             Nenhum atleta encontrado com os filtros selecionados.
           </div>
         )}

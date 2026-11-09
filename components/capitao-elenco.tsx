@@ -124,21 +124,21 @@ export function CapitaoElenco({
             value={nome}
             onChange={(e) => setNome(e.target.value)}
             placeholder="Nome completo"
-            className="px-3 py-3 rounded-[10px] bg-[rgba(8,22,58,0.6)] border border-white/10"
+            className="px-3 py-3 rounded-[10px] bg-[#08080a] border border-white/10"
           />
 
           <input
             value={cpf}
             onChange={(e) => setCpf(e.target.value)}
             placeholder="Número do documento"
-            className="px-3 py-3 rounded-[10px] bg-[rgba(8,22,58,0.6)] border border-white/10"
+            className="px-3 py-3 rounded-[10px] bg-[#08080a] border border-white/10"
           />
 
           <input
             value={posicao}
             onChange={(e) => setPosicao(e.target.value)}
             placeholder="Posição"
-            className="px-3 py-3 rounded-[10px] bg-[rgba(8,22,58,0.6)] border border-white/10"
+            className="px-3 py-3 rounded-[10px] bg-[#08080a] border border-white/10"
           />
 
           <input
@@ -148,7 +148,7 @@ export function CapitaoElenco({
             value={numero}
             onChange={(e) => setNumero(e.target.value)}
             placeholder="Número da camisa"
-            className="px-3 py-3 rounded-[10px] bg-[rgba(8,22,58,0.6)] border border-white/10"
+            className="px-3 py-3 rounded-[10px] bg-[#08080a] border border-white/10"
           />
 
           <input

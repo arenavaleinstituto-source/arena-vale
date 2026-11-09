@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect, ChangeEvent } from 'react';
-import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
 import {
   buscarNoticias,
@@ -29,7 +28,7 @@ import {
  */
 const BUCKET_CAPAS = 'noticias-capas';
 
-export default function NoticiasPage() {
+export function NoticiasLegado() {
   const [titulo, setTitulo] = useState('');
   const [categoria, setCategoria] = useState<string>(CATEGORIA_PADRAO);
   const [tag, setTag] = useState<string>(TAG_PADRAO);
@@ -198,24 +197,20 @@ export default function NoticiasPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#070b13] text-white p-4 md:p-8 max-w-4xl mx-auto font-sans">
-      <Link href="/painel" className="text-xs text-amber-400 font-semibold hover:underline">
-        ← Voltar ao Centro de Comando
-      </Link>
-
-      <h1 className="text-2xl font-bold mt-4 uppercase">Publicar Notícias</h1>
-      <p className="text-sm text-slate-400 mb-6">
+    <div className="text-white max-w-4xl font-sans">
+      <h2 className="titulo-secao !text-left !text-2xl">Publicar Notícias</h2>
+      <p className="text-sm text-zinc-400 mb-6">
         Lance notas oficiais, convocações de arbitragem e novidades do portal. Tudo que você publicar
         aqui aparece no mural de comunicados e na Home, no mesmo formato.
       </p>
 
       <form
         onSubmit={handlePost}
-        className="bg-slate-900/90 p-6 rounded-2xl border border-slate-800 space-y-5 shadow-xl"
+        className="bg-zinc-900/90 p-6 rounded-2xl border border-zinc-800 space-y-5 shadow-xl"
       >
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="md:col-span-2">
-            <label className="text-xs text-slate-300 block mb-1 font-semibold uppercase">
+            <label className="text-xs text-zinc-300 block mb-1 font-semibold uppercase">
               Título do Comunicado
             </label>
             <input
@@ -223,19 +218,19 @@ export default function NoticiasPage() {
               value={titulo}
               onChange={(e) => setTitulo(e.target.value)}
               placeholder="Ex: Definidas as datas da semifinal da Copa Regional"
-              className="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-amber-400"
+              className="w-full bg-slate-950 border border-zinc-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-[#e50914]"
               required
             />
           </div>
 
           <div>
-            <label className="text-xs text-slate-300 block mb-1 font-semibold uppercase">
+            <label className="text-xs text-zinc-300 block mb-1 font-semibold uppercase">
               Categoria
             </label>
             <select
               value={categoria}
               onChange={(e) => setCategoria(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-amber-400"
+              className="w-full bg-slate-950 border border-zinc-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-[#e50914]"
             >
               {CATEGORIAS_NOTICIA.map((c) => (
                 <option key={c} value={c}>
@@ -248,7 +243,7 @@ export default function NoticiasPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <label className="text-xs text-slate-300 block mb-1 font-semibold uppercase">
+            <label className="text-xs text-zinc-300 block mb-1 font-semibold uppercase">
               Selo (tag pequena ao lado da categoria)
             </label>
             <input
@@ -258,7 +253,7 @@ export default function NoticiasPage() {
               onChange={(e) => setTag(e.target.value.toUpperCase())}
               placeholder="Ex: NOVO, OFICIAL, URGENTE"
               maxLength={20}
-              className="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-amber-400"
+              className="w-full bg-slate-950 border border-zinc-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-[#e50914]"
             />
             <datalist id="tags-noticia">
               {TAGS_NOTICIA.map((t) => (
@@ -268,7 +263,7 @@ export default function NoticiasPage() {
           </div>
 
           <div>
-            <label className="text-xs text-slate-300 block mb-1 font-semibold uppercase">
+            <label className="text-xs text-zinc-300 block mb-1 font-semibold uppercase">
               Posição no mural
             </label>
             <input
@@ -276,9 +271,9 @@ export default function NoticiasPage() {
               value={ordem}
               onChange={(e) => setOrdem(Number(e.target.value))}
               min={1}
-              className="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-amber-400"
+              className="w-full bg-slate-950 border border-zinc-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-[#e50914]"
             />
-            <p className="text-[10px] text-slate-500 mt-1">Menor número aparece primeiro.</p>
+            <p className="text-[10px] text-zinc-500 mt-1">Menor número aparece primeiro.</p>
           </div>
 
           <div className="flex items-center gap-3 pt-6">
@@ -287,40 +282,40 @@ export default function NoticiasPage() {
               id="ativo"
               checked={ativo}
               onChange={(e) => setAtivo(e.target.checked)}
-              className="h-4 w-4 rounded border-white/15 bg-slate-950 text-amber-400 focus:ring-0"
+              className="h-4 w-4 rounded border-white/15 bg-slate-950 text-[#ff3b44] focus:ring-0"
             />
-            <label htmlFor="ativo" className="text-xs text-slate-300 font-semibold uppercase">
+            <label htmlFor="ativo" className="text-xs text-zinc-300 font-semibold uppercase">
               Publicar no site
             </label>
           </div>
         </div>
 
         <div>
-          <label className="text-xs text-slate-300 block mb-1 font-semibold uppercase">
+          <label className="text-xs text-zinc-300 block mb-1 font-semibold uppercase">
             Imagem de Capa (Banner Destaque)
           </label>
 
           {imagemPreview ? (
-            <div className="relative rounded-xl overflow-hidden border border-slate-700 bg-slate-950 max-h-64 flex items-center justify-center">
+            <div className="relative rounded-xl overflow-hidden border border-zinc-700 bg-slate-950 max-h-64 flex items-center justify-center">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={imagemPreview} alt="Prévia da Capa" className="w-full h-56 object-cover" />
               <button
                 type="button"
                 onClick={handleRemoverImagem}
-                className="absolute top-3 right-3 px-3 py-1.5 bg-slate-900/90 hover:bg-slate-800 text-xs text-white font-semibold rounded-lg border border-slate-600 transition shadow"
+                className="absolute top-3 right-3 px-3 py-1.5 bg-zinc-900/90 hover:bg-zinc-800 text-xs text-white font-semibold rounded-lg border border-zinc-600 transition shadow"
               >
                 Trocar Foto
               </button>
             </div>
           ) : (
-            <label className="flex flex-col items-center justify-center w-full h-36 border-2 border-dashed border-slate-700 hover:border-amber-400/60 rounded-xl cursor-pointer bg-slate-950/60 hover:bg-slate-950 transition">
+            <label className="flex flex-col items-center justify-center w-full h-36 border-2 border-dashed border-zinc-700 hover:border-[#e50914]/60 rounded-xl cursor-pointer bg-slate-950/60 hover:bg-slate-950 transition">
               <div className="flex flex-col items-center justify-center pt-5 pb-6 text-center px-4">
                 <span className="text-2xl mb-1">📷</span>
-                <p className="text-xs text-slate-300 font-medium">
-                  <span className="text-amber-400 underline">Clique para enviar a imagem</span> ou
+                <p className="text-xs text-zinc-300 font-medium">
+                  <span className="text-[#ff3b44] underline">Clique para enviar a imagem</span> ou
                   arraste o ficheiro aqui
                 </p>
-                <p className="text-[10px] text-slate-500 mt-1">
+                <p className="text-[10px] text-zinc-500 mt-1">
                   Formatos suportados: PNG, JPG ou WEBP (Recomendado 16:9)
                 </p>
               </div>
@@ -330,7 +325,7 @@ export default function NoticiasPage() {
         </div>
 
         <div>
-          <label className="text-xs text-slate-300 block mb-1 font-semibold uppercase">
+          <label className="text-xs text-zinc-300 block mb-1 font-semibold uppercase">
             Conteúdo do Comunicado
           </label>
           <textarea
@@ -338,7 +333,7 @@ export default function NoticiasPage() {
             value={descricao}
             onChange={(e) => setDescricao(e.target.value)}
             placeholder="Escreva os detalhes da notícia, escalas ou notas oficiais..."
-            className="w-full bg-slate-950 border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-amber-400"
+            className="w-full bg-slate-950 border border-zinc-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-[#e50914]"
             required
           />
         </div>
@@ -358,53 +353,53 @@ export default function NoticiasPage() {
         <button
           type="submit"
           disabled={enviando}
-          className="px-6 py-2.5 bg-amber-400 hover:bg-amber-300 disabled:opacity-50 disabled:cursor-not-allowed text-slate-950 font-bold rounded-lg text-sm transition cursor-pointer"
+          className="px-6 py-2.5 bg-[#e50914] hover:bg-[#e50914] disabled:opacity-50 disabled:cursor-not-allowed text-slate-950 font-bold rounded-lg text-sm transition cursor-pointer"
         >
           {enviando ? 'Publicando...' : 'Publicar Comunicado'}
         </button>
       </form>
 
       <div className="mt-10 space-y-4">
-        <h2 className="text-xs uppercase font-extrabold text-slate-400 tracking-wider">
+        <h2 className="text-xs uppercase font-extrabold text-zinc-400 tracking-wider">
           Publicações Recentes
         </h2>
 
         {carregando && (
-          <p className="text-xs text-slate-500">Carregando comunicados já publicados...</p>
+          <p className="text-xs text-zinc-500">Carregando comunicados já publicados...</p>
         )}
 
         {!carregando && noticias.length === 0 && (
-          <p className="text-xs text-slate-500">Nenhum comunicado publicado ainda.</p>
+          <p className="text-xs text-zinc-500">Nenhum comunicado publicado ainda.</p>
         )}
 
         {noticias.map((item) => (
           <div
             key={item.id}
-            className="p-4 bg-slate-900 border border-slate-800 rounded-xl flex flex-col md:flex-row gap-4 items-start"
+            className="p-4 bg-zinc-900 border border-zinc-800 rounded-xl flex flex-col md:flex-row gap-4 items-start"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={imagemNoticia(item)}
               alt={item.titulo}
-              className="w-full md:w-36 h-24 object-cover rounded-lg border border-slate-800 flex-shrink-0"
+              className="w-full md:w-36 h-24 object-cover rounded-lg border border-zinc-800 flex-shrink-0"
             />
 
             <div className="flex-1 min-w-0">
               <div className="flex flex-wrap items-center gap-2">
-                <span className="text-[10px] uppercase font-bold px-2 py-0.5 bg-amber-400/10 text-amber-300 rounded border border-amber-400/20">
+                <span className="text-[10px] uppercase font-bold px-2 py-0.5 bg-[#e50914]/10 text-[#ff3b44] rounded border border-[#e50914]/20">
                   {item.categoria}
                 </span>
                 {item.tag && (
-                  <span className="text-[10px] uppercase font-bold px-2 py-0.5 bg-slate-800 text-slate-300 rounded border border-slate-700">
+                  <span className="text-[10px] uppercase font-bold px-2 py-0.5 bg-zinc-800 text-zinc-300 rounded border border-zinc-700">
                     {item.tag}
                   </span>
                 )}
-                <span className="text-[10px] text-slate-500">{formatarDataBR(item.created_at)}</span>
+                <span className="text-[10px] text-zinc-500">{formatarDataBR(item.created_at)}</span>
                 <span
                   className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded border ${
                     item.ativo
                       ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
-                      : 'bg-slate-800 text-slate-500 border-slate-700'
+                      : 'bg-zinc-800 text-zinc-500 border-zinc-700'
                   }`}
                 >
                   {item.ativo ? 'No ar' : 'Despublicado'}
@@ -412,24 +407,24 @@ export default function NoticiasPage() {
               </div>
 
               <h3 className="font-bold text-white text-base mt-1.5">{item.titulo}</h3>
-              <p className="text-xs text-slate-400 mt-1 line-clamp-2">{item.descricao}</p>
+              <p className="text-xs text-zinc-400 mt-1 line-clamp-2">{item.descricao}</p>
 
               <div className="mt-3 flex flex-wrap items-center gap-2">
-                <label className="text-[10px] uppercase font-bold text-slate-500 flex items-center gap-2">
+                <label className="text-[10px] uppercase font-bold text-zinc-500 flex items-center gap-2">
                   Posição
                   <input
                     type="number"
                     defaultValue={item.ordem}
                     min={1}
                     onBlur={(e) => handleSalvarOrdem(item.id, Number(e.target.value))}
-                    className="w-16 bg-slate-950 border border-slate-700 rounded px-2 py-1 text-xs text-white"
+                    className="w-16 bg-slate-950 border border-zinc-700 rounded px-2 py-1 text-xs text-white"
                   />
                 </label>
 
                 <button
                   type="button"
                   onClick={() => handleAlternarAtivo(item.id, !item.ativo)}
-                  className="px-3 py-1.5 rounded-lg border border-amber-500/30 bg-amber-500/10 text-amber-300 text-[10px] font-bold uppercase transition hover:bg-amber-500/20"
+                  className="px-3 py-1.5 rounded-lg border border-[#e50914]/30 bg-[#e50914]/10 text-[#ff3b44] text-[10px] font-bold uppercase transition hover:bg-[#e50914]/20"
                 >
                   {item.ativo ? 'Despublicar' : 'Publicar'}
                 </button>

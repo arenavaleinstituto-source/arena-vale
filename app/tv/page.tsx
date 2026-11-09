@@ -39,7 +39,7 @@ const VIDEOS_RECENTES = [
 
 export default function TvPage() {
   return (
-    <div className="min-h-screen bg-[#07080c] text-white selection:bg-[#e50914] selection:text-white flex flex-col justify-between font-sans overflow-x-clip">
+    <div className="min-h-screen bg-[#0b0b0c] text-white selection:bg-[#e50914] selection:text-white flex flex-col justify-between font-sans overflow-x-clip">
       {/* CABEÇALHO */}
 
       {/* CONTEÚDO PRINCIPAL */}
@@ -52,15 +52,15 @@ export default function TvPage() {
           <h1 className="text-3xl sm:text-5xl font-black uppercase tracking-tight text-white">
             TV Arena Vale Ao Vivo
           </h1>
-          <p className="text-xs sm:text-sm text-[#8a92a6] uppercase tracking-wide leading-relaxed">
+          <p className="text-xs sm:text-sm text-[#a1a1aa] uppercase tracking-wide leading-relaxed">
             Acompanhe os melhores momentos, coberturas completas e jogos decisivos da nossa região em
             alta definição.
           </p>
         </div>
 
         {/* REPRODUTOR DE VÍDEO / YOUTUBE EMBED */}
-        <div className="rounded-[2.5rem] border border-white/15 bg-[#11141d] p-4 sm:p-8 shadow-2xl relative overflow-hidden">
-          <div className="aspect-video w-full rounded-2xl bg-[#07080c] border border-white/10 flex flex-col items-center justify-center relative overflow-hidden shadow-inner">
+        <div className="rounded-[2.5rem] border border-white/15 bg-[#141417] p-4 sm:p-8 shadow-2xl relative overflow-hidden">
+          <div className="aspect-video w-full rounded-2xl bg-[#0b0b0c] border border-white/10 flex flex-col items-center justify-center relative overflow-hidden shadow-inner">
             <iframe
               className="w-full h-full rounded-2xl"
               src={`https://www.youtube.com/embed/live_stream?channel=${CANAL_YOUTUBE_ID}&rel=0&modestbranding=1`}
@@ -75,7 +75,7 @@ export default function TvPage() {
               <h2 className="text-sm font-black uppercase tracking-wider text-white">
                 Inscreva-se no Canal Oficial
               </h2>
-              <p className="text-[11px] text-[#8a92a6] uppercase mt-1">
+              <p className="text-[11px] text-[#a1a1aa] uppercase mt-1">
                 Ative as notificações no YouTube para não perder nenhuma live de Futsal e Futebol 7.
               </p>
             </div>
@@ -144,7 +144,7 @@ export default function TvPage() {
       </main>
 
       {/* RODAPÉ */}
-      <footer className="border-t border-white/10 bg-[#050609] py-8 text-center text-xs text-[#555d6e]">
+      <footer className="border-t border-white/10 bg-[#0b0b0c] py-8 text-center text-xs text-[#71717a]">
         © 2026 Arena Vale · Todos os direitos reservados.
       </footer>
     </div>

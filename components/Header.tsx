@@ -8,7 +8,7 @@ export default function Header() {
   const [menuPainelAberto, setMenuPainelAberto] = useState(false);
 
   return (
-    <header className="border-b border-white/[0.08] bg-[#07080c]/90 backdrop-blur-xl sticky top-0 z-50">
+    <header className="border-b border-white/[0.08] bg-[#0b0b0c]/90 backdrop-blur-xl sticky top-0 z-50">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
         
         {/* LOGO */}
@@ -18,7 +18,7 @@ export default function Header() {
         </LogoSecreto>
 
         {/* NAVEGAÇÃO PRINCIPAL */}
-        <nav className="hidden md:flex items-center gap-6 text-xs font-black uppercase tracking-wider text-[#b8c0d4]">
+        <nav className="hidden md:flex items-center gap-6 text-xs font-black uppercase tracking-wider text-[#c3c3cb]">
           <Link href="/" className="hover:text-white transition">Início</Link>
           <Link href="/tv" className="hover:text-white transition">TV Arena Vale</Link>
           {/* BUG CORRIGIDO: o menu não tinha link para /noticias — o mural
@@ -51,10 +51,10 @@ export default function Header() {
 
             {/* MENU SUSPENSO COM OS 4 NÍVEIS HIERÁRQUICOS */}
             {menuPainelAberto && (
-              <div className="absolute right-0 mt-3 w-72 rounded-2xl border border-white/15 bg-[#11141d] p-3 shadow-2xl z-50 space-y-2 backdrop-blur-xl">
+              <div className="absolute right-0 mt-3 w-72 rounded-2xl border border-white/15 bg-[#141417] p-3 shadow-2xl z-50 space-y-2 backdrop-blur-xl">
                 <div className="px-3 py-2 border-b border-white/10">
                   <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#ff4d4f] block">ACESSO RESTRITO</span>
-                  <span className="text-[11px] text-[#8a92a6]">Selecione o seu nível</span>
+                  <span className="text-[11px] text-[#a1a1aa]">Selecione o seu nível</span>
                 </div>
 
                 <Link 
@@ -69,7 +69,7 @@ export default function Header() {
                 <Link 
                   href="/login" 
                   onClick={() => setMenuPainelAberto(false)}
-                  className="flex items-center justify-between rounded-xl px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-[#cad0e0] hover:bg-white/5 hover:text-white transition"
+                  className="flex items-center justify-between rounded-xl px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-[#d4d4d8] hover:bg-white/5 hover:text-white transition"
                 >
                   <span>🛡️ Coordenadores</span>
                   <span>→</span>
@@ -78,7 +78,7 @@ export default function Header() {
                 <Link 
                   href="/login" 
                   onClick={() => setMenuPainelAberto(false)}
-                  className="flex items-center justify-between rounded-xl px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-[#cad0e0] hover:bg-white/5 hover:text-white transition"
+                  className="flex items-center justify-between rounded-xl px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-[#d4d4d8] hover:bg-white/5 hover:text-white transition"
                 >
                   <span>📋 Moderador de Time</span>
                   <span>→</span>
@@ -87,7 +87,7 @@ export default function Header() {
                 <Link 
                   href="/login" 
                   onClick={() => setMenuPainelAberto(false)}
-                  className="flex items-center justify-between rounded-xl px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-[#cad0e0] hover:bg-white/5 hover:text-white transition"
+                  className="flex items-center justify-between rounded-xl px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-[#d4d4d8] hover:bg-white/5 hover:text-white transition"
                 >
                   <span>⚡ Capitão de Equipe</span>
                   <span>→</span>

@@ -49,7 +49,7 @@ export default async function SumulasIndexPage() {
                 DIGITAIS
               </span>
             </h1>
-            <p className="mt-4 text-sm text-[#cad0e0] max-w-2xl uppercase">
+            <p className="mt-4 text-sm text-[#d4d4d8] max-w-2xl uppercase">
               Consulta oficial das súmulas dos confrontos da temporada, com hash de integridade e assinaturas
               dos capitães e do árbitro.
             </p>
@@ -130,7 +130,7 @@ export default async function SumulasIndexPage() {
         )}
       </div>
 
-      <footer className="border-t border-white/10 bg-[#050505] px-6 py-8 text-center text-xs text-[#555d6e]">
+      <footer className="border-t border-white/10 bg-[#050505] px-6 py-8 text-center text-xs text-[#71717a]">
         © 2026 Arena Vale · Súmula digital oficial · CNPJ 40.694.741/0001-34
       </footer>
     </main>

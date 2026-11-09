@@ -121,21 +121,21 @@ export function CoordDestaques({ userId }: { userId: string }) {
             value={atletaNome}
             onChange={(e) => setAtletaNome(e.target.value)}
             placeholder="Nome do atleta"
-            className="px-3 py-3 rounded-[10px] bg-[rgba(8,22,58,0.6)] border border-white/10"
+            className="px-3 py-3 rounded-[10px] bg-[#08080a] border border-white/10"
           />
 
           <input
             value={timeNome}
             onChange={(e) => setTimeNome(e.target.value)}
             placeholder="Nome do time"
-            className="px-3 py-3 rounded-[10px] bg-[rgba(8,22,58,0.6)] border border-white/10"
+            className="px-3 py-3 rounded-[10px] bg-[#08080a] border border-white/10"
           />
 
           <input
             value={campeonatoNome}
             onChange={(e) => setCampeonatoNome(e.target.value)}
             placeholder="Nome do campeonato"
-            className="px-3 py-3 rounded-[10px] bg-[rgba(8,22,58,0.6)] border border-white/10"
+            className="px-3 py-3 rounded-[10px] bg-[#08080a] border border-white/10"
           />
 
           <input

@@ -115,7 +115,7 @@ export default async function ComunicadoDetalhePage(props: { params: Promise<{ i
                   <span className="inline-block skew-x-12">{noticia.categoria}</span>
                 </span>
                 {noticia.tag && (
-                  <span className="inline-block -skew-x-12 border border-white/20 bg-black/60 backdrop-blur-md px-3 py-1 text-[10px] font-black uppercase tracking-widest text-[#cad0e0]">
+                  <span className="inline-block -skew-x-12 border border-white/20 bg-black/60 backdrop-blur-md px-3 py-1 text-[10px] font-black uppercase tracking-widest text-[#d4d4d8]">
                     <span className="inline-block skew-x-12">{noticia.tag}</span>
                   </span>
                 )}
