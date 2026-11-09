@@ -14,7 +14,9 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "db:seed": "tsx --env-file=.env.local scripts/seed.ts"
+    "db:seed": "tsx --env-file=.env.local scripts/seed.ts",
+    "test:db": "vitest run -c vitest.db.config.ts",
+    "db:teste:resetar": "tsx scripts/db/resetar-banco-teste.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",

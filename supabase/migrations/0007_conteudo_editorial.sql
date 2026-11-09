@@ -186,7 +186,8 @@ on conflict (id) do nothing;
 -- ───────────────────────────────────────────────────────────────────
 -- 4) VIEW DE CLASSIFICAÇÃO (usada por lib/supabase/queries.ts)
 -- ───────────────────────────────────────────────────────────────────
-create or replace view public.v_classificacao as
+drop view if exists public.v_classificacao;
+create view public.v_classificacao as
 select
   i.campeonato_id,
   i.time_id,
