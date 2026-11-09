@@ -40,6 +40,35 @@ describe('LogoSecreto', () => {
     expect(push).not.toHaveBeenCalled();
   });
 
+  it('o diálogo não fica preso dentro do header (backdrop-filter quebra position:fixed)', () => {
+    render(
+      <header style={{ backdropFilter: 'blur(8px)' }}>
+        <LogoSecreto />
+      </header>,
+    );
+    const botao = screen.getByRole('button', { name: 'Arena Vale — início' });
+    fireEvent.click(botao);
+    fireEvent.click(botao);
+    fireEvent.click(botao);
+    const dialogo = screen.getByRole('dialog', { name: 'Acesso restrito' });
+    expect(dialogo.closest('header')).toBeNull();
+  });
+
+  it('um 4º toque logo depois de abrir não fecha o diálogo', () => {
+    render(<LogoSecreto />);
+    const botao = screen.getByRole('button', { name: 'Arena Vale — início' });
+    fireEvent.click(botao);
+    fireEvent.click(botao);
+    fireEvent.click(botao);
+    const fundo = screen.getByTestId('acesso-restrito-fundo');
+    act(() => { vi.advanceTimersByTime(100); });
+    fireEvent.mouseDown(fundo);
+    expect(screen.getByRole('dialog', { name: 'Acesso restrito' })).toBeInTheDocument();
+    act(() => { vi.advanceTimersByTime(400); });
+    fireEvent.mouseDown(fundo);
+    expect(screen.queryByRole('dialog', { name: 'Acesso restrito' })).toBeNull();
+  });
+
   it('renderiza o conteúdo recebido no lugar do logo padrão', () => {
     render(
       <LogoSecreto>

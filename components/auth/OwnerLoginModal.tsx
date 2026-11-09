@@ -1,11 +1,14 @@
 'use client';
 
 import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
+import { createPortal } from 'react-dom';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 
 const MSG_CREDENCIAL = 'E-mail ou senha inválidos';
 const MSG_CONEXAO = 'Não foi possível entrar. Verifique sua conexão e tente de novo.';
+/** Toques no fundo logo após abrir (ex.: 4º toque no logo) não fecham o modal. */
+const CARENCIA_FECHAR_MS = 300;
 
 type Props = { open: boolean; onClose: () => void };
 
@@ -26,16 +29,18 @@ export function OwnerLoginModal({ open, onClose }: Props) {
   const [senha, setSenha] = useState('');
   const [erro, setErro] = useState<string | null>(null);
   const [enviando, setEnviando] = useState(false);
+  const abertoEm = useRef(0);
 
   useEffect(() => {
     if (!open) return;
+    abertoEm.current = Date.now();
     emailRef.current?.focus();
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
   }, [open, onClose]);
 
-  if (!open) return null;
+  if (!open || typeof document === 'undefined') return null;
 
   async function entrar(e: FormEvent) {
     e.preventDefault();
@@ -55,10 +60,17 @@ export function OwnerLoginModal({ open, onClose }: Props) {
     }
   }
 
-  return (
+  // Portal no <body>: headers com backdrop-filter viram o bloco de contenção
+  // de `position: fixed` e prenderiam o modal dentro da faixa do header.
+  return createPortal(
     <div
+      data-testid="acesso-restrito-fundo"
       className="fixed inset-0 z-[100] grid place-items-center bg-black/70 px-4 backdrop-blur-md"
-      onMouseDown={(e) => { if (e.target === e.currentTarget) onClose(); }}
+      onMouseDown={(e) => {
+        if (e.target !== e.currentTarget) return;
+        if (Date.now() - abertoEm.current < CARENCIA_FECHAR_MS) return;
+        onClose();
+      }}
     >
       <div
         role="dialog"
@@ -117,6 +129,7 @@ export function OwnerLoginModal({ open, onClose }: Props) {
           </button>
         </form>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
