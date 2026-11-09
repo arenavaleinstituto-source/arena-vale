@@ -32,7 +32,7 @@ Fazer o site abrir como **marca de mídia esportiva**, e não como plataforma de
    - **fundo:** a foto de capa do site antigo (`public/fundo-arena.jpg`), com uma camada escura para dar leitura.
 5. **Ao Vivo:** o botão **"▶ Assista ao vivo"** fica na seção Ao Vivo, no lugar de "Canal no YouTube".
 6. **Projeto Social:** item próprio no menu e página completa, com **todo o conteúdo da página antiga**.
-7. **Notícias do Mundo do Esporte:** seção e aba próprias, alimentadas pelo bot do Telegram. A coordenação edita e publica.
+7. **Esporte Mundial:** seção e aba próprias, alimentadas pelo bot do Telegram. A coordenação edita e publica.
 8. **Entrar:**
    - o botão no canto superior direito abre o menu **Coordenação / Moderador / Capitão**, sem descrições;
    - cada opção abre o painel de login;
@@ -77,7 +77,7 @@ Evolução do `SiteHeader` atual (preso no topo, o mesmo em todas as páginas).
   - Início `/`
   - Ao Vivo `/ao-vivo`, com ponto vermelho
   - Notícias `/noticias`
-  - Mundo do Esporte `/noticias?aba=mundo`
+  - Esporte Mundial `/noticias?aba=mundo` (nome no menu: **ESPORTE MUNDIAL** — notícias do esporte pelo mundo, garimpadas pelo bot)
   - Agenda `/agenda`
   - Modalidades `/modalidades`
   - Vídeos `/videos`
@@ -97,7 +97,7 @@ Evolução do `SiteHeader` atual (preso no topo, o mesmo em todas as páginas).
 | 1 | **Banner** | ARENA VALE, frase, subtítulo, foto de capa | `site_config.capa_url` (padrão `/fundo-arena.jpg`) |
 | 2 | **Arena Vale Ao Vivo** | player quando o canal está ao vivo; fora do ar: "Próxima transmissão" com contagem regressiva + botão "▶ Assista ao vivo" | YouTube (seção 6) + agenda |
 | 3 | **Agora na Arena** | cartazes 2:3 das notícias da ARENA VALE | `noticias` (`aba = 'arena'`, publicadas) |
-| 4 | **Notícias do Mundo do Esporte** | cartazes com a fonte visível; abaixo, o caminho da notícia (Telegram → bot → rascunho → coordenação publica) | `noticias` (`aba = 'mundo'`, publicadas) |
+| 4 | **Esporte Mundial** | cartazes com a fonte visível; abaixo, o caminho da notícia (Telegram → bot → rascunho → coordenação publica) | `noticias` (`aba = 'mundo'`, publicadas) |
 | 5 | **Agenda da Arena** | próximos 6 jogos: modalidade, fase, times, data e hora, local, selo "Transmissão" | `agenda_jogos` + `jogos` futuros (seção 7) |
 | 6 | **Últimos vídeos** | 8 mais recentes | YouTube RSS + vídeos do Instagram cadastrados |
 | 7 | **Modalidades** | Futsal, Futebol 7, Basquete, Vôlei ("O palco do <modalidade> é aqui.") | fixas → `/modalidades/[slug]` |
@@ -143,7 +143,7 @@ Evolução do `SiteHeader` atual (preso no topo, o mesmo em todas as páginas).
 | Página | Conteúdo |
 |---|---|
 | `/ao-vivo` | o player ou "fora do ar", a próxima transmissão e a agenda de transmissões. A página antiga `/tv` redireciona (308) para cá |
-| `/noticias` | abas **ARENA VALE** e **Mundo do Esporte** (`?aba=mundo`), cartazes 2:3 e fileiras do spec anterior (4.1) |
+| `/noticias` | abas **ARENA VALE** e **Esporte Mundial** (`?aba=mundo`), cartazes 2:3 e fileiras do spec anterior (4.1) |
 | `/noticias/[id]` | leitura: vídeo (player próprio, YouTube embutido ou link externo) ou foto, mais o texto e a fonte |
 | `/videos` | grade dos vídeos do YouTube + os do Instagram; filtro "Todos / YouTube / Instagram" |
 | `/projetosocial` | toda a página antiga (título, texto, 4 números, 3 iniciativas, apoio pelo WhatsApp com mensagem pronta, cotas, CNPJ) + "Resultados dos projetos" + botão "Inscrever criança / atleta" (→ `/inscricao`) |
@@ -151,7 +151,7 @@ Evolução do `SiteHeader` atual (preso no topo, o mesmo em todas as páginas).
 | `/patrocinio` | "Anuncie": propriedades de mídia e contato. Mantém o conteúdo atual no visual novo |
 | `/agenda`, `/atletasdestaques`, `/sumula`, `/inscricao`, `/login`, `/criar-senha`, `/privacidade`, `/termos`, `/links` | passam para o visual novo, com o mesmo conteúdo |
 
-## 10. Mundo do Esporte e o bot do Telegram
+## 10. Esporte Mundial e o bot do Telegram
 
 O bot segue a seção 4.4 do spec anterior. Mudanças:
 
@@ -234,7 +234,7 @@ Cada parte termina com build verde e o site de teste atualizado:
 
 1. **3A — Base visual + cabeçalho + página inicial**: tokens, `SiteHeader` novo com o menu Entrar, home com os 12 blocos, YouTube e agenda.
 2. **3B — Páginas**: `/ao-vivo`, `/modalidades`, `/videos`, `/projetosocial`, `/sobre` e o visual novo nas demais.
-3. **3C — Notícias + Mundo do Esporte + bot do Telegram** (spec anterior, 4.1–4.5, com as mudanças da seção 10).
+3. **3C — Notícias + Esporte Mundial + bot do Telegram** (spec anterior, 4.1–4.5, com as mudanças da seção 10).
 4. **3D — Painéis no visual novo** + abas Ao Vivo, Vídeos e Configurações.
 5. **3E — Revisão final independente**, aplicação no banco oficial (o dono roda a checagem e o SQL), aprovação do dono no site de teste e **merge na `main`**: o site novo vai para o endereço oficial.
 
