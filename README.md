@@ -106,3 +106,27 @@ Os **modelos de e-mail padrão** do Supabase já funcionam com o site:
 
 - Spec: `docs/superpowers/specs/2026-11-08-arena-vale-organizacao-noticias-permissoes-design.md`
 - Planos: `docs/superpowers/plans/`
+
+## Bot do Telegram (Esporte Mundial)
+
+O bot transforma mensagens encaminhadas em **rascunhos** na aba Notícias do painel (aba Esporte Mundial). Nada é publicado sozinho: a coordenação revisa e publica.
+
+**Configuração (uma vez):**
+
+1. No Telegram, abra o **@BotFather**, envie `/newbot` e escolha o nome (ex.: ARENA VALE Notícias). Ele devolve o **token**.
+2. Na Vercel → projeto → Settings → Environment Variables, crie (Production e Preview):
+   - `TELEGRAM_BOT_TOKEN` = o token do BotFather;
+   - `TELEGRAM_WEBHOOK_SECRET` = uma senha longa inventada (só letras, números, `_` e `-`);
+   - `CRON_SECRET` = outra senha longa (usada pela rotina diária que apaga vídeos vencidos).
+3. Faça um novo deploy e registre o webhook, trocando `<TOKEN>` e `<SEGREDO>`:
+
+   ```
+   https://api.telegram.org/bot<TOKEN>/setWebhook?url=https://arena-vale.vercel.app/api/telegram&secret_token=<SEGREDO>&allowed_updates=["message"]
+   ```
+
+   Abra esse endereço no navegador: deve aparecer `"ok":true`.
+4. No painel, aba **Notícias**, clique em **Vincular Telegram**, e envie ao bot a mensagem `/vincular <código>`.
+
+**Uso:** encaminhe ao bot a mensagem do grupo (foto, vídeo ou texto com link). Ele responde "Rascunho criado ✅" com o link do editor.
+
+**Vídeos:** guardados por 30 dias (ajustável na área do proprietário) até 20 MB; depois disso a notícia toca pelo link original, quando houver.

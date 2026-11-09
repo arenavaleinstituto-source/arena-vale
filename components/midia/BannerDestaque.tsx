@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useSyncExternalStore } from 'react';
 import { modoReproducao, type NoticiaMidia } from '@/lib/midia/noticias';
 import { IMAGEM_CARTAZ_PADRAO } from './Cartaz';
 
@@ -13,11 +13,13 @@ function podeAnimar(): boolean {
   return !reduz && !economia;
 }
 
+const semInscricao = () => () => {};
+
 /** Banner de destaque do catálogo (spec 4.1): vídeo mudo em loop ou o cartaz com zoom lento. */
 export function BannerDestaque({ n }: { n: NoticiaMidia }) {
   const modo = modoReproducao(n);
-  const [animar, setAnimar] = useState(false);
-  useEffect(() => setAnimar(podeAnimar()), []);
+  // No servidor nunca anima; no navegador, decide pelas preferências do aparelho.
+  const animar = useSyncExternalStore(semInscricao, podeAnimar, () => false);
   const capa = n.imagem_url || IMAGEM_CARTAZ_PADRAO;
   const video = modo.tipo !== 'foto';
   return (
