@@ -151,6 +151,23 @@ describe('mídia esportiva (0011)', () => {
     ]);
   });
 
+  it('notícia nova grava mesmo com a coluna antiga "tag" obrigatória e sem padrão (como no banco oficial)', async () => {
+    const cli = new pg.Client({ connectionString: env.databaseUrl, ssl: { rejectUnauthorized: false } });
+    await cli.connect();
+    try {
+      await cli.query('begin');
+      // imita o banco oficial: tag NOT NULL sem valor padrão
+      await cli.query('alter table public.noticias alter column tag drop default');
+      await cli.query('alter table public.noticias alter column tag set not null');
+      await cli.query(readFileSync('supabase/migrations/0014_noticias_tag_padrao.sql', 'utf8'));
+      const { rows } = await cli.query("insert into public.noticias (titulo, origem, aba) values ('Do bot', 'telegram', 'mundo') returning tag");
+      expect(rows[0].tag).toBe('NOVO');
+    } finally {
+      await cli.query('rollback');
+      await cli.end();
+    }
+  });
+
   it('categorias antigas viram as novas sem perder Campeonatos e Projeto Social (qualquer caixa)', async () => {
     const sql = readFileSync('supabase/migrations/0011_midia_esportiva.sql', 'utf8');
     const ini = sql.indexOf('-- dados existentes: categorias antigas');
