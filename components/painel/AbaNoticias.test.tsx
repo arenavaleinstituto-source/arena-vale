@@ -7,7 +7,9 @@ const LINHAS = [
   { id: 'b', titulo: 'Golaço na Itália', status: 'rascunho', aba: 'mundo', origem: 'telegram', created_at: '2026-11-02T00:00:00Z', imagem_url: null },
   { id: 'c', titulo: 'Rascunho manual', status: 'rascunho', aba: 'arena', origem: 'manual', created_at: '2026-11-01T00:00:00Z', imagem_url: null },
 ];
+let falhar = false;
 function consulta() {
+  if (falhar) throw new Error('sem rede');
   const q: Record<string, unknown> = {};
   for (const m of ['select', 'eq', 'order', 'limit']) q[m] = () => q;
   q.then = (ok: (v: unknown) => unknown) => Promise.resolve({ data: LINHAS, error: null }).then(ok);
@@ -38,6 +40,14 @@ describe('AbaNoticias', () => {
     render(<AbaNoticias />);
     expect(await screen.findByRole('heading', { name: 'Editar notícia' })).toBeInTheDocument();
     expect(screen.getByLabelText('Título')).toHaveValue('Golaço na Itália');
+  });
+
+  it('sem rede: avisa em vez de ficar carregando para sempre', async () => {
+    busca = new URLSearchParams('aba=noticias');
+    falhar = true;
+    render(<AbaNoticias />);
+    expect(await screen.findByText('Não consegui carregar as notícias. Verifique a conexão e abra a aba de novo.')).toBeInTheDocument();
+    falhar = false;
   });
 
   it('"Nova notícia" abre o editor vazio', async () => {

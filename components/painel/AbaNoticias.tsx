@@ -18,6 +18,7 @@ export function AbaNoticias() {
   const params = useSearchParams();
   const [lista, setLista] = useState<NoticiaMidia[]>([]);
   const [carregado, setCarregado] = useState(false);
+  const [erro, setErro] = useState(false);
   const [filtro, setFiltro] = useState<Filtro>(SEM_FILTRO);
   const [modo, setModo] = useState<{ modo: ModoVideo; dias: number }>({ modo: 'guardar_arquivo', dias: 30 });
   const [editando, setEditando] = useState<string | 'nova' | null>(() => params?.get('editar') ?? null);
@@ -26,12 +27,18 @@ export function AbaNoticias() {
     let vivo = true;
     const sb = createClient();
     (async () => {
-      const [{ data }, rm] = await Promise.all([sb.from('noticias').select('*').order('created_at', { ascending: false }).limit(300), sb.rpc('modo_video_atual')]);
-      if (!vivo) return;
-      setLista(((data ?? []) as Record<string, unknown>[]).map(mapearNoticiaMidia));
-      const m = (rm.data as { modo?: ModoVideo; dias?: number }[] | null)?.[0];
-      if (m?.modo) setModo({ modo: m.modo, dias: m.dias ?? 30 });
-      setCarregado(true);
+      try {
+        const [r, rm] = await Promise.all([sb.from('noticias').select('*').order('created_at', { ascending: false }).limit(300), sb.rpc('modo_video_atual')]);
+        if (!vivo) return;
+        if (r.error) throw r.error;
+        setLista(((r.data ?? []) as Record<string, unknown>[]).map(mapearNoticiaMidia));
+        const m = (rm.data as { modo?: ModoVideo; dias?: number }[] | null)?.[0];
+        if (m?.modo) setModo({ modo: m.modo, dias: m.dias ?? 30 });
+      } catch {
+        if (vivo) setErro(true);
+      } finally {
+        if (vivo) setCarregado(true);
+      }
     })();
     return () => {
       vivo = false;
@@ -120,6 +127,10 @@ export function AbaNoticias() {
 
         {!carregado ? (
           <p className="text-av-cinza">Carregando…</p>
+        ) : erro ? (
+          <p className="text-[#ff8a8f]" role="alert">
+            Não consegui carregar as notícias. Verifique a conexão e abra a aba de novo.
+          </p>
         ) : visiveis.length === 0 ? (
           <p className="text-av-cinza">Nenhuma notícia com esse filtro.</p>
         ) : (
