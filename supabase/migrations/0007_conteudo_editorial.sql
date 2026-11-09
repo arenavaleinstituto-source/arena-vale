@@ -113,6 +113,32 @@ create policy "atletas_destaque_write_coord"
 
 -- Preenche a modalidade dos registros que já existiam, deduplicando pelo
 -- nome do campeonato. `derivarModalidade` no app faz o mesmo em runtime.
+-- Corrige tabelas que têm o gatilho set_updated_at mas não têm a coluna
+-- updated_at (no banco de produção, atletas_destaque estava assim e
+-- qualquer UPDATE nela falhava com: record "new" has no field "updated_at").
+do $$
+declare r record;
+begin
+  for r in
+    select distinct c.relname
+      from pg_trigger t
+      join pg_class c      on c.oid = t.tgrelid
+      join pg_namespace n  on n.oid = c.relnamespace
+      join pg_proc p       on p.oid = t.tgfoid
+     where n.nspname = 'public'
+       and p.proname = 'set_updated_at'
+       and not t.tgisinternal
+       and not exists (
+         select 1 from information_schema.columns col
+          where col.table_schema = 'public'
+            and col.table_name = c.relname
+            and col.column_name = 'updated_at')
+  loop
+    execute format('alter table public.%I add column updated_at timestamptz not null default now()', r.relname);
+    raise notice 'coluna updated_at criada em %', r.relname;
+  end loop;
+end $$;
+
 update public.atletas_destaque
    set modalidade = case
      when upper(coalesce(campeonato_nome, '')) like '%FUTSAL%'  then 'FUTSAL'
