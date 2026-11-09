@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { LogoSecreto } from '@/components/auth/LogoSecreto';
 
 export default function Header() {
   const [menuPainelAberto, setMenuPainelAberto] = useState(false);
@@ -11,15 +12,18 @@ export default function Header() {
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
         
         {/* LOGO */}
-        <Link href="/" className="flex items-center gap-3">
+        <LogoSecreto className="flex items-center gap-3">
           <img src="/logo.png" alt="Arena Vale" className="h-10 w-auto object-contain rounded-lg mix-blend-lighten" />
           <span className="text-sm font-black uppercase tracking-widest text-white hidden sm:inline">ARENA VALE</span>
-        </Link>
+        </LogoSecreto>
 
         {/* NAVEGAÇÃO PRINCIPAL */}
         <nav className="hidden md:flex items-center gap-6 text-xs font-black uppercase tracking-wider text-[#b8c0d4]">
           <Link href="/" className="hover:text-white transition">Início</Link>
           <Link href="/tv" className="hover:text-white transition">TV Arena Vale</Link>
+          {/* BUG CORRIGIDO: o menu não tinha link para /noticias — o mural
+              de comunicados oficiais ficava sem entrada no site. */}
+          <Link href="/noticias" className="hover:text-white transition">Notícias</Link>
           <Link href="/campeonatos" className="hover:text-white transition">Campeonatos</Link>
           <Link href="/atletasdestaques" className="hover:text-white transition">Atletas</Link>
           <Link href="/projetosocial" className="hover:text-white transition">Projeto Social</Link>
@@ -45,11 +49,11 @@ export default function Header() {
               <span className={`transform transition-transform duration-200 ${menuPainelAberto ? 'rotate-180' : ''}`}>▼</span>
             </button>
 
-            {/* MENU SUSPENSO COM OS 4 NÍVEIS HIERÁRQUICOS (CFG6) */}
+            {/* MENU SUSPENSO COM OS 4 NÍVEIS HIERÁRQUICOS */}
             {menuPainelAberto && (
               <div className="absolute right-0 mt-3 w-72 rounded-2xl border border-white/15 bg-[#11141d] p-3 shadow-2xl z-50 space-y-2 backdrop-blur-xl">
                 <div className="px-3 py-2 border-b border-white/10">
-                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#ff4d4f] block">ACESSO RESTRITO · CFG6</span>
+                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#ff4d4f] block">ACESSO RESTRITO</span>
                   <span className="text-[11px] text-[#8a92a6]">Selecione o seu nível</span>
                 </div>
 

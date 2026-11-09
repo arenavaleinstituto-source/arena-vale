@@ -29,7 +29,7 @@ import {
   SYNC_ITEMS,
   DEPLOY_SEQUENCE,
   SyncItem,
-} from '../data/syncData';
+} from '../syncData';
 
 const SEV_STYLE: Record<string, { label: string; color: string; bg: string }> = {
   critico: { label: 'Bloqueante', color: '#ff3b47', bg: 'rgba(229,9,20,0.16)' },

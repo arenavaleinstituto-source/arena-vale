@@ -7,7 +7,7 @@ import {
   AlertTriangle,
   CheckCircle2,
 } from 'lucide-react';
-import { ROUTE_SCAN_RESULTS, RouteScanItem } from '../data/auditData';
+import { ROUTE_SCAN_RESULTS, RouteScanItem } from '../auditData';
 
 export const RoutesAuditTable: React.FC = () => {
   const [filter, setFilter] = useState<'todos' | 'critico_erro' | 'alerta' | 'ok'>('todos');

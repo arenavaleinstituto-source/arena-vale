@@ -11,7 +11,7 @@ import {
   Zap,
   HelpCircle,
 } from 'lucide-react';
-import { NO_VERCEL_HOSTING_OPTIONS } from '../data/arenaSiteData';
+import { NO_VERCEL_HOSTING_OPTIONS } from '../arenaSiteData';
 
 interface NoVercelGuideProps {
   onOpenRebuiltSite: () => void;

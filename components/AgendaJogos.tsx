@@ -35,7 +35,7 @@ export default function AgendaJogos() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-6 border-b border-white/10 gap-4 mb-6">
         <div>
           <span className="inline-flex items-center gap-2 rounded-full border border-[#e50914]/40 bg-[#e50914]/10 px-3.5 py-1 text-[10px] font-black uppercase tracking-[0.2em] text-[#ff4d4f] mb-2">
-            CALENDÁRIO OFICIAL · CFG6
+            CALENDÁRIO OFICIAL
           </span>
           <h2 className="text-xl sm:text-2xl font-black uppercase tracking-tight text-white">Agenda de Jogos</h2>
           <p className="text-xs text-[#8a92a6] uppercase mt-1">Confrontos agendados para a temporada atual</p>

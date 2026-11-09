@@ -106,7 +106,7 @@ export default function LinksPage() {
 
       {/* RODAPÉ */}
       <footer className="mt-12 text-center text-[10px] text-[#555d6e] uppercase tracking-wider">
-        © 2026 Arena Vale · Configuração Registada sob a etiqueta **CFG6**.
+        © 2026 Arena Vale · Todos os direitos reservados.Todos os direitos reservados.
       </footer>
     </div>
   );

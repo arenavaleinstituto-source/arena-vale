@@ -40,6 +40,17 @@ describe('LogoSecreto', () => {
     expect(push).not.toHaveBeenCalled();
   });
 
+  it('renderiza o conteúdo recebido no lugar do logo padrão', () => {
+    render(
+      <LogoSecreto>
+        <span>SÚMULAS DIGITAIS</span>
+      </LogoSecreto>,
+    );
+    const botao = screen.getByRole('button', { name: 'Arena Vale — início' });
+    expect(botao).toHaveTextContent('SÚMULAS DIGITAIS');
+    expect(botao.querySelector('img')).toBeNull();
+  });
+
   it('1 clique navega para / depois de 500 ms', () => {
     render(<LogoSecreto />);
     fireEvent.click(screen.getByRole('button', { name: 'Arena Vale — início' }));

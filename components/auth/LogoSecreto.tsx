@@ -1,19 +1,20 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useState, type ReactNode } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useTripleTap } from '@/lib/ui/useTripleTap';
 import { OwnerLoginModal } from './OwnerLoginModal';
 
-type Props = { className?: string; imgClassName?: string };
+type Props = { className?: string; imgClassName?: string; children?: ReactNode };
 
 const ROTULO = 'Arena Vale — início';
 
 /**
  * Logo do header. 1 ou 2 toques: vai para o início (ou rola ao topo na home).
  * 3 toques rápidos: abre o acesso restrito.
+ * `children` substitui o logo padrão, para manter o conteúdo original do header.
  */
-export function LogoSecreto({ className, imgClassName }: Props) {
+export function LogoSecreto({ className, imgClassName, children }: Props) {
   const router = useRouter();
   const pathname = usePathname();
   const [aberto, setAberto] = useState(false);
@@ -36,7 +37,8 @@ export function LogoSecreto({ className, imgClassName }: Props) {
         style={{ touchAction: 'manipulation' }}
         className={className}
       >
-        <img src="/logo.png" alt="Arena Vale" className={imgClassName} />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        {children ?? <img src="/logo.png" alt="Arena Vale" className={imgClassName} />}
       </button>
       <OwnerLoginModal open={aberto} onClose={fechar} />
     </>

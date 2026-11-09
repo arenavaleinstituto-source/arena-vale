@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import { LogoSecreto } from '@/components/auth/LogoSecreto';
 
 export const metadata = {
   title: 'Projeto Social | Arena Vale Sports',
@@ -42,9 +43,9 @@ export default function ProjetoSocialPage() {
       {/* CABEÇALHO */}
       <header className="border-b border-white/[0.08] bg-[#07080c]/90 backdrop-blur-xl sticky top-0 z-40">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
-          <Link href="/" className="flex items-center gap-3">
+          <LogoSecreto className="flex items-center gap-3">
             <img src="/logo.png" alt="Arena Vale" className="h-10 w-auto object-contain rounded-lg mix-blend-lighten" />
-          </Link>
+          </LogoSecreto>
           <nav className="hidden md:flex items-center gap-6 text-xs font-black uppercase tracking-wider text-[#b8c0d4]">
             <Link href="/" className="hover:text-white transition">Início</Link>
             <Link href="/tv" className="hover:text-white transition">TV Arena Vale</Link>
@@ -64,7 +65,7 @@ export default function ProjetoSocialPage() {
         {/* HERO DO PROJETO */}
         <div className="text-center max-w-3xl mx-auto space-y-4">
           <span className="inline-flex items-center gap-2 rounded-full border border-[#e50914]/40 bg-[#e50914]/10 px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-[#ff4d4f]">
-            RESPONSABILIDADE SOCIAL · CFG6
+            RESPONSABILIDADE SOCIAL
           </span>
           <h1 className="text-3xl sm:text-5xl font-black uppercase tracking-tight text-white">
             Projeto Social Arena Vale
@@ -135,7 +136,7 @@ export default function ProjetoSocialPage() {
 
       {/* RODAPÉ */}
       <footer className="border-t border-white/10 bg-[#050609] py-8 text-center text-xs text-[#555d6e]">
-        © 2026 Arena Vale · Configuração Registada sob a etiqueta **CFG6**. Todos os direitos reservados. CNPJ: 40.694.741/0001-34
+        © 2026 Arena Vale · Todos os direitos reservados. CNPJ: 40.694.741/0001-34
       </footer>
     </div>
   );

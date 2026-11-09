@@ -31,7 +31,7 @@ export default function PainelMetricas() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-6 border-b border-white/10 gap-4">
         <div>
           <span className="inline-flex items-center gap-2 rounded-full border border-amber-400/40 bg-amber-500/10 px-3.5 py-1 text-[10px] font-black uppercase tracking-[0.2em] text-amber-300 mb-2">
-            MÉTRICAS E AVALIAÇÃO · CFG6
+            MÉTRICAS E AVALIAÇÃO
           </span>
           <h2 className="text-xl sm:text-2xl font-black uppercase tracking-tight text-white">Relatório de Tráfego e Desempenho</h2>
           <p className="text-xs text-[#8a92a6] uppercase mt-1">Acompanhamento em tempo real das visitas e conteúdos da Arena Vale</p>

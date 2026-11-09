@@ -56,7 +56,7 @@ export default function AgendaPage() {
         {/* HERO / TÍTULO */}
         <div className="text-center space-y-4 max-w-3xl mx-auto">
           <span className="inline-flex items-center gap-2 rounded-full border border-[#e50914]/40 bg-[#e50914]/10 px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] text-[#ff4d4f]">
-            CALENDÁRIO DE CONFRONTOS · CFG6
+            CALENDÁRIO DE CONFRONTOS
           </span>
           <h1 className="text-3xl sm:text-5xl font-black uppercase tracking-tight text-white">
             Agenda de Jogos
@@ -99,7 +99,7 @@ export default function AgendaPage() {
 
       {/* RODAPÉ */}
       <footer className="border-t border-white/10 bg-[#050609] py-8 text-center text-xs text-[#555d6e]">
-        © 2026 Arena Vale · Configuração CFG6. Todos os direitos reservados.
+        © 2026 Arena Vale · Todos os direitos reservados.
       </footer>
     </div>
   );

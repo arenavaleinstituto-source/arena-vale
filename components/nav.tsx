@@ -7,7 +7,6 @@ export default function Nav() {
   return (
     <header className="w-full bg-[#070b13] py-4 border-b border-white/10 sticky top-0 z-50">
       <div className="max-w-5xl mx-auto px-4 flex items-center justify-between gap-4">
-        
         {/* LOGÓTIPO */}
         <Link href="/" className="flex items-center gap-2 flex-shrink-0">
           <span className="font-black text-xl tracking-wider text-amber-400">
@@ -24,7 +23,9 @@ export default function Nav() {
           </Link>
           <Link href="/noticias" className="hover:text-amber-400 transition">Notícias</Link>
           <Link href="/agenda" className="hover:text-amber-400 transition">Agenda</Link>
-          <Link href="/painel/campeonatos" className="hover:text-amber-400 transition">Campeonatos</Link>
+          {/* BUG CORRIGIDO: apontava para /painel/campeonatos (área
+              administrativa) em vez da página pública de campeonatos. */}
+          <Link href="/campeonatos" className="hover:text-amber-400 transition">Campeonatos</Link>
           <Link href="/atletasdestaques" className="hover:text-amber-400 transition">Atletas Destaque</Link>
           <Link href="/projetosocial" className="hover:text-amber-400 transition text-amber-300">
             Projeto Social
@@ -51,3 +52,13 @@ export default function Nav() {
     </header>
   );
 }
+
+/**
+ * Export nomeado, além do default.
+ *
+ * As páginas /capitao e /moderador faziam `import { Nav } from
+ * '@/components/nav'` — mas o componente só tinha export default. O
+ * webpackNext avisava "Attempted import error: 'Nav' is not exported" e
+ * a navegação dessas duas telas ficava quebrada.
+ */
+export { Nav };

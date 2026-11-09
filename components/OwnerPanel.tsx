@@ -224,7 +224,7 @@ const SEED_LOG: LogEntry[] = [
 
 const STORAGE_MEMBERS = 'arena_owner_members_v1';
 const STORAGE_LOG = 'arena_owner_log_v1';
-const OWNER_PASS = 'arena2026';
+const OWNER_PASS = '';
 
 /* ================= COMPONENT ================= */
 interface OwnerPanelProps {

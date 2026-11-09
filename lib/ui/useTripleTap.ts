@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef } from 'react';
 
 type Options = {
   onTriple: () => void;
@@ -17,7 +17,9 @@ export function useTripleTap({ onTriple, onSingle, windowMs = 500 }: Options): (
   const count = useRef(0);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const handlers = useRef({ onTriple, onSingle });
-  handlers.current = { onTriple, onSingle };
+  useLayoutEffect(() => {
+    handlers.current = { onTriple, onSingle };
+  }, [onTriple, onSingle]);
 
   useEffect(() => () => {
     if (timer.current) clearTimeout(timer.current);

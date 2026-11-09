@@ -23,7 +23,6 @@ import {
   BookOpen,
   Building2,
 } from 'lucide-react';
-import { ArenaLogo } from './ArenaLogo';
 import { OwnerPanel } from './OwnerPanel';
 import {
   ARENA_CONSTANTS,
@@ -35,7 +34,7 @@ import {
   MatchScheduleItem,
   NewsArticle,
   buildWhatsAppLink,
-} from '../data/arenaSiteData';
+} from '../arenaSiteData';
 
 export type ArenaPageRoute =
   | 'home'
@@ -202,7 +201,7 @@ export const RebuiltArenaSite: React.FC<RebuiltArenaSiteProps> = ({
             onClick={() => navigateToPage('home')}
             className="cursor-pointer text-left"
           >
-            <ArenaLogo size="md" />
+            <span  >ARENA VALE</span>
           </button>
 
           {/* Desktop Navigation */}
@@ -1884,7 +1883,7 @@ export const RebuiltArenaSite: React.FC<RebuiltArenaSiteProps> = ({
                   type="button"
                   onClick={() => {
                     setLoginEmail('coordenacao@arenavalesports.com.br');
-                    setLoginPass('arena2026');
+                    setLoginPass('');
                     setIsAdminAuthenticated(true);
                   }}
                   className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-300 hover:underline cursor-pointer"
@@ -2037,7 +2036,7 @@ export const RebuiltArenaSite: React.FC<RebuiltArenaSiteProps> = ({
                 style={{ animation: 'tapPulse 0.5s ease-out' }}
               />
             )}
-            <ArenaLogo size="lg" />
+            <span  >ARENA VALE</span>
             {logoTaps > 0 && logoTaps < 5 && (
               <span className="pointer-events-none absolute -bottom-4 left-1/2 -translate-x-1/2 font-mono-code text-[10px] text-amber-400/80">
                 {logoTaps}/5

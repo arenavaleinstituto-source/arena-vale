@@ -48,7 +48,7 @@ export default function Header() {
             {menuAberto && (
               <div className="absolute right-0 mt-3 w-64 sm:w-72 rounded-2xl border border-white/15 bg-[#11141d] p-3 shadow-2xl z-50 space-y-2 backdrop-blur-xl">
                 <div className="px-3 py-2 border-b border-white/10">
-                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#ff4d4f] block">HIERARQUIA · CFG6</span>
+                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#ff4d4f] block">HIERARQUIA</span>
                   <span className="text-[11px] text-[#8a92a6]">Selecione o painel de acesso</span>
                 </div>
 

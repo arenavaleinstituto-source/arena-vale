@@ -18,7 +18,7 @@ import {
   MindMapBranch,
   SEVERITY_META,
   PHASE_META,
-} from '../data/auditData';
+} from '../auditData';
 
 interface NodeInspectorPanelProps {
   node: AuditLeafNode;

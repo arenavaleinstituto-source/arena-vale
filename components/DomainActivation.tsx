@@ -23,7 +23,7 @@ import {
   PATH_B_RECORDS,
   CUTOVER_STEPS,
   DOMAIN_ALERTS,
-} from '../data/domainData';
+} from '../domainData';
 
 const STORAGE_KEY = 'arena_domain_cutover_v1';
 

@@ -37,16 +37,32 @@ export default function PainelProprietarioPage() {
   const [senhaNovo, setSenhaNovo] = useState('');
   const [detalheNovo, setDetalheNovo] = useState('');
 
-  const handleLogin = (e: React.FormEvent) => {
+  /**
+   * O acesso a esta página é garantido pelo `middleware.ts`, que exige uma
+   * sessão Supabase válida. Anteriormente a verificação era feita aqui, no
+   * cliente, contra credenciais fixas escritas no próprio arquivo — o que
+   * publicava a senha do proprietário dentro do bundle JavaScript.
+   */
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (
-      emailLogin.trim().toLowerCase() === 'pmmiranda2017@gmail.com' &&
-      senhaLogin.trim().toUpperCase() === 'VINIGUTO2020'
-    ) {
+    setErroLogin('');
+
+    try {
+      const { createClient } = await import('@/lib/supabase/client');
+      const supabase = createClient();
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: emailLogin.trim().toLowerCase(),
+        password: senhaLogin,
+      });
+
+      if (error || !data.user) {
+        setErroLogin('Credenciais inválidas. Verifique o e-mail e a senha.');
+        return;
+      }
+
       setAutenticado(true);
-      setErroLogin('');
-    } else {
-      setErroLogin('Credenciais inválidas. Verifique o e-mail e a senha mestra.');
+    } catch {
+      setErroLogin('Não foi possível validar o acesso.');
     }
   };
 
@@ -341,7 +357,7 @@ export default function PainelProprietarioPage() {
                     <h4 className="mt-4 text-base font-black uppercase text-white">Proprietário Arena Vale</h4>
                     <p className="text-[11px] font-bold text-amber-400 mt-0.5 uppercase tracking-wider">DIREÇÃO EXECUTIVA</p>
                     <div className="mt-4 space-y-1 text-xs text-[#8a92a6]">
-                      <p className="truncate">✉ pmmiranda2017@gmail.com</p>
+                      <p className="truncate">✉ conta do proprietário</p>
                       <p>🔒 Acesso Master Permanente</p>
                     </div>
                   </div>

@@ -10,7 +10,7 @@ import {
   FileDown,
   Info,
 } from 'lucide-react';
-import { PATCH_FILES, PATCH_ZIP_NAME, PATCH_ROOT_FOLDER } from '../data/patchFiles';
+import { PATCH_FILES, PATCH_ZIP_NAME, PATCH_ROOT_FOLDER } from '../patchFiles';
 
 type Status = 'idle' | 'building' | 'done' | 'error';
 

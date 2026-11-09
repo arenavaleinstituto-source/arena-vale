@@ -16,7 +16,7 @@ import {
   Download,
   FolderArchive,
 } from 'lucide-react';
-import { PATCHES, APPLY_FLOW, Patch } from '../data/patchKit';
+import { PATCHES, APPLY_FLOW, Patch } from '../patchKit';
 import { PatchDownload } from './PatchDownload';
 
 const KIND_META: Record<Patch['kind'], { label: string; color: string; Icon: typeof ShieldAlert }> = {

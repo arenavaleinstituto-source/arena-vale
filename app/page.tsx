@@ -3,159 +3,55 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
-import { OwnerLoginModal } from '@/components/auth/OwnerLoginModal';
-
-interface NoticiaItem {
-  id: string;
-  titulo: string;
-  descricao: string;
-  categoria: string;
-  tag: string;
-  imagem?: string;
-}
-
-interface AtletaItem {
-  id: string;
-  nome: string;
-  modalidade: string;
-  equipe: string;
-  destaque: string;
-  imagem?: string;
-}
-
-const NOTICIAS_PADRAO: NoticiaItem[] = [
-  {
-    id: 'noticia-1',
-    titulo: 'NOVA TEMPORADA DE TRANSMISSÕES',
-    descricao: 'A Arena Vale prepara cobertura técnica e multimídia completa para o esporte regional com câmeras IA.',
-    categoria: 'BROADCAST',
-    tag: 'AO VIVO',
-    imagem: '/fundo-arena.jpg'
-  },
-  {
-    id: 'noticia-2',
-    titulo: 'INCENTIVO AO ESPORTE REGIONAL',
-    descricao: 'Aproximamos marcas, atletas e projetos com impacto direto na comunidade esportiva do Vale.',
-    categoria: 'PROJETO VALE',
-    tag: 'DESTAQUE',
-    imagem: '/fundo-arena.jpg'
-  },
-  {
-    id: 'noticia-3',
-    titulo: 'ORGANIZAÇÃO E GESTÃO ESPORTIVA',
-    descricao: 'Coordenação e arbitragem estruturadas para elevar o nível técnico de todas as competições.',
-    categoria: 'COMPETIÇÕES',
-    tag: 'OFICIAL',
-    imagem: '/fundo-arena.jpg'
-  }
-];
-
-function corrigirTextoPublico(texto: string): string {
-  return texto
-    .replace(/\bINSCRICOES\b/gi, 'INSCRIÇÕES')
-    .replace(/\bINSCRICAO\b/gi, 'INSCRIÇÃO')
-    .replace(/\bTRANSMISSAO\b/gi, 'TRANSMISSÃO')
-    .replace(/\bTRANSMISSOES\b/gi, 'TRANSMISSÕES')
-    .replace(/\bREGIAO\b/gi, 'REGIÃO')
-    .replace(/\bESTAO\b/gi, 'ESTÃO')
-    .replace(/\bVOLEI\b/gi, 'VÔLEI');
-}
-
-function corrigirDescricaoPublica(texto: string): string {
-  if (/^DSFSDF/i.test(texto.trim())) {
-    return 'Confira os principais resultados, notícias e bastidores das competições na cobertura oficial da Arena Vale.';
-  }
-  return corrigirTextoPublico(texto);
-}
-
-const ATLETAS_PADRAO: AtletaItem[] = [
-  {
-    id: 'atleta-1',
-    nome: 'MATHEUS SILVA',
-    modalidade: 'FUTSAL ADULTO',
-    equipe: 'VALE FC',
-    destaque: 'Artilheiro da Temporada · 18 Gols',
-    imagem: '/fundo-arena.jpg'
-  },
-  {
-    id: 'atleta-2',
-    nome: 'GABRIEL SOUZA',
-    modalidade: 'FUTEBOL 7',
-    equipe: 'ATLÉTICO VALE',
-    destaque: 'Melhor Goleiro do Circuito',
-    imagem: '/fundo-arena.jpg'
-  },
-  {
-    id: 'atleta-3',
-    nome: 'LUCAS OLIVEIRA',
-    modalidade: 'BASQUETEBOL',
-    equipe: 'VALE HOOPS',
-    destaque: 'MVP da Etapa Regional',
-    imagem: '/fundo-arena.jpg'
-  }
-];
+import { LogoSecreto } from '@/components/auth/LogoSecreto';
+import CartaoComunicado from '@/components/CartaoComunicado';
+import CartaoDestaque from '@/components/CartaoDestaque';
+import {
+  buscarNoticias,
+  comFallback,
+  buscarDestaques,
+  comFallbackDestaques,
+  NOTICIAS_PADRAO,
+  DESTAQUES_PADRAO,
+  type Noticia,
+  type Destaque,
+} from '@/lib/content';
 
 export default function HomePage() {
   const [menuMobileAberto, setMenuMobileAberto] = useState(false);
   const [menuPainelAberto, setMenuPainelAberto] = useState(false);
-  const [ownerLoginOpen, setOwnerLoginOpen] = useState(false);
   const [campeonatoSelecionado, setCampeonatoSelecionado] = useState(0);
 
-  const [noticiasPublicas, setNoticiasPublicas] = useState<NoticiaItem[]>(NOTICIAS_PADRAO);
-  const [atletasPublicos, setAtletasPublicos] = useState<AtletaItem[]>(ATLETAS_PADRAO);
+  const [noticiasPublicas, setNoticiasPublicas] = useState<Noticia[]>(NOTICIAS_PADRAO);
+  const [destaquesPublicos, setDestaquesPublicos] = useState<Destaque[]>(DESTAQUES_PADRAO);
 
   useEffect(() => {
-    const supabase = createClient();
+    let cancelado = false;
 
     async function carregarConteudo() {
       try {
-        const [{ data: noticias, error: erroNoticias }, { data: atletas, error: erroAtletas }] =
-          await Promise.all([
-            supabase
-              .from('noticias')
-              .select('id, titulo, descricao, categoria, tag, imagem_url')
-              .eq('ativo', true)
-              .order('ordem', { ascending: true })
-              .limit(3),
-            supabase
-              .from('atletas_destaque')
-              .select('id, nome, modalidade, equipe, destaque_texto, imagem_url')
-              .eq('ativo', true)
-              .order('created_at', { ascending: true })
-              .limit(3),
-          ]);
+        const supabase = createClient();
 
-        if (!erroNoticias && noticias && noticias.length > 0) {
-          setNoticiasPublicas(
-            noticias.map((n: any) => ({
-              id: n.id,
-              titulo: corrigirTextoPublico(n.titulo),
-              descricao: corrigirDescricaoPublica(n.descricao),
-              categoria: corrigirTextoPublico(n.categoria),
-              tag: corrigirTextoPublico(n.tag),
-              imagem: n.imagem_url || '/fundo-arena.jpg',
-            }))
-          );
-        }
+        const [comunicados, atletas] = await Promise.all([
+          buscarNoticias(supabase, { limite: 3, ordem: 'ordem' }),
+          buscarDestaques(supabase, { limite: 3 }),
+        ]);
 
-        if (!erroAtletas && atletas && atletas.length > 0) {
-          setAtletasPublicos(
-            atletas.map((a: any) => ({
-              id: a.id,
-              nome: a.nome,
-              modalidade: a.modalidade,
-              equipe: a.equipe,
-              destaque: a.destaque_texto,
-              imagem: a.imagem_url || '/fundo-arena.jpg',
-            }))
-          );
-        }
+        if (cancelado) return;
+
+        // Mesmo conjunto de fallback do mural /noticias — antes cada tela
+        // tinha o seu, por isso a Home e o mural mostravam conteúdo diferente.
+        setNoticiasPublicas(comFallback(comunicados.noticias));
+        setDestaquesPublicos(comFallbackDestaques(atletas.destaques));
       } catch {
         // Mantém os itens padrão se houver falha na ligação
       }
     }
 
     carregarConteudo();
+    return () => {
+      cancelado = true;
+    };
   }, []);
 
   const modalidades = [
@@ -224,10 +120,7 @@ export default function HomePage() {
         <header className="sticky top-0 z-40 border-b border-white/[0.08] bg-[#050505]/90 backdrop-blur-xl shadow-[0_10px_30px_rgba(0,0,0,0.6)]">
           <div className="mx-auto flex w-full max-w-[1750px] min-w-0 items-center justify-between gap-3 px-4 sm:px-6 lg:px-10 2xl:px-12 py-2.5 sm:py-3">
             <div className="flex items-center shrink-0">
-              <button type="button" onClick={() => setOwnerLoginOpen(true)} title="Acesso reservado do Proprietário" aria-label="Acesso reservado do Proprietário" className="group relative flex max-w-[170px] items-center rounded-2xl p-1 transition duration-300 hover:scale-[1.02] sm:max-w-[190px]">
-                <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-[#e50914]/30 via-white/10 to-transparent opacity-0 blur-lg transition duration-500 group-hover:opacity-100" />
-                <img src="/logo.png" alt="Arena Vale Oficial" className="relative h-11 sm:h-14 xl:h-16 w-auto max-w-full object-contain rounded-xl mix-blend-lighten contrast-110 drop-shadow-[0_0_20px_rgba(229,9,20,0.3)]" />
-              </button>
+              <LogoSecreto className="group relative flex max-w-[170px] items-center rounded-2xl p-1 transition duration-300 hover:scale-[1.02] sm:max-w-[190px]" imgClassName="relative h-11 sm:h-14 xl:h-16 w-auto max-w-full object-contain rounded-xl mix-blend-lighten contrast-110 drop-shadow-[0_0_20px_rgba(229,9,20,0.3)]" />
             </div>
             <nav className="hidden xl:flex min-w-0 flex-1 items-center justify-center gap-3 2xl:gap-5 text-[11px] 2xl:text-xs font-black uppercase tracking-[0.08em] text-[#b8c0d4]">
               <Link href="#inicio" className="text-white hover:text-[#e50914] whitespace-nowrap transition">Início</Link>
@@ -365,38 +258,17 @@ export default function HomePage() {
               <div className="inline-flex items-center gap-2 mb-2"><span className="h-3 w-1.5 bg-[#e50914] -skew-x-12" /><span className="text-xs font-black tracking-[0.3em] text-[#e50914] uppercase">AGORA NA ARENA · BROADCAST</span></div>
               <h2 className="text-4xl sm:text-5xl font-black italic uppercase tracking-tighter text-white leading-none">CONTEÚDO & <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#e50914] to-[#ff4b52]">COBERTURA</span></h2>
             </div>
-            <div className="flex items-center gap-3 self-start sm:self-end"><span className="text-[11px] font-black uppercase tracking-widest text-gray-400">EDIÇÃO 2026</span><span className="h-2 w-2 rounded-full bg-[#e50914]" /></div>
+            <div className="flex items-center gap-3 self-start sm:self-end">
+              <Link href="/noticias" className="rounded-full border border-white/20 bg-white/5 px-6 py-2.5 text-xs font-black uppercase tracking-wider text-white hover:bg-white/10 transition whitespace-nowrap">
+                Ver Todos os Comunicados ↗
+              </Link>
+              <span className="text-[11px] font-black uppercase tracking-widest text-gray-400">EDIÇÃO 2026</span>
+              <span className="h-2 w-2 rounded-full bg-[#e50914]" />
+            </div>
           </div>
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {noticiasPublicas.map((h, index) => (
-              <article key={h.id} className="group relative min-h-[430px] flex flex-col justify-between rounded-2xl border border-white/10 bg-[#0a0a0a] overflow-hidden shadow-2xl transition-all duration-500 hover:-translate-y-2 hover:border-[#e50914]/70">
-                <img src={h.imagem || '/fundo-arena.jpg'} alt={h.titulo} className="absolute inset-0 h-full w-full object-cover object-center opacity-35 mix-blend-luminosity filter contrast-125 transition-all duration-700 group-hover:scale-110 group-hover:opacity-55 group-hover:mix-blend-normal" />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/85 to-transparent" />
-                <div className="absolute inset-0 bg-gradient-to-br from-[#e50914]/15 via-transparent to-black/80 opacity-60 group-hover:opacity-90 transition-opacity duration-500" />
-                <span className="pointer-events-none select-none absolute -right-3 top-10 text-7xl font-black italic uppercase tracking-tighter text-white/[0.04] transition-transform duration-500 group-hover:-translate-x-3">{h.categoria}</span>
-                <div className="absolute top-3 left-3 h-4 w-4 border-t-2 border-l-2 border-white/30 transition-colors group-hover:border-[#e50914]" />
-                <div className="absolute top-3 right-3 h-4 w-4 border-t-2 border-r-2 border-white/30 transition-colors group-hover:border-[#e50914]" />
-                <div className="relative z-10 p-6 flex items-start justify-between gap-2">
-                  <div className="flex items-center gap-2">
-                    <span className="inline-block -skew-x-12 bg-[#e50914] px-3.5 py-1 text-[11px] font-black uppercase tracking-widest text-white shadow-[0_0_15px_rgba(229,9,20,0.5)]"><span className="inline-block skew-x-12">{h.categoria}</span></span>
-                    <span className="inline-block -skew-x-12 border border-white/20 bg-black/60 backdrop-blur-md px-3 py-1 text-[10px] font-black uppercase tracking-widest text-[#cad0e0]"><span className="inline-block skew-x-12">{h.tag}</span></span>
-                  </div>
-                  <span className="text-4xl font-black italic leading-none text-transparent select-none" style={{ WebkitTextStroke: '1px rgba(255,255,255,0.22)' }}>0{index + 1}</span>
-                </div>
-                <div className="relative z-10 p-6 pt-0 mt-auto">
-                  <div className="mb-3 flex items-center gap-2">
-                    <span className="h-1 w-8 bg-[#e50914] transition-all duration-300 group-hover:w-14" />
-                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#e50914]">ARENA PRESS</span>
-                  </div>
-                  <h3 className="text-2xl sm:text-[26px] font-black italic uppercase leading-[1.08] tracking-tight text-white drop-shadow-md group-hover:text-[#ff2a35] transition-colors">{h.titulo}</h3>
-                  <p className="mt-3 text-xs sm:text-sm text-[#b8c0d4] leading-relaxed line-clamp-3 font-medium">{h.descricao}</p>
-                  <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between">
-                    <a href="#campeonatos" className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-white group-hover:text-[#e50914] transition"><span>EXPLORAR COBERTURA</span><span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-white/10 text-[10px] group-hover:bg-[#e50914] group-hover:text-white group-hover:translate-x-1 transition-all">↗</span></a>
-                    <img src="/logo.png" alt="AV" className="h-10 w-auto object-contain opacity-80 mix-blend-lighten group-hover:opacity-100 transition" />
-                  </div>
-                </div>
-                <div className="relative z-10 h-1.5 w-full bg-gradient-to-r from-[#e50914] via-[#ff4b52] to-transparent opacity-75 group-hover:opacity-100 transition-opacity" />
-              </article>
+            {noticiasPublicas.map((noticia, indice) => (
+              <CartaoComunicado key={noticia.id} noticia={noticia} indice={indice} />
             ))}
           </div>
         </section>
@@ -441,6 +313,15 @@ export default function HomePage() {
                 </p>
                 <div className="mt-8 flex flex-wrap items-center gap-4"><Link href="/atletasdestaques" className="rounded-full bg-[#e50914] px-7 py-3.5 text-xs font-black uppercase tracking-wider text-white shadow-lg shadow-[#e50914]/30 transition hover:bg-[#ff1e27] hover:scale-105">GALERIA OFICIAL →</Link></div>
               </div>
+            </div>
+
+            {/* Grade de destaques — MESMO cartão e MESMOS dados da galeria
+                /atletasdestaques. Antes esta busca era feita e o resultado
+                era descartado: os atletas publicados nunca apareciam aqui. */}
+            <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+              {destaquesPublicos.map((destaque) => (
+                <CartaoDestaque key={destaque.id} destaque={destaque} />
+              ))}
             </div>
           </div>
         </section>
@@ -621,7 +502,6 @@ export default function HomePage() {
             </div>
           </div>
         </footer>
-        <OwnerLoginModal open={ownerLoginOpen} onClose={() => setOwnerLoginOpen(false)} />
       </div>
     </>
   );

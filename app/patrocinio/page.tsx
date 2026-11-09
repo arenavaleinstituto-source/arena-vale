@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { LogoSecreto } from '@/components/auth/LogoSecreto';
 
 export default function PatrocinioPage() {
   return (
@@ -9,9 +10,9 @@ export default function PatrocinioPage() {
       {/* CABEÇALHO */}
       <header className="sticky top-0 z-40 border-b border-white/[0.08] bg-[#07080c]/90 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <Link href="/" className="flex items-center gap-3">
+          <LogoSecreto className="flex items-center gap-3">
             <img src="/logo.png" alt="Arena Vale" className="h-12 w-auto object-contain rounded-lg mix-blend-lighten" />
-          </Link>
+          </LogoSecreto>
           <Link href="/" className="rounded-full border border-white/20 bg-white/5 px-6 py-2 text-xs font-black uppercase tracking-wider text-white hover:bg-white/10 transition">
             ← Voltar ao Início
           </Link>
