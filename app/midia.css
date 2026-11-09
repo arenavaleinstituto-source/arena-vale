@@ -237,3 +237,13 @@
 .fileira .seta.esq { left: -14px; }
 .fileira .seta.dir { right: -14px; }
 @media (hover: hover) and (min-width: 860px) { .fileira .seta { display: grid; place-items: center; } }
+
+/* menu Entrar com botões (a prévia usava links) */
+.menu-entrar button { background: none; border: 0; color: var(--branco); text-align: left; cursor: pointer; font-family: var(--rotulo); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; font-size: 15px; padding: 11px 12px; border-radius: 12px; }
+.menu-entrar button:hover, .menu-entrar button:focus-visible { background: rgba(229,9,20,.14); }
+.menu-entrar > a { padding: 11px 12px; border-radius: 12px; }
+.entrar i svg { width: 15px; height: 15px; fill: #fff; }
+.topo .logo-topo { flex: none; display: block; background: none; border: 0; padding: 0; cursor: pointer; }
+.topo .logo-topo-img { height: 44px; width: auto; display: block; }
+@media (max-width: 760px) { .topo .logo-topo-img { height: 34px; } }
+.menu a[aria-current="page"] { color: var(--branco); }

@@ -5,6 +5,7 @@ let pathname = '/noticias';
 vi.mock('next/navigation', () => ({
   useRouter: () => ({ push: vi.fn() }),
   usePathname: () => pathname,
+  useSearchParams: () => new URLSearchParams(),
 }));
 vi.mock('@/lib/supabase/client', async () => {
   const { fakeSupabase } = await import('./auth/fake-supabase');
@@ -23,15 +24,42 @@ describe('SiteHeader', () => {
     expect(header.className).toMatch(/\btop-0\b/);
   });
 
-  it('o menu leva aos blocos da página inicial a partir de qualquer página', () => {
+  it('menu principal da mídia esportiva, nesta ordem', () => {
     render(<SiteHeader />);
     const menu = screen.getByRole('navigation', { name: 'Menu principal' });
-    const link = (nome: string) =>
-      Array.from(menu.querySelectorAll('a')).find((a) => a.textContent?.trim() === nome);
-    expect(link('Início')).toHaveAttribute('href', '/#inicio');
-    expect(link('Notícias')).toHaveAttribute('href', '/#noticias');
-    expect(link('Campeonatos')).toHaveAttribute('href', '/#campeonatos');
-    expect(link('Agenda')).toHaveAttribute('href', '/agenda');
+    const links = Array.from(menu.querySelectorAll('a'));
+    expect(links.map((a) => a.textContent?.trim())).toEqual([
+      'Início',
+      'Ao Vivo',
+      'Notícias do Vale',
+      'Esporte Mundial',
+      'Agenda',
+      'Modalidades',
+      'Projeto Social',
+      'Atletas Destaques',
+    ]);
+    expect(links.map((a) => a.getAttribute('href'))).toEqual([
+      '/',
+      '/ao-vivo',
+      '/noticias',
+      '/noticias?aba=mundo',
+      '/agenda',
+      '/modalidades',
+      '/projetosocial',
+      '/atletasdestaques',
+    ]);
+  });
+
+  it('sem Vídeos nem Sobre no menu; Anuncie leva ao /patrocinio', () => {
+    render(<SiteHeader />);
+    const menu = screen.getByRole('navigation', { name: 'Menu principal' });
+    expect(menu.textContent).not.toMatch(/Vídeos|Sobre/);
+    expect(screen.getByRole('link', { name: 'Anuncie' })).toHaveAttribute('href', '/patrocinio');
+  });
+
+  it('a marca nunca aparece com "Sports"', () => {
+    render(<SiteHeader />);
+    expect(document.body.textContent ?? '').not.toMatch(/sports?\b/i);
   });
 
   it('tem o logo com toque triplo', () => {

@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { cargoDoBanco, destinoPorCargo, type Cargo } from '@/lib/auth/rotas';
 import { ROTULO_CARGO, iniciais } from '@/lib/auth/mensagens';
+import { CARGOS_ENTRAR } from '@/lib/midia/menu';
 import { FormEntrarEquipe } from './FormEntrarEquipe';
 
 type Sessao = { nome: string; cargo: Cargo } | null;
@@ -20,15 +21,20 @@ function IconePessoa() {
 }
 
 /**
- * Botão "Entrar" do cabeçalho (spec 5.4). Visitante: abre o painel lateral
- * "Área da equipe". Logado: avatar com iniciais e cargo — o dono aparece
- * como "Coordenador", nunca pelo cargo real.
+ * Botão "Entrar" do cabeçalho (spec Fase 3, seção 4).
+ * Visitante: abre o menu "ÁREA DA EQUIPE" (Coordenação / Moderador / Capitão);
+ * cada opção abre o painel lateral de login. O rótulo é só visual — depois do
+ * login o destino vem do cargo no banco (`destinoPorCargo`).
+ * Logado: avatar com iniciais e cargo — o dono aparece como "Coordenador".
  */
 export function EntrarEquipe() {
   const router = useRouter();
   const tituloId = useId();
+  const menuId = useId();
   const botaoRef = useRef<HTMLButtonElement>(null);
-  const [aberto, setAberto] = useState(false);
+  const caixaRef = useRef<HTMLDivElement>(null);
+  const [cargoLogin, setCargoLogin] = useState<string | null>(null);
+  const [menuEntrar, setMenuEntrar] = useState(false);
   const [menu, setMenu] = useState(false);
   const [sessao, setSessao] = useState<Sessao>(null);
 
@@ -54,17 +60,35 @@ export function EntrarEquipe() {
     };
   }, []);
 
-  const fechar = useCallback(() => {
-    setAberto(false);
+  const fecharLogin = useCallback(() => {
+    setCargoLogin(null);
     botaoRef.current?.focus();
   }, []);
 
+  // Esc fecha o que estiver aberto (login ou menu).
   useEffect(() => {
-    if (!aberto) return;
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') fechar(); };
+    if (!cargoLogin && !menuEntrar) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return;
+      if (cargoLogin) fecharLogin();
+      else {
+        setMenuEntrar(false);
+        botaoRef.current?.focus();
+      }
+    };
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
-  }, [aberto, fechar]);
+  }, [cargoLogin, menuEntrar, fecharLogin]);
+
+  // Clique (ou toque) fora fecha o menu.
+  useEffect(() => {
+    if (!menuEntrar) return;
+    const onClick = (e: MouseEvent) => {
+      if (caixaRef.current && !caixaRef.current.contains(e.target as Node)) setMenuEntrar(false);
+    };
+    document.addEventListener('click', onClick);
+    return () => document.removeEventListener('click', onClick);
+  }, [menuEntrar]);
 
   async function sair() {
     await createClient().auth.signOut();
@@ -82,9 +106,9 @@ export function EntrarEquipe() {
           onClick={() => setMenu((v) => !v)}
           aria-expanded={menu}
           aria-label={`Conta: ${ROTULO_CARGO[sessao.cargo]}`}
-          className="flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] py-1.5 pl-1.5 pr-4 transition hover:border-[#e50914]"
+          className="flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] py-1.5 pl-1.5 pr-4 transition hover:border-av-vermelho"
         >
-          <span className="grid h-8 w-8 place-items-center rounded-full bg-gradient-to-br from-[#e50914] to-[#7a0b10] text-xs font-black text-white">
+          <span className="grid h-8 w-8 place-items-center rounded-full bg-gradient-to-br from-av-vermelho to-[#7a0b10] text-xs font-black text-white">
             {iniciais(sessao.nome)}
           </span>
           <span className="hidden text-left leading-tight sm:grid">
@@ -93,11 +117,11 @@ export function EntrarEquipe() {
           </span>
         </button>
         {menu && (
-          <div className="absolute right-0 z-50 mt-3 w-52 rounded-2xl border border-white/15 bg-[#111111]/95 p-2 shadow-2xl backdrop-blur-2xl">
-            <Link href={painel} onClick={() => setMenu(false)} className="block rounded-xl px-4 py-2.5 text-sm font-bold text-white hover:bg-white/10">
+          <div className="menu-entrar">
+            <Link href={painel} onClick={() => setMenu(false)}>
               Meu painel
             </Link>
-            <button type="button" onClick={sair} className="block w-full rounded-xl px-4 py-2.5 text-left text-sm font-bold text-white/70 hover:bg-white/10 hover:text-white">
+            <button type="button" onClick={sair} className="text-left">
               Sair
             </button>
           </div>
@@ -107,41 +131,60 @@ export function EntrarEquipe() {
   }
 
   return (
-    <>
+    <div className="entrar-wrap" ref={caixaRef}>
       <button
         ref={botaoRef}
         type="button"
-        onClick={() => setAberto(true)}
-        aria-haspopup="dialog"
+        className="entrar"
+        onClick={() => setMenuEntrar((v) => !v)}
+        aria-haspopup="menu"
+        aria-expanded={menuEntrar}
+        aria-controls={menuId}
         aria-label="Entrar na área da equipe"
-        className="inline-flex items-center gap-2 whitespace-nowrap rounded-full border border-white/15 bg-white/[0.04] py-1.5 pl-1.5 pr-4 text-[11px] font-black uppercase tracking-[0.12em] text-white transition hover:border-[#e50914] hover:bg-[#e50914]/10 max-sm:pr-1.5"
       >
-        <span className="grid h-7 w-7 place-items-center rounded-full bg-[#e50914]"><IconePessoa /></span>
-        <span className="max-sm:hidden">Entrar</span>
+        <i aria-hidden="true">
+          <IconePessoa />
+        </i>
+        <span>Entrar</span>
       </button>
-      {aberto &&
+      {menuEntrar && (
+        <div className="menu-entrar" id={menuId} role="menu" aria-label="Área da equipe">
+          <span className="me-tit">Área da equipe</span>
+          {CARGOS_ENTRAR.map((cargo) => (
+            <button
+              key={cargo}
+              type="button"
+              role="menuitem"
+              onClick={() => {
+                setMenuEntrar(false);
+                setCargoLogin(cargo);
+              }}
+            >
+              {cargo}
+            </button>
+          ))}
+        </div>
+      )}
+      {cargoLogin &&
         typeof document !== 'undefined' &&
         createPortal(
           <>
-            <div className="fixed inset-0 z-[100] bg-black/55 backdrop-blur-sm" onClick={fechar} aria-hidden="true" />
-            <aside
-              role="dialog"
-              aria-modal="true"
-              aria-labelledby={tituloId}
-              className="fixed inset-y-0 right-0 z-[101] flex w-full max-w-[420px] flex-col gap-5 overflow-y-auto border-l border-white/10 bg-gradient-to-b from-[#17171a] to-[#0d0d0f] p-6 sm:rounded-l-[28px]"
-            >
-              <div className="flex items-start justify-between gap-3">
+            <div className="fundo-login" onClick={fecharLogin} aria-hidden="true" />
+            <aside className="login" role="dialog" aria-modal="true" aria-labelledby={tituloId}>
+              <div className="topo-l">
                 <div>
-                  <h2 id={tituloId} className="text-3xl font-black uppercase leading-none text-white">ÁREA DA EQUIPE</h2>
-                  <p className="mt-2 text-sm text-white/60">Coordenadores, moderadores e capitães</p>
+                  <span className="cargo-l">Área da equipe · {cargoLogin}</span>
+                  <h2 id={tituloId}>Entrar</h2>
                 </div>
-                <button type="button" onClick={fechar} aria-label="Fechar" className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-white/10 bg-white/5 text-white hover:bg-white/10">✕</button>
+                <button type="button" className="fechar" onClick={fecharLogin} aria-label="Fechar">
+                  ✕
+                </button>
               </div>
               <FormEntrarEquipe autoFocus />
             </aside>
           </>,
           document.body,
         )}
-    </>
+    </div>
   );
 }

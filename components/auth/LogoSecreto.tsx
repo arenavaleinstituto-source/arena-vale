@@ -59,7 +59,7 @@ export function LogoSecreto({ className, imgClassName, children }: Props) {
         className={className}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        {children ?? <img src="/logo.png" alt="Arena Vale" className={imgClassName} />}
+        {children ?? <img src="/logo.png" alt="ARENA VALE" className={imgClassName} />}
       </button>
       <OwnerLoginModal open={aberto} onClose={fechar} />
     </>

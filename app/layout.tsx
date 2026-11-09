@@ -4,6 +4,8 @@ import { Barlow, Barlow_Condensed, Saira } from 'next/font/google';
 import './globals.css';
 import './midia.css';
 import { SiteHeader } from '@/components/SiteHeader';
+import { SiteFooter } from '@/components/SiteFooter';
+import { lerConfigSite } from '@/lib/midia/config';
 
 /**
  * METADADOS GLOBAIS
@@ -23,8 +25,8 @@ const barlow = Barlow({ subsets: ['latin'], weight: ['400', '600', '700'], varia
 const barlowCondensed = Barlow_Condensed({ subsets: ['latin'], weight: ['600', '700'], variable: '--font-barlow-condensed', display: 'swap' });
 
 export const metadata: Metadata = {
-  title: 'Arena Vale',
-  description: 'Plataforma de gestão de campeonatos e transmissões esportivas.',
+  title: 'ARENA VALE · Mídia Esportiva',
+  description: 'O palco do esporte é aqui. Transmissões, notícias, agenda e histórias de quem vive o esporte.',
   icons: {
     icon: '/logo.png',
     shortcut: '/logo.png',
@@ -54,16 +56,18 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const config = await lerConfigSite();
   return (
     <html lang="pt-BR" className={`${saira.variable} ${barlow.variable} ${barlowCondensed.variable}`}>
       <body className="bg-av-preto text-white font-sans antialiased selection:bg-[#e50914] selection:text-white overflow-x-clip">
         <SiteHeader />
         {children}
+        <SiteFooter whatsapp={config.whatsapp} instagramUrl={config.instagramUrl} />
       </body>
     </html>
   );
