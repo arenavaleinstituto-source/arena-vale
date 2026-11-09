@@ -43,6 +43,14 @@ export type RascunhoTelegram = {
 /** Título usado quando a mensagem não tem texto. */
 export const TITULO_PADRAO = 'Notícia do Telegram';
 
+/** Até 110 caracteres, cortando numa palavra inteira e terminando com "…". */
+function cortarTitulo(t: string, max = 110): string {
+  if (t.length <= max) return t;
+  const corte = t.slice(0, max);
+  const espaco = corte.lastIndexOf(' ');
+  return (espaco > max * 0.6 ? corte.slice(0, espaco) : corte).replace(/[\s,;:.–-]+$/, '') + '…';
+}
+
 /** Limite de download da API de bots do Telegram. */
 export const LIMITE_VIDEO = 20 * 1024 * 1024;
 
@@ -64,9 +72,9 @@ export function extrairRascunho(msg: TgMessage): RascunhoTelegram {
       ? ''
       : linhas[i]
           .replace(/^(?:\s*#[\p{L}\p{N}_]+:?)+/u, '')
-          .replace(/^[\s\p{Extended_Pictographic}️‍:–-]+/u, '')
+          .replace(/^[\s\p{Extended_Pictographic}\p{Regional_Indicator}️‍:–-]+/u, '')
           .trim();
-  const titulo = (limpo || (i === -1 ? '' : linhas[i].trim()) || TITULO_PADRAO).slice(0, 120);
+  const titulo = cortarTitulo(limpo || (i === -1 ? '' : linhas[i].trim()) || TITULO_PADRAO);
   const descricao = i === -1 ? '' : linhas.slice(i + 1).join('\n').trim();
 
   const foto = msg.photo?.length ? [...msg.photo].sort((a, b) => (b.file_size ?? b.width ?? 0) - (a.file_size ?? a.width ?? 0))[0] : null;

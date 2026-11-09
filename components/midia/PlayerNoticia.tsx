@@ -18,7 +18,7 @@ export function PlayerNoticia({ n }: { n: NoticiaMidia }) {
   return (
     <div className="relative overflow-hidden rounded-[22px] bg-av-grafite-2">
       {/* eslint-disable-next-line @next/next/no-img-element -- capas de várias origens */}
-      <img src={capa} alt={n.titulo} className="max-h-[70vh] w-full object-cover" style={n.enquadramento ? { objectPosition: n.enquadramento } : undefined} />
+      <img src={capa} alt={n.titulo} className="max-h-[75vh] w-full bg-black object-contain" style={n.enquadramento ? { objectPosition: n.enquadramento } : undefined} />
       {modo.tipo === 'link' && (
         <div className="absolute inset-0 grid place-items-center bg-black/45">
           <a href={modo.href} target="_blank" rel="noopener noreferrer" className="av-btn forte">

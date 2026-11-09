@@ -55,8 +55,20 @@ describe('extrairRascunho', () => {
     expect(r.descricao).toBe('O zagueiro cumprirá suspensão automática.\n\n📰Juliano Machado');
   });
 
+  it('bandeira no começo sai do título (no Windows ela aparece como "DE")', () => {
+    expect(extrairRascunho({ ...base, text: '🇩🇪 🥇 Pela primeira vez desde 2005' }).titulo).toBe('Pela primeira vez desde 2005');
+  });
+
+  it('título longo corta numa palavra inteira, com reticências', () => {
+    const t = extrairRascunho({ ...base, text: 'Pela primeira vez desde que o FIFPro World 11 começou em 2005, o vencedor da Bola de Ouro do mesmo ano não foi incluído na seleção' }).titulo;
+    expect(t.length).toBeLessThanOrEqual(111);
+    expect(t.endsWith('…')).toBe(true);
+    expect(t).not.toMatch(/\s…$/);
+    expect(t).toMatch(/^Pela primeira vez desde que o FIFPro World 11/);
+  });
+
   it('título longo é cortado em 120; sem texto, título padrão', () => {
-    expect(extrairRascunho({ ...base, text: 'x'.repeat(200) }).titulo).toHaveLength(120);
+    expect(extrairRascunho({ ...base, text: 'x'.repeat(200) }).titulo).toBe('x'.repeat(110) + '…');
     expect(extrairRascunho({ ...base, photo: FOTO.photo }).titulo).toBe('Notícia do Telegram');
   });
 
