@@ -9,7 +9,7 @@ import { MetadataRoute } from 'next';
  *
  * `baseUrl` segue apontando para o domínio Vercel porque o domínio
  * próprio (arenavale.com.br) ainda não tem registro A configurado
- * (ver `domainData.ts`). Quando o A apontar, troque a constante abaixo
+ * no DNS. Quando o registro A apontar, troque a constante abaixo
  * e o `robots.txt` junto.
  */
 const baseUrl = 'https://arena-vale.vercel.app';
