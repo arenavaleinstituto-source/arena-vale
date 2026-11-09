@@ -80,14 +80,14 @@ Evolução do `SiteHeader` atual (preso no topo, o mesmo em todas as páginas).
   - Esporte Mundial `/noticias?aba=mundo` (nome no menu: **ESPORTE MUNDIAL** — notícias do esporte pelo mundo, garimpadas pelo bot)
   - Agenda `/agenda`
   - Modalidades `/modalidades`
-  - Vídeos `/videos`
+  - (Vídeos saiu do menu; a página `/videos` continua, aberta pelo "Ver todos" da faixa de vídeos)
   - Projeto Social `/projetosocial`
   - Atletas Destaques `/atletas` (no lugar de "Sobre"; a página `/sobre` continua, com link no rodapé)
 - **Direita:**
   - **Anuncie** (`/patrocinio`);
   - **Entrar**, que abre o menu "ÁREA DA EQUIPE" com Coordenação, Moderador e Capitão.
 - **Cada opção do Entrar** abre o painel lateral de login (`FormEntrarEquipe`) com o rótulo "Área da equipe · <cargo>". O rótulo é só visual: **o destino depois do login vem do cargo no banco** (`destinoPorCargo`), e não da opção clicada.
-- **Alinhamento:** duas linhas. Em cima, o logo à esquerda e Anuncie + Entrar à direita. Embaixo, o menu completo centralizado, sem cortar nenhuma palavra.
+- **Alinhamento:** uma linha só: logo à esquerda, menu no meio, Anuncie + Entrar à direita.
 - **No celular:** o menu vira uma faixa que rola para o lado, e "Entrar" vira só o ícone.
 - **Logado:** continua o avatar com as iniciais e o cargo, nunca "Proprietário".
 
@@ -105,8 +105,8 @@ Evolução do `SiteHeader` atual (preso no topo, o mesmo em todas as páginas).
 | 8 | **Projeto Social** | título, texto, 4 números, 3 iniciativas, resultados, apoio (3 botões vermelhos: Apoiar, Cotas, Inscrever criança/atleta) | textos da página antiga + `noticias` (categoria `projeto_social`) |
 | 9 | **Atletas Destaques** | cartazes dos atletas destaque (rodada, artilheiro, revelação) | `atletas_destaque` |
 | 10 | ~~Números da Arena~~ | **saiu do site público**: as contagens (campeonatos, equipes, jogos, vídeos) ficam só no painel da coordenação, para conhecimento; talvez voltem ao público no futuro | contagens no banco + RSS |
-| 11 | **Para marcas** | "Coloque sua marca no palco do esporte.", com as propriedades de mídia e o botão para o WhatsApp | fixo |
-| 12 | **Rodapé** | logo + slogan (sem linha de menu), botões **WhatsApp** (wa.me/5547988444404), **Instagram** (@arenavaleoficial) e **YouTube** (@TVArenaVale), **CNPJ 40.694.741/0001-34**, © ARENA VALE · Mídia Esportiva, links Sobre a ARENA VALE · Privacidade · Termos | fixo (links editáveis em Configurações) |
+| 11 | **Para marcas** | "Coloque sua marca no palco do esporte.", só o texto e o botão para o WhatsApp (sem as etiquetas de propriedades de mídia) | fixo |
+| 12 | **Rodapé** | logo maior + slogan, centralizados com os botões (sem linha de menu), botões **WhatsApp** (wa.me/5547988444404), **Instagram** (@arenavaleoficial) e **YouTube** (@TVArenaVale), **CNPJ 40.694.741/0001-34**, © ARENA VALE · Mídia Esportiva, links Sobre a ARENA VALE · Privacidade · Termos | fixo (links editáveis em Configurações) |
 
 - **Blocos sem conteúdo** (sem notícias publicadas, sem jogos futuros) mostram um estado vazio curto, por exemplo "Nenhum jogo agendado — volte em breve.". A página nunca quebra.
 - **Renderização:** Server Components com `revalidate = 60`. O YouTube revalida a cada 30 min.
