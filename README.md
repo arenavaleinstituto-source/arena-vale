@@ -1,215 +1,85 @@
-# 🏆 Arena Vale Sports — App Completo (Next.js + Supabase + Vercel)
+# Arena Vale — site oficial
 
-Stack de produção recomendada pelo time:
-- **Frontend + Backend:** Next.js 14 (App Router, React Server Components, Route Handlers)
-- **Banco + Auth:** Supabase (Postgres + Auth + Storage + RLS)
-- **Deploy:** Vercel (1-clique)
-- **Charts:** Recharts (já incluso)
-- **UI:** Tailwind + shadcn + Radix UI
+Site da Arena Vale ("O palco do esporte é aqui."). Tem agenda, campeonatos, notícias, atletas destaque, súmulas digitais, TV, projeto social e os painéis da equipe.
 
-> ⚠️ **Substitui 100% o template original Manus.** Toda a lógica de tRPC/MySQL/Manus-OAuth/Manus-Forge é descartada.
+- Produção: https://arena-vale.vercel.app
+- Repositório: `arenavaleinstituto-source/arena-vale`
 
----
+## Stack
 
-## 🚀 Setup em 10 minutos
+- **Next.js 16** (App Router) + **React 19** + TypeScript
+- **Supabase**: banco Postgres, login (Auth), arquivos (Storage) e regras de acesso (RLS)
+- **Tailwind CSS 3**, com a configuração em `tailwind.config.ts`
+- **Vitest** + Testing Library para os testes
+- Deploy na **Vercel**: cada branch enviada ao GitHub ganha um link de prévia
 
-### 1. Criar projeto no Supabase
-1. Acesse https://supabase.com → New Project
-2. Escolha senha do DB forte, região **South America (São Paulo)**
-3. Espere provisionar (~2 min)
-4. Em **Settings → API**, copie:
-   - `Project URL` → `NEXT_PUBLIC_SUPABASE_URL`
-   - `anon public` key → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-   - `service_role` key → `SUPABASE_SERVICE_ROLE_KEY`
+## Rodar localmente
 
-### 2. Rodar migration + seed
-```bash
-# Instalar CLI (se não tiver)
-npm install -g supabase
+Requisitos: Node 20.9 ou mais novo.
 
-# Linkar ao projeto (vai pedir o ref ID da URL do Supabase)
-supabase link --project-ref <seu-ref>
-
-# Aplicar schema completo (tabelas + RLS + policies)
-supabase db push
-
-# Popular com dados demo
-npm run db:seed
-```
-
-### 3. Setup local
 ```bash
 npm install
-cp .env.local.example .env.local
-# preencha .env.local com as 3 chaves do passo 1
-npm run dev
+cp .env.example .env.local   # depois preencha as 3 chaves (veja abaixo)
+npm run dev                  # http://localhost:3000
 ```
 
-Abre em http://localhost:3000
+## Variáveis de ambiente
 
-### 4. Deploy na Vercel
-1. Suba o código para um repo Git (GitHub/GitLab/Bitbucket)
-2. Acesse https://vercel.com → New Project → Import
-3. Em **Environment Variables**, cole as 3 chaves
-4. Deploy 🚀
+Ficam em `.env.local`, que **nunca** vai para o git. Na Vercel, ficam em *Settings → Environment Variables*, para Preview e Production.
 
----
-
-## 🏗️ Estrutura
-
-```
-arena-vale-app/
-├── app/
-│   ├── (public)/
-│   │   └── page.tsx                  ← landing pública
-│   ├── (auth)/
-│   │   ├── login/page.tsx
-│   │   ├── login/actions.ts
-│   │   └── logout/route.ts
-│   ├── (coord)/
-│   │   ├── coordenador/
-│   │   │   ├── page.tsx              ← dashboard visão geral
-│   │   │   ├── inscricoes/page.tsx
-│   │   │   ├── moderadores/page.tsx
-│   │   │   ├── sumulas/page.tsx
-│   │   │   ├── patrocinadores/page.tsx
-│   │   │   └── config/page.tsx
-│   │   └── moderador/
-│   │       └── page.tsx              ← painel do time
-│   ├── api/
-│   │   ├── campeonatos/route.ts
-│   │   ├── times/route.ts
-│   │   ├── jogos/route.ts
-│   │   ├── sumulas/route.ts
-│   │   ├── patrocinadores/route.ts
-│   │   └── inscricoes/route.ts
-│   ├── layout.tsx
-│   └── globals.css
-├── components/
-│   ├── ui/                           ← shadcn primitives
-│   ├── shield.tsx
-│   ├── nav.tsx
-│   ├── coord-shell.tsx
-│   ├── mod-shell.tsx
-│   ├── stat-card.tsx
-│   ├── live-game-card.tsx
-│   ├── championship-card.tsx
-│   ├── standings-table.tsx
-│   ├── activity-feed.tsx
-│   ├── revenue-chart.tsx
-│   └── revenue-donut.tsx
-├── lib/
-│   ├── supabase/
-│   │   ├── server.ts                 ← cliente SSR
-│   │   ├── client.ts                 ← cliente browser
-│   │   ├── middleware.ts             ← refresh session
-│   │   ├── types.ts                  ← tipos gerados
-│   │   └── queries.ts                ← helpers de query
-│   ├── utils.ts
-│   └── auth-helpers.ts
-├── supabase/
-│   ├── config.toml
-│   └── migrations/
-│       └── 0001_init.sql             ← schema + RLS + seed
-├── middleware.ts                     ← auth guard global
-├── scripts/
-│   └── seed.ts
-├── .env.local.example
-├── package.json
-├── next.config.mjs
-├── tailwind.config.ts
-├── postcss.config.mjs
-├── tsconfig.json
-└── README.md
-```
-
----
-
-## 🔐 RBAC (controle de acesso)
-
-3 níveis, cada um com policies RLS específicas:
-
-| Role | Pode |
-|---|---|
-| `anon` | Ver landing, jogos ao vivo, classificação pública |
-| `authenticated` | Tudo de `anon` + editar perfil + inscrições do próprio time |
-| `moderador` | Tudo de `authenticated` + lançar súmulas do seu time + escalar jogadores |
-| `coordenador` | **TUDO**: aprova inscrições, gerencia patrocinadores, valida súmulas, vê financeiro |
-
-Todas as policies estão em `supabase/migrations/0001_init.sql`.
-
----
-
-## 🖨️ Súmula digital
-
-A súmula é persistida em `sumulas` com:
-- ID único (`uuid`)
-- Hash SHA-256 do conteúdo (imutabilidade)
-- QR code de validação (aponta para `/sumula/[id]/verificar`)
-- Assinaturas digitais do árbitro e dos 2 capitães
-- Timestamps `created_at` + `validated_at`
-
-A impressão usa `@media print` em uma rota dedicada `/sumula/[id]/imprimir`.
-
-Para integração com **impressora térmica Bluetooth** (Zebra ZQ630, Brother PJ-773 etc):
-- Service Worker PWA + Web Bluetooth API
-- Job de impressão em background
-- Templates ESC/POS otimizados para 80mm
-
----
-
-## 💳 Pagamentos (opcional)
-
-Schema já tem `inscricoes` com `status_pagamento`. Integre Stripe:
-```ts
-// app/api/checkout/route.ts
-import Stripe from 'stripe';
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
-// ...
-```
-
-Pix via Mercado Pago ou PagSeguro também são suportados (BRL nativo).
-
----
-
-## 📺 Transmissões ao vivo
-
-Tabela `transmissoes` já modelada. Suporta:
-- YouTube Live (URL embed)
-- Twitch
-- Livepeer (WebRTC descentralizado)
-- Servidor próprio via RTMP + HLS
-
-A landing pública consome `transmissoes` com `status = 'ao_vivo'`.
-
----
-
-## 🛠️ Próximos passos sugeridos
-
-1. ✅ Criar projeto Supabase
-2. ✅ Rodar migration + seed
-3. ✅ Criar usuário coordenador (sign up + update role no DB)
-4. ✅ Customizar domínio (arenavalesports.com.br → Vercel)
-5. ✅ Configurar SMTP (Resend ou Supabase Auth emails)
-6. ✅ Integrar gateway de pagamento
-7. ✅ Integrar stream provider
-8. ✅ PWA para uso em campo (smartphone dos árbitros)
-
----
-
-## 💰 Custos estimados
-
-| Serviço | Free tier | Produção |
+| Variável | Onde pegar | Uso |
 |---|---|---|
-| Supabase | 500MB DB · 50k MAU · 1GB storage | $25/mês (Pro) |
-| Vercel | Hobby (não-comercial) | $20/mês (Pro) |
-| Domínio | — | ~R$ 50/ano |
-| Stripe | — | 2.99% + R$ 0.39 por transação |
-| **Total mensal mínimo (MVP)** | **R$ 0** | **~R$ 150/mês** |
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase → Settings → API → Project URL | navegador e servidor |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase → Settings → API → `anon` `public` | navegador e servidor |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase → Settings → API → `service_role` | **só no servidor** e no seed. Nunca expor no navegador |
 
----
+As variáveis do bot do Telegram e da rotina de vídeos entram nas próximas fases.
 
-## 🆘 Suporte
+## Banco de dados
 
-Documentação interna em `docs/` (criar conforme necessário).
-Para issues do template: ver PENDENCIAS.md (entregue junto da landing estática).
+As migrações ficam em `supabase/migrations/` (`0001` a `0007`) e devem ser aplicadas em ordem. Há duas formas:
+
+**A) Pelo terminal (Supabase CLI)**
+```bash
+npx supabase login
+npx supabase link --project-ref <ref-do-projeto>   # o ref aparece na URL do painel do Supabase
+npx supabase db push
+```
+
+**B) Pelo painel**
+
+Abra **SQL Editor** no Supabase, cole o conteúdo de cada arquivo de `supabase/migrations/` em ordem (`0001`, `0002`, …) e execute.
+
+Depois, para popular com dados de demonstração (campeonatos, times, jogos e súmulas):
+```bash
+npm run db:seed   # exige SUPABASE_SERVICE_ROLE_KEY no .env.local
+```
+
+## Scripts
+
+| Comando | O que faz |
+|---|---|
+| `npm run dev` | servidor de desenvolvimento |
+| `npm run build` | build de produção |
+| `npm start` | sobe o build de produção |
+| `npm run lint` | ESLint |
+| `npm run typecheck` | checagem de tipos (TypeScript) |
+| `npm test` | testes (Vitest) |
+| `npm run db:seed` | popula o banco com dados de demonstração |
+
+## Acesso da equipe
+
+- **Coordenadores, moderadores e capitães** entram por `/login`.
+- O logo no canto superior esquerdo leva ao início. **Três toques rápidos** nele abrem o acesso restrito.
+- As áreas `/painel`, `/coordenador` e `/proprietario` exigem login. A checagem por cargo chega na Fase 2.
+
+## Deploy
+
+1. Trabalhe numa branch e envie para o GitHub (`git push -u origin <branch>`).
+2. A Vercel cria um link de **prévia** para a branch. Revise o site por ele.
+3. Com tudo aprovado, faça o merge na `main`. A Vercel publica em produção.
+
+## Documentação do projeto
+
+- Spec: `docs/superpowers/specs/2026-11-08-arena-vale-organizacao-noticias-permissoes-design.md`
+- Planos: `docs/superpowers/plans/`
