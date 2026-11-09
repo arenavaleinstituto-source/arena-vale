@@ -106,12 +106,12 @@ export function EntrarEquipe() {
           onClick={() => setMenu((v) => !v)}
           aria-expanded={menu}
           aria-label={`Conta: ${ROTULO_CARGO[sessao.cargo]}`}
-          className="flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] py-1.5 pl-1.5 pr-4 transition hover:border-av-vermelho"
+          className="flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] p-1.5 transition hover:border-av-vermelho min-[1700px]:pr-4"
         >
           <span className="grid h-8 w-8 place-items-center rounded-full bg-gradient-to-br from-av-vermelho to-[#7a0b10] text-xs font-black text-white">
             {iniciais(sessao.nome)}
           </span>
-          <span className="hidden text-left leading-tight sm:grid">
+          <span className="hidden text-left leading-tight min-[1700px]:grid">
             <span className="max-w-[9rem] truncate text-xs font-bold text-white">{sessao.nome || 'Minha conta'}</span>
             <span className="text-[10px] uppercase tracking-widest text-white/50">{ROTULO_CARGO[sessao.cargo]}</span>
           </span>

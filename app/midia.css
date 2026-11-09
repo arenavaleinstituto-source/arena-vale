@@ -255,3 +255,10 @@
 .video .thumb img { position: absolute; inset: 0; }
 .videos { align-items: start; }
 .video { align-content: start; }
+
+/* cabeçalho: mais largo em telas grandes e menu compacto em telas médias (não corta itens) */
+.topo .dentro { max-width: 1640px; }
+@media (max-width: 1500px) { .menu a { padding: 8px 9px; letter-spacing: .05em; } .topo .dentro { gap: 12px; } }
+@media (max-width: 1280px) { .menu a { font-size: 13px; padding: 8px 7px; } }
+.menu { -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 24px), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 24px), transparent); }
+@media (min-width: 1100px) { .menu { -webkit-mask-image: none; mask-image: none; } }
