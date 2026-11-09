@@ -306,3 +306,9 @@
 .abas-noticias a[aria-current="page"] { background: var(--vermelho); border-color: var(--vermelho); color: #fff; }
 .fileira-titulo { margin: 28px 0 12px; font-family: var(--display); font-weight: 800; font-size: 20px; text-transform: uppercase; }
 .trilho { justify-content: safe center; }
+
+/* cabeçalho: menu centralizado entre o logo e os botões; logo maior (pedido do dono) */
+.menu { justify-content: safe center; }
+.topo .logo-topo-img { height: 60px; }
+@media (max-width: 1280px) { .topo .logo-topo-img { height: 50px; } }
+@media (max-width: 760px) { .topo .logo-topo-img { height: 40px; } }
