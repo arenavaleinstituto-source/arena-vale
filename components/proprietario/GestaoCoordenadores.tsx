@@ -18,6 +18,7 @@ export function GestaoCoordenadores({ coordenadores, limite, donoId }: Props) {
   const router = useRouter();
   const id = useId();
   const [email, setEmail] = useState('');
+  const [senha, setSenha] = useState('');
   const [novoLimite, setNovoLimite] = useState(String(limite));
   const [confirmarRemocao, setConfirmarRemocao] = useState<string | null>(null);
   const [escolhendoQuemSai, setEscolhendoQuemSai] = useState(false);
@@ -50,17 +51,27 @@ export function GestaoCoordenadores({ coordenadores, limite, donoId }: Props) {
   function convidar(e: FormEvent) {
     e.preventDefault();
     const alvo = email.trim();
+    if (senha.length < 8) return setMsg({ tipo: 'erro', texto: 'A senha precisa ter pelo menos 8 caracteres.' });
+    let jaTinhaConta = false;
     void rodar(async () => {
       const resp = await fetch('/api/convites', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: alvo, cargo: 'coordenador' }),
+        body: JSON.stringify({ email: alvo, cargo: 'coordenador', senha }),
       });
-      const corpo = (await resp.json()) as { ok: boolean; erro?: string };
-      if (!corpo.ok) return corpo.erro ?? 'Não foi possível enviar o convite.';
+      const corpo = (await resp.json()) as { ok: boolean; erro?: string; jaTinhaConta?: boolean };
+      if (!corpo.ok) return corpo.erro ?? 'Não foi possível cadastrar.';
+      jaTinhaConta = corpo.jaTinhaConta === true;
       setEmail('');
+      setSenha('');
       return null;
-    }, `Convite enviado para ${alvo}.`);
+    }, '').then(() => {
+      setMsg((m) =>
+        m?.tipo === 'ok'
+          ? { tipo: 'ok', texto: jaTinhaConta ? `${alvo} já tinha conta: entra com a senha que já usa.` : `Pronto: ${alvo} já pode entrar com o e-mail e a senha cadastrada.` }
+          : m,
+      );
+    });
   }
 
   function remover(c: Coordenador) {
@@ -126,7 +137,8 @@ export function GestaoCoordenadores({ coordenadores, limite, donoId }: Props) {
       </section>
 
       <section className={cartao}>
-        <h2 className="text-xl font-black uppercase text-white">Convidar coordenador</h2>
+        <h2 className="text-xl font-black uppercase text-white">Cadastrar coordenador</h2>
+        <p className="mt-1 text-sm text-white/60">A pessoa entra pelo botão Entrar do site com este e-mail e a senha. Passe a senha a ela pelo WhatsApp.</p>
         <form onSubmit={convidar} className="mt-4 flex flex-wrap gap-3">
           <label htmlFor={`${id}-email`} className="sr-only">E-mail do novo coordenador</label>
           <input
@@ -139,9 +151,21 @@ export function GestaoCoordenadores({ coordenadores, limite, donoId }: Props) {
             disabled={noLimite}
             className="min-w-0 flex-1 rounded-2xl border border-white/10 bg-[#08080a] px-4 py-3 text-white focus:border-[#e50914] focus:outline-none"
           />
-          <button type="submit" disabled={noLimite || ocupado} className={`${botao} bg-[#e50914] text-white`}>Convidar coordenador</button>
+          <label htmlFor={`${id}-senha`} className="sr-only">Senha do novo coordenador</label>
+          <input
+            id={`${id}-senha`}
+            type="text"
+            autoComplete="off"
+            required
+            value={senha}
+            onChange={(e) => setSenha(e.target.value)}
+            placeholder="senha (mínimo 8 caracteres)"
+            disabled={noLimite}
+            className="min-w-0 flex-1 rounded-2xl border border-white/10 bg-[#08080a] px-4 py-3 text-white focus:border-[#e50914] focus:outline-none"
+          />
+          <button type="submit" disabled={noLimite || ocupado} className={`${botao} bg-[#e50914] text-white`}>Cadastrar coordenador</button>
         </form>
-        {noLimite && <p className="mt-3 text-sm text-[#ff3b44]">Limite de {limite} coordenadores atingido — aumente o limite para convidar mais.</p>}
+        {noLimite && <p className="mt-3 text-sm text-[#ff3b44]">Limite de {limite} coordenadores atingido — aumente o limite para cadastrar mais.</p>}
       </section>
 
       <section className={cartao}>

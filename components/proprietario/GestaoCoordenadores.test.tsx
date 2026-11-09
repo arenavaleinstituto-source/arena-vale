@@ -31,19 +31,30 @@ describe('GestaoCoordenadores', () => {
 
   it('convidar desabilitado no limite', () => {
     render(<GestaoCoordenadores coordenadores={[DONO, ANA, BETO]} limite={3} donoId="dono" />);
-    expect(screen.getByRole('button', { name: 'Convidar coordenador' })).toBeDisabled();
-    expect(screen.getByText('Limite de 3 coordenadores atingido — aumente o limite para convidar mais.')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Cadastrar coordenador' })).toBeDisabled();
+    expect(screen.getByText('Limite de 3 coordenadores atingido — aumente o limite para cadastrar mais.')).toBeInTheDocument();
   });
 
-  it('convidar envia o pedido para /api/convites como coordenador', async () => {
+  it('cadastra coordenador com e-mail e senha em /api/convites', async () => {
     render(<GestaoCoordenadores coordenadores={[DONO]} limite={3} donoId="dono" />);
     const u = userEvent.setup();
     await u.type(screen.getByLabelText('E-mail do novo coordenador'), 'novo@exemplo.com');
-    await u.click(screen.getByRole('button', { name: 'Convidar coordenador' }));
+    await u.type(screen.getByLabelText('Senha do novo coordenador'), 'senha-forte-1');
+    await u.click(screen.getByRole('button', { name: 'Cadastrar coordenador' }));
     await waitFor(() => expect(fetch).toHaveBeenCalledWith('/api/convites', expect.objectContaining({ method: 'POST' })));
     const corpo = JSON.parse((fetch as unknown as ReturnType<typeof vi.fn>).mock.calls[0][1].body);
-    expect(corpo).toEqual({ email: 'novo@exemplo.com', cargo: 'coordenador' });
-    expect(await screen.findByText('Convite enviado para novo@exemplo.com.')).toBeInTheDocument();
+    expect(corpo).toEqual({ email: 'novo@exemplo.com', cargo: 'coordenador', senha: 'senha-forte-1' });
+    expect(await screen.findByText('Pronto: novo@exemplo.com já pode entrar com o e-mail e a senha cadastrada.')).toBeInTheDocument();
+  });
+
+  it('senha curta nem chega ao servidor', async () => {
+    render(<GestaoCoordenadores coordenadores={[DONO]} limite={3} donoId="dono" />);
+    const u = userEvent.setup();
+    await u.type(screen.getByLabelText('E-mail do novo coordenador'), 'novo@exemplo.com');
+    await u.type(screen.getByLabelText('Senha do novo coordenador'), '123');
+    await u.click(screen.getByRole('button', { name: 'Cadastrar coordenador' }));
+    expect(await screen.findByText('A senha precisa ter pelo menos 8 caracteres.')).toBeInTheDocument();
+    expect(fetch).not.toHaveBeenCalled();
   });
 
   it('remover chama definir_cargo com autenticado depois de confirmar', async () => {
