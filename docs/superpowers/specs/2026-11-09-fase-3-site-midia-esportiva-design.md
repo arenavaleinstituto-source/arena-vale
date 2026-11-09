@@ -76,7 +76,7 @@ Evolução do `SiteHeader` atual (preso no topo, o mesmo em todas as páginas).
 - **Menu:**
   - Início `/`
   - Ao Vivo `/ao-vivo`, com ponto vermelho
-  - Notícias `/noticias`
+  - **Notícias do Vale** `/noticias` (notícias da ARENA VALE e da região; aba "Notícias do Vale" na página de notícias)
   - Esporte Mundial `/noticias?aba=mundo` (nome no menu: **ESPORTE MUNDIAL** — notícias do esporte pelo mundo, garimpadas pelo bot)
   - Agenda `/agenda`
   - Modalidades `/modalidades`
@@ -143,7 +143,7 @@ Evolução do `SiteHeader` atual (preso no topo, o mesmo em todas as páginas).
 | Página | Conteúdo |
 |---|---|
 | `/ao-vivo` | o player ou "fora do ar", a próxima transmissão e a agenda de transmissões. A página antiga `/tv` redireciona (308) para cá |
-| `/noticias` | abas **ARENA VALE** e **Esporte Mundial** (`?aba=mundo`), cartazes 2:3 e fileiras do spec anterior (4.1) |
+| `/noticias` | abas **Notícias do Vale** e **Esporte Mundial** (`?aba=mundo`), cartazes 2:3 e fileiras do spec anterior (4.1) |
 | `/noticias/[id]` | leitura: vídeo (player próprio, YouTube embutido ou link externo) ou foto, mais o texto e a fonte |
 | `/videos` | grade dos vídeos do YouTube + os do Instagram; filtro "Todos / YouTube / Instagram" |
 | `/projetosocial` | toda a página antiga (título, texto, 4 números, 3 iniciativas, apoio pelo WhatsApp com mensagem pronta, cotas, CNPJ) + "Resultados dos projetos" + botão "Inscrever criança / atleta" (→ `/inscricao`) |
