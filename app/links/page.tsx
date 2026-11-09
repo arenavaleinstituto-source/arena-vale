@@ -18,7 +18,7 @@ export default function LinksPage() {
     },
     {
       nome: '📺 TV Arena Vale (Transmissões & Jogos)',
-      url: '/tv',
+      url: '/ao-vivo',
       destaque: false,
     },
     {
@@ -29,7 +29,7 @@ export default function LinksPage() {
     },
     {
       nome: '🏆 Campeonatos & Inscrições Abertas',
-      url: '/campeonatos',
+      url: '/modalidades',
       destaque: false,
     },
     {

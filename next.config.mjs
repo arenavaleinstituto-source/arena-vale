@@ -11,9 +11,12 @@ const nextConfig = {
     // `npm run typecheck` roda a checagem completa.
     ignoreBuildErrors: false,
   },
-  // Rotas antigas do painel viraram abas de /coordenador (spec Fase 3, seção 12).
+  // Rotas antigas: /tv e /campeonatos viraram Ao Vivo e Modalidades; o painel virou abas de /coordenador (spec Fase 3).
   async redirects() {
     return [
+      { source: '/tv', destination: '/ao-vivo', permanent: true },
+      { source: '/campeonatos', destination: '/modalidades', permanent: true },
+      { source: '/atletas', destination: '/atletasdestaques', permanent: true },
       { source: '/painel/noticias', destination: '/coordenador?aba=noticias', permanent: true },
       { source: '/painel/tv', destination: '/coordenador?aba=aovivo', permanent: true },
       { source: '/painel/campeonatos', destination: '/coordenador?aba=campeonatos', permanent: true },
