@@ -11,6 +11,7 @@ export function fakeSupabase(opts: { role?: string | null; nome?: string; userId
     signInWithOtp: vi.fn().mockResolvedValue({ error: null }),
     resetPasswordForEmail: vi.fn().mockResolvedValue({ error: null }),
     updateUser: vi.fn().mockResolvedValue({ data: {}, error: null }),
+    setSession: vi.fn().mockResolvedValue({ data: {}, error: null }),
   };
   const consulta = {
     select: vi.fn().mockReturnThis(),

@@ -24,8 +24,18 @@ export function FormCriarSenha() {
 
   useEffect(() => {
     let vivo = true;
-    createClient()
-      .auth.getUser()
+    // Link padrão do Supabase (convite enviado pelo servidor): os tokens chegam
+    // depois do "#". Abre a sessão com eles e limpa o endereço.
+    const abrirSessaoDoLink = async () => {
+      if (typeof window === 'undefined' || !window.location.hash.includes('access_token=')) return;
+      const p = new URLSearchParams(window.location.hash.slice(1));
+      const access_token = p.get('access_token');
+      const refresh_token = p.get('refresh_token');
+      window.history.replaceState(null, '', window.location.pathname);
+      if (access_token && refresh_token) await createClient().auth.setSession({ access_token, refresh_token });
+    };
+    abrirSessaoDoLink()
+      .then(() => createClient().auth.getUser())
       .then(async ({ data: { user } }) => {
         if (!vivo) return;
         if (!user) return setEstado('sem-sessao');

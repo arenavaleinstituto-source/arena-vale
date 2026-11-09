@@ -17,8 +17,16 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   const tipo = url.searchParams.get('type') as EmailOtpType | null;
   const destino = destinoConfirmacao(url.searchParams.get('next'), url.origin);
 
+  const supabase = await createClient();
+  // Modelos de e-mail padrão do Supabase (link de acesso e nova senha pedidos
+  // pelo navegador): chegam com ?code= (fluxo PKCE).
+  const code = url.searchParams.get('code');
+  if (code) {
+    const { error } = await supabase.auth.exchangeCodeForSession(code);
+    if (!error) return NextResponse.redirect(new URL(destino, url.origin));
+  }
+  // Modelos personalizados (com servidor de e-mail próprio): ?token_hash=&type=
   if (tokenHash && tipo && TIPOS.includes(tipo)) {
-    const supabase = await createClient();
     const { error } = await supabase.auth.verifyOtp({ type: tipo, token_hash: tokenHash });
     if (!error) return NextResponse.redirect(new URL(destino, url.origin));
   }

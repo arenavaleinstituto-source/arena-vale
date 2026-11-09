@@ -45,7 +45,7 @@ export async function convidar(entrada: EntradaConvite, deps: Deps): Promise<Res
     return { ok: false, status: 400, erro: `Essa pessoa já é ${ROTULO_CARGO[existente.role].toLowerCase()}. Use outro e-mail.` };
   }
 
-  const id = existente?.id ?? (await deps.convidarPorEmail(email, `${deps.origem}/auth/confirm?next=/criar-senha`));
+  const id = existente?.id ?? (await deps.convidarPorEmail(email, `${deps.origem}/criar-senha`));
 
   if (existente?.role !== entrada.cargo) {
     const erroCargo = await deps.definirCargo(id, entrada.cargo);

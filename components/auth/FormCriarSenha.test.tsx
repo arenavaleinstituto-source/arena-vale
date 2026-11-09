@@ -41,6 +41,18 @@ describe('FormCriarSenha', () => {
     expect(sb.auth.updateUser).toHaveBeenCalledWith({ password: 'senhaboa123' });
   });
 
+  it('link padrão do convite (tokens no #) abre a sessão e mostra o formulário', async () => {
+    sb = fakeSupabase();
+    sb.auth.getUser
+      .mockResolvedValueOnce({ data: { user: { id: 'c1' } } })
+      .mockResolvedValue({ data: { user: { id: 'c1' } } });
+    window.history.replaceState(null, '', '/criar-senha#access_token=AAA&refresh_token=RRR&type=invite');
+    render(<FormCriarSenha />);
+    expect(await screen.findByLabelText('Nova senha')).toBeInTheDocument();
+    expect(sb.auth.setSession).toHaveBeenCalledWith({ access_token: 'AAA', refresh_token: 'RRR' });
+    expect(window.location.hash).toBe('');
+  });
+
   it('sem sessão (link vencido) explica o que fazer', async () => {
     sb = fakeSupabase();
     render(<FormCriarSenha />);

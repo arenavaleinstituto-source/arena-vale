@@ -86,15 +86,11 @@ Em **Authentication → URL Configuration**:
 - **Site URL:** `https://arena-vale.vercel.app`
 - **Redirect URLs:** `https://arena-vale.vercel.app/**`, `https://*-arena-vale.vercel.app/**` e `http://localhost:3000/**`
 
-Em **Authentication → Email Templates**, troque o link de cada modelo:
+Os **modelos de e-mail padrão** do Supabase já funcionam com o site:
+- convite → o link abre `/criar-senha` com a sessão no `#` (a página abre a sessão sozinha);
+- link de acesso e "esqueci a senha" → voltam com `?code=` para `/auth/confirm`.
 
-| Modelo | Link |
-|---|---|
-| Invite user | `{{ .RedirectTo }}&token_hash={{ .TokenHash }}&type=invite` |
-| Magic Link | `{{ .RedirectTo }}&token_hash={{ .TokenHash }}&type=magiclink` |
-| Reset Password | `{{ .RedirectTo }}&token_hash={{ .TokenHash }}&type=recovery` |
-
-O site já envia `RedirectTo` como `<site>/auth/confirm?next=...`; a rota `/auth/confirm` cria a sessão e segue para o destino.
+**Limite importante:** sem um servidor de e-mail próprio (Authentication → Emails → *Set up SMTP*), o Supabase só entrega e-mails para os membros da equipe do projeto e com limite baixo por hora. Para convidar qualquer pessoa, configure um SMTP (ex.: Resend). Com SMTP, os modelos também podem ser personalizados; nesse caso use links no formato `{{ .RedirectTo }}&token_hash={{ .TokenHash }}&type=<invite|magiclink|recovery>` (a rota `/auth/confirm` também aceita esse formato).
 
 ## Testes de banco
 
