@@ -17,6 +17,13 @@ const coord = { cargo: 'coordenador' as const, ehDono: false };
 const dono = { cargo: 'coordenador' as const, ehDono: true };
 const ORIGEM = 'https://arena-vale.vercel.app';
 
+describe('regra da marca', () => {
+  it('nenhuma mensagem de convite revela o proprietário', async () => {
+    const fonte = (await import('node:fs')).readFileSync('lib/auth/convites.ts', 'utf8');
+    expect(fonte).not.toMatch(/erro:\s*['"`][^'"`]*propriet/i);
+  });
+});
+
 describe('cadastro com senha', () => {
   it('com senha: cria a conta com e-mail e senha, sem mandar convite', async () => {
     const p = portas();
@@ -56,7 +63,7 @@ describe('convidar', () => {
 
   it('coordenador não convida coordenador (403)', async () => {
     const r = await convidar({ email: 'a@b.com', cargo: 'coordenador' }, { quemChama: coord, origem: ORIGEM, ...portas() });
-    expect(r).toEqual({ ok: false, status: 403, erro: 'Só o proprietário convida coordenadores.' });
+    expect(r).toEqual({ ok: false, status: 403, erro: 'Só a coordenação principal convida coordenadores.' });
   });
 
   it('dono convida coordenador (sem campeonato)', async () => {

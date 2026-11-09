@@ -31,7 +31,7 @@ const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export async function convidar(entrada: EntradaConvite, deps: Deps): Promise<ResultadoConvite> {
   if (deps.quemChama.cargo !== 'coordenador') return { ok: false, status: 403, erro: 'Só a coordenação envia convites.' };
   if (entrada.cargo === 'coordenador' && !deps.quemChama.ehDono) {
-    return { ok: false, status: 403, erro: 'Só o proprietário convida coordenadores.' };
+    return { ok: false, status: 403, erro: 'Só a coordenação principal convida coordenadores.' };
   }
   const email = entrada.email.trim().toLowerCase();
   if (!EMAIL.test(email)) return { ok: false, status: 400, erro: 'E-mail inválido.' };

@@ -5,6 +5,7 @@ import { mapearNoticiaMidia } from '@/lib/midia/noticias';
 
 const escritas: { tabela: string; op: string; valor: unknown }[] = [];
 const rpc = vi.fn();
+const remover = vi.fn().mockResolvedValue({ error: null });
 function consulta(tabela: string) {
   const q: Record<string, unknown> = {};
   for (const m of ['select', 'eq', 'order', 'limit']) q[m] = () => q;
@@ -20,7 +21,7 @@ function consulta(tabela: string) {
   return q;
 }
 vi.mock('@/lib/supabase/client', () => ({
-  createClient: () => ({ from: consulta, rpc, storage: { from: () => ({ upload: vi.fn(), getPublicUrl: () => ({ data: { publicUrl: '' } }), remove: vi.fn() }) } }),
+  createClient: () => ({ from: consulta, rpc, storage: { from: () => ({ upload: vi.fn(), getPublicUrl: () => ({ data: { publicUrl: '' } }), remove: remover }) } }),
 }));
 
 import { EditorNoticia } from './EditorNoticia';
@@ -67,6 +68,18 @@ describe('EditorNoticia', () => {
     render(<EditorNoticia noticia={n({ imagem_url: null, tipo_midia: 'video', video_link: 'https://youtu.be/dQw4w9WgXcQ' })} modo="guardar_arquivo" onSalvo={vi.fn()} onFechar={vi.fn()} />);
     await userEvent.setup().click(screen.getByRole('button', { name: 'Usar a imagem do YouTube' }));
     expect(screen.getByRole('img', { name: 'Golaço' })).toHaveAttribute('src', 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg');
+  });
+
+  it('"Remover vídeo" só apaga o arquivo depois de salvar', async () => {
+    remover.mockClear();
+    const url = 'https://x.supabase.co/storage/v1/object/public/noticias/videos/1.mp4';
+    render(<EditorNoticia noticia={n({ tipo_midia: 'video', video_url: url, video_link: 'https://youtu.be/dQw4w9WgXcQ' })} modo="guardar_arquivo" onSalvo={vi.fn()} onFechar={vi.fn()} />);
+    const u = userEvent.setup();
+    await u.click(screen.getByRole('button', { name: 'Remover vídeo' }));
+    expect(remover).not.toHaveBeenCalled();
+    await u.click(screen.getByRole('button', { name: 'Salvar rascunho' }));
+    await waitFor(() => expect(remover).toHaveBeenCalledWith(['videos/1.mp4']));
+    expect(escritas[0]).toMatchObject({ op: 'update', valor: expect.objectContaining({ video_url: null }) });
   });
 
   it('publicada: mostra Despublicar', () => {

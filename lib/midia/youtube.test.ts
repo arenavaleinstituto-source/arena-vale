@@ -62,6 +62,16 @@ describe('ao vivo', () => {
     expect(await estaAoVivo(CANAL, fetchCom(200, '"isLiveNow":true'))).toBe(true);
   });
 
+  it('a checagem do ao vivo vale no máximo 60 s (com a página de 60 s, fica em ~2 min no total)', async () => {
+    let init: { next?: { revalidate?: number } } | undefined;
+    const f = ((_u: string, i: typeof init) => {
+      init = i;
+      return Promise.resolve(new Response(''));
+    }) as unknown as typeof fetch;
+    await estaAoVivo(CANAL, f);
+    expect(init?.next?.revalidate).toBeLessThanOrEqual(60);
+  });
+
   it('player do ao vivo sem cookies', () => {
     expect(embedAoVivo(CANAL)).toBe(`https://www.youtube-nocookie.com/embed/live_stream?channel=${CANAL}`);
   });

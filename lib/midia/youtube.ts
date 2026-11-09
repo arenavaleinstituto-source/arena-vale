@@ -66,7 +66,7 @@ export function detectarAoVivo(html: string): boolean {
 export async function estaAoVivo(channelId: string, f: typeof fetch = fetch): Promise<boolean> {
   try {
     const r = await (f as FetchComCache)(`https://www.youtube.com/channel/${encodeURIComponent(channelId)}/live`, {
-      next: { revalidate: 120 },
+      next: { revalidate: 60 },
       signal: AbortSignal.timeout(4000),
     });
     if (!r.ok) return false;

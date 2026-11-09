@@ -97,11 +97,10 @@ export function EditorNoticia({ noticia, modo, diasVideo = 30, onSalvo, onFechar
     if (url) muda('imagem_url', url);
   }
 
-  async function removerVideo() {
-    const caminho = f.video_url?.split('/object/public/noticias/')[1];
-    if (caminho) await supabase.storage.from('noticias').remove([decodeURIComponent(caminho)]);
+  /** Tira o vídeo do formulário; o arquivo só é apagado depois de salvar (sem salvar, a notícia continua com ele). */
+  function removerVideo() {
     muda('video_url', null);
-    setMensagem('Arquivo de vídeo removido.');
+    setMensagem('Vídeo removido do formulário. Salve para confirmar.');
   }
 
   async function gravar(status: 'rascunho' | 'publicado') {
@@ -139,6 +138,9 @@ export function EditorNoticia({ noticia, modo, diasVideo = 30, onSalvo, onFechar
       setMensagem(/column|coluna/i.test(r.error.message) ? 'O editor novo passa a gravar depois da atualização do banco (fim da Fase 3).' : `Erro: ${r.error.message}`);
       return;
     }
+    // Arquivo de vídeo trocado ou removido: só agora, com a notícia salva, apaga o antigo do armazenamento.
+    const antigo = noticia?.video_url?.split('/object/public/noticias/')[1];
+    if (antigo && noticia?.video_url !== dados.video_url) await supabase.storage.from('noticias').remove([decodeURIComponent(antigo.split('?')[0])]);
     setMensagem(status === 'publicado' ? 'Publicada! Já aparece no site em até 1 minuto.' : 'Rascunho salvo.');
     onSalvo({ ...(noticia ?? ({} as NoticiaMidia)), ...(r.data as NoticiaMidia) });
   }
