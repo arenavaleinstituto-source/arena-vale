@@ -5,6 +5,7 @@ function portas(over: Partial<PortasConvite> = {}, existente: { id: string; role
   const p: PortasConvite = {
     buscarPerfilPorEmail: vi.fn().mockResolvedValue(existente),
     convidarPorEmail: vi.fn().mockResolvedValue('novo-id'),
+    criarComSenha: vi.fn().mockResolvedValue('novo-id'),
     definirCargo: vi.fn().mockResolvedValue(null),
     vincular: vi.fn().mockResolvedValue(null),
     ...over,
@@ -15,6 +16,33 @@ function portas(over: Partial<PortasConvite> = {}, existente: { id: string; role
 const coord = { cargo: 'coordenador' as const, ehDono: false };
 const dono = { cargo: 'coordenador' as const, ehDono: true };
 const ORIGEM = 'https://arena-vale.vercel.app';
+
+describe('cadastro com senha', () => {
+  it('com senha: cria a conta com e-mail e senha, sem mandar convite', async () => {
+    const p = portas();
+    const r = await convidar({ email: 'Cap@Exemplo.com', cargo: 'capitao', campeonatoId: 'c1', senha: 'senha-forte-1' }, { quemChama: coord, origem: ORIGEM, ...p });
+    expect(r).toEqual({ ok: true, jaTinhaConta: false });
+    expect(p.criarComSenha).toHaveBeenCalledWith('cap@exemplo.com', 'senha-forte-1');
+    expect(p.convidarPorEmail).not.toHaveBeenCalled();
+    expect(p.definirCargo).toHaveBeenCalledWith('novo-id', 'capitao');
+    expect(p.vincular).toHaveBeenCalledWith('capitao', 'novo-id', 'c1');
+  });
+
+  it('senha com menos de 8 caracteres é recusada', async () => {
+    const p = portas();
+    const r = await convidar({ email: 'a@b.com', cargo: 'moderador', campeonatoId: 'c1', senha: '1234567' }, { quemChama: coord, origem: ORIGEM, ...p });
+    expect(r).toEqual({ ok: false, status: 400, erro: 'A senha precisa ter pelo menos 8 caracteres.' });
+    expect(p.criarComSenha).not.toHaveBeenCalled();
+  });
+
+  it('quem já tem conta não tem a senha trocada: só ganha o cargo e o vínculo', async () => {
+    const p = portas({}, { id: 'velho', role: 'autenticado' });
+    const r = await convidar({ email: 'a@b.com', cargo: 'moderador', campeonatoId: 'c1', senha: 'senha-forte-1' }, { quemChama: coord, origem: ORIGEM, ...p });
+    expect(r).toEqual({ ok: true, jaTinhaConta: true });
+    expect(p.criarComSenha).not.toHaveBeenCalled();
+    expect(p.definirCargo).toHaveBeenCalledWith('velho', 'moderador');
+  });
+});
 
 describe('convidar', () => {
   it('coordenador convida moderador com campeonato', async () => {

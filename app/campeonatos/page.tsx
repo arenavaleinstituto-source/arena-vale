@@ -88,7 +88,7 @@ export default function PublicCampeonatosPage() {
           </div>
         ) : campeonatos.length === 0 ? (
           <div className="rounded-[2.5rem] border border-white/10 bg-[#141417] p-16 text-center shadow-2xl">
-             <p className="text-[#a1a1aa] font-bold uppercase tracking-wider">Ainda não há competições registadas na temporada atual.</p>
+             <p className="text-[#a1a1aa] font-bold uppercase tracking-wider">Ainda não há competições cadastradas na temporada atual.</p>
           </div>
         ) : (
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
@@ -150,7 +150,7 @@ export default function PublicCampeonatosPage() {
                         : 'bg-white/5 border border-white/10 text-white hover:bg-white/10'
                     }`}
                   >
-                    {camp.status === 'inscricoes_abertas' ? 'INSCREVER EQUIPA ↗' : 'SABER MAIS ↗'}
+                    {camp.status === 'inscricoes_abertas' ? 'INSCREVER EQUIPE ↗' : 'SABER MAIS ↗'}
                   </a>
                 </div>
               </article>

@@ -18,12 +18,12 @@ type Vinculo = {
 const TEXTO: Record<Cargo, { titulo: string; botao: string; ajuda: string }> = {
   moderador: {
     titulo: 'MODERADORES',
-    botao: 'Convidar moderador',
+    botao: 'Cadastrar moderador',
     ajuda: 'O moderador lança os resultados (placar, gols, cartões e súmula) só do campeonato escolhido.',
   },
   capitao: {
     titulo: 'CAPITÃES',
-    botao: 'Convidar capitão',
+    botao: 'Cadastrar capitão',
     ajuda: 'O capitão cadastra a própria equipe e a lista de jogadores no campeonato escolhido.',
   },
 };
@@ -35,6 +35,7 @@ export function CoordVinculos({ cargo }: { cargo: Cargo }) {
   const [campeonatos, setCampeonatos] = useState<Campeonato[]>([]);
   const [campeonatoId, setCampeonatoId] = useState('');
   const [email, setEmail] = useState('');
+  const [senha, setSenha] = useState('');
   const [vinculos, setVinculos] = useState<Vinculo[]>([]);
   const [msg, setMsg] = useState<{ tipo: 'ok' | 'erro'; texto: string } | null>(null);
   const [ocupado, setOcupado] = useState(false);
@@ -87,23 +88,33 @@ export function CoordVinculos({ cargo }: { cargo: Cargo }) {
   async function convidar(e: FormEvent) {
     e.preventDefault();
     setMsg(null);
+    if (senha.length < 8) {
+      setMsg({ tipo: 'erro', texto: 'A senha precisa ter pelo menos 8 caracteres.' });
+      return;
+    }
     setOcupado(true);
     const alvo = email.trim();
     try {
       const resp = await fetch('/api/convites', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: alvo, cargo, campeonatoId }),
+        body: JSON.stringify({ email: alvo, cargo, campeonatoId, senha }),
       });
-      const corpo = (await resp.json()) as { ok: boolean; erro?: string };
-      if (!corpo.ok) setMsg({ tipo: 'erro', texto: corpo.erro ?? 'Não foi possível enviar o convite.' });
+      const corpo = (await resp.json()) as { ok: boolean; erro?: string; jaTinhaConta?: boolean };
+      if (!corpo.ok) setMsg({ tipo: 'erro', texto: corpo.erro ?? 'Não foi possível cadastrar.' });
       else {
-        setMsg({ tipo: 'ok', texto: `Convite enviado para ${alvo}.` });
+        setMsg({
+          tipo: 'ok',
+          texto: corpo.jaTinhaConta
+            ? `${alvo} já tinha conta: entra com a senha que já usa.`
+            : `Pronto: ${alvo} já pode entrar com o e-mail e a senha cadastrada.`,
+        });
         setEmail('');
+        setSenha('');
         await carregar();
       }
     } catch {
-      setMsg({ tipo: 'erro', texto: 'Não foi possível enviar o convite. Verifique sua conexão.' });
+      setMsg({ tipo: 'erro', texto: 'Não foi possível cadastrar. Verifique sua conexão.' });
     } finally {
       setOcupado(false);
     }
@@ -127,9 +138,10 @@ export function CoordVinculos({ cargo }: { cargo: Cargo }) {
       <div>
         <h2 className="text-2xl font-black uppercase">{t.titulo}</h2>
         <p className="mt-1 text-sm text-[var(--text-dim)]">{t.ajuda}</p>
+        <p className="mt-1 text-sm text-[var(--text-dim)]">A pessoa entra pelo botão Entrar do site com este e-mail e a senha. Passe a senha a ela pelo WhatsApp.</p>
       </div>
 
-      <form onSubmit={convidar} className="grid gap-3 sm:grid-cols-[1fr_1fr_auto] sm:items-end">
+      <form onSubmit={convidar} className="grid gap-3 md:grid-cols-[1fr_1fr_1fr_auto] md:items-end">
         <label htmlFor={`${id}-camp`} className="grid gap-1.5 text-sm">
           Campeonato
           <select id={`${id}-camp`} value={campeonatoId} onChange={(e) => setCampeonatoId(e.target.value)} className="input">
@@ -140,13 +152,17 @@ export function CoordVinculos({ cargo }: { cargo: Cargo }) {
           E-mail
           <input id={`${id}-email`} type="email" required value={email} onChange={(e) => setEmail(e.target.value)} className="input" placeholder="pessoa@exemplo.com" />
         </label>
-        <button type="submit" disabled={ocupado || !campeonatoId} className="btn btn-primary">{t.botao}</button>
+        <label htmlFor={`${id}-senha`} className="grid gap-1.5 text-sm">
+          Senha
+          <input id={`${id}-senha`} type="text" autoComplete="off" required value={senha} onChange={(e) => setSenha(e.target.value)} className="input" placeholder="mínimo 8 caracteres" />
+        </label>
+        <button type="submit" disabled={ocupado || !campeonatoId} className="btn-forte">{t.botao}</button>
       </form>
 
       {msg && <p role={msg.tipo === 'erro' ? 'alert' : 'status'} className={msg.tipo === 'erro' ? 'text-red-400' : 'text-emerald-300'}>{msg.texto}</p>}
 
       <ul className="grid gap-2">
-        {doCampeonato.length === 0 && <li className="text-sm text-[var(--text-dim)]">Ninguém convidado neste campeonato ainda.</li>}
+        {doCampeonato.length === 0 && <li className="text-sm text-[var(--text-dim)]">Ninguém cadastrado neste campeonato ainda.</li>}
         {doCampeonato.map((v) => (
           <li key={v.chave} className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-white/[0.04] px-4 py-3">
             <div>

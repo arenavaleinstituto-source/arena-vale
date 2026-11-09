@@ -54,7 +54,7 @@ export default function AtletasDestaquesPage() {
             <span className="text-[#e50914]">EM DESTAQUE</span>
           </h1>
           <p className="mt-4 text-sm sm:text-base text-[#d4d4d8] leading-relaxed max-w-2xl">
-            Aprovação, curadoria e homologação de talentos para exibição na montra da página principal do portal Arena Vale.
+            Aprovação, curadoria e homologação de talentos para exibição na vitrine da página principal do portal Arena Vale.
           </p>
         </div>
 

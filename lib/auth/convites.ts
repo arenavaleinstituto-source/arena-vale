@@ -3,7 +3,7 @@ import type { Cargo } from './rotas';
 import { ROTULO_CARGO } from './mensagens';
 
 export type CargoConvite = 'coordenador' | 'moderador' | 'capitao';
-export type EntradaConvite = { email: string; cargo: CargoConvite; campeonatoId?: string | null };
+export type EntradaConvite = { email: string; cargo: CargoConvite; campeonatoId?: string | null; senha?: string | null };
 export type ResultadoConvite =
   | { ok: true; jaTinhaConta: boolean }
   | { ok: false; status: 400 | 403; erro: string };
@@ -12,6 +12,8 @@ export type ResultadoConvite =
 export type PortasConvite = {
   buscarPerfilPorEmail(email: string): Promise<{ id: string; role: string } | null>;
   convidarPorEmail(email: string, redirectTo: string): Promise<string>;
+  /** Cria a conta já confirmada, com a senha definida pela coordenação. */
+  criarComSenha(email: string, senha: string): Promise<string>;
   /** Retorna a mensagem de erro do banco, ou null se deu certo. */
   definirCargo(id: string, cargo: CargoConvite): Promise<string | null>;
   vincular(cargo: 'moderador' | 'capitao', id: string, campeonatoId: string): Promise<string | null>;
@@ -35,6 +37,8 @@ export async function convidar(entrada: EntradaConvite, deps: Deps): Promise<Res
   if (!EMAIL.test(email)) return { ok: false, status: 400, erro: 'E-mail inválido.' };
   const campeonatoId = entrada.campeonatoId ?? null;
   if (entrada.cargo !== 'coordenador' && !campeonatoId) return { ok: false, status: 400, erro: 'Escolha o campeonato.' };
+  const senha = entrada.senha ?? null;
+  if (senha !== null && senha.length < 8) return { ok: false, status: 400, erro: 'A senha precisa ter pelo menos 8 caracteres.' };
 
   const existente = await deps.buscarPerfilPorEmail(email);
   if (existente?.role === 'coordenador' || existente?.role === 'proprietario') {
@@ -45,7 +49,8 @@ export async function convidar(entrada: EntradaConvite, deps: Deps): Promise<Res
     return { ok: false, status: 400, erro: `Essa pessoa já é ${ROTULO_CARGO[existente.role].toLowerCase()}. Use outro e-mail.` };
   }
 
-  const id = existente?.id ?? (await deps.convidarPorEmail(email, `${deps.origem}/criar-senha`));
+  // Quem já tem conta mantém a própria senha: a coordenação nunca troca a senha de uma conta existente.
+  const id = existente?.id ?? (senha ? await deps.criarComSenha(email, senha) : await deps.convidarPorEmail(email, `${deps.origem}/criar-senha`));
 
   if (existente?.role !== entrada.cargo) {
     const erroCargo = await deps.definirCargo(id, entrada.cargo);
@@ -70,6 +75,11 @@ export function portasSupabase(admin: SupabaseClient): PortasConvite {
     async convidarPorEmail(email, redirectTo) {
       const { data, error } = await admin.auth.admin.inviteUserByEmail(email, { redirectTo });
       if (error || !data.user) throw new Error(error?.message ?? 'Não foi possível enviar o convite.');
+      return data.user.id;
+    },
+    async criarComSenha(email, senha) {
+      const { data, error } = await admin.auth.admin.createUser({ email, password: senha, email_confirm: true });
+      if (error || !data.user) throw new Error(error?.message ?? 'Não foi possível criar a conta.');
       return data.user.id;
     },
     async definirCargo(id, cargo) {

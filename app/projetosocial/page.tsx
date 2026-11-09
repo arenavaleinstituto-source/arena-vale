@@ -19,7 +19,7 @@ export default function ProjetoSocialPage() {
     },
     {
       titulo: 'Educação e Cidadania',
-      descricao: 'Aliamos a prática desportiva ao acompanhamento escolar e valores fundamentais de disciplina e respeito.',
+      descricao: 'Aliamos a prática esportiva ao acompanhamento escolar e valores fundamentais de disciplina e respeito.',
       icone: '📚',
     },
     {

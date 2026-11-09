@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import pg from 'pg';
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import { carregarEnvTeste } from '../../scripts/db/teste-env';
 import { admin, clienteComo, criarUsuario, limparCoordenadores, visitante } from './fixtures';
 import { jogo, montarCenario, type Cenario } from './cenario';
@@ -108,6 +108,11 @@ describe('políticas por cargo (0010)', () => {
       await cli.query(readFileSync('supabase/migrations/0010_politicas_por_cargo.sql', 'utf8'));
       const { rows } = await cli.query("select 1 from pg_policies where schemaname='public' and policyname='teste_aberta'");
       expect(rows).toHaveLength(0);
+      // A 0010 apaga TODAS as políticas: reaplica as migrações seguintes, como numa sequência real.
+      const seguintes = readdirSync('supabase/migrations')
+        .filter((f) => f.endsWith('.sql') && f > '0010_politicas_por_cargo.sql')
+        .sort();
+      for (const f of seguintes) await cli.query(readFileSync(`supabase/migrations/${f}`, 'utf8'));
     } finally {
       await cli.end();
     }

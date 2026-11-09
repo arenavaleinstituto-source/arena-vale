@@ -124,10 +124,10 @@ export default function GestaoAtletasClient() {
     <div className="space-y-10">
       <div className="rounded-[2.5rem] border border-white/10 bg-[#1d1d22] p-6 sm:p-8 shadow-xl">
         <span className="text-xs font-black uppercase tracking-widest text-[#e50914]">
-          NOVO REGISTO EDITORIAL
+          NOVO CADASTRO EDITORIAL
         </span>
         <h2 className="mt-2 text-xl font-black uppercase text-white">
-          Registar Atleta em Destaque
+          Cadastrar atleta em destaque
         </h2>
         <p className="mt-1 text-xs text-[#a1a1aa]">
           Adicione um atleta diretamente à galeria com estatísticas e dados de homologação.

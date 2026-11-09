@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { convidar, portasSupabase } from '../../lib/auth/convites';
-import { admin, criarUsuario, limparCoordenadores } from './fixtures';
+import { admin, criarUsuario, limparCoordenadores, visitante } from './fixtures';
 import { montarCenario, type Cenario } from './cenario';
 
 let c: Cenario;
@@ -19,6 +19,19 @@ describe('convites com o banco (portasSupabase)', () => {
     const { data: perfil } = await admin().from('profiles').select('role').eq('id', u.id).single();
     expect(perfil?.role).toBe('moderador');
     const { data: vinculo } = await admin().from('campeonato_moderadores').select('*').eq('profile_id', u.id).eq('campeonato_id', c.campB);
+    expect(vinculo).toHaveLength(1);
+  });
+
+  it('capitão cadastrado com senha entra com e-mail e senha e já é capitão do campeonato', async () => {
+    const email = `teste+capsenha-${Date.now()}@arenavale.test`;
+    const r = await convidar({ email, cargo: 'capitao', campeonatoId: c.campA, senha: 'Senha-forte-123' }, { quemChama: coord, origem: 'http://x', ...portasSupabase(admin()) });
+    expect(r).toEqual({ ok: true, jaTinhaConta: false });
+    const cli = visitante();
+    const { data, error } = await cli.auth.signInWithPassword({ email, password: 'Senha-forte-123' });
+    expect(error).toBeNull();
+    const { data: perfil } = await admin().from('profiles').select('role').eq('id', data.user!.id).single();
+    expect(perfil?.role).toBe('capitao');
+    const { data: vinculo } = await admin().from('time_capitaes').select('id').eq('profile_id', data.user!.id).eq('campeonato_id', c.campA);
     expect(vinculo).toHaveLength(1);
   });
 

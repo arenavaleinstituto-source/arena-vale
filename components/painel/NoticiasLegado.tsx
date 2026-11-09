@@ -313,7 +313,7 @@ export function NoticiasLegado() {
                 <span className="text-2xl mb-1">📷</span>
                 <p className="text-xs text-zinc-300 font-medium">
                   <span className="text-[#ff3b44] underline">Clique para enviar a imagem</span> ou
-                  arraste o ficheiro aqui
+                  arraste o arquivo aqui
                 </p>
                 <p className="text-[10px] text-zinc-500 mt-1">
                   Formatos suportados: PNG, JPG ou WEBP (Recomendado 16:9)

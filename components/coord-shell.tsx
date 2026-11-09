@@ -181,7 +181,7 @@ export function CoordShell({ user, stats, inscricoes: initialInsc, patrocinadore
       </header>
 
       {/* Abas */}
-      <div role="tablist" aria-label="Seções do painel" className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none]">
+      <div role="tablist" aria-label="Seções do painel" className="flex flex-wrap gap-2">
         {ABAS_COORD.map((a) => (
           <button
             key={a.id}
