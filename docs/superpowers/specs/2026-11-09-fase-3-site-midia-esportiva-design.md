@@ -101,11 +101,11 @@ Evolução do `SiteHeader` atual (preso no topo, o mesmo em todas as páginas).
 | 5 | **Agenda da Arena** | próximos 6 jogos: modalidade, fase, times, data e hora, local, selo "Transmissão" | `agenda_jogos` + `jogos` futuros (seção 7) |
 | 6 | **Últimos vídeos** | 8 mais recentes | YouTube RSS + vídeos do Instagram cadastrados |
 | 7 | **Modalidades** | Futsal, Futebol 7, Basquete, Vôlei ("O palco do <modalidade> é aqui.") | fixas → `/modalidades/[slug]` |
-| 8 | **Projeto Social** | título, texto, 4 números, 3 iniciativas, resultados, apoio (Apoiar, Cotas, Inscrever criança/atleta), CNPJ | textos da página antiga + `noticias` (categoria `projeto_social`) |
+| 8 | **Projeto Social** | título, texto, 4 números, 3 iniciativas, resultados, apoio (3 botões vermelhos: Apoiar, Cotas, Inscrever criança/atleta) | textos da página antiga + `noticias` (categoria `projeto_social`) |
 | 9 | **Histórias da Arena** | atletas destaque e bastidores | `atletas_destaque` + `noticias` (categoria `bastidores`) |
 | 10 | **Números da Arena** | campeonatos, equipes, jogos, vídeos | contagens no banco + RSS |
 | 11 | **Para marcas** | "Coloque sua marca no palco do esporte.", com as propriedades de mídia e o botão para o WhatsApp | fixo |
-| 12 | **Rodapé** | logo, menu, privacidade, termos, © ARENA VALE | fixo |
+| 12 | **Rodapé** | logo + slogan, menu completo, botões **WhatsApp** (wa.me/5547988444404), **Instagram** (@arenavaleoficial) e **YouTube** (@TVArenaVale), **CNPJ 40.694.741/0001-34**, © ARENA VALE · Mídia Esportiva, Privacidade e Termos | fixo (links editáveis em Configurações) |
 
 - **Blocos sem conteúdo** (sem notícias publicadas, sem jogos futuros) mostram um estado vazio curto, por exemplo "Nenhum jogo agendado — volte em breve.". A página nunca quebra.
 - **Renderização:** Server Components com `revalidate = 60`. O YouTube revalida a cada 30 min.
