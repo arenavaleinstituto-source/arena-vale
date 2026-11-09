@@ -30,7 +30,10 @@ const TABS = [
   { id: 'capitaes', label: '👑 Capitães' },
   { id: 'sumulas', label: '📄 Súmulas' },
   { id: 'patrocinadores', label: '🤝 Patrocinadores' },
-  { id: 'destaques', label: '⭐ Atletas Destaque', href: '/coordenador/atletasdestaques' },
+  { id: 'noticias', label: '📰 Notícias', href: '/painel/noticias' },
+  { id: 'destaques', label: '⭐ Atletas Destaque', href: '/painel/atletasdestaques' },
+  { id: 'campeonatos', label: '🏆 Campeonatos', href: '/painel/campeonatos' },
+  { id: 'tv', label: '📺 TV', href: '/painel/tv' },
   { id: 'config', label: '⚙️ Config' },
   { id: 'jogos', label: '⚽ Jogos e Placar' },
 ];

@@ -1,126 +1,54 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
-import { Nav } from '@/components/nav';
+import { lerCargo } from '@/lib/auth/cargo';
+import { CabecalhoEquipe } from '@/components/painel/CabecalhoEquipe';
+import { ResultadosCampeonato, type CampeonatoDoModerador, type JogoDoModerador, type LinhaClassificacao } from '@/components/moderador/ResultadosCampeonato';
 
+export const dynamic = 'force-dynamic';
+export const metadata = { title: 'Resultados | Arena Vale', robots: { index: false, follow: false } };
+
+/** Painel do moderador: lança resultados só dos campeonatos ligados a ele (coordenação vê todos). */
 export default async function ModeradorPage() {
   const supabase = await createClient();
+  const { cargo, userId } = await lerCargo(supabase);
+  if (!userId) redirect('/login?next=/moderador');
+  if (cargo !== 'moderador' && cargo !== 'coordenador') redirect('/acesso-negado');
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect('/login?next=/moderador');
+  let ids: string[] | null = null;
+  if (cargo === 'moderador') {
+    const { data } = await supabase.from('campeonato_moderadores').select('campeonato_id').eq('profile_id', userId);
+    ids = (data ?? []).map((v) => v.campeonato_id as string);
   }
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('id', user.id)
-    .single();
+  let consultaCamps = supabase.from('campeonatos').select('id, nome').order('ano', { ascending: false });
+  if (ids) consultaCamps = consultaCamps.in('id', ids.length ? ids : ['00000000-0000-0000-0000-000000000000']);
+  const { data: camps } = await consultaCamps;
+  const lista = (camps ?? []) as { id: string; nome: string }[];
 
-  const { data: teamLink } = await supabase
-    .from('time_moderadores')
-    .select(`
-      *,
-      time:times(id, nome),
-      campeonato:campeonatos(id, nome, ano)
-    `)
-    .eq('profile_id', user.id)
-    .maybeSingle();
-
-  if (!teamLink) {
-    return (
-      <>
-        <Nav />
-
-        <main className="pt-[78px] container py-10">
-          <div className="panel text-center py-12">
-            <h1 className="font-serif text-2xl font-bold">
-              Nenhuma liberação encontrada
-            </h1>
-
-            <p className="text-[var(--text-dim)] mt-3">
-              O coordenador ainda não liberou um time e campeonato para você.
-            </p>
-          </div>
-        </main>
-      </>
-    );
-  }
-
-  const { data: jogos } = await supabase
-    .from('jogos')
-    .select(`
-      id,
-      data,
-      local,
-      placar_casa,
-      placar_visitante,
-      status,
-      casa:times!time_casa_id(nome),
-      visitante:times!time_visitante_id(nome)
-    `)
-    .eq('campeonato_id', teamLink.campeonato_id)
-    .order('data', { ascending: true });
+  const campeonatos: CampeonatoDoModerador[] = await Promise.all(
+    lista.map(async (c) => {
+      const [{ data: jogos }, { data: tabela }] = await Promise.all([
+        supabase
+          .from('jogos')
+          .select('id, data, local, status, placar_casa, placar_visitante, placar_casa_1t, placar_visitante_1t, casa:times!jogos_time_casa_id_fkey(id, nome), fora:times!jogos_time_visitante_id_fkey(id, nome)')
+          .eq('campeonato_id', c.id)
+          .order('data'),
+        supabase.from('v_classificacao').select('*').eq('campeonato_id', c.id).order('pontos', { ascending: false }),
+      ]);
+      return {
+        id: c.id,
+        nome: c.nome,
+        jogos: (jogos ?? []) as unknown as JogoDoModerador[],
+        classificacao: (tabela ?? []) as LinhaClassificacao[],
+      };
+    }),
+  );
 
   return (
     <>
-      <Nav />
-
-      <main className="pt-[78px] container py-10">
-        <div className="panel mb-6">
-          <span className="eyebrow">🛡️ Painel do Moderador</span>
-
-          <h1 className="font-serif text-2xl font-extrabold mt-2">
-            {teamLink.time?.nome || 'Time não informado'}
-          </h1>
-
-          <p className="text-[var(--text-dim)] text-sm mt-2">
-            Bem-vindo, {profile?.full_name}.
-          </p>
-
-          <div className="mt-4 text-sm">
-            <strong>Campeonato liberado:</strong>{' '}
-            {teamLink.campeonato?.nome || 'Não informado'}{' '}
-            {teamLink.campeonato?.ano || ''}
-          </div>
-        </div>
-
-        <div className="panel">
-          <h2 className="font-serif text-xl font-bold mb-5">
-            Jogos autorizados
-          </h2>
-
-          {!jogos || jogos.length === 0 ? (
-            <p className="text-[var(--text-mute)]">
-              Nenhum jogo encontrado para este time e campeonato.
-            </p>
-          ) : (
-            <div className="grid gap-4">
-              {jogos.map((jogo: any) => (
-                <div
-                  key={jogo.id}
-                  className="border-b border-white/10 pb-4"
-                >
-                  <strong>
-                    {jogo.casa?.nome || 'Casa'} x{' '}
-                    {jogo.visitante?.nome || 'Visitante'}
-                  </strong>
-
-                  <p className="text-sm text-[var(--text-dim)] mt-2">
-                    Placar: {jogo.placar_casa} x {jogo.placar_visitante}
-                  </p>
-
-                  <p className="text-xs text-[var(--text-mute)] mt-1">
-                    {new Date(jogo.data).toLocaleString('pt-BR')} ·{' '}
-                    {jogo.local || 'Local não informado'} · {jogo.status}
-                  </p>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+      <CabecalhoEquipe titulo="Resultados" subtitulo="Moderação de campeonatos" />
+      <main className="mx-auto w-full max-w-6xl px-5 py-8">
+        <ResultadosCampeonato campeonatos={campeonatos} />
       </main>
     </>
   );
