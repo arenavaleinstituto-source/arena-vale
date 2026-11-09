@@ -45,6 +45,17 @@ export function visitante(): SupabaseClient {
   return createClient(env.url, env.anonKey, SEM_SESSAO);
 }
 
+/**
+ * Isola os testes do limite global de coordenadores: rebaixa todos os
+ * coordenadores para autenticado e apaga a marca de dono (via service role).
+ */
+export async function limparCoordenadores(): Promise<void> {
+  const a = admin();
+  await a.from('proprietario').delete().not('profile_id', 'is', null);
+  const { error } = await a.from('profiles').update({ role: 'autenticado' }).eq('role', 'coordenador');
+  if (error) throw new Error(`limparCoordenadores: ${error.message}`);
+}
+
 /** Remove todos os usuários de teste (@arenavale.test). */
 export async function apagarUsuariosDeTeste(): Promise<void> {
   const a = admin();
