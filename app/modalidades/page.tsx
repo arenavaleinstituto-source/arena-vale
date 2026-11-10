@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { TopoPagina } from '@/components/midia/TopoPagina';
 import { CartoesModalidades } from '@/components/home/Modalidades';
 import { buscarModalidades } from '@/lib/midia/modalidades-busca';
+import { SeuCampeonato } from '@/components/home/SeuCampeonato';
+import { lerConfigSite } from '@/lib/midia/config';
 
 export const revalidate = 60;
 
@@ -12,7 +14,7 @@ export const metadata: Metadata = {
 
 /** Página Modalidades (spec Fase 3, seção 8): os cartões das modalidades cadastradas. */
 export default async function ModalidadesPage() {
-  const lista = await buscarModalidades();
+  const [lista, config] = await Promise.all([buscarModalidades(), lerConfigSite()]);
   return (
     <main className="w-full overflow-x-clip bg-av-preto text-av-branco">
       <TopoPagina chapeu="Esportes" titulo="Modalidades" subtitulo="Campeonatos, agenda e notícias de cada esporte." />
@@ -21,6 +23,7 @@ export default async function ModalidadesPage() {
           <CartoesModalidades lista={lista} />
         </div>
       </section>
+      <SeuCampeonato whatsapp={config.whatsapp} alt />
     </main>
   );
 }
