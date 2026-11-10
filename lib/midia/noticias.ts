@@ -36,6 +36,9 @@ export type NoticiaMidia = {
   origem: 'manual' | 'telegram';
   modalidade: string | null;
   created_at: string;
+  /** Story no Instagram (0016). */
+  story_status?: 'processando' | 'publicado' | 'erro';
+  story_erro?: string | null;
 };
 
 const texto = (v: unknown): string | null => (typeof v === 'string' && v.trim() ? v : null);
@@ -76,6 +79,9 @@ export function mapearNoticiaMidia(row: Record<string, unknown>): NoticiaMidia {
     origem: row.origem === 'telegram' ? 'telegram' : 'manual',
     modalidade: texto(row.modalidade),
     created_at: created,
+    ...(row.story_status === 'processando' || row.story_status === 'publicado' || row.story_status === 'erro'
+      ? { story_status: row.story_status, story_erro: texto(row.story_erro) }
+      : {}),
   };
 }
 
