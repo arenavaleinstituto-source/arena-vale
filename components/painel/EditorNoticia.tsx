@@ -187,12 +187,9 @@ export function EditorNoticia({ noticia, modo, diasVideo = 30, onSalvo, onFechar
       <div className="grid gap-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h2 className="font-display text-2xl font-extrabold uppercase">{noticia ? 'Editar notícia' : 'Nova notícia'}</h2>
-          <button type="button" onClick={onFechar} className="btn-leve">
-            ← Voltar à lista
-          </button>
         </div>
         {noticia?.origem === 'telegram' && (
-          <p className="rounded-2xl border border-av-amarelo/40 bg-av-amarelo/10 px-4 py-3 text-sm text-av-amarelo">Reescreva com suas palavras e cite a fonte.</p>
+          <p className="rounded-2xl border border-av-amarelo/40 bg-av-amarelo/10 px-4 py-3 text-sm text-av-amarelo">Reescreva com suas palavras.</p>
         )}
 
         <label className={ROTULO}>
@@ -334,6 +331,9 @@ export function EditorNoticia({ noticia, modo, diasVideo = 30, onSalvo, onFechar
           </button>
           <button type="button" disabled={ocupado} onClick={() => gravar('publicado')} className="btn-forte disabled:opacity-50">
             Publicar
+          </button>
+          <button type="button" disabled={ocupado} onClick={onFechar} className="btn-leve disabled:opacity-50">
+            ← Voltar à lista
           </button>
         </div>
       </div>

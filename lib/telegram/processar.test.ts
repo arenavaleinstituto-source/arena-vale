@@ -146,6 +146,12 @@ describe('processarUpdate', () => {
     expect(p.enviarMensagem).toHaveBeenLastCalledWith(5, 'Não consegui criar o rascunho, tente de novo');
   });
 
+  it('não grava a fonte (pedido do dono, 10/11/2026); dá para religar em GUARDAR_FONTE', async () => {
+    const p = portas();
+    await processarUpdate(foto({ forward_origin: { type: 'channel', chat: { title: 'Antenados Esportes', username: 'antenados' }, message_id: 3 } }), p, ORIGEM);
+    expect(p.inserirRascunho).toHaveBeenCalledWith(expect.objectContaining({ fonte: null }));
+  });
+
   it('foto ganha a logo da ARENA VALE antes de ser guardada', async () => {
     const p = portas();
     await processarUpdate(foto(), p, ORIGEM);
