@@ -61,7 +61,7 @@ describe('EditorNoticia', () => {
 
   it('rascunho do Telegram mostra o lembrete de direitos', () => {
     render(<EditorNoticia noticia={n({ origem: 'telegram' })} modo="guardar_arquivo" onSalvo={vi.fn()} onFechar={vi.fn()} />);
-    expect(screen.getByText('Reescreva com suas palavras e cite a fonte.')).toBeInTheDocument();
+    expect(screen.getByText('Reescreva com suas palavras.')).toBeInTheDocument();
   });
 
   it('link do YouTube sem cartaz oferece a imagem do YouTube', async () => {

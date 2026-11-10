@@ -45,6 +45,9 @@ export type PortasBot = {
 
 const LIMITE_FOTO = 5 * 1024 * 1024;
 
+/** O dono pediu para não mostrar a fonte nas notícias do robô. Se algum canal reclamar, é só voltar para true. */
+const GUARDAR_FONTE = false;
+
 export async function processarUpdate(update: unknown, p: PortasBot, origem: string): Promise<void> {
   const msg = (update as { message?: TgMessage }).message;
   if (!msg?.chat || !msg.from) return;
@@ -126,7 +129,7 @@ async function criarRascunho(msg: TgMessage & { chat: { id: number } }, chat: nu
     video_expira_em: video_url ? new Date(Date.now() + dias * 86400000).toISOString() : null,
     video_link: r.video_link,
     video_servico: r.video_link ? servicoDoLink(r.video_link) : null,
-    fonte: r.fonte,
+    fonte: GUARDAR_FONTE ? r.fonte : null,
     // Álbum: a 1ª mensagem grava o grupo; as seguintes batem no único e são ignoradas.
     telegram_message_ref: r.mediaGroupId ? `grupo:${chat}:${r.mediaGroupId}` : r.ref,
     created_by: perfilId,
