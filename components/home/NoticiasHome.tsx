@@ -10,7 +10,7 @@ export function AgoraNaArena({ noticias }: { noticias: NoticiaMidia[] }) {
       {noticias.length === 0 ? (
         <p className="vazio">Em breve as primeiras notícias.</p>
       ) : (
-        <Fileira rotulo="Agora na Arena">
+        <Fileira rotulo="Agora na Arena" girar>
           {noticias.map((n) => (
             <CartazNoticia key={n.id} n={n} />
           ))}
@@ -32,7 +32,7 @@ export function EsporteMundial({ noticias }: { noticias: NoticiaMidia[] }) {
       {noticias.length === 0 ? (
         <p className="vazio">Em breve as primeiras notícias.</p>
       ) : (
-        <Fileira rotulo="Esporte Mundial">
+        <Fileira rotulo="Esporte Mundial" girar>
           {noticias.map((n) => (
             <CartazNoticia key={n.id} n={n} />
           ))}

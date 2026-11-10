@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 import { Cartaz } from './Cartaz';
 import { Faixa } from './Faixa';
 import { Fileira } from './Fileira';
@@ -61,5 +61,50 @@ describe('Fileira', () => {
     );
     expect(screen.getByRole('button', { name: 'Anterior Mais recentes' })).toBeTruthy();
     expect(screen.getByRole('button', { name: 'Próximo Mais recentes' })).toBeTruthy();
+  });
+});
+
+describe('Fileira girando', () => {
+  afterEach(() => vi.useRealTimers());
+
+  function montar(posicao: { left: number }) {
+    vi.useFakeTimers();
+    render(
+      <Fileira rotulo="Esporte Mundial" girar>
+        <span>a</span>
+        <span>b</span>
+      </Fileira>,
+    );
+    const trilho = screen.getByRole('region', { name: 'Esporte Mundial' });
+    Object.defineProperty(trilho, 'clientWidth', { value: 400 });
+    Object.defineProperty(trilho, 'scrollWidth', { value: 1200 });
+    Object.defineProperty(trilho, 'scrollLeft', { get: () => posicao.left });
+    const scrollBy = vi.fn();
+    const scrollTo = vi.fn();
+    Object.assign(trilho, { scrollBy, scrollTo });
+    return { trilho, scrollBy, scrollTo };
+  }
+
+  it('avança sozinha a cada 4 segundos', () => {
+    const { scrollBy } = montar({ left: 0 });
+    act(() => vi.advanceTimersByTime(4000));
+    expect(scrollBy).toHaveBeenCalledTimes(1);
+  });
+
+  it('no fim volta para o começo (as mais novas)', () => {
+    const { scrollBy, scrollTo } = montar({ left: 800 });
+    act(() => vi.advanceTimersByTime(4000));
+    expect(scrollTo).toHaveBeenCalledWith({ left: 0, behavior: 'smooth' });
+    expect(scrollBy).not.toHaveBeenCalled();
+  });
+
+  it('para enquanto a pessoa está com o mouse em cima', () => {
+    const { trilho, scrollBy } = montar({ left: 0 });
+    fireEvent.mouseEnter(trilho.parentElement!);
+    act(() => vi.advanceTimersByTime(8000));
+    expect(scrollBy).not.toHaveBeenCalled();
+    fireEvent.mouseLeave(trilho.parentElement!);
+    act(() => vi.advanceTimersByTime(4000));
+    expect(scrollBy).toHaveBeenCalledTimes(1);
   });
 });

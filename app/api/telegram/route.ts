@@ -19,7 +19,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     const update = await req.json();
     const origem = process.env.NEXT_PUBLIC_BASE_URL || new URL(req.url).origin;
     await processarUpdate(update, portasBot(createAdminClient()), origem);
-  } catch {
+  } catch (e) {
+    console.error('[telegram] erro no webhook', e);
     // Sempre 200 para o Telegram: um erro aqui não deve fazê-lo reenviar a mesma mensagem sem parar.
   }
   return NextResponse.json({ ok: true });

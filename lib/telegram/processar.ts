@@ -66,25 +66,49 @@ export async function processarUpdate(update: unknown, p: PortasBot, origem: str
     return;
   }
 
+  try {
+    await criarRascunho(msg, chat, perfil.id, p, origem);
+  } catch (e) {
+    console.error('[telegram] falha ao criar rascunho', e);
+    await p.enviarMensagem(chat, 'Não consegui criar o rascunho, tente de novo');
+  }
+}
+
+async function criarRascunho(msg: TgMessage & { chat: { id: number } }, chat: number, perfilId: string, p: PortasBot, origem: string): Promise<void> {
   const r = extrairRascunho(msg);
   const { modo, dias } = await p.modoVideo();
+  const guardarVideo = Boolean(r.videoFileId) && modo === 'guardar_arquivo' && (r.videoTamanho ?? 0) <= LIMITE_VIDEO;
+  // Vídeo demora para baixar: avisa logo, para ninguém achar que não chegou.
+  if (guardarVideo && !r.mediaGroupId) await p.enviarMensagem(chat, 'Recebi o vídeo ⏳ guardando…');
   const base = `telegram/${chat}-${msg.message_id}`;
   let imagem_url: string | null = null;
   let video_url: string | null = null;
   let erroMidia = false;
+  let erroVideo = false;
 
   // Cartaz: a foto, ou a miniatura do vídeo.
   const capaId = r.fotoFileId ?? r.thumbFileId;
   if (capaId) {
-    const arq = await p.baixarArquivo(capaId, LIMITE_FOTO);
-    if (arq) imagem_url = await p.guardarArquivo(`${base}${r.fotoFileId ? '' : '-capa'}.${arq.ext}`, arq.bytes, arq.mime);
-    else if (r.fotoFileId) erroMidia = true;
+    try {
+      const arq = await p.baixarArquivo(capaId, LIMITE_FOTO);
+      if (arq) imagem_url = await p.guardarArquivo(`${base}${r.fotoFileId ? '' : '-capa'}.${arq.ext}`, arq.bytes, arq.mime);
+      else if (r.fotoFileId) erroMidia = true;
+    } catch (e) {
+      console.error('[telegram] falha ao guardar a foto', e);
+      if (r.fotoFileId) erroMidia = true;
+    }
   }
 
   // Vídeo: só no modo "guardar arquivo" e até 20 MB.
-  if (r.videoFileId && modo === 'guardar_arquivo' && (r.videoTamanho ?? 0) <= LIMITE_VIDEO) {
-    const arq = await p.baixarArquivo(r.videoFileId, LIMITE_VIDEO);
-    if (arq) video_url = await p.guardarArquivo(`${base}.${arq.ext}`, arq.bytes, arq.mime);
+  if (guardarVideo && r.videoFileId) {
+    try {
+      const arq = await p.baixarArquivo(r.videoFileId, LIMITE_VIDEO);
+      if (arq) video_url = await p.guardarArquivo(`${base}.${arq.ext}`, arq.bytes, arq.mime);
+      else erroVideo = true;
+    } catch (e) {
+      console.error('[telegram] falha ao guardar o vídeo', e);
+      erroVideo = true;
+    }
   }
 
   const dados: DadosRascunho = {
@@ -102,20 +126,21 @@ export async function processarUpdate(update: unknown, p: PortasBot, origem: str
     fonte: r.fonte,
     // Álbum: a 1ª mensagem grava o grupo; as seguintes batem no único e são ignoradas.
     telegram_message_ref: r.mediaGroupId ? `grupo:${chat}:${r.mediaGroupId}` : r.ref,
-    created_by: perfil.id,
+    created_by: perfilId,
   };
 
-  let criado: { id: string } | 'duplicado';
-  try {
-    criado = await p.inserirRascunho(dados);
-  } catch {
-    await p.enviarMensagem(chat, 'Não consegui criar o rascunho, tente de novo');
-    return;
-  }
+  const criado = await p.inserirRascunho(dados);
   if (criado === 'duplicado') {
     // No álbum o texto vem em só uma das fotos: se for esta, completa o rascunho do grupo.
     if (r.mediaGroupId && r.titulo !== TITULO_PADRAO) await p.completarAlbum(dados.telegram_message_ref, r.titulo, r.descricao);
     return;
   }
-  await p.enviarMensagem(chat, respostaRascunho(r, modo, Boolean(video_url), erroMidia, `${origem}/coordenador?aba=noticias&editar=${criado.id}`));
+  const link = `${origem}/coordenador?aba=noticias&editar=${criado.id}`;
+  if (erroVideo) {
+    const plano = r.video_link ? 'Ele vai tocar pelo link original.' : 'Envie o vídeo pelo painel antes de publicar.';
+    await p.enviarMensagem(chat, `Rascunho criado, mas não consegui guardar o vídeo. ${plano}
+${link}`);
+    return;
+  }
+  await p.enviarMensagem(chat, respostaRascunho(r, modo, Boolean(video_url), erroMidia, link));
 }

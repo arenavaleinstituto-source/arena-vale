@@ -61,7 +61,7 @@ export function portasBot(admin: SupabaseClient): PortasBot {
       const info = await tg<{ file_path?: string; file_size?: number }>('getFile', { file_id: fileId });
       if (!info?.file_path || (info.file_size ?? 0) > limiteBytes) return null;
       try {
-        const r = await fetch(`https://api.telegram.org/file/bot${process.env.TELEGRAM_BOT_TOKEN}/${info.file_path}`, { signal: AbortSignal.timeout(60000) });
+        const r = await fetch(`https://api.telegram.org/file/bot${process.env.TELEGRAM_BOT_TOKEN}/${info.file_path}`, { signal: AbortSignal.timeout(40000) });
         if (!r.ok) return null;
         const bytes = new Uint8Array(await r.arrayBuffer());
         if (bytes.byteLength > limiteBytes) return null;

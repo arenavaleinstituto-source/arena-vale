@@ -5,6 +5,7 @@ import { Faixa } from '@/components/midia/Faixa';
 import { ListaAgenda } from '@/components/home/AgendaArena';
 import { TabelaClassificacao } from '@/components/midia/TabelaClassificacao';
 import { MODALIDADES_SITE, modalidadePorSlug } from '@/lib/midia/modalidades';
+import { buscarModalidades } from '@/lib/midia/modalidades-busca';
 import { buscarAgenda } from '@/lib/midia/agenda';
 import { buscarCampeonatosDaModalidade, filtrarPorModalidade } from '@/lib/midia/campeonatos';
 import { buscarNoticiasPublicadas } from '@/lib/midia/noticias-busca';
@@ -13,6 +14,9 @@ import { CartazNoticia } from '@/components/midia/CartazNoticia';
 
 export const revalidate = 60;
 
+/** Modalidades novas (cadastradas depois do build) também abrem. */
+export const dynamicParams = true;
+
 export function generateStaticParams() {
   return MODALIDADES_SITE.map((m) => ({ slug: m.slug }));
 }
@@ -20,13 +24,13 @@ export function generateStaticParams() {
 type Params = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
-  const m = modalidadePorSlug((await params).slug);
+  const m = modalidadePorSlug((await params).slug, await buscarModalidades());
   return m ? { title: `${m.nome} | ARENA VALE`, description: m.frase } : {};
 }
 
 /** Página de uma modalidade (spec Fase 3, seção 8): próximos jogos e campeonatos com a classificação. */
 export default async function ModalidadePage({ params }: Params) {
-  const m = modalidadePorSlug((await params).slug);
+  const m = modalidadePorSlug((await params).slug, await buscarModalidades());
   if (!m) notFound();
   const [agenda, campeonatos, noticias] = await Promise.all([
     buscarAgenda(60).catch(() => []),

@@ -1,16 +1,19 @@
 import { createPublicClient } from '@/lib/supabase/server';
 import type { ItemAgenda } from './agenda';
-import type { SlugModalidade } from './modalidades';
+import { slugDoNome, type SlugModalidade } from './modalidades';
 
 /** Converte a modalidade escrita de qualquer jeito ("Futebol de 7", "Basquetebol"...) no slug do site. */
 export function slugDaModalidade(texto: string | null | undefined): SlugModalidade | null {
   if (!texto) return null;
   const t = texto.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/\s+/g, ' ').trim();
-  if (t.startsWith('futsal')) return 'futsal';
-  if (/^futebol( de)? ?7/.test(t)) return 'futebol7';
-  if (t.startsWith('basquete')) return 'basquete';
-  if (t.startsWith('volei')) return 'volei';
-  return null;
+  // As 4 de sempre, com as variações de categoria ("Futsal Adulto", "Vôlei Feminino"...).
+  // "Vôlei de Praia" NÃO é Vôlei: vira a própria modalidade ("volei-de-praia").
+  const categoria = '( (adulto|adulta|feminino|masculino|misto|sub[- ]?\\d+|livre|veteranos?))*$';
+  if (new RegExp(`^futsal${categoria}`).test(t)) return 'futsal';
+  if (new RegExp(`^futebol( de)? ?7( society)?${categoria}`).test(t)) return 'futebol7';
+  if (new RegExp(`^basquete(bol)?${categoria}`).test(t)) return 'basquete';
+  if (new RegExp(`^volei(bol)?${categoria}`).test(t)) return 'volei';
+  return slugDoNome(texto) || null;
 }
 
 export function filtrarPorModalidade(itens: ItemAgenda[], slug: string): ItemAgenda[] {

@@ -122,4 +122,26 @@ describe('processarUpdate', () => {
     await processarUpdate({ edited_message: {} }, p, ORIGEM);
     expect(p.enviarMensagem).not.toHaveBeenCalled();
   });
+
+  it('erro ao guardar o vídeo: cria o rascunho mesmo assim e avisa (nunca fica calado)', async () => {
+    const p = portas({
+      baixarArquivo: vi.fn().mockResolvedValue({ bytes: new Uint8Array([9]), ext: 'mp4', mime: 'video/mp4' }),
+      guardarArquivo: vi.fn().mockRejectedValue(new Error('Payload too large')),
+    });
+    await processarUpdate({ message: { message_id: 9, chat: { id: 5 }, from: { id: 42 }, caption: 'Gol', video: { file_id: 'v1', file_size: 1000 } } }, p, ORIGEM);
+    expect(p.inserirRascunho).toHaveBeenCalledWith(expect.objectContaining({ titulo: 'Gol', video_url: null, tipo_midia: 'video' }));
+    expect(p.enviarMensagem).toHaveBeenLastCalledWith(5, expect.stringContaining('não consegui guardar o vídeo'));
+  });
+
+  it('vídeo: responde na hora que recebeu, antes de baixar', async () => {
+    const p = portas({ baixarArquivo: vi.fn().mockResolvedValue({ bytes: new Uint8Array([9]), ext: 'mp4', mime: 'video/mp4' }) });
+    await processarUpdate({ message: { message_id: 10, chat: { id: 5 }, from: { id: 42 }, caption: 'Gol', video: { file_id: 'v1', file_size: 1000 } } }, p, ORIGEM);
+    expect(p.enviarMensagem).toHaveBeenNthCalledWith(1, 5, 'Recebi o vídeo ⏳ guardando…');
+  });
+
+  it('falha inesperada (ex.: banco fora): responde com o erro em vez de ficar calado', async () => {
+    const p = portas({ modoVideo: vi.fn().mockRejectedValue(new Error('timeout')) });
+    await processarUpdate(foto(), p, ORIGEM);
+    expect(p.enviarMensagem).toHaveBeenLastCalledWith(5, 'Não consegui criar o rascunho, tente de novo');
+  });
 });
