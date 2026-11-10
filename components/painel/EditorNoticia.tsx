@@ -5,7 +5,7 @@ import { createClient } from '@/lib/supabase/client';
 import { Cartaz } from '@/components/midia/Cartaz';
 import { CATEGORIAS_MIDIA, faltasParaPublicar, type ModoVideo, type NoticiaMidia } from '@/lib/midia/noticias';
 import { idYoutube, servicoDoLink } from '@/lib/midia/links';
-import { MODALIDADES_SITE } from '@/lib/midia/modalidades';
+import { useModalidades } from '@/lib/midia/useModalidades';
 import { capturarQuadro, reduzirImagem } from '@/lib/ui/imagem';
 
 const CAMPO = 'w-full rounded-2xl border border-av-linha bg-[#08080a] px-4 py-3 text-base text-av-branco outline-none focus:border-av-vermelho';
@@ -49,6 +49,7 @@ type Props = { noticia: NoticiaMidia | null; modo: ModoVideo; diasVideo?: number
 /** Editor de notícia (spec 2026-11-08, 4.3): uma pessoa da coordenação edita e publica, sem segunda aprovação. */
 export function EditorNoticia({ noticia, modo, diasVideo = 30, onSalvo, onFechar }: Props) {
   const supabase = createClient();
+  const modalidades = useModalidades();
   const [f, setF] = useState<Form>(() => formDe(noticia));
   const [faltas, setFaltas] = useState<string[]>([]);
   const [mensagem, setMensagem] = useState('');
@@ -191,7 +192,7 @@ export function EditorNoticia({ noticia, modo, diasVideo = 30, onSalvo, onFechar
             Modalidade
             <select className={CAMPO} value={f.modalidade} onChange={(e) => muda('modalidade', e.target.value)}>
               <option value="">—</option>
-              {MODALIDADES_SITE.map((m) => (
+              {modalidades.map((m) => (
                 <option key={m.slug} value={m.slug}>
                   {m.nome}
                 </option>

@@ -52,11 +52,11 @@ describe('mídia esportiva (0011)', () => {
     expect(r2.error).toBeNull();
   });
 
-  it('campeonatos.modalidade aceita só os 4 valores', async () => {
+  it('campeonatos.modalidade aceita só modalidades cadastradas (0015)', async () => {
     const ok = await admin().from('campeonatos').insert({ nome: 'Copa Futsal', ano: 2026, modalidade: 'futsal' });
     expect(ok.error).toBeNull();
-    const ruim = await admin().from('campeonatos').insert({ nome: 'Copa Handebol', ano: 2026, modalidade: 'handebol' });
-    expect(ruim.error?.code).toBe('23514');
+    const ruim = await admin().from('campeonatos').insert({ nome: 'Copa Fantasma', ano: 2026, modalidade: 'nao-cadastrada' });
+    expect(ruim.error?.code).toBe('23503');
   });
 
   it('notícia publicada fica ativa e ganha publicado_em', async () => {

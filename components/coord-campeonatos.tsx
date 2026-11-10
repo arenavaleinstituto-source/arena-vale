@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
-import { MODALIDADES_SITE } from '@/lib/midia/modalidades';
+import { useModalidades } from '@/lib/midia/useModalidades';
 
 type Campeonato = {
   id: string;
@@ -32,6 +32,7 @@ const VAZIO = { nome: '', ano: new Date().getFullYear(), categoria: '', formato:
 /** Aba "Campeonatos" do painel: cadastro com modalidade (spec Fase 3, seção 8). */
 export function CoordCampeonatos() {
   const supabase = createClient();
+  const modalidades = useModalidades();
   const [lista, setLista] = useState<Campeonato[]>([]);
   const [form, setForm] = useState(VAZIO);
   const [erro, setErro] = useState('');
@@ -100,7 +101,7 @@ export function CoordCampeonatos() {
             Modalidade
             <select className={CAMPO} value={form.modalidade} onChange={muda('modalidade')}>
               <option value="">—</option>
-              {MODALIDADES_SITE.map((m) => (
+              {modalidades.map((m) => (
                 <option key={m.slug} value={m.slug}>
                   {m.nome}
                 </option>
@@ -158,7 +159,7 @@ export function CoordCampeonatos() {
               Modalidade de {c.nome}
               <select className={CAMPO} value={c.modalidade ?? ''} onChange={(e) => mudarCampo(c.id, 'modalidade', e.target.value)}>
                 <option value="">—</option>
-                {MODALIDADES_SITE.map((m) => (
+                {modalidades.map((m) => (
                   <option key={m.slug} value={m.slug}>
                     {m.nome}
                   </option>

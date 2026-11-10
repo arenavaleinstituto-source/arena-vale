@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { Banner } from './Banner';
 import { AoVivo } from './AoVivo';
@@ -10,6 +10,11 @@ import { ParaMarcas } from './ParaMarcas';
 import { AtletasDestaques } from './AtletasDestaques';
 import { ProjetoSocialHome } from './ProjetoSocialHome';
 import type { ItemAgenda } from '@/lib/midia/agenda';
+import { MODALIDADES_SITE } from '@/lib/midia/modalidades';
+
+vi.mock('@/lib/midia/modalidades-busca', () => ({
+  buscarModalidades: async () => [...MODALIDADES_SITE, { slug: 'beach-tennis', nome: 'Beach Tennis', frase: 'O palco do beach tennis é aqui.' }],
+}));
 
 const JOGO: ItemAgenda = {
   id: 'j1',
@@ -116,10 +121,11 @@ describe('UltimosVideos', () => {
 });
 
 describe('Modalidades', () => {
-  it('4 cartões para as páginas de cada esporte', () => {
-    render(<Modalidades />);
+  it('um cartão por modalidade cadastrada, inclusive as novas', async () => {
+    render(await Modalidades());
     const hrefs = screen.getAllByRole('link').map((a) => a.getAttribute('href'));
-    expect(hrefs).toEqual(['/modalidades/futsal', '/modalidades/futebol7', '/modalidades/basquete', '/modalidades/volei']);
+    expect(hrefs).toEqual(['/modalidades/futsal', '/modalidades/futebol7', '/modalidades/basquete', '/modalidades/volei', '/modalidades/beach-tennis']);
+    expect(screen.getByText('O palco do beach tennis é aqui.')).toBeInTheDocument();
   });
 });
 

@@ -21,7 +21,7 @@ describe('modalidades', () => {
     expect(['Futebol 7', 'futebol7', 'Futebol de 7', 'FUTEBOL 7 SOCIETY'].map(slugDaModalidade)).toEqual(['futebol7', 'futebol7', 'futebol7', 'futebol7']);
     expect(['Basquete', 'Basquetebol'].map(slugDaModalidade)).toEqual(['basquete', 'basquete']);
     expect(['Vôlei', 'Voleibol', 'volei'].map(slugDaModalidade)).toEqual(['volei', 'volei', 'volei']);
-    expect(slugDaModalidade('Handebol')).toBeNull();
+    expect(slugDaModalidade('Handebol')).toBe('handebol');
     expect(slugDaModalidade(null)).toBeNull();
   });
 

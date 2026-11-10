@@ -1,11 +1,12 @@
 import Link from 'next/link';
-import { MODALIDADES_SITE } from '@/lib/midia/modalidades';
+import type { Modalidade } from '@/lib/midia/modalidades';
+import { buscarModalidades } from '@/lib/midia/modalidades-busca';
 
-/** Os 4 cartões de modalidade. */
-export function CartoesModalidades() {
+/** Os cartões de modalidade (as cadastradas pela coordenação). */
+export function CartoesModalidades({ lista }: { lista: Modalidade[] }) {
   return (
     <div className="mods">
-      {MODALIDADES_SITE.map((m) => (
+      {lista.map((m) => (
         <Link key={m.slug} href={`/modalidades/${m.slug}`} className="mod-c">
           <h3>{m.nome}</h3>
           <span>{m.frase}</span>
@@ -15,7 +16,8 @@ export function CartoesModalidades() {
   );
 }
 
-export function Modalidades() {
+export async function Modalidades() {
+  const lista = await buscarModalidades();
   return (
     <section className="faixa alt" id="modalidades">
       <div className="dentro">
@@ -25,7 +27,7 @@ export function Modalidades() {
             <p>Campeonatos, agenda e notícias de cada esporte.</p>
           </div>
         </div>
-        <CartoesModalidades />
+        <CartoesModalidades lista={lista} />
       </div>
     </section>
   );
