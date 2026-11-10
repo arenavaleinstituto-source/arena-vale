@@ -340,10 +340,10 @@
 @media (max-width: 480px) { .seu-camp-lista { grid-template-columns: 1fr; } .seu-camp .botoes .av-btn { width: 100%; justify-content: center; } }
 
 /* notícia em vídeo: cabeçalho (30%) estilo transmissão — logo transparente, times embaixo, imagem do vídeo nos 70% de baixo */
-.cartaz.com-cabecalho .cab-video { position: absolute; inset: 0 0 auto 0; height: 30%; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 7px; padding: 10px 12px 12px; text-align: center;
+.cartaz.com-cabecalho .cab-video { position: absolute; inset: 0 0 auto 0; height: 30%; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 10px 12px 12px; text-align: center;
   background: radial-gradient(80% 90% at 50% 0%, rgba(229,9,20,.22), transparent 70%), linear-gradient(180deg, #1a1a1e 0%, #0d0d10 100%); }
 .cartaz.com-cabecalho .cab-video::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: linear-gradient(90deg, transparent, var(--vermelho) 18%, var(--vermelho) 82%, transparent); box-shadow: 0 0 14px rgba(229,9,20,.7); }
-.cartaz.com-cabecalho .cab-video img { position: static; display: block; width: 64%; height: auto; max-height: 56%; object-fit: contain; filter: drop-shadow(0 4px 10px rgba(0,0,0,.6)); }
+.cartaz.com-cabecalho .cab-video img { position: static; display: block; width: 62%; height: auto; max-height: 50%; object-fit: contain; filter: drop-shadow(0 4px 10px rgba(0,0,0,.6)); }
 .cartaz.com-cabecalho .cab-video strong { font-family: var(--display); font-weight: 800; font-size: 12.5px; line-height: 1.1; letter-spacing: .04em; text-transform: uppercase; text-wrap: balance; color: #f4f4f5; }
 .cartaz.com-cabecalho .cab-video strong i { font-style: normal; color: var(--vermelho); font-size: 11px; padding: 0 2px; }
 .cartaz.com-cabecalho .cartaz-img { top: 30%; height: 70%; }
