@@ -304,10 +304,8 @@ export function EditorNoticia({ noticia, modo, diasVideo = 30, onSalvo, onFechar
             titulo={f.titulo || 'Título da notícia'}
             imagem={f.imagem_url}
             enquadramento={f.enquadramento}
-            selo={f.tipo_midia === 'video' ? 'Vídeo' : 'Foto'}
             video={f.tipo_midia === 'video'}
             novo
-            fonte={f.aba === 'mundo' ? f.fonte || null : null}
           />
         </div>
       </aside>

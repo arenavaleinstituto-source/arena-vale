@@ -59,15 +59,12 @@ describe('CartazNoticia', () => {
     expect(screen.getByRole('img', { name: 'Golaço' }).getAttribute('src')).toContain('og-banner.jpg');
   });
 
-  it('vídeo com link vira selo VÍDEO; foto vira FOTO', () => {
-    const { rerender } = render(<CartazNoticia n={n({ tipo_midia: 'video', video_link: 'https://youtu.be/dQw4w9WgXcQ' })} />);
-    expect(screen.getByText('Vídeo')).toBeInTheDocument();
-    rerender(<CartazNoticia n={n()} />);
-    expect(screen.getByText('Foto')).toBeInTheDocument();
-  });
-
-  it('Esporte Mundial mostra a fonte', () => {
-    render(<CartazNoticia n={n({ aba: 'mundo', fonte: 'Canal do Gol' })} />);
-    expect(screen.getByText('Fonte: Canal do Gol')).toBeInTheDocument();
+  it('capa limpa: sem selo AV FOTO/VÍDEO e sem a fonte por cima (vídeo mantém o ▶)', () => {
+    const { container, rerender } = render(<CartazNoticia n={n({ aba: 'mundo', fonte: 'Canal do Gol' })} />);
+    expect(container.textContent).not.toContain('Foto');
+    expect(container.textContent).not.toContain('Fonte');
+    rerender(<CartazNoticia n={n({ tipo_midia: 'video', video_link: 'https://youtu.be/dQw4w9WgXcQ' })} />);
+    expect(container.textContent).not.toContain('Vídeo');
+    expect(screen.getByRole('img', { name: 'Vídeo' })).toBeInTheDocument();
   });
 });

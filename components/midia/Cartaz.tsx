@@ -7,7 +7,8 @@ type Props = {
   titulo: string;
   imagem: string | null;
   /** Texto ao lado da marca "AV" no canto superior esquerdo (ex.: "Vídeo", "Foto"). */
-  selo: string;
+  /** Selo "AV ..." no canto; sem ele, a capa fica limpa. */
+  selo?: string;
   /** Linha pequena abaixo do título (ex.: categoria ou fonte). */
   chapeu?: string;
   novo?: boolean;
@@ -32,10 +33,12 @@ export function Cartaz({ href, titulo, imagem, selo, chapeu, novo, video, extern
         className="cartaz-img"
         style={enquadramento ? { objectPosition: enquadramento } : undefined}
       />
-      <span className="s">
-        <b>AV</b>
-        {selo}
-      </span>
+      {selo && (
+        <span className="s">
+          <b>AV</b>
+          {selo}
+        </span>
+      )}
       {novo && <span className="n">NOVO</span>}
       {fonte && <span className="fonte">Fonte: {fonte}</span>}
       {video && (
