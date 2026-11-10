@@ -57,7 +57,9 @@ describe('CartazNoticia', () => {
   it('vídeo: cabeçalho com a logo da ARENA VALE e os times do jogo', () => {
     const { container } = render(<CartazNoticia n={{ ...n({ tipo_midia: 'video', video_link: 'https://youtu.be/dQw4w9WgXcQ' }), confronto: 'FLAMENGO x PALMEIRAS' }} />);
     expect(container.querySelector('.cab-video img')?.getAttribute('alt')).toBe('ARENA VALE');
-    expect(container.querySelector('.cab-video strong')?.textContent).toBe('FLAMENGO x PALMEIRAS');
+    const linhas = [...container.querySelectorAll('.cab-video strong span > span, .cab-video strong i')].map((e) => e.textContent);
+    expect(linhas).toEqual(['FLAMENGO', 'x', 'PALMEIRAS']); // o x sozinho numa linha
+    expect(container.querySelector('.cartaz')?.className).toContain('com-times');
     expect(container.querySelector('.cab-video img')?.getAttribute('src')).toBe('/logo-transparente.png');
   });
 

@@ -32,10 +32,10 @@ export function Cartaz({ href, titulo, imagem, selo, chapeu, novo, video, extern
           <img src="/logo-transparente.png" alt="ARENA VALE" />
           {cabecalho.confronto && (
             <strong>
-              {cabecalho.confronto.split(/\s+x\s+/i).map((time, i) => (
-                <span key={i}>
-                  {i > 0 && <i aria-label="contra"> x </i>}
-                  {time}
+              {cabecalho.confronto.split(/\s+x\s+/i).map((time, n) => (
+                <span key={n}>
+                  {n > 0 && <i aria-label="contra">x</i>}
+                  <span>{time}</span>
                 </span>
               ))}
             </strong>
@@ -69,13 +69,13 @@ export function Cartaz({ href, titulo, imagem, selo, chapeu, novo, video, extern
   );
   if (externo) {
     return (
-      <a href={href} className={cabecalho ? 'cartaz com-cabecalho' : 'cartaz'} target="_blank" rel="noopener noreferrer">
+      <a href={href} className={cabecalho ? `cartaz com-cabecalho${cabecalho.confronto ? ' com-times' : ''}` : 'cartaz'} target="_blank" rel="noopener noreferrer">
         {conteudo}
       </a>
     );
   }
   return (
-    <Link href={href} className={cabecalho ? 'cartaz com-cabecalho' : 'cartaz'}>
+    <Link href={href} className={cabecalho ? `cartaz com-cabecalho${cabecalho.confronto ? ' com-times' : ''}` : 'cartaz'}>
       {conteudo}
     </Link>
   );
