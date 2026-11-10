@@ -107,7 +107,7 @@
 .cartaz:hover { transform: scale(1.04); }
 .cartaz::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(0,0,0,.92), rgba(0,0,0,.2) 50%, transparent 72%); }
 .cartaz .s { position: absolute; top: 9px; left: 9px; z-index: 2; display: flex; gap: 5px; align-items: center; font-family: var(--rotulo); font-weight: 700; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; }
-.cartaz .s b { background: var(--vermelho); border-radius: 999px; padding: 1px 7px; font-family: var(--display); }
+.cartaz .s { background: var(--vermelho); border-radius: 999px; padding: 3px 10px; box-shadow: 0 4px 14px rgba(0,0,0,.45); }
 .cartaz .n { position: absolute; top: 9px; right: 9px; z-index: 2; background: var(--vermelho); border-radius: 999px; padding: 2px 8px; font-family: var(--rotulo); font-weight: 700; font-size: 11px; letter-spacing: .08em; }
 .cartaz .t { position: absolute; left: 11px; right: 11px; bottom: 12px; z-index: 2; font-family: var(--display); font-weight: 800; font-size: 19px; line-height: 1; text-transform: uppercase; text-wrap: balance; }
 .cartaz .c { display: block; margin-top: 6px; font-family: var(--rotulo); font-size: 12px; letter-spacing: .1em; color: var(--cinza); }
