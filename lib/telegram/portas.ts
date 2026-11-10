@@ -1,3 +1,4 @@
+import { carimbarLogo } from '@/lib/imagem/marca';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Arquivo, PortasBot } from './processar';
 import type { ModoVideo } from '@/lib/midia/noticias';
@@ -81,6 +82,9 @@ export function portasBot(admin: SupabaseClient): PortasBot {
       if (error?.code === '23505') return 'duplicado';
       if (error || !data) throw new Error(error?.message ?? 'falha ao gravar');
       return { id: (data as { id: string }).id };
+    },
+    async carimbar(arq) {
+      return { bytes: await carimbarLogo(arq.bytes), ext: 'jpg', mime: 'image/jpeg' };
     },
     async completarAlbum(ref, titulo, descricao) {
       await admin

@@ -11,6 +11,8 @@ const nextConfig = {
     // `npm run typecheck` roda a checagem completa.
     ignoreBuildErrors: false,
   },
+  // O robô do Telegram lê a logo do disco para carimbar as fotos.
+  outputFileTracingIncludes: { '/api/telegram': ['./public/logo.png'] },
   // Rotas antigas: /tv e /campeonatos viraram Ao Vivo e Modalidades; o painel virou abas de /coordenador (spec Fase 3).
   async redirects() {
     return [

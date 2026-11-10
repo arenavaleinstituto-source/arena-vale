@@ -11,6 +11,7 @@ function portas(over: Partial<PortasBot> = {}) {
     inserirRascunho: vi.fn().mockResolvedValue({ id: 'n-1' }),
     enviarMensagem: vi.fn().mockResolvedValue(undefined),
     completarAlbum: vi.fn().mockResolvedValue(undefined),
+    carimbar: vi.fn().mockImplementation(async () => ({ bytes: new Uint8Array([7, 7]), ext: 'jpg', mime: 'image/jpeg' })),
     ...over,
   };
   return p;
@@ -143,5 +144,19 @@ describe('processarUpdate', () => {
     const p = portas({ modoVideo: vi.fn().mockRejectedValue(new Error('timeout')) });
     await processarUpdate(foto(), p, ORIGEM);
     expect(p.enviarMensagem).toHaveBeenLastCalledWith(5, 'Não consegui criar o rascunho, tente de novo');
+  });
+
+  it('foto ganha a logo da ARENA VALE antes de ser guardada', async () => {
+    const p = portas();
+    await processarUpdate(foto(), p, ORIGEM);
+    expect(p.carimbar).toHaveBeenCalled();
+    expect(p.guardarArquivo).toHaveBeenCalledWith('telegram/5-7.jpg', new Uint8Array([7, 7]), 'image/jpeg');
+  });
+
+  it('se carimbar falhar, guarda a foto original', async () => {
+    const p = portas({ carimbar: vi.fn().mockRejectedValue(new Error('sharp')) });
+    await processarUpdate(foto(), p, ORIGEM);
+    expect(p.guardarArquivo).toHaveBeenCalledWith('telegram/5-7.jpg', new Uint8Array([1, 2, 3]), 'image/jpeg');
+    expect(p.inserirRascunho).toHaveBeenCalled();
   });
 });

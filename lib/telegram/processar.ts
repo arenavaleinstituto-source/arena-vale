@@ -39,6 +39,8 @@ export type PortasBot = {
   enviarMensagem(chatId: number, texto: string): Promise<void>;
   /** Álbum: preenche título e texto do rascunho do grupo se ele ainda estiver com o título padrão. */
   completarAlbum(ref: string, titulo: string, descricao: string): Promise<void>;
+  /** Põe a logo da ARENA VALE na imagem (devolve JPEG). */
+  carimbar(arq: Arquivo): Promise<Arquivo>;
 };
 
 const LIMITE_FOTO = 5 * 1024 * 1024;
@@ -90,7 +92,8 @@ async function criarRascunho(msg: TgMessage & { chat: { id: number } }, chat: nu
   const capaId = r.fotoFileId ?? r.thumbFileId;
   if (capaId) {
     try {
-      const arq = await p.baixarArquivo(capaId, LIMITE_FOTO);
+      const baixado = await p.baixarArquivo(capaId, LIMITE_FOTO);
+      const arq = baixado && (await p.carimbar(baixado).catch((e) => (console.error('[telegram] falha ao carimbar a logo', e), baixado)));
       if (arq) imagem_url = await p.guardarArquivo(`${base}${r.fotoFileId ? '' : '-capa'}.${arq.ext}`, arq.bytes, arq.mime);
       else if (r.fotoFileId) erroMidia = true;
     } catch (e) {
