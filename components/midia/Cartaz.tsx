@@ -29,8 +29,17 @@ export function Cartaz({ href, titulo, imagem, selo, chapeu, novo, video, extern
       {cabecalho && (
         <span className="cab-video">
           {/* eslint-disable-next-line @next/next/no-img-element -- logo pequena e fixa */}
-          <img src="/logo.png" alt="ARENA VALE" />
-          {cabecalho.confronto && <strong>{cabecalho.confronto}</strong>}
+          <img src="/logo-transparente.png" alt="ARENA VALE" />
+          {cabecalho.confronto && (
+            <strong>
+              {cabecalho.confronto.split(/\s+x\s+/i).map((time, i) => (
+                <span key={i}>
+                  {i > 0 && <i aria-label="contra"> x </i>}
+                  {time}
+                </span>
+              ))}
+            </strong>
+          )}
         </span>
       )}
       {/* eslint-disable-next-line @next/next/no-img-element -- imagens de várias origens (Supabase, YouTube, Instagram) */}

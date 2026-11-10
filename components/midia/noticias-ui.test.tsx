@@ -57,7 +57,8 @@ describe('CartazNoticia', () => {
   it('vídeo: cabeçalho com a logo da ARENA VALE e os times do jogo', () => {
     const { container } = render(<CartazNoticia n={{ ...n({ tipo_midia: 'video', video_link: 'https://youtu.be/dQw4w9WgXcQ' }), confronto: 'FLAMENGO x PALMEIRAS' }} />);
     expect(container.querySelector('.cab-video img')?.getAttribute('alt')).toBe('ARENA VALE');
-    expect(screen.getByText('FLAMENGO x PALMEIRAS')).toBeInTheDocument();
+    expect(container.querySelector('.cab-video strong')?.textContent).toBe('FLAMENGO x PALMEIRAS');
+    expect(container.querySelector('.cab-video img')?.getAttribute('src')).toBe('/logo-transparente.png');
   });
 
   it('foto: sem cabeçalho', () => {
