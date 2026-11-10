@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/client';
 import { Cartaz } from '@/components/midia/Cartaz';
 import { CATEGORIAS_MIDIA, faltasParaPublicar, type ModoVideo, type NoticiaMidia } from '@/lib/midia/noticias';
 import { idYoutube, servicoDoLink } from '@/lib/midia/links';
+import { extrairConfronto, limparConfronto } from '@/lib/midia/confronto';
 import { useModalidades } from '@/lib/midia/useModalidades';
 import { capturarQuadro, reduzirImagem } from '@/lib/ui/imagem';
 
@@ -25,6 +26,7 @@ type Form = {
   enquadramento: string;
   video_url: string | null;
   video_link: string;
+  confronto: string;
 };
 
 function formDe(n: NoticiaMidia | null): Form {
@@ -41,6 +43,7 @@ function formDe(n: NoticiaMidia | null): Form {
     enquadramento: n?.enquadramento ?? '50% 50%',
     video_url: n?.video_url ?? null,
     video_link: n?.video_link ?? '',
+    confronto: n?.confronto ?? extrairConfronto(`${n?.titulo ?? ''} ${n?.descricao ?? ''}`) ?? '',
   };
 }
 
@@ -149,6 +152,8 @@ export function EditorNoticia({ noticia, modo, diasVideo = 30, onSalvo, onFechar
       video_link: link,
       video_servico: link ? servicoDoLink(link) : null,
       status,
+      // Só manda quando tem valor: assim o editor segue gravando mesmo antes da 0017 no banco.
+      ...(f.tipo_midia === 'video' && limparConfronto(f.confronto) ? { confronto: limparConfronto(f.confronto) } : noticia?.confronto ? { confronto: null } : {}),
     };
     setOcupado(true);
     const r = noticia ? await supabase.from('noticias').update(dados).eq('id', noticia.id).select().single() : await supabase.from('noticias').insert(dados).select().single();
@@ -281,6 +286,10 @@ export function EditorNoticia({ noticia, modo, diasVideo = 30, onSalvo, onFechar
           <div className="grid gap-3 rounded-2xl border border-av-linha p-4">
             <strong className="font-rotulo uppercase tracking-wider">Vídeo</strong>
             <label className={ROTULO}>
+              Times do jogo (aparecem no cabeçalho do vídeo, abaixo da logo)
+              <input className={CAMPO} value={f.confronto} maxLength={60} placeholder="Ex.: Flamengo x Palmeiras" onChange={(e) => muda('confronto', e.target.value)} />
+            </label>
+            <label className={ROTULO}>
               Link do vídeo original (opcional{modo === 'so_link' ? ', obrigatório no modo só link' : ''})
               <input className={CAMPO} value={f.video_link} onChange={(e) => muda('video_link', e.target.value)} placeholder="https://..." />
             </label>
@@ -347,6 +356,7 @@ export function EditorNoticia({ noticia, modo, diasVideo = 30, onSalvo, onFechar
             imagem={f.imagem_url}
             enquadramento={f.enquadramento}
             video={f.tipo_midia === 'video'}
+            cabecalho={f.tipo_midia === 'video' ? { confronto: limparConfronto(f.confronto) } : undefined}
             novo
           />
         </div>
