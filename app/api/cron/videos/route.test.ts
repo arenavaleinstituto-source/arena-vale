@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 const removidos = vi.fn().mockResolvedValue(2);
 vi.mock('@/lib/telegram/limpeza', () => ({ apagarVideosVencidos: () => removidos() }));
 vi.mock('@/lib/supabase/server', () => ({ createAdminClient: () => ({}) }));
+vi.mock('@/lib/instagram/portas', () => ({ renovarChaveInstagram: async () => 'em_dia' }));
 
 import { GET } from './route';
 
@@ -23,9 +24,9 @@ describe('GET /api/cron/videos', () => {
     expect((await GET(pedido('Bearer '))).status).toBe(401);
   });
 
-  it('com o Bearer certo: apaga e conta', async () => {
+  it('com o Bearer certo: apaga, conta e confere a chave do Instagram', async () => {
     const r = await GET(pedido('Bearer cron-certo'));
     expect(r.status).toBe(200);
-    expect(await r.json()).toEqual({ removidos: 2 });
+    expect(await r.json()).toEqual({ removidos: 2, instagram: 'em_dia' });
   });
 });

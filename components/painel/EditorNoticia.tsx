@@ -54,6 +54,9 @@ export function EditorNoticia({ noticia, modo, diasVideo = 30, onSalvo, onFechar
   const [faltas, setFaltas] = useState<string[]>([]);
   const [mensagem, setMensagem] = useState('');
   const [ocupado, setOcupado] = useState(false);
+  const storyPostado = noticia?.story_status === 'publicado';
+  // Vídeo guardado no site vai para o Story sozinho; foto, só se marcar.
+  const [postarStory, setPostarStory] = useState(() => Boolean(noticia?.video_url) && !storyPostado);
   const videoRef = useRef<HTMLVideoElement>(null);
   const publicada = noticia?.status === 'publicado';
   const [posX, posY] = f.enquadramento.split(' ').map((v) => parseInt(v, 10) || 50);
@@ -104,6 +107,21 @@ export function EditorNoticia({ noticia, modo, diasVideo = 30, onSalvo, onFechar
     setMensagem('Vídeo removido do formulário. Salve para confirmar.');
   }
 
+  /** Chama o servidor até o Instagram terminar (vídeo leva alguns segundos para processar). */
+  async function enviarStory(id: string): Promise<{ status: string; erro?: string }> {
+    setMensagem('Publicada! Postando o Story no Instagram… (vídeo pode levar 1 ou 2 minutos)');
+    for (let tentativa = 0; tentativa < 6; tentativa++) {
+      try {
+        const r = await fetch('/api/instagram/story', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ id }) });
+        const j = (await r.json()) as { status: string; erro?: string };
+        if (j.status !== 'processando') return j;
+      } catch {
+        return { status: 'erro', erro: 'Sem conexão com o site.' };
+      }
+    }
+    return { status: 'processando' };
+  }
+
   async function gravar(status: 'rascunho' | 'publicado') {
     setMensagem('');
     if (status === 'publicado') {
@@ -143,7 +161,23 @@ export function EditorNoticia({ noticia, modo, diasVideo = 30, onSalvo, onFechar
     const antigo = noticia?.video_url?.split('/object/public/noticias/')[1];
     if (antigo && noticia?.video_url !== dados.video_url) await supabase.storage.from('noticias').remove([decodeURIComponent(antigo.split('?')[0])]);
     setMensagem(status === 'publicado' ? 'Publicada! Já aparece no site em até 1 minuto.' : 'Rascunho salvo.');
-    onSalvo({ ...(noticia ?? ({} as NoticiaMidia)), ...(r.data as NoticiaMidia) });
+    const salva = { ...(noticia ?? ({} as NoticiaMidia)), ...(r.data as NoticiaMidia) };
+    if (status === 'publicado' && postarStory && !storyPostado) {
+      setOcupado(true);
+      const s = await enviarStory(salva.id);
+      setOcupado(false);
+      setPostarStory(false);
+      if (s.status === 'publicado') {
+        salva.story_status = 'publicado';
+        setMensagem('Publicada no site e postada no Story do Instagram ✅');
+      } else if (s.status === 'processando') {
+        setMensagem('Publicada no site. O Instagram ainda está processando o vídeo: clique em Publicar de novo daqui a pouco para concluir o Story.');
+        setPostarStory(true);
+      } else {
+        setMensagem(`Publicada no site, mas o Story não foi postado: ${s.erro ?? 'erro desconhecido'}`);
+      }
+    }
+    onSalvo(salva);
   }
 
   const ytId = idYoutube(f.video_link.trim());
@@ -286,6 +320,14 @@ export function EditorNoticia({ noticia, modo, diasVideo = 30, onSalvo, onFechar
         )}
         {mensagem && <p className="text-sm text-av-branco">{mensagem}</p>}
 
+        {storyPostado ? (
+          <p className="text-sm text-av-cinza">✓ Story já postado no Instagram.</p>
+        ) : (
+          <label className="flex items-center gap-3 text-sm text-av-branco">
+            <input type="checkbox" className="h-5 w-5 accent-[#e50914]" checked={postarStory} onChange={(e) => setPostarStory(e.target.checked)} />
+            Postar no Story do Instagram ao publicar
+          </label>
+        )}
         <div className="flex flex-wrap gap-2">
           <button type="button" disabled={ocupado} onClick={() => gravar('rascunho')} className="btn-leve disabled:opacity-50">
             {publicada ? 'Despublicar' : 'Salvar rascunho'}

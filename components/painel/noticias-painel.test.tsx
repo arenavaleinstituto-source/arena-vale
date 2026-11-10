@@ -82,6 +82,35 @@ describe('EditorNoticia', () => {
     expect(escritas[0]).toMatchObject({ op: 'update', valor: expect.objectContaining({ video_url: null }) });
   });
 
+  it('vídeo guardado: ao publicar, posta o Story no Instagram sozinho', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({ json: async () => ({ status: 'publicado' }) });
+    vi.stubGlobal('fetch', fetchMock);
+    const onSalvo = vi.fn();
+    render(<EditorNoticia noticia={n({ tipo_midia: 'video', video_url: 'https://x/v.mp4' })} modo="guardar_arquivo" onSalvo={onSalvo} onFechar={vi.fn()} />);
+    expect(screen.getByLabelText('Postar no Story do Instagram ao publicar')).toBeChecked();
+    await userEvent.setup().click(screen.getByRole('button', { name: 'Publicar' }));
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledWith('/api/instagram/story', expect.objectContaining({ method: 'POST', body: JSON.stringify({ id: 'n1' }) })));
+    expect(await screen.findByText('Publicada no site e postada no Story do Instagram ✅')).toBeInTheDocument();
+    expect(onSalvo).toHaveBeenCalledWith(expect.objectContaining({ story_status: 'publicado' }));
+    vi.unstubAllGlobals();
+  });
+
+  it('foto: Story só se marcar; desmarcado não chama o Instagram', async () => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal('fetch', fetchMock);
+    render(<EditorNoticia noticia={n()} modo="guardar_arquivo" onSalvo={vi.fn()} onFechar={vi.fn()} />);
+    expect(screen.getByLabelText('Postar no Story do Instagram ao publicar')).not.toBeChecked();
+    await userEvent.setup().click(screen.getByRole('button', { name: 'Publicar' }));
+    await waitFor(() => expect(escritas.length).toBe(1));
+    expect(fetchMock).not.toHaveBeenCalled();
+    vi.unstubAllGlobals();
+  });
+
+  it('Story já postado: não oferece de novo', () => {
+    render(<EditorNoticia noticia={n({ status: 'publicado', story_status: 'publicado' })} modo="guardar_arquivo" onSalvo={vi.fn()} onFechar={vi.fn()} />);
+    expect(screen.getByText('✓ Story já postado no Instagram.')).toBeInTheDocument();
+  });
+
   it('publicada: mostra Despublicar', () => {
     render(<EditorNoticia noticia={n({ status: 'publicado' })} modo="guardar_arquivo" onSalvo={vi.fn()} onFechar={vi.fn()} />);
     expect(screen.getByRole('button', { name: 'Despublicar' })).toBeInTheDocument();
