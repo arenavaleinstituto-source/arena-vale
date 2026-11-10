@@ -6,6 +6,7 @@ import { Modalidades } from '@/components/home/Modalidades';
 import { ProjetoSocialHome } from '@/components/home/ProjetoSocialHome';
 import { AtletasDestaques } from '@/components/home/AtletasDestaques';
 import { ParaMarcas } from '@/components/home/ParaMarcas';
+import { SeuCampeonato } from '@/components/home/SeuCampeonato';
 import { Patrocinadores } from '@/components/home/Patrocinadores';
 import { AgoraNaArena, EsporteMundial } from '@/components/home/NoticiasHome';
 import { buscarNoticiasPublicadas } from '@/lib/midia/noticias-busca';
@@ -56,6 +57,7 @@ export default async function Home() {
       <AgendaArena itens={proximosJogos} />
       <UltimosVideos videos={videos} externos={externos} channelUrl={`https://www.youtube.com/${config.youtubeHandle}`} />
       <Modalidades />
+      <SeuCampeonato whatsapp={config.whatsapp} />
       <ProjetoSocialHome whatsapp={config.whatsapp} />
       <AtletasDestaques destaques={destaques} />
       <Patrocinadores patrocinadores={patrocinadores} />

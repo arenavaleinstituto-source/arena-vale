@@ -158,3 +158,16 @@ describe('ProjetoSocialHome', () => {
     expect(botoes[2]).toHaveAttribute('href', '/inscricao');
   });
 });
+
+describe('SeuCampeonato', () => {
+  it('oferece o site para campeonatos de terceiros, com WhatsApp e exemplo', async () => {
+    const { SeuCampeonato } = await import('./SeuCampeonato');
+    const { container } = render(<SeuCampeonato whatsapp="5547988444404" />);
+    expect(container.textContent).toContain('Seu campeonato');
+    expect(container.textContent).toContain('Tabela de classificação automática');
+    const zap = screen.getByRole('link', { name: 'Quero meu campeonato no site' }).getAttribute('href')!;
+    expect(zap).toMatch(/^https:\/\/wa\.me\/5547988444404\?text=/);
+    expect(decodeURIComponent(zap)).toContain('campeonato');
+    expect(screen.getByRole('link', { name: 'Ver como fica' }).getAttribute('href')).toBe('/modalidades');
+  });
+});
