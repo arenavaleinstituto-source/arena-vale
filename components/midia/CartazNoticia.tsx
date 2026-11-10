@@ -12,6 +12,7 @@ export function CartazNoticia({ n }: { n: NoticiaMidia }) {
       imagem={n.imagem_url}
       enquadramento={n.enquadramento}
       video={video}
+      cabecalho={video ? { confronto: n.confronto ?? null } : undefined}
       novo={ehNova(n.publicado_em, new Date())}
       chapeu={n.categoria === 'geral' ? undefined : categoria}
     />

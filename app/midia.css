@@ -338,3 +338,16 @@
 .seu-camp-lista li::before { content: ''; flex: none; width: 10px; height: 10px; border-radius: 3px; background: var(--vermelho); box-shadow: 0 0 12px rgba(229,9,20,.6); }
 @media (max-width: 860px) { .seu-camp { grid-template-columns: 1fr; gap: 24px; } }
 @media (max-width: 480px) { .seu-camp-lista { grid-template-columns: 1fr; } .seu-camp .botoes .av-btn { width: 100%; justify-content: center; } }
+
+/* notícia em vídeo: cabeçalho (30%) com a logo e os times; a imagem do vídeo embaixo */
+.cartaz.com-cabecalho .cab-video { position: absolute; inset: 0 0 auto 0; height: 30%; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; padding: 8px 10px; text-align: center;
+  background: radial-gradient(120% 120% at 50% 0%, rgba(229,9,20,.35), transparent 70%), linear-gradient(180deg, #17171a, #0b0b0c); border-bottom: 2px solid var(--vermelho); }
+.cartaz.com-cabecalho .cab-video img { position: static; display: block; width: 72%; height: auto; max-height: 58%; object-fit: contain; }
+.cartaz.com-cabecalho .cab-video strong { font-family: var(--display); font-weight: 800; font-size: 13px; line-height: 1.05; letter-spacing: .02em; text-transform: uppercase; text-wrap: balance; }
+.cartaz.com-cabecalho .cartaz-img { top: 30%; height: 70%; }
+.cartaz.com-cabecalho .play { top: 62%; }
+
+/* banner estático "Divulgue seu torneio" */
+.banner-torneio { display: block; border-radius: 22px; overflow: hidden; border: 1px solid var(--linha); box-shadow: 0 24px 60px rgba(0,0,0,.5); transition: transform .2s, box-shadow .2s; }
+.banner-torneio:hover { transform: translateY(-3px); box-shadow: 0 30px 70px rgba(229,9,20,.25); }
+.banner-torneio img { display: block; width: 100%; height: auto; }

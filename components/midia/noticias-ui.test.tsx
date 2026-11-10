@@ -54,6 +54,17 @@ describe('BannerDestaque', () => {
 });
 
 describe('CartazNoticia', () => {
+  it('vídeo: cabeçalho com a logo da ARENA VALE e os times do jogo', () => {
+    const { container } = render(<CartazNoticia n={{ ...n({ tipo_midia: 'video', video_link: 'https://youtu.be/dQw4w9WgXcQ' }), confronto: 'FLAMENGO x PALMEIRAS' }} />);
+    expect(container.querySelector('.cab-video img')?.getAttribute('alt')).toBe('ARENA VALE');
+    expect(screen.getByText('FLAMENGO x PALMEIRAS')).toBeInTheDocument();
+  });
+
+  it('foto: sem cabeçalho', () => {
+    const { container } = render(<CartazNoticia n={n()} />);
+    expect(container.querySelector('.cab-video')).toBeNull();
+  });
+
   it('notícia antiga sem cartaz usa a imagem padrão', () => {
     render(<CartazNoticia n={n({ imagem_url: null })} />);
     expect(screen.getByRole('img', { name: 'Golaço' }).getAttribute('src')).toContain('og-banner.jpg');

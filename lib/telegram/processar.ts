@@ -3,6 +3,7 @@
  * Fala com o banco e com o Telegram só pelas "portas", para poder ser testado sem eles.
  */
 import { servicoDoLink } from '@/lib/midia/links';
+import { extrairConfronto } from '@/lib/midia/confronto';
 import type { ModoVideo } from '@/lib/midia/noticias';
 import { comandoVincular, extrairRascunho, LIMITE_VIDEO, respostaRascunho, TITULO_PADRAO, type TgMessage } from './extrair';
 
@@ -23,6 +24,8 @@ export type DadosRascunho = {
   fonte: string | null;
   telegram_message_ref: string;
   created_by: string;
+  /** Times do jogo achados no texto (só vídeo). */
+  confronto?: string | null;
 };
 
 export type PortasBot = {
@@ -133,6 +136,7 @@ async function criarRascunho(msg: TgMessage & { chat: { id: number } }, chat: nu
     // Álbum: a 1ª mensagem grava o grupo; as seguintes batem no único e são ignoradas.
     telegram_message_ref: r.mediaGroupId ? `grupo:${chat}:${r.mediaGroupId}` : r.ref,
     created_by: perfilId,
+    ...(r.tipo_midia === 'video' ? { confronto: extrairConfronto(`${r.titulo} ${r.descricao}`) } : {}),
   };
 
   const criado = await p.inserirRascunho(dados);

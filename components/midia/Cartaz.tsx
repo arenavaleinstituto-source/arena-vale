@@ -16,14 +16,23 @@ type Props = {
   externo?: boolean;
   /** Ponto focal da imagem no recorte 2:3 (CSS object-position), ex.: "50% 30%". */
   enquadramento?: string | null;
+  /** Notícia em vídeo: faixa de cima (30%) com a logo e os times do jogo; a imagem fica embaixo. */
+  cabecalho?: { confronto: string | null };
   /** Fonte da notícia (Esporte Mundial), mostrada sobre o cartaz. */
   fonte?: string | null;
 };
 
 /** Cartaz 2:3, como capa de filme (spec 2026-11-08, 4.1). */
-export function Cartaz({ href, titulo, imagem, selo, chapeu, novo, video, externo, enquadramento, fonte }: Props) {
+export function Cartaz({ href, titulo, imagem, selo, chapeu, novo, video, externo, enquadramento, fonte, cabecalho }: Props) {
   const conteudo = (
     <>
+      {cabecalho && (
+        <span className="cab-video">
+          {/* eslint-disable-next-line @next/next/no-img-element -- logo pequena e fixa */}
+          <img src="/logo.png" alt="ARENA VALE" />
+          {cabecalho.confronto && <strong>{cabecalho.confronto}</strong>}
+        </span>
+      )}
       {/* eslint-disable-next-line @next/next/no-img-element -- imagens de várias origens (Supabase, YouTube, Instagram) */}
       <img
         src={imagem || IMAGEM_CARTAZ_PADRAO}
@@ -51,13 +60,13 @@ export function Cartaz({ href, titulo, imagem, selo, chapeu, novo, video, extern
   );
   if (externo) {
     return (
-      <a href={href} className="cartaz" target="_blank" rel="noopener noreferrer">
+      <a href={href} className={cabecalho ? 'cartaz com-cabecalho' : 'cartaz'} target="_blank" rel="noopener noreferrer">
         {conteudo}
       </a>
     );
   }
   return (
-    <Link href={href} className="cartaz">
+    <Link href={href} className={cabecalho ? 'cartaz com-cabecalho' : 'cartaz'}>
       {conteudo}
     </Link>
   );

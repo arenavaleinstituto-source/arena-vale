@@ -152,6 +152,12 @@ describe('processarUpdate', () => {
     expect(p.inserirRascunho).toHaveBeenCalledWith(expect.objectContaining({ fonte: null }));
   });
 
+  it('vídeo: acha os times no texto para o cabeçalho', async () => {
+    const p = portas({ baixarArquivo: vi.fn().mockResolvedValue({ bytes: new Uint8Array([9]), ext: 'mp4', mime: 'video/mp4' }) });
+    await processarUpdate({ message: { message_id: 11, chat: { id: 5 }, from: { id: 42 }, caption: 'Gols de Flamengo 2 x 1 Palmeiras', video: { file_id: 'v1', file_size: 1000 } } }, p, ORIGEM);
+    expect(p.inserirRascunho).toHaveBeenCalledWith(expect.objectContaining({ confronto: 'FLAMENGO x PALMEIRAS' }));
+  });
+
   it('foto ganha a logo da ARENA VALE antes de ser guardada', async () => {
     const p = portas();
     await processarUpdate(foto(), p, ORIGEM);

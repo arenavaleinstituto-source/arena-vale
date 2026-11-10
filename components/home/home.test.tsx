@@ -171,3 +171,15 @@ describe('SeuCampeonato', () => {
     expect(screen.getByRole('link', { name: 'Ver como fica' }).getAttribute('href')).toBe('/modalidades');
   });
 });
+
+describe('BannerTorneio', () => {
+  it('banner estático que leva ao WhatsApp, com versão de celular', async () => {
+    const { BannerTorneio } = await import('./BannerTorneio');
+    const { container } = render(<BannerTorneio whatsapp="5547988444404" />);
+    const link = container.querySelector('a.banner-torneio')!.getAttribute('href')!;
+    expect(link).toMatch(/^https:\/\/wa\.me\/5547988444404\?text=/);
+    expect(decodeURIComponent(link)).toContain('divulgar o meu torneio');
+    expect(screen.getByRole('img').getAttribute('alt')).toContain('Divulgue seu torneio na ARENA VALE');
+    expect(container.querySelector('source')?.getAttribute('srcset')).toBe('/banners/divulgue-torneio-celular.jpg');
+  });
+});

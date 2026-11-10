@@ -1,6 +1,15 @@
 import { describe, expect, it } from 'vitest';
 import { admin, clienteComo, criarUsuario, visitante } from './fixtures';
 
+describe('cabeçalho dos vídeos (0017)', () => {
+  it('notícia guarda os times do jogo (até 60 letras)', async () => {
+    const { data } = await admin().from('noticias').insert({ titulo: 'Gol', confronto: 'FLAMENGO x PALMEIRAS' }).select('confronto').single();
+    expect(data?.confronto).toBe('FLAMENGO x PALMEIRAS');
+    const ruim = await admin().from('noticias').insert({ titulo: 'Gol', confronto: 'X'.repeat(61) });
+    expect(ruim.error?.code).toBe('23514');
+  });
+});
+
 describe('Story no Instagram (0016)', () => {
   it('a chave do Instagram só é lida pelo servidor (nem coordenador, nem visitante)', async () => {
     await admin().from('instagram_conta').upsert({ id: 'main', ig_user_id: '178', token: 'segredo' });

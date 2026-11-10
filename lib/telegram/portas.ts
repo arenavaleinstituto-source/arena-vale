@@ -78,7 +78,13 @@ export function portasBot(admin: SupabaseClient): PortasBot {
       return admin.storage.from('noticias').getPublicUrl(caminho).data.publicUrl;
     },
     async inserirRascunho(dados) {
-      const { data, error } = await admin.from('noticias').insert(dados).select('id').single();
+      let { data, error } = await admin.from('noticias').insert(dados).select('id').single();
+      // Banco ainda sem a coluna "confronto" (0017): grava sem ela.
+      if (error && /confronto/.test(error.message) && 'confronto' in dados) {
+        const { confronto: _semColuna, ...resto } = dados;
+        void _semColuna;
+        ({ data, error } = await admin.from('noticias').insert(resto).select('id').single());
+      }
       if (error?.code === '23505') return 'duplicado';
       if (error || !data) throw new Error(error?.message ?? 'falha ao gravar');
       return { id: (data as { id: string }).id };

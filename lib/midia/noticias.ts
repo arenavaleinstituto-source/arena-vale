@@ -36,6 +36,8 @@ export type NoticiaMidia = {
   origem: 'manual' | 'telegram';
   modalidade: string | null;
   created_at: string;
+  /** Times do jogo para o cabeçalho dos vídeos (0017), ex.: "FLAMENGO x PALMEIRAS". */
+  confronto?: string | null;
   /** Story no Instagram (0016). */
   story_status?: 'processando' | 'publicado' | 'erro';
   story_erro?: string | null;
@@ -79,6 +81,7 @@ export function mapearNoticiaMidia(row: Record<string, unknown>): NoticiaMidia {
     origem: row.origem === 'telegram' ? 'telegram' : 'manual',
     modalidade: texto(row.modalidade),
     created_at: created,
+    ...(texto(row.confronto) ? { confronto: texto(row.confronto) } : {}),
     ...(row.story_status === 'processando' || row.story_status === 'publicado' || row.story_status === 'erro'
       ? { story_status: row.story_status, story_erro: texto(row.story_erro) }
       : {}),
