@@ -77,6 +77,20 @@ describe('mídia esportiva (0011)', () => {
     expect(p?.publicado_em).not.toBeNull();
   });
 
+  it('despublicar zera publicado_em; republicar ganha data nova (selo NOVO volta) — 0018', async () => {
+    const antiga = '2026-01-01T00:00:00+00:00';
+    const { data: n } = await admin()
+      .from('noticias')
+      .insert({ titulo: 'Vai e volta', status: 'publicado', publicado_em: antiga })
+      .select('id, publicado_em')
+      .single();
+    expect(new Date(n!.publicado_em).toISOString()).toBe(new Date(antiga).toISOString());
+    const { data: r } = await admin().from('noticias').update({ status: 'rascunho' }).eq('id', n!.id).select('publicado_em').single();
+    expect(r?.publicado_em).toBeNull();
+    const { data: p } = await admin().from('noticias').update({ status: 'publicado' }).eq('id', n!.id).select('publicado_em').single();
+    expect(new Date(p!.publicado_em).getTime()).toBeGreaterThan(new Date(antiga).getTime());
+  });
+
   it('visitante não lê rascunho', async () => {
     const { data: n } = await admin().from('noticias').insert({ titulo: 'Rascunho secreto' }).select('id').single();
     const { data } = await visitante().from('noticias').select('id').eq('id', n!.id);

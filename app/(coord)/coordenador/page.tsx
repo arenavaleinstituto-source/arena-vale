@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import { createClient } from '@/lib/supabase/server';
 import { lerCargo } from '@/lib/auth/cargo';
+import { enderecoDeLogin } from '@/lib/auth/rotas';
 import { getDashboardStats, getInscricoes, getPatrocinadores } from '@/lib/supabase/queries';
 import { CoordShell } from '@/components/coord-shell';
 import { lerConfigSite } from '@/lib/midia/config';
@@ -14,10 +15,15 @@ export const metadata = { title: 'Coordenação | ARENA VALE', robots: { index: 
 const STATS_VAZIO = { inscricoes_pendentes: 0, campeonatos: 0, equipes: 0, jogos: 0 };
 
 /** Painel da coordenação (spec Fase 3, seção 12). */
-export default async function CoordenadorPage() {
+export default async function CoordenadorPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const supabase = await createClient();
   const { cargo, userId } = await lerCargo(supabase);
-  if (!userId) redirect('/login?next=/coordenador');
+  if (!userId) {
+    const busca = new URLSearchParams();
+    for (const [k, v] of Object.entries(await searchParams)) if (typeof v === 'string') busca.set(k, v);
+    const texto = busca.toString();
+    redirect(enderecoDeLogin('/coordenador', texto ? `?${texto}` : ''));
+  }
   if (cargo !== 'coordenador') redirect('/acesso-negado');
 
   const config = await lerConfigSite();

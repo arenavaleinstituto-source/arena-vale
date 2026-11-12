@@ -86,3 +86,8 @@ export function destinoConfirmacao(next: string | null | undefined, origem?: str
   if (caminho && (dentroDe(caminho.split('?')[0], '/criar-senha') || dentroDaEquipe(caminho))) return caminho;
   return '/login';
 }
+
+/** Endereço do login que volta para a mesma página (com a busca, ex.: `?aba=noticias&editar=…`). */
+export function enderecoDeLogin(pathname: string, search: string): string {
+  return `/login?next=${encodeURIComponent(pathname + (search || ''))}`;
+}

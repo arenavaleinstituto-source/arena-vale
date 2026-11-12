@@ -65,30 +65,44 @@ export function EntrarEquipe() {
     botaoRef.current?.focus();
   }, []);
 
-  // Esc fecha o que estiver aberto (login ou menu).
+  // Esc fecha o que estiver aberto (login, menu da equipe ou menu da conta).
   useEffect(() => {
-    if (!cargoLogin && !menuEntrar) return;
+    if (!cargoLogin && !menuEntrar && !menu) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== 'Escape') return;
       if (cargoLogin) fecharLogin();
       else {
         setMenuEntrar(false);
+        setMenu(false);
         botaoRef.current?.focus();
       }
     };
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
-  }, [cargoLogin, menuEntrar, fecharLogin]);
+  }, [cargoLogin, menuEntrar, menu, fecharLogin]);
 
-  // Toque ou clique fora fecha o menu. `pointerdown`: o iPhone não dispara `click` em áreas sem link.
+  // Toque ou clique fora fecha os menus. `pointerdown`: o iPhone não dispara `click` em áreas sem link.
   useEffect(() => {
-    if (!menuEntrar) return;
+    if (!menuEntrar && !menu) return;
     const fora = (e: Event) => {
-      if (caixaRef.current && !caixaRef.current.contains(e.target as Node)) setMenuEntrar(false);
+      if (caixaRef.current && !caixaRef.current.contains(e.target as Node)) {
+        setMenuEntrar(false);
+        setMenu(false);
+      }
     };
     document.addEventListener('pointerdown', fora);
     return () => document.removeEventListener('pointerdown', fora);
-  }, [menuEntrar]);
+  }, [menuEntrar, menu]);
+
+  // Com o login aberto, a página de trás não rola.
+  useEffect(() => {
+    if (!cargoLogin) return;
+    const antes = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = antes;
+    };
+  }, [cargoLogin]);
 
   async function sair() {
     await createClient().auth.signOut();
@@ -100,8 +114,9 @@ export function EntrarEquipe() {
   if (sessao) {
     const painel = destinoPorCargo(sessao.cargo) ?? '/';
     return (
-      <div className="relative">
+      <div className="relative" ref={caixaRef}>
         <button
+          ref={botaoRef}
           type="button"
           onClick={() => setMenu((v) => !v)}
           aria-expanded={menu}

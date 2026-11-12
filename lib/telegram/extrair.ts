@@ -14,7 +14,7 @@ type TgOrigin =
 
 export type TgMessage = {
   message_id: number;
-  chat: { id: number };
+  chat: { id: number; type?: string };
   from?: { id: number };
   text?: string;
   caption?: string;

@@ -70,6 +70,8 @@ export async function processarUpdate(update: unknown, p: PortasBot, origem: str
 
   const perfil = await p.perfilPorTelegram(msg.from.id);
   if (!perfil || perfil.role !== 'coordenador') {
+    // Em grupo, só responde a quem está vinculado (não fica avisando cada membro).
+    if (msg.chat.type && msg.chat.type !== 'private' && !perfil) return;
     await p.enviarMensagem(chat, 'Você não tem permissão para criar notícias.');
     return;
   }

@@ -38,7 +38,13 @@ export type LinhaAgendaJogos = {
   equipe_fora: string;
   data_hora: string;
   local?: string | null;
+  status?: string | null;
 };
+
+/** Transmissões marcadas como canceladas saem da agenda. */
+export function agendaAtiva<T extends { status?: string | null }>(linhas: T[]): T[] {
+  return linhas.filter((l) => !/^cancelad/i.test((l.status ?? '').trim()));
+}
 
 const UMA_HORA_MS = 3600 * 1000;
 
@@ -135,13 +141,13 @@ export async function buscarAgenda(limite = 6): Promise<ItemAgenda[]> {
       .then((r) => r, () => ({ data: null, error: true })),
     sb
       .from('agenda_jogos')
-      .select('id,modalidade,fase,equipe_casa,equipe_fora,data_hora,local')
+      .select('id,modalidade,fase,equipe_casa,equipe_fora,data_hora,local,status')
       .gte('data_hora', agora.toISOString())
       .order('data_hora')
       .limit(50)
       .then((r) => r, () => ({ data: null, error: true })),
   ]);
   const jogos = rJogos.error || !rJogos.data ? [] : (rJogos.data as unknown as LinhaJogo[]).map(deJogos);
-  const agenda = rAgenda.error || !rAgenda.data ? [] : (rAgenda.data as unknown as LinhaAgendaJogos[]).map(deAgendaJogos);
+  const agenda = rAgenda.error || !rAgenda.data ? [] : agendaAtiva(rAgenda.data as unknown as LinhaAgendaJogos[]).map(deAgendaJogos);
   return juntarAgenda(jogos, agenda, agora, limite);
 }
