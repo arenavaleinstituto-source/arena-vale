@@ -7,6 +7,7 @@ import { extrairConfronto } from '@/lib/midia/confronto';
 import type { ModoVideo } from '@/lib/midia/noticias';
 import { comandoVincular, extrairRascunho, LIMITE_VIDEO, respostaRascunho, TITULO_PADRAO, type TgMessage } from './extrair';
 import { tratarGaleria, type EstadoBot, type TgCallbackQuery } from './galeria';
+import { extrairParceiro } from './parceiro';
 import type { ItemAgenda } from '@/lib/midia/agenda';
 
 export type Arquivo = { bytes: Uint8Array; ext: string; mime: string };
@@ -16,7 +17,7 @@ export type DadosRascunho = {
   descricao: string;
   status: 'rascunho';
   origem: 'telegram';
-  aba: 'mundo';
+  aba: 'mundo' | 'arena';
   tipo_midia: 'foto' | 'video';
   imagem_url: string | null;
   video_url: string | null;
@@ -66,6 +67,8 @@ export type PortasBot = {
   responderBotao(callbackId: string): Promise<void>;
   /** false quando as tabelas da galeria ainda não existem. */
   galeriaAtiva(): Promise<boolean>;
+  /** Modo parceiro: logo da ARENA VALE + faixa "Foto e arte: @perfil" embaixo (devolve JPEG). */
+  montarParceiro(arq: Arquivo, perfil: string): Promise<Arquivo>;
 };
 
 const LIMITE_FOTO = 5 * 1024 * 1024;
@@ -122,7 +125,12 @@ export async function processarUpdate(update: unknown, p: PortasBot, origem: str
   }
 }
 
-async function criarRascunho(msg: TgMessage & { chat: { id: number } }, chat: number, perfilId: string, p: PortasBot, origem: string): Promise<void> {
+async function criarRascunho(msgOriginal: TgMessage & { chat: { id: number } }, chat: number, perfilId: string, p: PortasBot, origem: string): Promise<void> {
+  // Modo parceiro: "parceiro @perfil" sai do texto e vira o crédito da arte e a fonte.
+  const parceiro = extrairParceiro(msgOriginal.text ?? msgOriginal.caption ?? '');
+  const msg = parceiro
+    ? { ...msgOriginal, ...(msgOriginal.text !== undefined ? { text: parceiro.texto } : { caption: parceiro.texto }) }
+    : msgOriginal;
   const r = extrairRascunho(msg);
   const { modo, dias } = await p.modoVideo();
   const guardarVideo = Boolean(r.videoFileId) && modo === 'guardar_arquivo' && (r.videoTamanho ?? 0) <= LIMITE_VIDEO;
@@ -139,7 +147,8 @@ async function criarRascunho(msg: TgMessage & { chat: { id: number } }, chat: nu
   if (capaId) {
     try {
       const baixado = await p.baixarArquivo(capaId, LIMITE_FOTO);
-      const arq = baixado && (await p.carimbar(baixado).catch((e) => (console.error('[telegram] falha ao carimbar a logo', e), baixado)));
+      const marcar = (a: Arquivo) => (parceiro ? p.montarParceiro(a, parceiro.perfil) : p.carimbar(a));
+      const arq = baixado && (await marcar(baixado).catch((e) => (console.error('[telegram] falha ao marcar a imagem', e), baixado)));
       if (arq) imagem_url = await p.guardarArquivo(`${base}${r.fotoFileId ? '' : '-capa'}.${arq.ext}`, arq.bytes, arq.mime);
       else if (r.fotoFileId) erroMidia = true;
     } catch (e) {
@@ -165,14 +174,15 @@ async function criarRascunho(msg: TgMessage & { chat: { id: number } }, chat: nu
     descricao: r.descricao,
     status: 'rascunho',
     origem: 'telegram',
-    aba: 'mundo',
+    aba: parceiro ? 'arena' : 'mundo',
     tipo_midia: r.tipo_midia,
     imagem_url,
     video_url,
     video_expira_em: video_url ? new Date(Date.now() + dias * 86400000).toISOString() : null,
     video_link: r.video_link,
     video_servico: r.video_link ? servicoDoLink(r.video_link) : null,
-    fonte: GUARDAR_FONTE ? r.fonte : null,
+    // O crédito do parceiro sempre aparece, mesmo com GUARDAR_FONTE desligado.
+    fonte: parceiro ? `@${parceiro.perfil}` : GUARDAR_FONTE ? r.fonte : null,
     // Álbum: a 1ª mensagem grava o grupo; as seguintes batem no único e são ignoradas.
     telegram_message_ref: r.mediaGroupId ? `grupo:${chat}:${r.mediaGroupId}` : r.ref,
     created_by: perfilId,
@@ -192,5 +202,7 @@ async function criarRascunho(msg: TgMessage & { chat: { id: number } }, chat: nu
 ${link}`);
     return;
   }
-  await p.enviarMensagem(chat, respostaRascunho(r, modo, Boolean(video_url), erroMidia, link));
+  const resposta = respostaRascunho(r, modo, Boolean(video_url), erroMidia, link);
+  const avisoParceiro = parceiro ? `\nModo parceiro @${parceiro.perfil}: arte com crédito, na aba Notícias do Vale.` : '';
+  await p.enviarMensagem(chat, resposta + avisoParceiro);
 }

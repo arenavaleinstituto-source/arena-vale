@@ -41,10 +41,11 @@ Outras variáveis (cadastradas na Vercel; no computador, em `.env.local`):
 | `TELEGRAM_BOT_TOKEN`, `TELEGRAM_WEBHOOK_SECRET` | robô do Telegram (seção abaixo) |
 | `CRON_SECRET` | rotina diária que apaga vídeos vencidos e renova a chave do Instagram |
 | `INSTAGRAM_ACCESS_TOKEN`, `INSTAGRAM_USER_ID` | Story automático no Instagram (opcional) |
+| `YOUTUBE_API_KEY` | YouTube Data API v3: Últimos vídeos, lives e Cortes (Shorts). Sem ela, os vídeos usam o RSS e os Cortes não aparecem |
 
 ## Banco de dados
 
-As migrações ficam em `supabase/migrations/` (`0001` a `0018`) e devem ser aplicadas em ordem. Há duas formas:
+As migrações ficam em `supabase/migrations/` (`0001` a `0019`) e devem ser aplicadas em ordem. Há duas formas:
 
 **A) Pelo terminal (Supabase CLI)**
 ```bash
@@ -128,12 +129,16 @@ O bot transforma mensagens encaminhadas em **rascunhos** na aba Notícias do pai
 3. Faça um novo deploy e registre o webhook pelo terminal (assim o segredo não fica no histórico do navegador), trocando `<TOKEN>` e `<SEGREDO>`:
 
    ```
-   curl -s "https://api.telegram.org/bot<TOKEN>/setWebhook" -d "url=https://arena-vale.vercel.app/api/telegram" -d "secret_token=<SEGREDO>" -d 'allowed_updates=["message"]'
+   node scripts/telegram/configurar.mjs https://arena-vale.vercel.app/api/telegram
    ```
 
-   A resposta deve ter `"ok":true`.
+   O script lê o token e o segredo do `.env.local` (sem imprimi-los), registra o menu de comandos (`/fotos` e `/pronto`) e o webhook com `allowed_updates=["message","callback_query"]` (necessário para os botões). Ele mostra o `getWebhookInfo` no fim: `ultimo_erro` deve ser `null`. Sem a URL, mantém a que já está registrada.
 4. No painel, aba **Notícias**, clique em **Vincular Telegram**, e envie ao bot a mensagem `/vincular <código>`.
 
 **Uso:** encaminhe ao bot a mensagem do grupo (foto, vídeo ou texto com link). Ele responde "Rascunho criado ✅" com o link do editor.
+
+**Galeria (`/fotos`):** o coordenador envia `/fotos`, escolhe o jogo nos botões (jogos dos últimos 3 dias e de hoje) ou "Outro evento" (o robô pede o nome) e manda as fotos — soltas, em álbum ou como arquivo. Elas vão para o álbum do jogo em `/galeria`, com a logo. `/pronto` encerra e devolve o link; depois de 30 min sem foto, o robô volta sozinho ao modo notícias. Também dá para enviar pelo painel, aba **Galeria**.
+
+**Modo parceiro (`parceiro @perfil`):** para repostar a publicação de outra pessoa **com autorização dela**, escreva `parceiro @perfil` na legenda. O robô mantém a imagem como veio (inclusive a marca do autor), acrescenta a logo da ARENA VALE e uma faixa "Foto e arte: @perfil · Publicado com autorização", e cria o rascunho na aba Notícias do Vale com a fonte `@perfil`. O robô nunca remove marcas ou logos de terceiros.
 
 **Vídeos:** guardados por 30 dias (ajustável na área do proprietário) até 20 MB; depois disso a notícia toca pelo link original, quando houver.

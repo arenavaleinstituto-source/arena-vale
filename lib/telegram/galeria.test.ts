@@ -48,6 +48,7 @@ function portas(estadoInicial: EstadoBot | null = null, over: Partial<PortasBot>
     enviarBotoes: vi.fn().mockResolvedValue(undefined),
     responderBotao: vi.fn().mockResolvedValue(undefined),
     galeriaAtiva: vi.fn().mockResolvedValue(true),
+    montarParceiro: vi.fn(),
     ...over,
   } satisfies PortasBot;
   return { p, estado: () => estado };

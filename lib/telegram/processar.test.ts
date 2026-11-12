@@ -23,6 +23,7 @@ function portas(over: Partial<PortasBot> = {}) {
     enviarBotoes: vi.fn().mockResolvedValue(undefined),
     responderBotao: vi.fn().mockResolvedValue(undefined),
     galeriaAtiva: vi.fn().mockResolvedValue(false),
+    montarParceiro: vi.fn(),
     ...over,
   };
   return p;
@@ -188,5 +189,33 @@ describe('processarUpdate', () => {
     await processarUpdate(foto(), p, ORIGEM);
     expect(p.guardarArquivo).toHaveBeenCalledWith('telegram/5-7.jpg', new Uint8Array([1, 2, 3]), 'image/jpeg');
     expect(p.inserirRascunho).toHaveBeenCalled();
+  });
+});
+
+describe('modo parceiro', () => {
+  it('foto com "parceiro @perfil": arte com crédito, aba Notícias do Vale e fonte do parceiro', async () => {
+    const p = portas({ montarParceiro: vi.fn().mockImplementation(async () => ({ bytes: new Uint8Array([8]), ext: 'jpg', mime: 'image/jpeg' })) });
+    await processarUpdate(foto({ caption: 'Recorde\nparceiro @egidio' }), p, ORIGEM);
+    expect(p.montarParceiro).toHaveBeenCalledWith(expect.objectContaining({ ext: 'jpg' }), 'egidio');
+    expect(p.carimbar).not.toHaveBeenCalled();
+    const dados = (p.inserirRascunho as ReturnType<typeof vi.fn>).mock.calls[0][0];
+    expect(dados).toMatchObject({ aba: 'arena', fonte: '@egidio', titulo: 'Recorde' });
+    expect(`${dados.titulo} ${dados.descricao}`).not.toMatch(/parceiro/i);
+    expect((p.enviarMensagem as ReturnType<typeof vi.fn>).mock.calls.at(-1)?.[1]).toContain('parceiro @egidio');
+  });
+
+  it('vídeo com parceiro: a capa recebe o crédito e o vídeo segue igual', async () => {
+    const baixar = vi.fn().mockImplementation(async (id: string) =>
+      id === 'v1' ? { bytes: new Uint8Array([9]), ext: 'mp4', mime: 'video/mp4' } : { bytes: new Uint8Array([1]), ext: 'jpg', mime: 'image/jpeg' },
+    );
+    const p = portas({ baixarArquivo: baixar, montarParceiro: vi.fn().mockImplementation(async () => ({ bytes: new Uint8Array([8]), ext: 'jpg', mime: 'image/jpeg' })) });
+    await processarUpdate(
+      { message: { message_id: 8, chat: { id: 5 }, from: { id: 42 }, caption: 'Virada parceiro @egidio', video: { file_id: 'v1', file_size: 1000, thumbnail: { file_id: 't1' } } } },
+      p,
+      ORIGEM,
+    );
+    expect(p.montarParceiro).toHaveBeenCalledTimes(1);
+    expect(p.guardarArquivo).toHaveBeenCalledWith('telegram/5-8.mp4', new Uint8Array([9]), 'video/mp4');
+    expect((p.inserirRascunho as ReturnType<typeof vi.fn>).mock.calls[0][0]).toMatchObject({ aba: 'arena', fonte: '@egidio', titulo: 'Virada' });
   });
 });

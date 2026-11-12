@@ -1,4 +1,5 @@
 import { carimbarLogo } from '@/lib/imagem/marca';
+import { montarParceiro } from '@/lib/imagem/parceiro';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Arquivo, PortasBot } from './processar';
 import type { ModoVideo } from '@/lib/midia/noticias';
@@ -94,6 +95,9 @@ export function portasBot(admin: SupabaseClient): PortasBot {
     },
     async carimbar(arq) {
       return { bytes: await carimbarLogo(arq.bytes), ext: 'jpg', mime: 'image/jpeg' };
+    },
+    async montarParceiro(arq, perfil) {
+      return { bytes: await montarParceiro(arq.bytes, perfil), ext: 'jpg', mime: 'image/jpeg' };
     },
     async completarAlbum(ref, titulo, descricao) {
       await admin
