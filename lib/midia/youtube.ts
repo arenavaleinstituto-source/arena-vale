@@ -1,6 +1,7 @@
 /**
  * YouTube do canal TV Arena Vale (spec Fase 3, seção 6).
- * Sem chave de API: lê o feed RSS público e a página /live do canal.
+ * Com YOUTUBE_API_KEY: listas do canal pela API oficial; sem ela, o feed RSS.
+ * O ao vivo é lido na página /live do canal.
  * Qualquer falha devolve "vazio" ou "fora do ar" — o site nunca quebra.
  */
 
@@ -46,7 +47,67 @@ export function parsearFeed(xml: string): VideoYT[] {
 
 type FetchComCache = (url: string, init?: RequestInit & { next?: { revalidate?: number } }) => Promise<Response>;
 
+/** Listas automáticas do canal: vídeos (UULF), lives (UULV) e Shorts (UUSH). */
+export function playlistsDoCanal(channelId: string): { videos: string; lives: string; shorts: string } {
+  const resto = channelId.replace(/^UC/, '');
+  return { videos: `UULF${resto}`, lives: `UULV${resto}`, shorts: `UUSH${resto}` };
+}
+
+const ESCONDIDOS = new Set(['Private video', 'Deleted video']);
+
+/** Resposta de playlistItems.list (YouTube Data API v3) → vídeos. */
+export function parsearPlaylistItems(json: unknown): VideoYT[] {
+  const itens = (json as { items?: unknown } | null)?.items;
+  if (!Array.isArray(itens)) return [];
+  const videos: VideoYT[] = [];
+  for (const it of itens) {
+    const s = (it as { snippet?: { title?: string; publishedAt?: string; resourceId?: { videoId?: string } } })?.snippet;
+    const id = s?.resourceId?.videoId;
+    const titulo = s?.title;
+    if (!id || !titulo || !s?.publishedAt || ESCONDIDOS.has(titulo)) continue;
+    videos.push({
+      id,
+      titulo: semHashtags(titulo),
+      publicadoEm: s.publishedAt,
+      capa: `https://i.ytimg.com/vi/${id}/hqdefault.jpg`,
+      link: `https://www.youtube.com/watch?v=${id}`,
+    });
+  }
+  return videos;
+}
+
+/** Uma lista do canal pela API oficial. Sem chave ou com erro: lista vazia. */
+export async function buscarListaYT(playlistId: string, limite: number, f: typeof fetch = fetch): Promise<VideoYT[]> {
+  const chave = process.env.YOUTUBE_API_KEY;
+  if (!chave) return [];
+  try {
+    const url =
+      `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=${limite}` +
+      `&playlistId=${encodeURIComponent(playlistId)}&key=${encodeURIComponent(chave)}`;
+    const r = await (f as FetchComCache)(url, { next: { revalidate: 1800 }, signal: AbortSignal.timeout(4000) });
+    if (!r.ok) return [];
+    return parsearPlaylistItems(await r.json());
+  } catch {
+    return [];
+  }
+}
+
+/** Cortes (Shorts) do canal, mais novos primeiro. */
+export async function buscarCortesYT(channelId: string, limite = 12, f: typeof fetch = fetch): Promise<VideoYT[]> {
+  return buscarListaYT(playlistsDoCanal(channelId).shorts, limite, f);
+}
+
+/** Últimos vídeos: com chave, vídeos + lives pela API; sem chave, o RSS público. */
 export async function buscarVideosYT(channelId: string, f: typeof fetch = fetch): Promise<VideoYT[]> {
+  if (process.env.YOUTUBE_API_KEY) {
+    const p = playlistsDoCanal(channelId);
+    const [videos, lives] = await Promise.all([buscarListaYT(p.videos, 15, f), buscarListaYT(p.lives, 15, f)]);
+    return [...videos, ...lives].sort((a, b) => Date.parse(b.publicadoEm) - Date.parse(a.publicadoEm)).slice(0, 15);
+  }
+  return buscarVideosRss(channelId, f);
+}
+
+async function buscarVideosRss(channelId: string, f: typeof fetch): Promise<VideoYT[]> {
   try {
     const r = await (f as FetchComCache)(`https://www.youtube.com/feeds/videos.xml?channel_id=${encodeURIComponent(channelId)}`, {
       next: { revalidate: 1800 },
