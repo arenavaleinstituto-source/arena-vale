@@ -1,6 +1,6 @@
 import { Banner } from '@/components/home/Banner';
 import { AoVivo } from '@/components/home/AoVivo';
-import { AgendaArena } from '@/components/home/AgendaArena';
+import { HojeNaArena } from '@/components/home/HojeNaArena';
 import { UltimosVideos } from '@/components/home/UltimosVideos';
 import { Modalidades } from '@/components/home/Modalidades';
 import { ProjetoSocialHome } from '@/components/home/ProjetoSocialHome';
@@ -14,7 +14,7 @@ import { buscarNoticiasPublicadas } from '@/lib/midia/noticias-busca';
 import { buscarPatrocinadores } from '@/lib/midia/patrocinadores';
 import { lerConfigSite, linkAssistirAoVivo } from '@/lib/midia/config';
 import { buscarVideosYT, embedAoVivo, estaAoVivo } from '@/lib/midia/youtube';
-import { buscarAgenda, resumoAgenda } from '@/lib/midia/agenda';
+import { buscarAgenda, buscarHojeNaArena, resumoAgenda } from '@/lib/midia/agenda';
 import { buscarVideosExternos } from '@/lib/midia/videos-externos-busca';
 import { buscarDestaques } from '@/lib/content/destaques';
 import { createPublicClient } from '@/lib/supabase/server';
@@ -33,9 +33,10 @@ async function seguro<T>(p: Promise<T>, vazio: T): Promise<T> {
 /** Página inicial de mídia esportiva (spec Fase 3, seção 5). */
 export default async function Home() {
   const config = await lerConfigSite();
-  const [aoVivoDetectado, agenda, videos, externos, destaques, patrocinadores, arena, mundo] = await Promise.all([
+  const [aoVivoDetectado, agenda, hojeNaArena, videos, externos, destaques, patrocinadores, arena, mundo] = await Promise.all([
     seguro(estaAoVivo(config.youtubeChannelId), false),
     seguro(buscarAgenda(30), []),
+    seguro(buscarHojeNaArena(), { hoje: [], proximos: [] }),
     seguro(buscarVideosYT(config.youtubeChannelId), []),
     seguro(buscarVideosExternos(8), []),
     seguro(
@@ -47,7 +48,8 @@ export default async function Home() {
     seguro(buscarNoticiasPublicadas({ aba: 'mundo', limite: 12 }), []),
   ]);
   const aoVivo = config.aoVivoManual || aoVivoDetectado;
-  const { lista: proximosJogos, proxima } = resumoAgenda(agenda, 6);
+  const { proxima } = resumoAgenda(agenda, 6);
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.arenavale.com.br';
 
   return (
     <main id="topo" className="w-full overflow-x-clip bg-av-preto text-av-branco">
@@ -55,7 +57,7 @@ export default async function Home() {
       <AoVivo aoVivo={aoVivo} embed={embedAoVivo(config.youtubeChannelId)} linkAssistir={linkAssistirAoVivo(config)} proxima={proxima} />
       <AgoraNaArena noticias={arena} />
       <EsporteMundial noticias={mundo} />
-      <AgendaArena itens={proximosJogos} />
+      <HojeNaArena hoje={hojeNaArena.hoje} proximos={hojeNaArena.proximos} baseUrl={baseUrl} youtubeHandle={config.youtubeHandle} albuns={{}} />
       <BannerTorneio whatsapp={config.whatsapp} />
       <UltimosVideos videos={videos} externos={externos} channelUrl={`https://www.youtube.com/${config.youtubeHandle}`} />
       <Modalidades />
