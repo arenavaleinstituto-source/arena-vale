@@ -353,3 +353,21 @@
 .cartaz.com-cabecalho.com-times .play { top: 70%; }
 .cartaz.com-cabecalho .cartaz-img { top: 30%; height: 70%; }
 .cartaz.com-cabecalho .play { top: 62%; }
+
+/* Menu do celular: botão ☰ (só até 760px) e lista que abre abaixo do cabeçalho */
+.hamb { display: none; flex: none; width: 42px; height: 42px; border-radius: 50%; border: 1px solid #34343a; background: transparent; color: var(--branco); cursor: pointer; place-items: center; padding: 0; }
+.hamb svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; }
+.hamb[aria-expanded="true"] { background: var(--vermelho); border-color: var(--vermelho); }
+.menu-cel, .fundo-menu-cel { display: none; }
+@media (max-width: 760px) {
+  .topo .menu { display: none; }
+  .topo .dentro { justify-content: space-between; }
+  .topo .logo-topo { margin-right: auto; }
+  .hamb { display: grid; }
+  .fundo-menu-cel { display: block; position: absolute; left: 0; right: 0; top: 100%; height: 100dvh; background: rgba(0,0,0,.65); }
+  .menu-cel { display: grid; z-index: 1; position: absolute; left: 0; right: 0; top: 100%; background: #0b0b0c; border-bottom: 1px solid #1c1c21; padding: 8px max(16px, env(safe-area-inset-left, 0px)) 18px; max-height: calc(100dvh - 70px); overflow-y: auto; box-shadow: 0 24px 50px rgba(0,0,0,.6); }
+  .menu-cel a { font-family: var(--rotulo); font-weight: 700; text-transform: uppercase; letter-spacing: .08em; font-size: 17px; color: #d4d4d8; padding: 14px 6px; border-bottom: 1px solid #1c1c21; }
+  .menu-cel a.on, .menu-cel a[aria-current="page"] { color: var(--branco); box-shadow: inset 3px 0 0 var(--vermelho); padding-left: 14px; }
+  .menu-cel a.vivo::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--vermelho); margin-right: 9px; box-shadow: 0 0 8px var(--vermelho); vertical-align: 2px; }
+  .menu-cel .anuncie-cel { margin-top: 14px; border: 0; text-align: center; background: var(--vermelho); color: var(--branco); border-radius: 999px; padding: 13px; }
+}
