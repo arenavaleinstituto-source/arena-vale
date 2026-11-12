@@ -192,3 +192,22 @@ export async function buscarHojeNaArena(): Promise<{ hoje: ItemAgenda[]; proximo
   const itens = await buscarItens(new Date(agora.getTime() - TRES_HORAS_MS), 50);
   return separarHoje(itens, agora);
 }
+
+/** Um jogo da agenda pelo id, na tabela da origem. */
+export async function buscarItemAgenda(origem: 'jogos' | 'agenda', id: string): Promise<ItemAgenda | null> {
+  const sb = createPublicClient();
+  if (origem === 'jogos') {
+    const { data, error } = await sb
+      .from('jogos')
+      .select('id,data,fase,local,casa:time_casa_id(nome),fora:time_visitante_id(nome),campeonato:campeonato_id(modalidade),transmissoes(id)')
+      .eq('id', id)
+      .maybeSingle();
+    return error || !data ? null : deJogos(data as unknown as LinhaJogo);
+  }
+  const { data, error } = await sb
+    .from('agenda_jogos')
+    .select('id,modalidade,fase,equipe_casa,equipe_fora,data_hora,local,status')
+    .eq('id', id)
+    .maybeSingle();
+  return error || !data ? null : deAgendaJogos(data as unknown as LinhaAgendaJogos);
+}
