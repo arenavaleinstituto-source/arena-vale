@@ -1,3 +1,4 @@
+import type { SupabaseClient } from '@supabase/supabase-js';
 import { createPublicClient } from '@/lib/supabase/server';
 
 /**
@@ -158,25 +159,27 @@ export function separarHoje(
   return { hoje, proximos: proximos.slice(0, maxProximos) };
 }
 
-/** Jogos dos campeonatos e transmissões a partir de `desde`, já juntos. */
-async function buscarItens(desde: Date, limite: number): Promise<ItemAgenda[]> {
-  const sb = createPublicClient();
+/** Jogos dos campeonatos e transmissões a partir de `desde` (e até `ate`, se houver), já juntos. */
+async function buscarItens(
+  desde: Date,
+  limite: number,
+  o: { ate?: Date; sb?: SupabaseClient; soAgendados?: boolean } = {},
+): Promise<ItemAgenda[]> {
+  const sb = o.sb ?? createPublicClient();
+  let qJogos = sb
+    .from('jogos')
+    .select('id,data,fase,local,casa:time_casa_id(nome),fora:time_visitante_id(nome),campeonato:campeonato_id(modalidade),transmissoes(id)')
+    .gte('data', agoraBrasiliaSemFuso(desde));
+  qJogos = o.soAgendados === false ? qJogos.neq('status', 'cancelado') : qJogos.eq('status', 'agendado');
+  if (o.ate) qJogos = qJogos.lte('data', agoraBrasiliaSemFuso(o.ate));
+  let qAgenda = sb
+    .from('agenda_jogos')
+    .select('id,modalidade,fase,equipe_casa,equipe_fora,data_hora,local,status')
+    .gte('data_hora', desde.toISOString());
+  if (o.ate) qAgenda = qAgenda.lte('data_hora', o.ate.toISOString());
   const [rJogos, rAgenda] = await Promise.all([
-    sb
-      .from('jogos')
-      .select('id,data,fase,local,casa:time_casa_id(nome),fora:time_visitante_id(nome),campeonato:campeonato_id(modalidade),transmissoes(id)')
-      .eq('status', 'agendado')
-      .gte('data', agoraBrasiliaSemFuso(desde))
-      .order('data')
-      .limit(50)
-      .then((r) => r, () => ({ data: null, error: true })),
-    sb
-      .from('agenda_jogos')
-      .select('id,modalidade,fase,equipe_casa,equipe_fora,data_hora,local,status')
-      .gte('data_hora', desde.toISOString())
-      .order('data_hora')
-      .limit(50)
-      .then((r) => r, () => ({ data: null, error: true })),
+    qJogos.order('data').limit(50).then((r) => r, () => ({ data: null, error: true })),
+    qAgenda.order('data_hora').limit(50).then((r) => r, () => ({ data: null, error: true })),
   ]);
   const jogos = rJogos.error || !rJogos.data ? [] : (rJogos.data as unknown as LinhaJogo[]).map(deJogos);
   const agenda = rAgenda.error || !rAgenda.data ? [] : agendaAtiva(rAgenda.data as unknown as LinhaAgendaJogos[]).map(deAgendaJogos);
@@ -210,4 +213,26 @@ export async function buscarItemAgenda(origem: 'jogos' | 'agenda', id: string): 
     .eq('id', id)
     .maybeSingle();
   return error || !data ? null : deAgendaJogos(data as unknown as LinhaAgendaJogos);
+}
+
+/** Fim do dia de hoje (23h59m59s de Brasília). */
+function fimDoDiaBrasilia(agora: Date): Date {
+  return new Date(Date.parse(`${diaBrasilia(agora.getTime())}T23:59:59.999-03:00`));
+}
+
+/** Jogos de `dias` atrás até o fim de hoje, das duas fontes, do mais recente ao mais antigo (até 8). */
+export async function jogosRecentes(dias: number, agora: Date = new Date(), sb?: SupabaseClient): Promise<ItemAgenda[]> {
+  try {
+    const desde = new Date(Date.parse(`${diaBrasilia(agora.getTime() - dias * 24 * UMA_HORA_MS)}T00:00:00-03:00`));
+    const itens = await buscarItens(desde, 50, { ate: fimDoDiaBrasilia(agora), sb, soAgendados: false });
+    return itens.sort((a, b) => Date.parse(b.dataHora) - Date.parse(a.dataHora)).slice(0, 8);
+  } catch {
+    return [];
+  }
+}
+
+/** "Casa x Fora · 15/11" (data de Brasília). */
+export function rotuloJogo(item: ItemAgenda): string {
+  const [, mes, dia] = diaBrasilia(Date.parse(item.dataHora)).split('-');
+  return `${item.casa} x ${item.fora} · ${dia}/${mes}`;
 }
