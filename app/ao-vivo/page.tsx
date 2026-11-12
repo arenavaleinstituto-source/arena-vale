@@ -29,7 +29,7 @@ export default async function AoVivoPage() {
         proxima={proximaTransmissao(agenda)}
       />
       <Faixa id="transmissoes" titulo="Próximas transmissões" subtitulo="Jogos com transmissão confirmada." alt>
-        <ListaAgenda itens={transmissoes} />
+        <ListaAgenda itens={transmissoes} youtubeHandle={config.youtubeHandle} />
       </Faixa>
     </main>
   );

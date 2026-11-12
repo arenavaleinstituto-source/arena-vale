@@ -4,7 +4,7 @@ import { renderToString } from 'react-dom/server';
 import { Banner } from './Banner';
 import { AoVivo } from './AoVivo';
 import { Contagem } from './Contagem';
-import { AgendaArena } from './AgendaArena';
+import { HojeNaArena } from './HojeNaArena';
 import { UltimosVideos } from './UltimosVideos';
 import { Modalidades } from './Modalidades';
 import { ParaMarcas } from './ParaMarcas';
@@ -92,16 +92,28 @@ describe('Contagem', () => {
   });
 });
 
-describe('AgendaArena', () => {
+describe('HojeNaArena', () => {
+  const props = { baseUrl: 'https://www.arenavale.com.br', youtubeHandle: '@TVArenaVale', albuns: {} };
+  const outro = (id: string, casa: string): ItemAgenda => ({ ...JOGO, id, casa });
+
   it('vazia: mensagem curta', () => {
-    render(<AgendaArena itens={[]} />);
+    render(<HojeNaArena hoje={[]} proximos={[]} {...props} />);
     expect(screen.getByText('Nenhum jogo agendado — volte em breve.')).toBeInTheDocument();
   });
 
-  it('jogo com selo Transmissão', () => {
-    render(<AgendaArena itens={[JOGO]} />);
-    expect(screen.getByText('● Transmissão')).toBeInTheDocument();
-    expect(screen.getByText('Ginásio Galegão - Blumenau')).toBeInTheDocument();
+  it('jogo de hoje com selo HOJE e próximos dias', () => {
+    render(<HojeNaArena hoje={[JOGO]} proximos={[outro('j2', 'Real'), outro('j3', 'Sede')]} {...props} />);
+    expect(screen.getByRole('heading', { name: 'Hoje na Arena' })).toBeInTheDocument();
+    expect(screen.getAllByText('HOJE')).toHaveLength(1);
+    expect(screen.getByText('Próximos dias')).toBeInTheDocument();
+    expect(screen.getAllByText('● Transmissão')).toHaveLength(3);
+    expect(screen.getAllByText('Ginásio Galegão - Blumenau')).toHaveLength(3);
+  });
+
+  it('sem jogo hoje: avisa e mostra os próximos', () => {
+    render(<HojeNaArena hoje={[]} proximos={[outro('j2', 'Real')]} {...props} />);
+    expect(screen.getByText('Hoje não tem jogo na Arena — veja os próximos')).toBeInTheDocument();
+    expect(screen.getByText(/Real/)).toBeInTheDocument();
   });
 });
 
