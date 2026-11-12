@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { decidirRota, destinoPorCargo, cargoDoBanco, destinoConfirmacao } from './rotas';
+import { decidirRota, destinoPorCargo, cargoDoBanco, destinoConfirmacao, enderecoDeLogin } from './rotas';
 
 describe('decidirRota', () => {
   it.each([
@@ -95,5 +95,17 @@ describe('destinoConfirmacao (links de e-mail)', () => {
     expect(destinoConfirmacao('//evil.com')).toBe('/login');
     expect(destinoConfirmacao(null)).toBe('/login');
     expect(destinoConfirmacao('/noticias')).toBe('/login');
+  });
+});
+
+describe('enderecoDeLogin', () => {
+  it('guarda a rota e a busca (link do Telegram para um rascunho)', () => {
+    const url = enderecoDeLogin('/coordenador', '?aba=noticias&editar=abc');
+    expect(url).toBe('/login?next=' + encodeURIComponent('/coordenador?aba=noticias&editar=abc'));
+    expect(destinoPorCargo('coordenador', new URLSearchParams(url.split('?')[1]).get('next'))).toBe('/coordenador?aba=noticias&editar=abc');
+  });
+
+  it('sem busca fica só a rota', () => {
+    expect(enderecoDeLogin('/painel', '')).toBe('/login?next=%2Fpainel');
   });
 });

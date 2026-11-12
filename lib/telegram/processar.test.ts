@@ -23,6 +23,13 @@ const foto = (extra: object = {}) => ({
 });
 
 describe('processarUpdate', () => {
+  it('em grupo, quem não está vinculado não recebe resposta (o robô fica quieto)', async () => {
+    const p = portas({ perfilPorTelegram: vi.fn().mockResolvedValue(null) });
+    await processarUpdate(foto({ chat: { id: -100, type: 'supergroup' } }), p, ORIGEM);
+    expect(p.enviarMensagem).not.toHaveBeenCalled();
+    expect(p.inserirRascunho).not.toHaveBeenCalled();
+  });
+
   it('remetente sem vínculo: avisa que não tem permissão e não cria nada', async () => {
     const p = portas({ perfilPorTelegram: vi.fn().mockResolvedValue(null) });
     await processarUpdate(foto(), p, ORIGEM);

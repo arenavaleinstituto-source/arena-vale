@@ -1,7 +1,7 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 import { lerCargo } from '@/lib/auth/cargo';
-import { decidirRota } from '@/lib/auth/rotas';
+import { decidirRota, enderecoDeLogin } from '@/lib/auth/rotas';
 
 /**
  * Porteiro das áreas da equipe (spec 5.5). O cargo vem sempre do banco.
@@ -40,10 +40,7 @@ export async function proxy(request: NextRequest) {
 
   if (decisao === 'nao-encontrado') return naoEncontrado();
   if (decisao === 'login') {
-    const destino = request.nextUrl.clone();
-    destino.pathname = '/login';
-    destino.search = `?next=${encodeURIComponent(pathname)}`;
-    return NextResponse.redirect(destino);
+    return NextResponse.redirect(new URL(enderecoDeLogin(pathname, request.nextUrl.search), request.url));
   }
   if (decisao === 'negado') return NextResponse.redirect(new URL('/acesso-negado', request.url));
   return resposta;

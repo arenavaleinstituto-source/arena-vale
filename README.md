@@ -33,11 +33,18 @@ Ficam em `.env.local`, que **nunca** vai para o git. Na Vercel, ficam em *Settin
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase → Settings → API → `anon` `public` | navegador e servidor |
 | `SUPABASE_SERVICE_ROLE_KEY` | Supabase → Settings → API → `service_role` | **só no servidor** e no seed. Nunca expor no navegador |
 
-As variáveis do bot do Telegram e da rotina de vídeos entram nas próximas fases.
+Outras variáveis (cadastradas na Vercel; no computador, em `.env.local`):
+
+| Variável | Uso |
+|---|---|
+| `NEXT_PUBLIC_BASE_URL` | endereço do site (`https://www.arenavale.com.br`) |
+| `TELEGRAM_BOT_TOKEN`, `TELEGRAM_WEBHOOK_SECRET` | robô do Telegram (seção abaixo) |
+| `CRON_SECRET` | rotina diária que apaga vídeos vencidos e renova a chave do Instagram |
+| `INSTAGRAM_ACCESS_TOKEN`, `INSTAGRAM_USER_ID` | Story automático no Instagram (opcional) |
 
 ## Banco de dados
 
-As migrações ficam em `supabase/migrations/` (`0001` a `0007`) e devem ser aplicadas em ordem. Há duas formas:
+As migrações ficam em `supabase/migrations/` (`0001` a `0018`) e devem ser aplicadas em ordem. Há duas formas:
 
 **A) Pelo terminal (Supabase CLI)**
 ```bash
@@ -118,13 +125,13 @@ O bot transforma mensagens encaminhadas em **rascunhos** na aba Notícias do pai
    - `TELEGRAM_BOT_TOKEN` = o token do BotFather;
    - `TELEGRAM_WEBHOOK_SECRET` = uma senha longa inventada (só letras, números, `_` e `-`);
    - `CRON_SECRET` = outra senha longa (usada pela rotina diária que apaga vídeos vencidos).
-3. Faça um novo deploy e registre o webhook, trocando `<TOKEN>` e `<SEGREDO>`:
+3. Faça um novo deploy e registre o webhook pelo terminal (assim o segredo não fica no histórico do navegador), trocando `<TOKEN>` e `<SEGREDO>`:
 
    ```
-   https://api.telegram.org/bot<TOKEN>/setWebhook?url=https://arena-vale.vercel.app/api/telegram&secret_token=<SEGREDO>&allowed_updates=["message"]
+   curl -s "https://api.telegram.org/bot<TOKEN>/setWebhook" -d "url=https://arena-vale.vercel.app/api/telegram" -d "secret_token=<SEGREDO>" -d 'allowed_updates=["message"]'
    ```
 
-   Abra esse endereço no navegador: deve aparecer `"ok":true`.
+   A resposta deve ter `"ok":true`.
 4. No painel, aba **Notícias**, clique em **Vincular Telegram**, e envie ao bot a mensagem `/vincular <código>`.
 
 **Uso:** encaminhe ao bot a mensagem do grupo (foto, vídeo ou texto com link). Ele responde "Rascunho criado ✅" com o link do editor.

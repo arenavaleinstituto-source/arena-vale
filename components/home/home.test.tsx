@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
+import { renderToString } from 'react-dom/server';
 import { Banner } from './Banner';
 import { AoVivo } from './AoVivo';
 import { Contagem } from './Contagem';
@@ -82,6 +83,12 @@ describe('Contagem', () => {
     render(<Contagem alvo="2099-01-01T00:00:00.000Z" />);
     expect(screen.getByText('dias')).toBeInTheDocument();
     expect(screen.getByText('min')).toBeInTheDocument();
+  });
+
+  it('no servidor não usa o relógio (evita diferença ao abrir no navegador)', () => {
+    const html = renderToString(<Contagem alvo="2099-01-01T00:00:00.000Z" />);
+    expect(html).toContain('--');
+    expect(html).not.toMatch(/<b>\d/);
   });
 });
 

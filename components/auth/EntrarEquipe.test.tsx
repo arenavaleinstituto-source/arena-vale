@@ -93,4 +93,26 @@ describe('EntrarEquipe', () => {
     render(<EntrarEquipe />);
     expect(await screen.findByText('Moderador')).toBeInTheDocument();
   });
+  it('menu da conta (logado) fecha com Esc e com toque fora', async () => {
+    sb = fakeSupabase({ role: 'moderador', nome: 'Ana', userId: 'm1' });
+    render(<EntrarEquipe />);
+    const u = userEvent.setup();
+    await u.click(await screen.findByRole('button', { name: 'Conta: Moderador' }));
+    expect(screen.getByRole('link', { name: 'Meu painel' })).toBeInTheDocument();
+    await u.keyboard('{Escape}');
+    expect(screen.queryByRole('link', { name: 'Meu painel' })).toBeNull();
+    await u.click(screen.getByRole('button', { name: 'Conta: Moderador' }));
+    fireEvent.pointerDown(document.body);
+    expect(screen.queryByRole('link', { name: 'Meu painel' })).toBeNull();
+  });
+
+  it('com o login aberto a página de trás não rola', async () => {
+    sb = fakeSupabase();
+    render(<EntrarEquipe />);
+    const u = await abrirMenu();
+    await u.click(screen.getByRole('menuitem', { name: 'Coordenação' }));
+    expect(document.body.style.overflow).toBe('hidden');
+    await u.keyboard('{Escape}');
+    expect(document.body.style.overflow).toBe('');
+  });
 });

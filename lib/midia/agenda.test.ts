@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { deAgendaJogos, deJogos, juntarAgenda, proximaTransmissao, resumoAgenda, type ItemAgenda } from './agenda';
+import { agendaAtiva, deAgendaJogos, deJogos, juntarAgenda, proximaTransmissao, resumoAgenda, type ItemAgenda } from './agenda';
 
 const AGORA = new Date('2026-11-10T12:00:00-03:00');
 
@@ -101,5 +101,17 @@ describe('conversões', () => {
     expect(i.transmissao).toBe(true);
     expect(i.origem).toBe('agenda');
     expect(i.dataHora).toBe('2026-11-20T15:30:00.000Z');
+  });
+});
+
+describe('agendaAtiva', () => {
+  it('tira da agenda as transmissões canceladas (qualquer forma de escrever)', () => {
+    const linhas = [
+      { id: 'a', equipe_casa: 'A', equipe_fora: 'B', data_hora: '2026-11-15T19:00:00Z', status: 'Agendado' },
+      { id: 'b', equipe_casa: 'A', equipe_fora: 'B', data_hora: '2026-11-15T19:00:00Z', status: 'Cancelado' },
+      { id: 'c', equipe_casa: 'A', equipe_fora: 'B', data_hora: '2026-11-15T19:00:00Z', status: ' cancelada ' },
+      { id: 'd', equipe_casa: 'A', equipe_fora: 'B', data_hora: '2026-11-15T19:00:00Z', status: null },
+    ];
+    expect(agendaAtiva(linhas).map((l) => l.id)).toEqual(['a', 'd']);
   });
 });
