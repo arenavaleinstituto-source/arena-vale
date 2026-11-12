@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { agendaAtiva, deAgendaJogos, deJogos, juntarAgenda, proximaTransmissao, resumoAgenda, separarHoje, type ItemAgenda } from './agenda';
+import { agendaAtiva, deAgendaJogos, deJogos, juntarAgenda, proximaTransmissao, resumoAgenda, separarHoje, buscarHojeNaArena, type ItemAgenda } from './agenda';
 
 const AGORA = new Date('2026-11-10T12:00:00-03:00');
 
@@ -155,5 +155,19 @@ describe('separarHoje', () => {
     );
     expect(r.hoje.map((i) => i.casa)).toEqual(['A', 'B']);
     expect(r.proximos.map((i) => i.casa)).toEqual(['C', 'D']);
+  });
+});
+
+describe('buscarHojeNaArena', () => {
+  it('inclui jogo ao vivo e finalizado (não só agendado)', async () => {
+    const filtros: [string, string, unknown][] = [];
+    const q: Record<string, unknown> = {};
+    for (const m of ['select', 'gte', 'lte', 'order', 'limit']) q[m] = () => q;
+    for (const m of ['eq', 'neq', 'in']) q[m] = (c: string, v: unknown) => (filtros.push([m, c, v]), q);
+    q.then = (ok: (v: unknown) => unknown) => Promise.resolve({ data: [], error: null }).then(ok);
+    const sb = { from: () => q } as never;
+    await buscarHojeNaArena(sb);
+    expect(filtros).toContainEqual(['in', 'status', ['agendado', 'ao_vivo', 'finalizado']]);
+    expect(filtros).not.toContainEqual(['eq', 'status', 'agendado']);
   });
 });

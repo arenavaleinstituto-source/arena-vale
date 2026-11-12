@@ -162,14 +162,14 @@ export function separarHoje(
 async function buscarItens(
   desde: Date,
   limite: number,
-  o: { ate?: Date; sb?: SupabaseClient; soAgendados?: boolean } = {},
+  o: { ate?: Date; sb?: SupabaseClient; status?: string[] } = {},
 ): Promise<ItemAgenda[]> {
   const sb = o.sb ?? createPublicClient();
   let qJogos = sb
     .from('jogos')
     .select('id,data,fase,local,casa:time_casa_id(nome),fora:time_visitante_id(nome),campeonato:campeonato_id(modalidade),transmissoes(id)')
     .gte('data', agoraBrasiliaSemFuso(desde));
-  qJogos = o.soAgendados === false ? qJogos.neq('status', 'cancelado') : qJogos.eq('status', 'agendado');
+  qJogos = o.status ? qJogos.in('status', o.status) : qJogos.eq('status', 'agendado');
   if (o.ate) qJogos = qJogos.lte('data', agoraBrasiliaSemFuso(o.ate));
   let qAgenda = sb
     .from('agenda_jogos')
@@ -189,9 +189,12 @@ export async function buscarAgenda(limite = 6): Promise<ItemAgenda[]> {
   return buscarItens(new Date(), limite);
 }
 
-export async function buscarHojeNaArena(): Promise<{ hoje: ItemAgenda[]; proximos: ItemAgenda[] }> {
+/** Jogos que acontecem ou aconteceram (o jogo "ao vivo" continua aparecendo). */
+const STATUS_DO_DIA = ['agendado', 'ao_vivo', 'finalizado'];
+
+export async function buscarHojeNaArena(sb?: SupabaseClient): Promise<{ hoje: ItemAgenda[]; proximos: ItemAgenda[] }> {
   const agora = new Date();
-  const itens = await buscarItens(new Date(agora.getTime() - TRES_HORAS_MS), 50);
+  const itens = await buscarItens(new Date(agora.getTime() - TRES_HORAS_MS), 50, { sb, status: STATUS_DO_DIA });
   return separarHoje(itens, agora);
 }
 
@@ -223,7 +226,7 @@ function fimDoDiaBrasilia(agora: Date): Date {
 export async function jogosRecentes(dias: number, agora: Date = new Date(), sb?: SupabaseClient): Promise<ItemAgenda[]> {
   try {
     const desde = new Date(Date.parse(`${diaBrasilia(agora.getTime() - dias * 24 * UMA_HORA_MS)}T00:00:00-03:00`));
-    const itens = await buscarItens(desde, 50, { ate: fimDoDiaBrasilia(agora), sb, soAgendados: false });
+    const itens = await buscarItens(desde, 50, { ate: fimDoDiaBrasilia(agora), sb, status: STATUS_DO_DIA });
     return itens.sort((a, b) => Date.parse(b.dataHora) - Date.parse(a.dataHora)).slice(0, 8);
   } catch {
     return [];
