@@ -52,7 +52,10 @@ export function AbaGaleria() {
       .order('created_at', { ascending: false })
       .limit(200);
     if (error) return setMensagem('Não consegui carregar os álbuns. Se a galeria é nova, falta rodar o SQL da galeria.');
-    setAlbuns(((data ?? []) as unknown as LinhaAlbum[]).map(deAlbum));
+    const lista = ((data ?? []) as unknown as LinhaAlbum[]).map(deAlbum);
+    setAlbuns(lista);
+    // Mantém o álbum aberto em dia (ex.: capa posta pelo servidor no 1º envio).
+    setAberto((atual) => (atual ? (lista.find((a) => a.id === atual.id) ?? atual) : atual));
     // eslint-disable-next-line react-hooks/exhaustive-deps -- cliente estável
   }, []);
 
@@ -186,7 +189,11 @@ export function AbaGaleria() {
     if (error) return setMensagem('Não consegui apagar a foto.');
     const caminhos = [caminhoNoBucket(f.url), caminhoNoBucket(f.miniaturaUrl)].filter((c): c is string => !!c);
     if (caminhos.length) await supabase.storage.from('galeria').remove(caminhos);
-    if (aberto.capaUrl === f.url) await supabase.from('galeria_albuns').update({ capa_url: null }).eq('id', aberto.id);
+    // A capa pode ter sido posta pelo servidor (1ª foto) sem a tela saber: troca no banco
+    // só se a capa ainda for esta foto, pela próxima foto que sobrou (ou nenhuma).
+    const proxima = fotos.find((x) => x.id !== f.id)?.url ?? null;
+    await supabase.from('galeria_albuns').update({ capa_url: proxima }).eq('id', aberto.id).eq('capa_url', f.url);
+    if (aberto.capaUrl === f.url) setAberto({ ...aberto, capaUrl: proxima });
     await carregarFotos(aberto.id);
     await carregarAlbuns();
   }

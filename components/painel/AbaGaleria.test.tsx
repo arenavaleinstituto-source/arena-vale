@@ -147,4 +147,19 @@ describe('AbaGaleria', () => {
     expect(chamadas.find((c) => c.acao === 'delete' && c.tabela === 'galeria_fotos')).toMatchObject({ filtros: [['id', 'f1']] });
     expect(removidos[0]).toEqual(['alb-1/aaa.jpg', 'alb-1/aaa-m.jpg']);
   });
+
+  it('apagar a foto que é capa no banco troca a capa pela próxima, mesmo sem a tela saber', async () => {
+    const u = userEvent.setup();
+    render(<AbaGaleria />);
+    await u.click(await screen.findByRole('button', { name: 'Abrir' }));
+    const primeira = (await screen.findAllByRole('listitem', { name: /Foto/ }))[0];
+    await u.click(within(primeira).getByRole('button', { name: 'Apagar' }));
+    expect(chamadas.find((c) => c.acao === 'update' && c.tabela === 'galeria_albuns')).toMatchObject({
+      valor: { capa_url: FOTOS[1].url },
+      filtros: [
+        ['id', 'alb-1'],
+        ['capa_url', FOTOS[0].url],
+      ],
+    });
+  });
 });
