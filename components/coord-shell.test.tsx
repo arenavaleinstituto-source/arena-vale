@@ -43,10 +43,10 @@ describe('CoordShell', () => {
     expect(document.body.textContent ?? '').not.toMatch(/propriet/i);
   });
 
-  it('as 13 abas aparecem e trocar de aba grava na URL', async () => {
+  it('as 14 abas aparecem e trocar de aba grava na URL', async () => {
     montar();
     const abas = screen.getAllByRole('tab');
-    expect(abas).toHaveLength(13);
+    expect(abas).toHaveLength(14);
     await userEvent.setup().click(screen.getByRole('tab', { name: 'Notícias' }));
     expect(replace).toHaveBeenCalledWith('/coordenador?aba=noticias', { scroll: false });
   });

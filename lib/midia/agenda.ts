@@ -1,5 +1,8 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { createPublicClient } from '@/lib/supabase/server';
+import { diaBrasilia } from './jogo-rotulo';
+
+export { rotuloJogo } from './jogo-rotulo';
 
 /**
  * Agenda única (spec Fase 3, seção 7): junta a agenda de transmissões
@@ -130,10 +133,6 @@ function agoraBrasiliaSemFuso(agora: Date): string {
 
 const TRES_HORAS_MS = 3 * UMA_HORA_MS;
 
-/** Dia (AAAA-MM-DD) no horário de Brasília (UTC−3, sem horário de verão). */
-function diaBrasilia(t: number): string {
-  return new Date(t - TRES_HORAS_MS).toISOString().slice(0, 10);
-}
 
 /**
  * Hoje na Arena: `hoje` são os jogos do dia de Brasília que começaram há no
@@ -229,10 +228,4 @@ export async function jogosRecentes(dias: number, agora: Date = new Date(), sb?:
   } catch {
     return [];
   }
-}
-
-/** "Casa x Fora · 15/11" (data de Brasília). */
-export function rotuloJogo(item: ItemAgenda): string {
-  const [, mes, dia] = diaBrasilia(Date.parse(item.dataHora)).split('-');
-  return `${item.casa} x ${item.fora} · ${dia}/${mes}`;
 }
