@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { agendaAtiva, deAgendaJogos, deJogos, juntarAgenda, proximaTransmissao, resumoAgenda, type ItemAgenda } from './agenda';
+import { agendaAtiva, deAgendaJogos, deJogos, juntarAgenda, proximaTransmissao, resumoAgenda, separarHoje, type ItemAgenda } from './agenda';
 
 const AGORA = new Date('2026-11-10T12:00:00-03:00');
 
@@ -113,5 +113,47 @@ describe('agendaAtiva', () => {
       { id: 'd', equipe_casa: 'A', equipe_fora: 'B', data_hora: '2026-11-15T19:00:00Z', status: null },
     ];
     expect(agendaAtiva(linhas).map((l) => l.id)).toEqual(['a', 'd']);
+  });
+});
+
+describe('separarHoje', () => {
+  const AG = new Date('2026-11-15T20:00:00-03:00');
+  const it2 = (dataHora: string, casa = 'A') => item({ casa, dataHora: new Date(dataHora).toISOString() });
+
+  it('jogo que começou há 30 min fica em hoje', () => {
+    const r = separarHoje([it2('2026-11-15T19:30:00-03:00')], AG);
+    expect(r.hoje).toHaveLength(1);
+    expect(r.proximos).toHaveLength(0);
+  });
+
+  it('jogo de hoje com mais de 3 h sai das duas listas', () => {
+    const r = separarHoje([it2('2026-11-15T16:59:00-03:00')], AG);
+    expect(r.hoje).toHaveLength(0);
+    expect(r.proximos).toHaveLength(0);
+  });
+
+  it('jogo às 23h30 de Brasília (amanhã em UTC) é hoje', () => {
+    const r = separarHoje([it2('2026-11-16T02:30:00Z')], AG);
+    expect(r.hoje).toHaveLength(1);
+  });
+
+  it('jogo de amanhã às 10h vai para próximos', () => {
+    const r = separarHoje([it2('2026-11-16T10:00:00-03:00')], AG);
+    expect(r.hoje).toHaveLength(0);
+    expect(r.proximos).toHaveLength(1);
+  });
+
+  it('próximos corta em 6', () => {
+    const itens = [1, 2, 3, 4, 5, 6, 7, 8].map((d) => it2(`2026-11-${16 + d}T10:00:00-03:00`, `T${d}`));
+    expect(separarHoje(itens, AG).proximos).toHaveLength(6);
+  });
+
+  it('resultado ordenado por dataHora', () => {
+    const r = separarHoje(
+      [it2('2026-11-15T22:00:00-03:00', 'B'), it2('2026-11-15T21:00:00-03:00', 'A'), it2('2026-11-18T10:00:00-03:00', 'D'), it2('2026-11-17T10:00:00-03:00', 'C')],
+      AG,
+    );
+    expect(r.hoje.map((i) => i.casa)).toEqual(['A', 'B']);
+    expect(r.proximos.map((i) => i.casa)).toEqual(['C', 'D']);
   });
 });

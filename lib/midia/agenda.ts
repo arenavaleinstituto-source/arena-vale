@@ -127,27 +127,68 @@ function agoraBrasiliaSemFuso(agora: Date): string {
   return new Date(agora.getTime() - 3 * UMA_HORA_MS).toISOString().slice(0, 19);
 }
 
-export async function buscarAgenda(limite = 6): Promise<ItemAgenda[]> {
-  const agora = new Date();
+const TRES_HORAS_MS = 3 * UMA_HORA_MS;
+
+/** Dia (AAAA-MM-DD) no horário de Brasília (UTC−3, sem horário de verão). */
+function diaBrasilia(t: number): string {
+  return new Date(t - TRES_HORAS_MS).toISOString().slice(0, 10);
+}
+
+/**
+ * Hoje na Arena: `hoje` são os jogos do dia de Brasília que começaram há no
+ * máximo 3 h ou ainda vão começar; `proximos` são os dos dias seguintes.
+ */
+export function separarHoje(
+  itens: ItemAgenda[],
+  agora: Date,
+  maxProximos = 6,
+): { hoje: ItemAgenda[]; proximos: ItemAgenda[] } {
+  const t0 = agora.getTime();
+  const diaHoje = diaBrasilia(t0);
+  const ordenados = itens
+    .filter((i) => Date.parse(i.dataHora) >= t0 - TRES_HORAS_MS)
+    .sort((x, y) => Date.parse(x.dataHora) - Date.parse(y.dataHora));
+  const hoje: ItemAgenda[] = [];
+  const proximos: ItemAgenda[] = [];
+  for (const i of ordenados) {
+    const dia = diaBrasilia(Date.parse(i.dataHora));
+    if (dia === diaHoje) hoje.push(i);
+    else if (dia > diaHoje) proximos.push(i);
+  }
+  return { hoje, proximos: proximos.slice(0, maxProximos) };
+}
+
+/** Jogos dos campeonatos e transmissões a partir de `desde`, já juntos. */
+async function buscarItens(desde: Date, limite: number): Promise<ItemAgenda[]> {
   const sb = createPublicClient();
   const [rJogos, rAgenda] = await Promise.all([
     sb
       .from('jogos')
       .select('id,data,fase,local,casa:time_casa_id(nome),fora:time_visitante_id(nome),campeonato:campeonato_id(modalidade),transmissoes(id)')
       .eq('status', 'agendado')
-      .gte('data', agoraBrasiliaSemFuso(agora))
+      .gte('data', agoraBrasiliaSemFuso(desde))
       .order('data')
       .limit(50)
       .then((r) => r, () => ({ data: null, error: true })),
     sb
       .from('agenda_jogos')
       .select('id,modalidade,fase,equipe_casa,equipe_fora,data_hora,local,status')
-      .gte('data_hora', agora.toISOString())
+      .gte('data_hora', desde.toISOString())
       .order('data_hora')
       .limit(50)
       .then((r) => r, () => ({ data: null, error: true })),
   ]);
   const jogos = rJogos.error || !rJogos.data ? [] : (rJogos.data as unknown as LinhaJogo[]).map(deJogos);
   const agenda = rAgenda.error || !rAgenda.data ? [] : agendaAtiva(rAgenda.data as unknown as LinhaAgendaJogos[]).map(deAgendaJogos);
-  return juntarAgenda(jogos, agenda, agora, limite);
+  return juntarAgenda(jogos, agenda, desde, limite);
+}
+
+export async function buscarAgenda(limite = 6): Promise<ItemAgenda[]> {
+  return buscarItens(new Date(), limite);
+}
+
+export async function buscarHojeNaArena(): Promise<{ hoje: ItemAgenda[]; proximos: ItemAgenda[] }> {
+  const agora = new Date();
+  const itens = await buscarItens(new Date(agora.getTime() - TRES_HORAS_MS), 50);
+  return separarHoje(itens, agora);
 }
