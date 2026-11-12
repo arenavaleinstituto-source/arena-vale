@@ -7,12 +7,10 @@ import { MetadataRoute } from 'next';
  * /noticias, o mural oficial de comunicados, que é a página mais
  * rastreável do site depois da Home.
  *
- * `baseUrl` segue apontando para o domínio Vercel porque o domínio
- * próprio (arenavale.com.br) ainda não tem registro A configurado
- * no DNS. Quando o registro A apontar, troque a constante abaixo
- * e o `robots.txt` junto.
+ * O domínio vem de NEXT_PUBLIC_BASE_URL (https://www.arenavale.com.br desde 11/11/2026),
+ * o mesmo usado no robots.txt.
  */
-const baseUrl = 'https://arena-vale.vercel.app';
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.arenavale.com.br';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const agora = new Date();
