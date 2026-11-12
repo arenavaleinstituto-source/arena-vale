@@ -1,7 +1,7 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
-import { buscarVideosYT, detectarAoVivo, embedAoVivo, estaAoVivo, parsearFeed } from './youtube';
+import { buscarCortesYT, buscarListaYT, buscarVideosYT, detectarAoVivo, embedAoVivo, estaAoVivo, parsearFeed, parsearPlaylistItems, playlistsDoCanal } from './youtube';
 
 const amostra = fs.readFileSync(path.join(import.meta.dirname, '__amostras__/feed-tvarenavale.xml'), 'utf8');
 const CANAL = 'UCBTQ97bWA6VqK2a6qv80dIg';
@@ -74,5 +74,97 @@ describe('ao vivo', () => {
 
   it('player do ao vivo sem cookies', () => {
     expect(embedAoVivo(CANAL)).toBe(`https://www.youtube-nocookie.com/embed/live_stream?channel=${CANAL}`);
+  });
+});
+
+function itemPl(id: string, titulo: string, publicadoEm: string) {
+  return { snippet: { title: titulo, publishedAt: publicadoEm, resourceId: { videoId: id }, thumbnails: { high: { url: 'x' } } } };
+}
+
+describe('YouTube pela API oficial', () => {
+  afterEach(() => vi.unstubAllEnvs());
+
+  it('playlists derivadas do canal', () => {
+    expect(playlistsDoCanal(CANAL)).toEqual({
+      videos: 'UULFBTQ97bWA6VqK2a6qv80dIg',
+      lives: 'UULVBTQ97bWA6VqK2a6qv80dIg',
+      shorts: 'UUSHBTQ97bWA6VqK2a6qv80dIg',
+    });
+  });
+
+  it('parsearPlaylistItems descarta privados/apagados, tira hashtags e monta a capa', () => {
+    const r = parsearPlaylistItems({
+      items: [
+        itemPl('abc', 'Golaço #futsal #arenavale', '2026-11-10T10:00:00Z'),
+        itemPl('p1', 'Private video', '2026-11-10T10:00:00Z'),
+        itemPl('d1', 'Deleted video', '2026-11-10T10:00:00Z'),
+      ],
+    });
+    expect(r).toEqual([
+      { id: 'abc', titulo: 'Golaço', publicadoEm: '2026-11-10T10:00:00Z', capa: 'https://i.ytimg.com/vi/abc/hqdefault.jpg', link: 'https://www.youtube.com/watch?v=abc' },
+    ]);
+    expect(parsearPlaylistItems(null)).toEqual([]);
+    expect(parsearPlaylistItems({ items: 'x' })).toEqual([]);
+  });
+
+  it('buscarListaYT monta a URL com a chave', async () => {
+    vi.stubEnv('YOUTUBE_API_KEY', 'chave-teste');
+    const urls: string[] = [];
+    const f = ((u: string) => {
+      urls.push(u);
+      return Promise.resolve(new Response(JSON.stringify({ items: [itemPl('a1', 'Corte', '2026-11-10T10:00:00Z')] })));
+    }) as unknown as typeof fetch;
+    const r = await buscarListaYT('UUSHBTQ97bWA6VqK2a6qv80dIg', 12, f);
+    expect(r).toHaveLength(1);
+    expect(urls[0]).toContain('playlistItems?part=snippet&maxResults=12&playlistId=UUSHBTQ97bWA6VqK2a6qv80dIg&key=');
+  });
+
+  it('buscarListaYT sem chave não chama a rede', async () => {
+    vi.stubEnv('YOUTUBE_API_KEY', '');
+    let chamou = false;
+    const f = (() => {
+      chamou = true;
+      return Promise.resolve(new Response('{}'));
+    }) as unknown as typeof fetch;
+    expect(await buscarListaYT('UUSHx', 12, f)).toEqual([]);
+    expect(chamou).toBe(false);
+  });
+
+  it('buscarListaYT com 403 devolve vazio', async () => {
+    vi.stubEnv('YOUTUBE_API_KEY', 'chave-teste');
+    expect(await buscarListaYT('UUSHx', 12, fetchCom(403, '{"error":{}}'))).toEqual([]);
+  });
+
+  it('buscarVideosYT com chave junta vídeos e lives, mais novo primeiro, até 15', async () => {
+    vi.stubEnv('YOUTUBE_API_KEY', 'chave-teste');
+    const f = ((u: string) => {
+      const lives = u.includes('playlistId=UULV');
+      const itens = Array.from({ length: 10 }, (_, i) =>
+        itemPl(`${lives ? 'l' : 'v'}${i}`, `T${i}`, `2026-11-${String(lives ? 20 - i : 19 - i).padStart(2, '0')}T10:00:00Z`),
+      );
+      return Promise.resolve(new Response(JSON.stringify({ items: itens })));
+    }) as unknown as typeof fetch;
+    const r = await buscarVideosYT(CANAL, f);
+    expect(r).toHaveLength(15);
+    expect(r[0].id).toBe('l0');
+    expect(r[1].id).toBe('v0');
+    const datas = r.map((v) => Date.parse(v.publicadoEm));
+    expect([...datas].sort((a, b) => b - a)).toEqual(datas);
+  });
+
+  it('buscarVideosYT sem chave continua usando o RSS', async () => {
+    vi.stubEnv('YOUTUBE_API_KEY', '');
+    expect((await buscarVideosYT(CANAL, fetchCom(200, amostra))).length).toBeGreaterThan(0);
+  });
+
+  it('buscarCortesYT lê a lista de Shorts', async () => {
+    vi.stubEnv('YOUTUBE_API_KEY', 'chave-teste');
+    const urls: string[] = [];
+    const f = ((u: string) => {
+      urls.push(u);
+      return Promise.resolve(new Response(JSON.stringify({ items: [] })));
+    }) as unknown as typeof fetch;
+    await buscarCortesYT(CANAL, 12, f);
+    expect(urls[0]).toContain('playlistId=UUSHBTQ97bWA6VqK2a6qv80dIg');
   });
 });

@@ -382,3 +382,17 @@
 .menu-lembrar { position: absolute; left: 0; top: calc(100% + 8px); min-width: 210px; background: #111114; border: 1px solid var(--linha); border-radius: 18px; padding: 8px; box-shadow: 0 20px 50px rgba(0,0,0,.6); display: grid; gap: 2px; z-index: 30; }
 .menu-lembrar a { font-family: var(--rotulo); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; font-size: 14px; padding: 11px 12px; border-radius: 12px; }
 .menu-lembrar a:hover, .menu-lembrar a:focus-visible { background: rgba(229,9,20,.14); }
+
+/* Cortes (Shorts): cartões 9:16 e player vertical */
+#cortes .trilho { grid-auto-columns: 168px; }
+@media (min-width: 860px) { #cortes .trilho { grid-auto-columns: 200px; } }
+.corte { position: relative; display: block; aspect-ratio: 9 / 16; border-radius: 18px; overflow: hidden; border: 1px solid var(--linha); background: var(--grafite-2); padding: 0; cursor: pointer; scroll-snap-align: start; color: var(--branco); text-align: left; }
+.corte img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.corte::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0) 45%, rgba(0,0,0,.85)); }
+.corte .play { position: absolute; top: 10px; left: 10px; z-index: 1; width: 34px; height: 34px; border-radius: 50%; background: var(--vermelho); display: grid; place-items: center; font-size: 13px; }
+.corte .nome { position: absolute; left: 12px; right: 12px; bottom: 12px; z-index: 1; font-family: var(--display); font-weight: 800; text-transform: uppercase; font-size: 15px; line-height: 1.1; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.corte:focus-visible { outline: 2px solid var(--vermelho); outline-offset: 2px; }
+.fundo-corte { position: fixed; inset: 0; background: rgba(0,0,0,.85); z-index: 90; }
+.player-corte { position: fixed; z-index: 91; top: 50%; left: 50%; transform: translate(-50%, -50%); height: min(86dvh, 760px); aspect-ratio: 9 / 16; max-width: calc(100vw - 32px); border-radius: 18px; overflow: hidden; background: #000; }
+.player-corte iframe { width: 100%; height: 100%; border: 0; display: block; }
+.player-corte .fechar { position: absolute; top: 10px; right: 10px; z-index: 2; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--linha); background: rgba(11,11,12,.85); color: var(--branco); font-size: 18px; cursor: pointer; }
