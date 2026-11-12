@@ -13,7 +13,7 @@ export default function LinksPage() {
   const linksOficiais = [
     {
       nome: '🌐 Site Oficial Arena Vale',
-      url: 'https://arena-vale.vercel.app',
+      url: 'https://www.arenavale.com.br',
       destaque: true,
     },
     {

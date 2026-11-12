@@ -21,7 +21,7 @@ import { MetadataRoute } from 'next';
  * para os buscadores. A proteção real é o `proxy.ts` (cargo lido do banco)
  * e o RLS do Supabase.
  */
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://arena-vale.vercel.app';
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.arenavale.com.br';
 
 export default function robots(): MetadataRoute.Robots {
   return {
