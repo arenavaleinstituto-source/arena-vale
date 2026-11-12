@@ -1,4 +1,5 @@
 import { MetadataRoute } from 'next';
+import { buscarAlbuns } from '@/lib/midia/galeria-busca';
 
 /**
  * SITEMAP
@@ -12,7 +13,7 @@ import { MetadataRoute } from 'next';
  */
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.arenavale.com.br';
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const agora = new Date();
 
   const paginas: { path: string; changeFrequency: 'daily' | 'weekly' | 'monthly' | 'yearly'; priority: number }[] = [
@@ -23,6 +24,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/ao-vivo', changeFrequency: 'daily', priority: 0.9 },
     { path: '/videos', changeFrequency: 'daily', priority: 0.8 },
     { path: '/agenda', changeFrequency: 'weekly', priority: 0.8 },
+    { path: '/galeria', changeFrequency: 'weekly', priority: 0.7 },
     { path: '/modalidades', changeFrequency: 'weekly', priority: 0.7 },
     { path: '/modalidades/futsal', changeFrequency: 'weekly', priority: 0.6 },
     { path: '/modalidades/futebol7', changeFrequency: 'weekly', priority: 0.6 },
@@ -37,10 +39,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/links', changeFrequency: 'monthly', priority: 0.3 },
   ];
 
-  return paginas.map((pagina) => ({
-    url: `${baseUrl}${pagina.path}`,
-    lastModified: agora,
-    changeFrequency: pagina.changeFrequency,
-    priority: pagina.priority,
-  }));
+  const albuns = await buscarAlbuns(200).catch(() => []);
+  return [
+    ...paginas.map((pagina) => ({
+      url: `${baseUrl}${pagina.path}`,
+      lastModified: agora,
+      changeFrequency: pagina.changeFrequency,
+      priority: pagina.priority,
+    })),
+    ...albuns.map((a) => ({
+      url: `${baseUrl}/galeria/${a.id}`,
+      lastModified: new Date(`${a.data}T12:00:00-03:00`),
+      changeFrequency: 'monthly' as const,
+      priority: 0.5,
+    })),
+  ];
 }

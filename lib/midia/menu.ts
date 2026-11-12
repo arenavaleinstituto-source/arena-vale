@@ -8,6 +8,7 @@ export const MENU_PRINCIPAL: { rotulo: string; href: string; vivo?: boolean }[] 
   { rotulo: 'Modalidades', href: '/modalidades' },
   { rotulo: 'Projeto Social', href: '/projetosocial' },
   { rotulo: 'Atletas Destaques', href: '/atletasdestaques' },
+  { rotulo: 'Galeria', href: '/galeria' },
 ];
 
 /** Opções do botão "Entrar". O rótulo é só visual: o destino vem do cargo no banco. */
