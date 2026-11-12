@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 let pathname = '/noticias';
@@ -71,6 +72,35 @@ describe('SiteHeader', () => {
     render(<SiteHeader />);
     expect((await screen.findAllByRole('button', { name: 'Entrar na área da equipe' })).length).toBeGreaterThan(0);
     expect(screen.queryByText('Painel')).toBeNull();
+  });
+
+  it('celular: botão ☰ abre o menu com todas as páginas e o Anuncie', async () => {
+    const u = userEvent.setup();
+    render(<SiteHeader />);
+    const botao = screen.getByRole('button', { name: 'Abrir menu' });
+    expect(botao).toHaveAttribute('aria-expanded', 'false');
+    expect(screen.queryByRole('navigation', { name: 'Menu do celular' })).toBeNull();
+    await u.click(botao);
+    const cel = screen.getByRole('navigation', { name: 'Menu do celular' });
+    const textos = Array.from(cel.querySelectorAll('a')).map((a) => a.textContent?.trim());
+    expect(textos).toEqual(['Início', 'Ao Vivo', 'Notícias do Vale', 'Esporte Mundial', 'Agenda', 'Modalidades', 'Projeto Social', 'Atletas Destaques', 'Anuncie']);
+    expect(screen.getByRole('button', { name: 'Fechar menu' })).toHaveAttribute('aria-expanded', 'true');
+    expect(document.body.style.overflow).toBe('hidden');
+  });
+
+  it('celular: tocar numa página, no X ou apertar Esc fecha o menu', async () => {
+    const u = userEvent.setup();
+    render(<SiteHeader />);
+    await u.click(screen.getByRole('button', { name: 'Abrir menu' }));
+    await u.click(screen.getByRole('navigation', { name: 'Menu do celular' }).querySelector('a[href="/agenda"]')!);
+    expect(screen.queryByRole('navigation', { name: 'Menu do celular' })).toBeNull();
+    await u.click(screen.getByRole('button', { name: 'Abrir menu' }));
+    await u.keyboard('{Escape}');
+    expect(screen.queryByRole('navigation', { name: 'Menu do celular' })).toBeNull();
+    await u.click(screen.getByRole('button', { name: 'Abrir menu' }));
+    await u.click(screen.getByRole('button', { name: 'Fechar menu' }));
+    expect(screen.queryByRole('navigation', { name: 'Menu do celular' })).toBeNull();
+    expect(document.body.style.overflow).toBe('');
   });
 
   it.each(['/painel', '/painel/noticias', '/coordenador', '/proprietario', '/moderador', '/capitao'])(
