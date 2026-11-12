@@ -56,14 +56,16 @@ create table if not exists public.telegram_estado (
 alter table public.telegram_estado enable row level security;
 revoke all on public.telegram_estado from anon, authenticated;
 
--- Storage: bucket público "galeria" (10 MB, só imagens).
+-- Storage: bucket público "galeria" (10 MB, só imagens). O link direto da foto é público;
+-- listar a pasta é só do staff, para não vazar fotos de álbum escondido.
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
 values ('galeria', 'galeria', true, 10485760, array['image/jpeg', 'image/png', 'image/webp'])
 on conflict (id) do update set public = true, file_size_limit = excluded.file_size_limit,
   allowed_mime_types = excluded.allowed_mime_types;
 
 drop policy if exists galeria_midia_leitura on storage.objects;
-create policy galeria_midia_leitura on storage.objects for select using (bucket_id = 'galeria');
+create policy galeria_midia_leitura on storage.objects for select to authenticated
+  using (bucket_id = 'galeria' and public.is_staff());
 drop policy if exists galeria_midia_staff_insert on storage.objects;
 create policy galeria_midia_staff_insert on storage.objects for insert to authenticated
   with check (bucket_id = 'galeria' and public.is_staff());
