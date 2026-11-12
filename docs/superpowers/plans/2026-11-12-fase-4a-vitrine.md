@@ -227,7 +227,7 @@
 
 **Interfaces:**
 - Produz:
-  - as tabelas `galeria_albuns`, `galeria_fotos` e `telegram_estado`, exatamente como na spec §4.1;
+  - as tabelas `galeria_albuns`, `galeria_fotos` e `telegram_estado`, como na spec §4.1, **mais a coluna `telegram_estado.ultimo_grupo text null`**, usada na tarefa 10;
   - o bucket `galeria`.
 
 - [ ] **Passo 1: testes de banco que falham.**
@@ -426,7 +426,7 @@
     - se o update tem `callback_query`, tratar por `from.id` / `message.chat.id`;
     - depois do perfil coordenador, chamar `tratarGaleria`; se ela devolver `true`, retornar.
   - O `callback_data` cabe em 64 bytes (uuid tem 36).
-  - `EstadoBot` ganha `ultimoGrupo?: string | null`. Para isso, a 0019 da tarefa 6 inclui a coluna `ultimo_grupo text`. Se a tarefa 6 já tiver sido publicada, acrescentar uma migração 0020 com `alter table ... add column if not exists`.
+  - `EstadoBot.ultimoGrupo` usa a coluna `ultimo_grupo`, criada na 0019 (tarefa 6).
   - Nas portas, `guardarFotoGaleria` usa `prepararFotoGaleria` e o bucket `galeria`, e atualiza `capa_url` se estiver nula.
 - [ ] **Passo 4:** os testes passam. Testes, tsc, eslint e build.
 - [ ] **Passo 5:**
