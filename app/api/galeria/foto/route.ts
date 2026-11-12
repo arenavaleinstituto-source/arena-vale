@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createAdminClient, createClient } from '@/lib/supabase/server';
-import { prepararFotoGaleria } from '@/lib/imagem/galeria';
-import { deFoto, SELECT_FOTO, UUID_RE, type LinhaFoto } from '@/lib/midia/galeria';
+import { UUID_RE } from '@/lib/midia/galeria';
+import { guardarFotoNoAlbum } from '@/lib/midia/galeria-guardar';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
@@ -36,26 +36,8 @@ export async function POST(req: Request): Promise<NextResponse> {
   if (!album) return erro(400, 'Álbum não encontrado.');
 
   try {
-    const p = await prepararFotoGaleria(new Uint8Array(await arquivo.arrayBuffer()));
-    const nome = crypto.randomUUID();
-    const caminho = `${albumId}/${nome}.jpg`;
-    const caminhoMini = `${albumId}/${nome}-m.jpg`;
-    const bucket = admin.storage.from('galeria');
-    const r1 = await bucket.upload(caminho, p.grande, { contentType: 'image/jpeg' });
-    if (r1.error) throw r1.error;
-    const r2 = await bucket.upload(caminhoMini, p.miniatura, { contentType: 'image/jpeg' });
-    if (r2.error) throw r2.error;
-    const url = bucket.getPublicUrl(caminho).data.publicUrl;
-    const miniatura = bucket.getPublicUrl(caminhoMini).data.publicUrl;
-
-    const { data: linha, error } = await admin
-      .from('galeria_fotos')
-      .insert({ album_id: albumId, url, miniatura_url: miniatura, largura: p.largura, altura: p.altura, enviado_por: user.id })
-      .select(SELECT_FOTO)
-      .single();
-    if (error || !linha) throw error ?? new Error('insert sem retorno');
-    if (!album.capa_url) await admin.from('galeria_albuns').update({ capa_url: url }).eq('id', albumId);
-    return NextResponse.json({ ok: true, foto: deFoto(linha as unknown as LinhaFoto) });
+    const foto = await guardarFotoNoAlbum(admin, album as { id: string; capa_url: string | null }, new Uint8Array(await arquivo.arrayBuffer()), user.id);
+    return NextResponse.json({ ok: true, foto });
   } catch (e) {
     console.error('[galeria] falha ao guardar foto', e);
     return erro(500, 'Não consegui guardar a foto.');

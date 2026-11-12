@@ -6,6 +6,8 @@ import { servicoDoLink } from '@/lib/midia/links';
 import { extrairConfronto } from '@/lib/midia/confronto';
 import type { ModoVideo } from '@/lib/midia/noticias';
 import { comandoVincular, extrairRascunho, LIMITE_VIDEO, respostaRascunho, TITULO_PADRAO, type TgMessage } from './extrair';
+import { tratarGaleria, type EstadoBot, type TgCallbackQuery } from './galeria';
+import type { ItemAgenda } from '@/lib/midia/agenda';
 
 export type Arquivo = { bytes: Uint8Array; ext: string; mime: string };
 
@@ -44,6 +46,26 @@ export type PortasBot = {
   completarAlbum(ref: string, titulo: string, descricao: string): Promise<void>;
   /** Põe a logo da ARENA VALE na imagem (devolve JPEG). */
   carimbar(arq: Arquivo): Promise<Arquivo>;
+
+  // ── Galeria (Fase 4A) ──
+  /** Modo do robô para a pessoa; sem linha → notícias. */
+  lerEstado(telegramId: number): Promise<EstadoBot>;
+  gravarEstado(telegramId: number, e: EstadoBot): Promise<void>;
+  /** Só estende o prazo do modo galeria (não mexe no resto do estado). */
+  renovarPrazo(telegramId: number, expiraEm: string): Promise<void>;
+  /** Marca o álbum do Telegram como já respondido; true só para a primeira foto do grupo (atômico). */
+  marcarGrupo(telegramId: number, grupo: string): Promise<boolean>;
+  /** Jogos dos últimos 3 dias e de hoje, das duas fontes, até 8. */
+  jogosRecentes(): Promise<ItemAgenda[]>;
+  /** Cria o álbum do jogo ou devolve o que já existe. */
+  albumDoJogo(origem: 'jogos' | 'agenda', jogoRef: string, titulo: string, data: string, perfilId: string): Promise<{ id: string; titulo: string }>;
+  criarAlbumEvento(titulo: string, data: string, perfilId: string): Promise<{ id: string; titulo: string }>;
+  /** Prepara (gira, reduz, logo), guarda no bucket `galeria` e registra a foto. */
+  guardarFotoGaleria(albumId: string, bytes: Uint8Array, perfilId: string): Promise<void>;
+  enviarBotoes(chatId: number, texto: string, botoes: { texto: string; dados: string }[][]): Promise<void>;
+  responderBotao(callbackId: string): Promise<void>;
+  /** false quando as tabelas da galeria ainda não existem. */
+  galeriaAtiva(): Promise<boolean>;
 };
 
 const LIMITE_FOTO = 5 * 1024 * 1024;
@@ -51,7 +73,15 @@ const LIMITE_FOTO = 5 * 1024 * 1024;
 /** O dono pediu para não mostrar a fonte nas notícias do robô. Se algum canal reclamar, é só voltar para true. */
 const GUARDAR_FONTE = false;
 
-export async function processarUpdate(update: unknown, p: PortasBot, origem: string): Promise<void> {
+export async function processarUpdate(update: unknown, p: PortasBot, origem: string, agora: Date = new Date()): Promise<void> {
+  const cb = (update as { callback_query?: TgCallbackQuery }).callback_query;
+  if (cb?.from) {
+    const perfilBotao = await p.perfilPorTelegram(cb.from.id);
+    if (perfilBotao?.role === 'coordenador') await tratarGaleria(update, perfilBotao, p, origem, agora);
+    else await p.responderBotao(cb.id);
+    return;
+  }
+
   const msg = (update as { message?: TgMessage }).message;
   if (!msg?.chat || !msg.from) return;
   const chat = msg.chat.id;
@@ -73,6 +103,14 @@ export async function processarUpdate(update: unknown, p: PortasBot, origem: str
     // Em grupo, só responde a quem está vinculado (não fica avisando cada membro).
     if (msg.chat.type && msg.chat.type !== 'private' && !perfil) return;
     await p.enviarMensagem(chat, 'Você não tem permissão para criar notícias.');
+    return;
+  }
+
+  try {
+    if (await tratarGaleria(update, perfil, p, origem, agora)) return;
+  } catch (e) {
+    console.error('[telegram] falha na galeria', e);
+    await p.enviarMensagem(chat, 'Não consegui fazer isso agora, tente de novo');
     return;
   }
 
