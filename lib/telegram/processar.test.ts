@@ -12,6 +12,17 @@ function portas(over: Partial<PortasBot> = {}) {
     enviarMensagem: vi.fn().mockResolvedValue(undefined),
     completarAlbum: vi.fn().mockResolvedValue(undefined),
     carimbar: vi.fn().mockImplementation(async () => ({ bytes: new Uint8Array([7, 7]), ext: 'jpg', mime: 'image/jpeg' })),
+    lerEstado: vi.fn().mockResolvedValue({ modo: 'noticias', albumId: null, expiraEm: null }),
+    gravarEstado: vi.fn().mockResolvedValue(undefined),
+    renovarPrazo: vi.fn().mockResolvedValue(undefined),
+    marcarGrupo: vi.fn().mockResolvedValue(true),
+    jogosRecentes: vi.fn().mockResolvedValue([]),
+    albumDoJogo: vi.fn(),
+    criarAlbumEvento: vi.fn(),
+    guardarFotoGaleria: vi.fn(),
+    enviarBotoes: vi.fn().mockResolvedValue(undefined),
+    responderBotao: vi.fn().mockResolvedValue(undefined),
+    galeriaAtiva: vi.fn().mockResolvedValue(false),
     ...over,
   };
   return p;

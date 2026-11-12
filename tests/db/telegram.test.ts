@@ -96,4 +96,30 @@ describe('bot do Telegram com o banco (portasBot)', () => {
     const { data } = await admin().from('noticias').select('video_url, video_link, status').eq('id', n!.id).single();
     expect(data).toEqual({ video_url: null, video_link: 'https://youtu.be/dQw4w9WgXcQ', status: 'publicado' });
   });
+
+  it('galeria: estado do robô grava, renova o prazo e marca o grupo uma vez só', async () => {
+    const p = portasBot(admin());
+    const tg = 700000 + Math.floor(Math.random() * 99999);
+    expect(await p.lerEstado(tg)).toMatchObject({ modo: 'noticias', albumId: null });
+    const { data: alb } = await admin().from('galeria_albuns').insert({ titulo: 'Festival', data: '2026-11-15' }).select('id').single();
+    await p.gravarEstado(tg, { modo: 'galeria', albumId: alb!.id, expiraEm: '2026-11-15T10:00:00.000Z', ultimoGrupo: null });
+    await p.renovarPrazo(tg, '2026-11-15T11:00:00.000Z');
+    const e = await p.lerEstado(tg);
+    expect(e).toMatchObject({ modo: 'galeria', albumId: alb!.id, albumTitulo: 'Festival' });
+    expect(Date.parse(e.expiraEm!)).toBe(Date.parse('2026-11-15T11:00:00.000Z'));
+    const [a, b] = await Promise.all([p.marcarGrupo(tg, 'grp-9'), p.marcarGrupo(tg, 'grp-9')]);
+    expect([a, b].filter(Boolean)).toHaveLength(1);
+    expect(await p.marcarGrupo(tg, 'grp-10')).toBe(true);
+  });
+
+  it('galeria: álbum do jogo é criado uma vez e reaproveitado', async () => {
+    const u = await criarUsuario('coordenador');
+    const p = portasBot(admin());
+    const ref = crypto.randomUUID();
+    const a1 = await p.albumDoJogo('agenda', ref, 'Real x Sede', '2026-11-20', u.id);
+    const a2 = await p.albumDoJogo('agenda', ref, 'Real x Sede', '2026-11-20', u.id);
+    expect(a2.id).toBe(a1.id);
+    expect(a1.titulo).toBe('Real x Sede');
+    expect(await p.galeriaAtiva()).toBe(true);
+  });
 });

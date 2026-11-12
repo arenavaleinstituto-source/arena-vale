@@ -2,6 +2,9 @@ import { carimbarLogo } from '@/lib/imagem/marca';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Arquivo, PortasBot } from './processar';
 import type { ModoVideo } from '@/lib/midia/noticias';
+import { jogosRecentes } from '@/lib/midia/agenda';
+import { guardarFotoNoAlbum } from '@/lib/midia/galeria-guardar';
+import type { EstadoBot } from './galeria';
 
 /** Chamada à API de bots do Telegram. O token vem só do ambiente do servidor. */
 async function tg<T>(metodo: string, corpo: Record<string, unknown>): Promise<T | null> {
@@ -102,6 +105,94 @@ export function portasBot(admin: SupabaseClient): PortasBot {
     },
     async enviarMensagem(chatId, texto) {
       await tg('sendMessage', { chat_id: chatId, text: texto, disable_web_page_preview: true });
+    },
+
+    // ── Galeria (Fase 4A) ──
+    async lerEstado(telegramId): Promise<EstadoBot> {
+      const { data } = await admin
+        .from('telegram_estado')
+        .select('modo, album_id, expira_em, ultimo_grupo, album:album_id(titulo)')
+        .eq('telegram_user_id', telegramId)
+        .maybeSingle();
+      const d = data as {
+        modo: EstadoBot['modo'];
+        album_id: string | null;
+        expira_em: string | null;
+        ultimo_grupo: string | null;
+        album: { titulo?: string } | null;
+      } | null;
+      if (!d) return { modo: 'noticias', albumId: null, albumTitulo: null, expiraEm: null, ultimoGrupo: null };
+      return { modo: d.modo, albumId: d.album_id, albumTitulo: d.album?.titulo ?? null, expiraEm: d.expira_em, ultimoGrupo: d.ultimo_grupo };
+    },
+    async gravarEstado(telegramId, e) {
+      const { error } = await admin.from('telegram_estado').upsert({
+        telegram_user_id: telegramId,
+        modo: e.modo,
+        album_id: e.albumId,
+        expira_em: e.expiraEm,
+        ultimo_grupo: e.ultimoGrupo ?? null,
+      });
+      if (error) throw new Error(error.message);
+    },
+    async renovarPrazo(telegramId, expiraEm) {
+      await admin.from('telegram_estado').update({ expira_em: expiraEm }).eq('telegram_user_id', telegramId);
+    },
+    async marcarGrupo(telegramId, grupo) {
+      const g = grupo.replace(/[^\w-]/g, '');
+      const { data } = await admin
+        .from('telegram_estado')
+        .update({ ultimo_grupo: g })
+        .eq('telegram_user_id', telegramId)
+        .or(`ultimo_grupo.is.null,ultimo_grupo.neq.${g}`)
+        .select('telegram_user_id');
+      return (data?.length ?? 0) > 0;
+    },
+    async jogosRecentes() {
+      return jogosRecentes(3, new Date(), admin);
+    },
+    async albumDoJogo(origem, jogoRef, titulo, data, perfilId) {
+      const buscar = async () =>
+        (await admin.from('galeria_albuns').select('id, titulo').eq('origem', origem).eq('jogo_ref', jogoRef).maybeSingle()).data as {
+          id: string;
+          titulo: string;
+        } | null;
+      const existente = await buscar();
+      if (existente) return existente;
+      const { data: novo, error } = await admin
+        .from('galeria_albuns')
+        .insert({ titulo, data, origem, jogo_ref: jogoRef, criado_por: perfilId })
+        .select('id, titulo')
+        .single();
+      if (error?.code === '23505') {
+        const outro = await buscar();
+        if (outro) return outro;
+      }
+      if (error || !novo) throw new Error(error?.message ?? 'falha ao criar álbum');
+      return novo as { id: string; titulo: string };
+    },
+    async criarAlbumEvento(titulo, data, perfilId) {
+      const { data: novo, error } = await admin.from('galeria_albuns').insert({ titulo, data, criado_por: perfilId }).select('id, titulo').single();
+      if (error || !novo) throw new Error(error?.message ?? 'falha ao criar álbum');
+      return novo as { id: string; titulo: string };
+    },
+    async guardarFotoGaleria(albumId, bytes, perfilId) {
+      const { data: album } = await admin.from('galeria_albuns').select('id, capa_url').eq('id', albumId).maybeSingle();
+      if (!album) throw new Error('álbum não existe');
+      await guardarFotoNoAlbum(admin, album as { id: string; capa_url: string | null }, bytes, perfilId);
+    },
+    async enviarBotoes(chatId, texto, botoes) {
+      await tg('sendMessage', {
+        chat_id: chatId,
+        text: texto,
+        reply_markup: { inline_keyboard: botoes.map((linha) => linha.map((b) => ({ text: b.texto, callback_data: b.dados }))) },
+      });
+    },
+    async responderBotao(callbackId) {
+      await tg('answerCallbackQuery', { callback_query_id: callbackId });
+    },
+    async galeriaAtiva() {
+      const { error } = await admin.from('galeria_albuns').select('id').limit(1);
+      return !error;
     },
   };
 }
