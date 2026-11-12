@@ -3,6 +3,7 @@ export const ABAS_COORD = [
   { id: 'visao', rotulo: 'Visão geral' },
   { id: 'aovivo', rotulo: 'Ao Vivo' },
   { id: 'noticias', rotulo: 'Notícias' },
+  { id: 'galeria', rotulo: 'Galeria' },
   { id: 'videos', rotulo: 'Vídeos' },
   { id: 'jogos', rotulo: 'Agenda e jogos' },
   { id: 'campeonatos', rotulo: 'Campeonatos' },

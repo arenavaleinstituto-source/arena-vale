@@ -38,6 +38,7 @@ describe('SiteHeader', () => {
       'Modalidades',
       'Projeto Social',
       'Atletas Destaques',
+      'Galeria',
     ]);
     expect(links.map((a) => a.getAttribute('href'))).toEqual([
       '/',
@@ -48,6 +49,7 @@ describe('SiteHeader', () => {
       '/modalidades',
       '/projetosocial',
       '/atletasdestaques',
+      '/galeria',
     ]);
   });
 
@@ -83,7 +85,7 @@ describe('SiteHeader', () => {
     await u.click(botao);
     const cel = screen.getByRole('navigation', { name: 'Menu do celular' });
     const textos = Array.from(cel.querySelectorAll('a')).map((a) => a.textContent?.trim());
-    expect(textos).toEqual(['Início', 'Ao Vivo', 'Notícias do Vale', 'Esporte Mundial', 'Agenda', 'Modalidades', 'Projeto Social', 'Atletas Destaques', 'Anuncie']);
+    expect(textos).toEqual(['Início', 'Ao Vivo', 'Notícias do Vale', 'Esporte Mundial', 'Agenda', 'Modalidades', 'Projeto Social', 'Atletas Destaques', 'Galeria', 'Anuncie']);
     expect(screen.getByRole('button', { name: 'Fechar menu' })).toHaveAttribute('aria-expanded', 'true');
     expect(document.body.style.overflow).toBe('hidden');
   });

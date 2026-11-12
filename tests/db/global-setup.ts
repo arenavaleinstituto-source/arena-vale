@@ -8,7 +8,7 @@ import { resetarBancoTeste } from '../../scripts/db/resetar-banco-teste';
 async function esperarApiEnxergarEsquema(): Promise<void> {
   const { visitante } = await import('./fixtures');
   for (let tentativa = 0; tentativa < 30; tentativa += 1) {
-    const { error } = await visitante().from('videos_externos').select('id').limit(1);
+    const { error } = await visitante().from('galeria_albuns').select('id').limit(1);
     if (!error) return;
     await new Promise((r) => setTimeout(r, 1000));
   }

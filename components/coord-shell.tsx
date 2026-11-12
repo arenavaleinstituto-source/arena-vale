@@ -14,6 +14,7 @@ import { CoordCampeonatos } from './coord-campeonatos';
 import { GestaoModalidades } from './painel/GestaoModalidades';
 import { AbaAoVivo } from './painel/AbaAoVivo';
 import { AbaNoticias } from './painel/AbaNoticias';
+import { AbaGaleria } from './painel/AbaGaleria';
 import { AbaVideos } from './painel/AbaVideos';
 import { ABAS_COORD, abaValida, type IdAba } from './painel/abas';
 import GestaoAtletasClient from '@/app/(coord)/coordenador/atletasdestaques/gestao-atletas-client';
@@ -228,6 +229,7 @@ export function CoordShell({ user, stats, inscricoes: initialInsc, patrocinadore
 
         {tab === 'aovivo' && <AbaAoVivo aoVivoDetectado={aoVivoDetectado} />}
         {tab === 'noticias' && <AbaNoticias />}
+        {tab === 'galeria' && <AbaGaleria />}
         {tab === 'videos' && <AbaVideos />}
         {tab === 'jogos' && <CoordJogos />}
         {tab === 'campeonatos' && (
