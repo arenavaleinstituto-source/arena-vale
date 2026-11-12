@@ -103,4 +103,12 @@ describe('galeria (0019)', () => {
     expect(Number(b.file_size_limit)).toBe(10485760);
     expect([...b.allowed_mime_types].sort()).toEqual(['image/jpeg', 'image/png', 'image/webp']);
   });
+
+  it('visitante não lista os arquivos do bucket galeria (álbum escondido não vaza)', async () => {
+    await admin().storage.from('galeria').upload('pasta-teste/x.jpg', new Uint8Array([255, 216, 255, 217]), { contentType: 'image/jpeg', upsert: true });
+    const { data } = await visitante().storage.from('galeria').list('');
+    expect(data ?? []).toEqual([]);
+    const { data: dentro } = await visitante().storage.from('galeria').list('pasta-teste');
+    expect(dentro ?? []).toEqual([]);
+  });
 });
