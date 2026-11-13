@@ -24,6 +24,12 @@ const album = (id: string, total: number): AlbumGaleria => ({
   capaUrl: 'https://cdn.test/capa.jpg',
   ativo: true,
   totalFotos: total,
+  competicao: null,
+  local: null,
+  placar: null,
+  descricao: null,
+  fotografo: null,
+  publicadoEm: '2026-11-15T20:00:00Z',
 });
 const fotos: FotoGaleria[] = [1, 2, 3, 4, 5].map((i) => ({
   id: `f${i}`,
@@ -42,6 +48,12 @@ describe('GradeAlbuns', () => {
     expect(screen.getByText('12 fotos')).toBeInTheDocument();
     expect(screen.getByText('1 foto')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Álbum a/ })).toHaveAttribute('href', '/galeria/a');
+  });
+
+  it('mostra a competição e o placar no cartão', () => {
+    render(<GradeAlbuns albuns={[{ ...album('c', 3), competicao: 'Copa Vale · Final', placar: 'Real 3 x 1 Sede' }]} />);
+    expect(screen.getByText('Copa Vale · Final')).toBeInTheDocument();
+    expect(screen.getByText('Real 3 x 1 Sede')).toBeInTheDocument();
   });
 });
 
@@ -83,5 +95,26 @@ describe('página do álbum', () => {
     const { default: Pagina } = await import('@/app/galeria/[id]/page');
     await expect(Pagina({ params: Promise.resolve({ id: 'x' }) })).rejects.toThrow('NEXT_NOT_FOUND');
     expect(notFound).toHaveBeenCalled();
+  });
+
+  it('mostra competição, placar, local, descrição e quem fotografou', async () => {
+    buscarAlbum.mockResolvedValue({
+      album: {
+        ...album('d', 2),
+        competicao: 'Copa Vale Sub-11 · Final',
+        placar: 'Real 3 x 1 Sede',
+        local: 'Ginásio Galegão – Blumenau',
+        descricao: 'Jogo decidido no segundo tempo.',
+        fotografo: 'Fulano de Tal',
+      },
+      fotos: fotos.slice(0, 2),
+    });
+    const { default: Pagina } = await import('@/app/galeria/[id]/page');
+    render(await Pagina({ params: Promise.resolve({ id: 'd' }) }));
+    expect(screen.getByText('Copa Vale Sub-11 · Final')).toBeInTheDocument();
+    expect(screen.getByText('Real 3 x 1 Sede')).toBeInTheDocument();
+    expect(screen.getByText(/Ginásio Galegão – Blumenau/)).toBeInTheDocument();
+    expect(screen.getByText('Jogo decidido no segundo tempo.')).toBeInTheDocument();
+    expect(screen.getByText('Fotos: Fulano de Tal')).toBeInTheDocument();
   });
 });

@@ -24,6 +24,7 @@ function portas(over: Partial<PortasBot> = {}) {
     responderBotao: vi.fn().mockResolvedValue(undefined),
     galeriaAtiva: vi.fn().mockResolvedValue(false),
     montarParceiro: vi.fn(),
+    albumPublicado: vi.fn().mockResolvedValue(false),
     ...over,
   };
   return p;

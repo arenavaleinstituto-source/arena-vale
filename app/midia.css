@@ -416,7 +416,7 @@
 .miniatura { display: block; aspect-ratio: 1; padding: 0; border: 0; border-radius: 10px; overflow: hidden; background: var(--grafite-2); cursor: zoom-in; }
 .miniatura img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .miniatura:focus-visible { outline: 2px solid var(--vermelho); outline-offset: 2px; }
-.visualizador { position: fixed; inset: 0; z-index: 95; background: rgba(0,0,0,.94); display: grid; place-items: center; touch-action: pan-y; user-select: none; }
+.visualizador { position: fixed; inset: 0; z-index: 95; background: #000; display: grid; place-items: center; touch-action: pan-y; user-select: none; }
 .visualizador img { max-width: 100vw; max-height: calc(100dvh - 80px); width: auto; height: auto; object-fit: contain; }
 .visualizador .barra { position: absolute; top: 0; left: 0; right: 0; display: flex; align-items: center; gap: 10px; padding: calc(10px + env(safe-area-inset-top, 0px)) 16px 10px; background: linear-gradient(180deg, rgba(0,0,0,.7), transparent); z-index: 2; }
 .visualizador .contador { font-family: var(--rotulo); font-weight: 700; letter-spacing: .1em; color: var(--branco); margin-right: auto; }
@@ -427,3 +427,10 @@
 .visualizador .seta-v.dir { right: 12px; }
 .visualizador .seta-v:disabled { opacity: .3; cursor: default; }
 @media (hover: none) { .visualizador .seta-v { display: none; } }
+
+/* Detalhes do álbum: competição, placar, descrição e crédito */
+.album .competicao { font-family: var(--rotulo); font-weight: 700; letter-spacing: .1em; text-transform: uppercase; font-size: 12px; color: var(--vermelho-claro); }
+.album .placar { font-family: var(--display); font-weight: 800; font-size: 15px; text-transform: uppercase; color: var(--amarelo); }
+.topo-album .placar-album { font-family: var(--display); font-weight: 800; text-transform: uppercase; font-size: clamp(22px, 4vw, 34px); color: var(--amarelo); max-width: none; }
+.topo-album .descricao-album { font-size: 16px; color: #b9b9c2; }
+.topo-album .credito-album { font-family: var(--rotulo); font-weight: 700; letter-spacing: .1em; text-transform: uppercase; font-size: 13px; color: var(--cinza); }

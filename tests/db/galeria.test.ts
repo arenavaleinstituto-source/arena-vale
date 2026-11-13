@@ -111,4 +111,29 @@ describe('galeria (0019)', () => {
     const { data: dentro } = await visitante().storage.from('galeria').list('pasta-teste');
     expect(dentro ?? []).toEqual([]);
   });
+
+  it('álbum novo nasce como rascunho (o visitante não vê) e guarda os detalhes (0020)', async () => {
+    const { data, error } = await admin()
+      .from('galeria_albuns')
+      .insert({
+        titulo: 'Final Sub-11',
+        data: '2026-11-15',
+        competicao: 'Copa Vale Sub-11 · Final',
+        local: 'Ginásio Galegão – Blumenau',
+        placar: 'Real 3 x 1 Sede',
+        descricao: 'Jogo decidido no segundo tempo.',
+        fotografo: 'Fulano de Tal',
+      })
+      .select('id, ativo, publicado_em, competicao, placar')
+      .single();
+    expect(error).toBeNull();
+    expect(data).toMatchObject({ ativo: false, publicado_em: null, competicao: 'Copa Vale Sub-11 · Final', placar: 'Real 3 x 1 Sede' });
+    const { data: visto } = await visitante().from('galeria_albuns').select('id').eq('id', data!.id);
+    expect(visto).toEqual([]);
+  });
+
+  it('placar com mais de 40 letras é recusado (0020)', async () => {
+    const { error } = await admin().from('galeria_albuns').insert({ titulo: 'Longo', data: '2026-11-15', placar: 'x'.repeat(41) });
+    expect(error?.code).toBe('23514');
+  });
 });

@@ -49,6 +49,7 @@ function portas(estadoInicial: EstadoBot | null = null, over: Partial<PortasBot>
     responderBotao: vi.fn().mockResolvedValue(undefined),
     galeriaAtiva: vi.fn().mockResolvedValue(true),
     montarParceiro: vi.fn(),
+    albumPublicado: vi.fn().mockResolvedValue(false),
     ...over,
   } satisfies PortasBot;
   return { p, estado: () => estado };
@@ -99,7 +100,7 @@ describe('galeria pelo robô', () => {
     const { p, estado } = portas();
     await rodar(botao(`g:a:${JOGO.id}`), p);
     expect(p.responderBotao).toHaveBeenCalledWith('cb-1');
-    expect(p.albumDoJogo).toHaveBeenCalledWith('agenda', JOGO.id, 'Real x Sede', '2026-11-20', 'coord-1');
+    expect(p.albumDoJogo).toHaveBeenCalledWith('agenda', JOGO.id, 'Real x Sede', '2026-11-20', 'coord-1', { competicao: null, local: null, placar: null });
     expect(estado()).toMatchObject({ modo: 'galeria', albumId: 'alb-1', albumTitulo: 'Real x Sede', expiraEm: EM_30 });
     expect(p.enviarMensagem).toHaveBeenCalledWith(5, 'Pode mandar as fotos 📸 (envie /pronto quando terminar)');
   });
@@ -165,11 +166,21 @@ describe('galeria pelo robô', () => {
     expect(p.inserirRascunho).not.toHaveBeenCalled();
   });
 
-  it('/pronto fecha o álbum e manda o link', async () => {
+  it('/pronto com álbum em rascunho: lembra de publicar no painel', async () => {
     const { p, estado } = portas(galeriaAberta());
     await rodar(texto('/pronto'), p);
     expect(estado().modo).toBe('noticias');
-    expect(p.enviarMensagem).toHaveBeenCalledWith(5, 'Álbum pronto: https://site.test/galeria/alb-1');
+    expect(p.albumPublicado).toHaveBeenCalledWith('alb-1');
+    expect(p.enviarMensagem).toHaveBeenCalledWith(
+      5,
+      'Fotos guardadas ✅ O álbum está em RASCUNHO: confira os detalhes e clique em Publicar no painel:\nhttps://site.test/coordenador?aba=galeria',
+    );
+  });
+
+  it('/pronto com álbum já publicado: manda o link do site', async () => {
+    const { p } = portas(galeriaAberta(), { albumPublicado: vi.fn().mockResolvedValue(true) });
+    await rodar(texto('/pronto'), p);
+    expect(p.enviarMensagem).toHaveBeenCalledWith(5, 'Álbum atualizado no site ✅\nhttps://site.test/galeria/alb-1');
   });
 
   it('modo galeria vencido: a foto volta a virar notícia', async () => {

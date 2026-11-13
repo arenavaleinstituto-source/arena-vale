@@ -19,6 +19,8 @@ export type ItemAgenda = {
   dataHora: string;
   local: string | null;
   transmissao: boolean;
+  /** "Casa 3 x 1 Fora", só de jogo finalizado. */
+  placar?: string | null;
 };
 
 type Nome = { nome?: string | null } | null | undefined;
@@ -32,6 +34,9 @@ export type LinhaJogo = {
   fora: Nome;
   campeonato: { modalidade?: string | null } | null | undefined;
   transmissoes: unknown[] | null | undefined;
+  status?: string | null;
+  placar_casa?: number | null;
+  placar_visitante?: number | null;
 };
 
 export type LinhaAgendaJogos = {
@@ -75,6 +80,10 @@ export function deJogos(row: LinhaJogo): ItemAgenda {
     dataHora: comFusoBrasilia(row.data),
     local: corrigirLocal(row.local),
     transmissao: (row.transmissoes?.length ?? 0) > 0,
+    placar:
+      row.status === 'finalizado' && row.placar_casa != null && row.placar_visitante != null
+        ? `${row.casa?.nome ?? 'A definir'} ${row.placar_casa} x ${row.placar_visitante} ${row.fora?.nome ?? 'A definir'}`
+        : null,
   };
 }
 
@@ -167,7 +176,7 @@ async function buscarItens(
   const sb = o.sb ?? createPublicClient();
   let qJogos = sb
     .from('jogos')
-    .select('id,data,fase,local,casa:time_casa_id(nome),fora:time_visitante_id(nome),campeonato:campeonato_id(modalidade),transmissoes(id)')
+    .select('id,data,fase,local,status,placar_casa,placar_visitante,casa:time_casa_id(nome),fora:time_visitante_id(nome),campeonato:campeonato_id(modalidade),transmissoes(id)')
     .gte('data', agoraBrasiliaSemFuso(desde));
   qJogos = o.status ? qJogos.in('status', o.status) : qJogos.eq('status', 'agendado');
   if (o.ate) qJogos = qJogos.lte('data', agoraBrasiliaSemFuso(o.ate));
@@ -204,7 +213,7 @@ export async function buscarItemAgenda(origem: 'jogos' | 'agenda', id: string): 
   if (origem === 'jogos') {
     const { data, error } = await sb
       .from('jogos')
-      .select('id,data,fase,local,casa:time_casa_id(nome),fora:time_visitante_id(nome),campeonato:campeonato_id(modalidade),transmissoes(id)')
+      .select('id,data,fase,local,status,placar_casa,placar_visitante,casa:time_casa_id(nome),fora:time_visitante_id(nome),campeonato:campeonato_id(modalidade),transmissoes(id)')
       .eq('id', id)
       .maybeSingle();
     return error || !data ? null : deJogos(data as unknown as LinhaJogo);

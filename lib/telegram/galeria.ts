@@ -3,6 +3,7 @@
  * modo galeria por 30 min → fotos vão para o álbum → /pronto devolve o link.
  */
 import { diaBrasilia, rotuloJogo } from '@/lib/midia/jogo-rotulo';
+import { detalhesDoJogo } from '@/lib/midia/galeria';
 import type { PortasBot } from './processar';
 import type { TgMessage } from './extrair';
 
@@ -97,7 +98,7 @@ async function tratarBotao(cb: TgCallbackQuery, perfilId: string, p: PortasBot, 
     return;
   }
   const titulo = `${jogo.casa} x ${jogo.fora}`.slice(0, 80);
-  const album = await p.albumDoJogo(origem, jogo.id, titulo, diaBrasilia(Date.parse(jogo.dataHora)), perfilId);
+  const album = await p.albumDoJogo(origem, jogo.id, titulo, diaBrasilia(Date.parse(jogo.dataHora)), perfilId, detalhesDoJogo(jogo));
   await abrirGaleria(p, cb.from.id, chat, album, agora);
 }
 
@@ -117,6 +118,14 @@ async function guardarFoto(msg: TgMessage, fileId: string, estado: EstadoBot, pe
     return;
   }
   if (responder) await p.enviarMensagem(chat, `✅ Foto guardada no álbum ${estado.albumTitulo ?? ''}`.trim());
+}
+
+/** Fim do envio: álbum em rascunho pede para publicar no painel; publicado manda o link do site. */
+async function mensagemPronto(p: PortasBot, origem: string, albumId: string): Promise<string> {
+  const publicado = await p.albumPublicado(albumId).catch(() => false);
+  return publicado
+    ? `Álbum atualizado no site ✅\n${origem}/galeria/${albumId}`
+    : `Fotos guardadas ✅ O álbum está em RASCUNHO: confira os detalhes e clique em Publicar no painel:\n${origem}/coordenador?aba=galeria`;
 }
 
 /**
@@ -164,7 +173,7 @@ export async function tratarGaleria(
     if (!pronto) return false;
     if (estado.modo === 'galeria' && estado.albumId) {
       await p.gravarEstado(telegramId, NOTICIAS);
-      await p.enviarMensagem(chat, `Álbum pronto: ${origem}/galeria/${estado.albumId}`);
+      await p.enviarMensagem(chat, await mensagemPronto(p, origem, estado.albumId));
     } else {
       await p.enviarMensagem(chat, MSG.nadaAberto);
     }
@@ -194,7 +203,7 @@ export async function tratarGaleria(
   // modo galeria, dentro do prazo
   if (pronto) {
     await p.gravarEstado(telegramId, NOTICIAS);
-    await p.enviarMensagem(chat, `Álbum pronto: ${origem}/galeria/${estado.albumId}`);
+    await p.enviarMensagem(chat, await mensagemPronto(p, origem, estado.albumId!));
     return true;
   }
   const fileId = arquivoDeFoto(msg);

@@ -14,7 +14,9 @@ export function CartaoAlbum({ album }: { album: AlbumGaleria }) {
         )}
       </span>
       <span className="info">
+        {album.competicao && <span className="competicao">{album.competicao}</span>}
         <strong>{album.titulo}</strong>
+        {album.placar && <span className="placar">{album.placar}</span>}
         <span className="meta">
           <span>{dataAlbum(album.data)}</span>
           <span>{textoFotos(album.totalFotos)}</span>
