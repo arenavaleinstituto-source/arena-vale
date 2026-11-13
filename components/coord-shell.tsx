@@ -139,6 +139,13 @@ export function CoordShell({ user, stats, inscricoes: initialInsc, patrocinadore
     });
   };
 
+  const toggleAtivoPatrocinador = (id: string, ativo: boolean) => {
+    startTransition(async () => {
+      await supabase.from('patrocinadores').update({ ativo }).eq('id', id);
+      setPatrocinadores((prev) => prev.map((p) => (p.id === id ? { ...p, ativo } : p)));
+    });
+  };
+
   const deletePatrocinador = async (id: string) => {
     if (!confirm('Excluir patrocinador?')) return;
     startTransition(async () => {
@@ -285,9 +292,23 @@ export function CoordShell({ user, stats, inscricoes: initialInsc, patrocinadore
                   <small className="text-xs text-av-cinza">
                     Cota {p.cota} · R$ {Number(p.valor_mensal).toLocaleString('pt-BR')}/mês
                   </small>
-                  <button type="button" onClick={() => deletePatrocinador(p.id)} className="mt-3 rounded-full border border-av-vermelho/40 px-3 py-1 text-xs text-[#ff8a8f]">
-                    Excluir
-                  </button>
+                  <span className={`mt-2 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest ${p.ativo ? 'bg-green-900/40 text-green-400' : 'bg-zinc-800 text-av-cinza'}`}>
+                    {p.ativo ? 'Publicado no site' : 'Escondido'}
+                  </span>
+                  <div className="mt-2 flex flex-wrap justify-center gap-2">
+                    {p.ativo ? (
+                      <button type="button" onClick={() => toggleAtivoPatrocinador(p.id, false)} className="rounded-full border border-av-linha px-3 py-1 text-xs text-av-cinza">
+                        Esconder do site
+                      </button>
+                    ) : (
+                      <button type="button" onClick={() => toggleAtivoPatrocinador(p.id, true)} className="rounded-full border border-green-700/50 px-3 py-1 text-xs text-green-400">
+                        Publicar no site
+                      </button>
+                    )}
+                    <button type="button" onClick={() => deletePatrocinador(p.id)} className="rounded-full border border-av-vermelho/40 px-3 py-1 text-xs text-[#ff8a8f]">
+                      Excluir
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
