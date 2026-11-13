@@ -1,5 +1,5 @@
 /** Cargo como o site enxerga (o dono aparece como coordenador; `ehDono` é à parte). */
-export type Cargo = 'visitante' | 'autenticado' | 'coordenador' | 'moderador' | 'capitao';
+export type Cargo = 'visitante' | 'autenticado' | 'coordenador' | 'moderador' | 'capitao' | 'delegado';
 export type DecisaoRota = 'livre' | 'login' | 'negado' | 'nao-encontrado';
 
 type Regra = { prefixo: string; permite: Cargo[] };
@@ -10,12 +10,14 @@ const REGRAS: Regra[] = [
   { prefixo: '/painel', permite: ['coordenador'] },
   { prefixo: '/moderador', permite: ['moderador', 'coordenador'] },
   { prefixo: '/capitao', permite: ['capitao', 'coordenador'] },
+  { prefixo: '/delegado', permite: ['delegado', 'coordenador'] },
 ];
 
 const PAINEL: Partial<Record<Cargo, string>> = {
   coordenador: '/coordenador',
   moderador: '/moderador',
   capitao: '/capitao',
+  delegado: '/delegado',
 };
 
 function dentroDe(pathname: string, prefixo: string) {
@@ -27,6 +29,7 @@ export function cargoDoBanco(role: string | null | undefined): Cargo {
   if (!role) return 'visitante';
   if (role === 'coordenador' || role === 'proprietario') return 'coordenador';
   if (role === 'moderador' || role === 'capitao') return role;
+  if (role === 'delegado') return 'delegado';
   return 'autenticado';
 }
 
@@ -40,7 +43,7 @@ export function decidirRota(pathname: string, cargo: Cargo, ehDono: boolean): De
 }
 
 /** Prefixos para onde um `next` pode levar depois do login (só a área da equipe). */
-const PREFIXOS_EQUIPE = ['/coordenador', '/painel', '/moderador', '/capitao', '/proprietario'];
+const PREFIXOS_EQUIPE = ['/coordenador', '/painel', '/moderador', '/capitao', '/delegado', '/proprietario'];
 const BASE_FALSA = 'https://arena-vale.invalid';
 
 /**

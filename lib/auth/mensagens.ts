@@ -22,6 +22,7 @@ export const ROTULO_CARGO: Record<string, string> = {
   coordenador: 'Coordenador',
   moderador: 'Moderador',
   capitao: 'Capitão',
+  delegado: 'Delegado',
 };
 
 export function iniciais(nome: string | null | undefined): string {
