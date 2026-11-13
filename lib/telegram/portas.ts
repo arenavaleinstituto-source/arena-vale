@@ -154,7 +154,7 @@ export function portasBot(admin: SupabaseClient): PortasBot {
     async jogosRecentes() {
       return jogosRecentes(3, new Date(), admin);
     },
-    async albumDoJogo(origem, jogoRef, titulo, data, perfilId) {
+    async albumDoJogo(origem, jogoRef, titulo, data, perfilId, detalhes) {
       const buscar = async () =>
         (await admin.from('galeria_albuns').select('id, titulo').eq('origem', origem).eq('jogo_ref', jogoRef).maybeSingle()).data as {
           id: string;
@@ -164,7 +164,7 @@ export function portasBot(admin: SupabaseClient): PortasBot {
       if (existente) return existente;
       const { data: novo, error } = await admin
         .from('galeria_albuns')
-        .insert({ titulo, data, origem, jogo_ref: jogoRef, criado_por: perfilId })
+        .insert({ titulo, data, origem, jogo_ref: jogoRef, criado_por: perfilId, ativo: false, ...(detalhes ?? {}) })
         .select('id, titulo')
         .single();
       if (error?.code === '23505') {
@@ -175,7 +175,7 @@ export function portasBot(admin: SupabaseClient): PortasBot {
       return novo as { id: string; titulo: string };
     },
     async criarAlbumEvento(titulo, data, perfilId) {
-      const { data: novo, error } = await admin.from('galeria_albuns').insert({ titulo, data, criado_por: perfilId }).select('id, titulo').single();
+      const { data: novo, error } = await admin.from('galeria_albuns').insert({ titulo, data, criado_por: perfilId, ativo: false }).select('id, titulo').single();
       if (error || !novo) throw new Error(error?.message ?? 'falha ao criar álbum');
       return novo as { id: string; titulo: string };
     },
@@ -193,6 +193,10 @@ export function portasBot(admin: SupabaseClient): PortasBot {
     },
     async responderBotao(callbackId) {
       await tg('answerCallbackQuery', { callback_query_id: callbackId });
+    },
+    async albumPublicado(albumId) {
+      const { data } = await admin.from('galeria_albuns').select('ativo').eq('id', albumId).maybeSingle();
+      return Boolean((data as { ativo?: boolean } | null)?.ativo);
     },
     async galeriaAtiva() {
       const { error } = await admin.from('galeria_albuns').select('id').limit(1);

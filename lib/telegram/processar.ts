@@ -59,7 +59,14 @@ export type PortasBot = {
   /** Jogos dos últimos 3 dias e de hoje, das duas fontes, até 8. */
   jogosRecentes(): Promise<ItemAgenda[]>;
   /** Cria o álbum do jogo ou devolve o que já existe. */
-  albumDoJogo(origem: 'jogos' | 'agenda', jogoRef: string, titulo: string, data: string, perfilId: string): Promise<{ id: string; titulo: string }>;
+  albumDoJogo(
+    origem: 'jogos' | 'agenda',
+    jogoRef: string,
+    titulo: string,
+    data: string,
+    perfilId: string,
+    detalhes?: { competicao: string | null; local: string | null; placar: string | null },
+  ): Promise<{ id: string; titulo: string }>;
   criarAlbumEvento(titulo: string, data: string, perfilId: string): Promise<{ id: string; titulo: string }>;
   /** Prepara (gira, reduz, logo), guarda no bucket `galeria` e registra a foto. */
   guardarFotoGaleria(albumId: string, bytes: Uint8Array, perfilId: string): Promise<void>;
@@ -67,6 +74,8 @@ export type PortasBot = {
   responderBotao(callbackId: string): Promise<void>;
   /** false quando as tabelas da galeria ainda não existem. */
   galeriaAtiva(): Promise<boolean>;
+  /** true quando o álbum já aparece no site. */
+  albumPublicado(albumId: string): Promise<boolean>;
   /** Modo parceiro: logo da ARENA VALE + faixa "Foto e arte: @perfil" embaixo (devolve JPEG). */
   montarParceiro(arq: Arquivo, perfil: string): Promise<Arquivo>;
 };

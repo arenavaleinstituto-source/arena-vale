@@ -1,4 +1,5 @@
 /** Galeria de fotos (spec Fase 4A, seção 4): tipos e conversões puras. */
+import type { ItemAgenda } from './agenda';
 
 export type AlbumGaleria = {
   id: string;
@@ -10,7 +11,27 @@ export type AlbumGaleria = {
   capaUrl: string | null;
   ativo: boolean;
   totalFotos: number;
+  competicao: string | null;
+  local: string | null;
+  placar: string | null;
+  descricao: string | null;
+  fotografo: string | null;
+  publicadoEm: string | null;
 };
+
+export type SituacaoAlbum = 'rascunho' | 'publicado' | 'escondido';
+
+/** Publicado aparece no site; rascunho nunca foi publicado; escondido já foi e saiu. */
+export function situacaoAlbum(a: Pick<AlbumGaleria, 'ativo' | 'publicadoEm'>): SituacaoAlbum {
+  if (a.ativo) return 'publicado';
+  return a.publicadoEm ? 'escondido' : 'rascunho';
+}
+
+/** Detalhes que o álbum de um jogo já ganha da agenda. */
+export function detalhesDoJogo(j: ItemAgenda): { competicao: string | null; local: string | null; placar: string | null } {
+  const competicao = [j.modalidade, j.fase].filter(Boolean).join(' · ');
+  return { competicao: competicao || null, local: j.local ?? null, placar: j.placar ?? null };
+}
 
 export type FotoGaleria = {
   id: string;
@@ -30,6 +51,12 @@ export type LinhaAlbum = {
   capa_url: string | null;
   ativo: boolean;
   galeria_fotos?: { count: number }[] | null;
+  competicao?: string | null;
+  local?: string | null;
+  placar?: string | null;
+  descricao?: string | null;
+  fotografo?: string | null;
+  publicado_em?: string | null;
 };
 
 export type LinhaFoto = {
@@ -41,7 +68,8 @@ export type LinhaFoto = {
   altura: number;
 };
 
-export const SELECT_ALBUM = 'id,titulo,data,origem,jogo_ref,capa_url,ativo,galeria_fotos(count)';
+export const SELECT_ALBUM =
+  'id,titulo,data,origem,jogo_ref,capa_url,ativo,competicao,local,placar,descricao,fotografo,publicado_em,galeria_fotos(count)';
 export const SELECT_FOTO = 'id,album_id,url,miniatura_url,largura,altura';
 
 export function deAlbum(l: LinhaAlbum): AlbumGaleria {
@@ -54,6 +82,12 @@ export function deAlbum(l: LinhaAlbum): AlbumGaleria {
     capaUrl: l.capa_url,
     ativo: l.ativo,
     totalFotos: l.galeria_fotos?.[0]?.count ?? 0,
+    competicao: l.competicao ?? null,
+    local: l.local ?? null,
+    placar: l.placar ?? null,
+    descricao: l.descricao ?? null,
+    fotografo: l.fotografo ?? null,
+    publicadoEm: l.publicado_em ?? null,
   };
 }
 

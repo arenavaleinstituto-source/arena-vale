@@ -171,3 +171,17 @@ describe('buscarHojeNaArena', () => {
     expect(filtros).not.toContainEqual(['eq', 'status', 'agendado']);
   });
 });
+
+describe('placar do jogo', () => {
+  const linha = {
+    id: 'j1', data: '2026-11-15T19:00:00', fase: null, local: null,
+    casa: { nome: 'Real' }, fora: { nome: 'Sede' }, campeonato: { modalidade: 'Futsal' }, transmissoes: [],
+    placar_casa: 3, placar_visitante: 1,
+  };
+  it('jogo finalizado leva o placar', () => {
+    expect(deJogos({ ...linha, status: 'finalizado' }).placar).toBe('Real 3 x 1 Sede');
+  });
+  it('jogo agendado não tem placar', () => {
+    expect(deJogos({ ...linha, status: 'agendado' }).placar ?? null).toBeNull();
+  });
+});

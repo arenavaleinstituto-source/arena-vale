@@ -2,7 +2,8 @@ import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-const ALBUM = { id: 'alb-1', titulo: 'Real x Sede', data: '2026-11-15', origem: 'agenda', jogo_ref: 'j1', capa_url: null, ativo: true, galeria_fotos: [{ count: 2 }] };
+const ALBUM_PADRAO = { id: 'alb-1', titulo: 'Real x Sede', data: '2026-11-15', origem: 'agenda', jogo_ref: 'j1', capa_url: null, ativo: true, publicado_em: '2026-11-15T20:00:00Z', galeria_fotos: [{ count: 2 }] };
+let ALBUM: Record<string, unknown> = { ...ALBUM_PADRAO };
 const FOTOS = [
   { id: 'f1', album_id: 'alb-1', url: 'https://banco.test/storage/v1/object/public/galeria/alb-1/aaa.jpg', miniatura_url: 'https://banco.test/storage/v1/object/public/galeria/alb-1/aaa-m.jpg', largura: 2000, altura: 1500 },
   { id: 'f2', album_id: 'alb-1', url: 'https://banco.test/storage/v1/object/public/galeria/alb-1/bbb.jpg', miniatura_url: 'https://banco.test/storage/v1/object/public/galeria/alb-1/bbb-m.jpg', largura: 2000, altura: 1500 },
@@ -58,13 +59,14 @@ vi.mock('@/lib/imagem/reduzir-no-navegador', () => ({ reduzirNoNavegador: async 
 import { AbaGaleria } from './AbaGaleria';
 
 const JOGOS = [
-  { id: 'j1', origem: 'agenda', modalidade: null, fase: null, casa: 'Real', fora: 'Sede', dataHora: '2026-11-15T22:00:00.000Z', local: null, transmissao: false },
+  { id: 'j1', origem: 'jogos', modalidade: 'Futsal', fase: 'Final', casa: 'Real', fora: 'Sede', dataHora: '2026-11-15T22:00:00.000Z', local: 'Ginásio Galegão', transmissao: false, placar: 'Real 3 x 1 Sede' },
 ];
 
 describe('AbaGaleria', () => {
   beforeEach(() => {
     chamadas.length = 0;
     removidos.length = 0;
+    ALBUM = { ...ALBUM_PADRAO };
     vi.stubGlobal(
       'fetch',
       vi.fn(async (url: string) => {
@@ -161,5 +163,64 @@ describe('AbaGaleria', () => {
         ['capa_url', FOTOS[0].url],
       ],
     });
+  });
+
+  it('álbum publicado mostra o selo, Ver no site e Esconder', async () => {
+    render(<AbaGaleria />);
+    expect(await screen.findByText('PUBLICADO NO SITE')).toBeInTheDocument();
+    const ver = screen.getByRole('link', { name: /Ver no site/ });
+    expect(ver).toHaveAttribute('href', '/galeria/alb-1');
+    expect(ver).toHaveAttribute('target', '_blank');
+    expect(screen.getByRole('button', { name: 'Esconder' })).toBeInTheDocument();
+  });
+
+  it('rascunho com fotos: Publicar no site grava ativo e a data', async () => {
+    ALBUM = { ...ALBUM_PADRAO, ativo: false, publicado_em: null };
+    const u = userEvent.setup();
+    render(<AbaGaleria />);
+    expect(await screen.findByText('RASCUNHO')).toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: /Ver no site/ })).toBeNull();
+    await u.click(screen.getByRole('button', { name: 'Publicar no site' }));
+    const up = chamadas.find((c) => c.acao === 'update' && c.tabela === 'galeria_albuns');
+    expect(up?.valor).toMatchObject({ ativo: true, publicado_em: expect.any(String) });
+  });
+
+  it('rascunho sem fotos não publica', async () => {
+    ALBUM = { ...ALBUM_PADRAO, ativo: false, publicado_em: null, galeria_fotos: [{ count: 0 }] };
+    const u = userEvent.setup();
+    render(<AbaGaleria />);
+    await u.click(await screen.findByRole('button', { name: 'Publicar no site' }));
+    expect(screen.getByText('Envie pelo menos 1 foto antes de publicar')).toBeInTheDocument();
+    expect(chamadas.find((c) => c.acao === 'update')).toBeUndefined();
+  });
+
+  it('escondido mostra o selo e Publicar de novo', async () => {
+    ALBUM = { ...ALBUM_PADRAO, ativo: false };
+    render(<AbaGaleria />);
+    expect(await screen.findByText('ESCONDIDO')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Publicar de novo' })).toBeInTheDocument();
+  });
+
+  it('álbum de jogo nasce como rascunho com competição, local e placar', async () => {
+    const u = userEvent.setup();
+    render(<AbaGaleria />);
+    await u.click(await screen.findByRole('button', { name: '+ Novo álbum' }));
+    await u.click(await screen.findByRole('radio', { name: 'Real x Sede · 15/11' }));
+    await u.click(screen.getByRole('button', { name: 'Criar álbum' }));
+    const ins = chamadas.find((c) => c.acao === 'insert' && c.tabela === 'galeria_albuns');
+    expect(ins?.valor).toMatchObject({ ativo: false, competicao: 'Futsal · Final', local: 'Ginásio Galegão', placar: 'Real 3 x 1 Sede', origem: 'jogos' });
+  });
+
+  it('Editar detalhes grava os campos', async () => {
+    const u = userEvent.setup();
+    render(<AbaGaleria />);
+    await u.click(await screen.findByRole('button', { name: 'Abrir' }));
+    await u.click(await screen.findByRole('button', { name: 'Editar detalhes' }));
+    await u.type(screen.getByLabelText('Placar'), 'Real 2 x 0 Sede');
+    await u.type(screen.getByLabelText('Fotos por'), 'Fulano');
+    await u.click(screen.getByRole('button', { name: 'Salvar detalhes' }));
+    const up = chamadas.find((c) => c.acao === 'update' && c.tabela === 'galeria_albuns');
+    expect(up?.valor).toMatchObject({ placar: 'Real 2 x 0 Sede', fotografo: 'Fulano', titulo: 'Real x Sede' });
+    expect(up?.filtros).toEqual([['id', 'alb-1']]);
   });
 });
