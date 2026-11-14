@@ -194,6 +194,17 @@
 .orbita-painel p { color: var(--cinza); font-size: 16px; }
 @media (max-width: 700px) { .orbita { grid-template-columns: 1fr; } }
 
+/* ===== Anel gráfico — SeuCampeonato ===== */
+.seu-camp { display: grid; grid-template-columns: 1fr 1fr auto; gap: 32px; align-items: center; }
+@media (max-width: 700px) { .seu-camp { grid-template-columns: 1fr; } .anel-grafico { display: none; } }
+.anel-grafico { position: relative; width: 160px; height: 160px; flex: none; }
+.anel-grafico svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.anel-trilho { fill: none; stroke: var(--linha); stroke-width: 6; }
+.anel-arco { fill: none; stroke: var(--vermelho); stroke-width: 6; stroke-linecap: round; }
+.anel-miolo { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; }
+.anel-miolo b { font-family: var(--display); font-weight: 800; font-size: 36px; }
+.anel-miolo span { font-family: var(--rotulo); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--cinza); }
+
 /* vídeos */
 .videos { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
 @media (max-width: 960px) { .videos { grid-template-columns: repeat(2, minmax(0, 1fr)); } }

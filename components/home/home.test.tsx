@@ -248,6 +248,13 @@ describe('SeuCampeonato', () => {
     expect(decodeURIComponent(zap)).toContain('campeonato');
     expect(screen.getByRole('link', { name: 'Ver como fica' }).getAttribute('href')).toBe('/modalidades');
   });
+
+  it('SeuCampeonato shows the anel graphic', async () => {
+    const { SeuCampeonato } = await import('./SeuCampeonato');
+    const { container } = render(<SeuCampeonato whatsapp="5547988444404" />);
+    expect(container.querySelector('.anel-grafico')).toBeInTheDocument();
+    expect(screen.getByText('6')).toBeInTheDocument();
+  });
 });
 
 describe('BannerTorneio', () => {
