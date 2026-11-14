@@ -202,14 +202,23 @@ describe('ParaMarcas', () => {
 });
 
 describe('AtletasDestaques', () => {
-  it('cartazes dos atletas com link para a galeria', () => {
-    render(
-      <AtletasDestaques
-        destaques={[{ id: 'a1', nome: 'Gabriel', equipe: 'Brusque', campeonato: 'Copa Vale', modalidade: 'FUTSAL', imagem_url: null, jogos: null, gols_ou_pontos: null, assistencias: null, ordem: 1, ativo: true, created_at: '2026-11-01' }]}
-      />,
-    );
-    expect(screen.getByRole('img', { name: 'Gabriel' })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Ver todos →' })).toHaveAttribute('href', '/atletasdestaques');
+  const destaque = { id: 'a1', nome: 'Gabriel', equipe: 'Brusque', campeonato: 'Copa Vale', modalidade: 'FUTSAL', imagem_url: '/g.jpg', jogos: null, gols_ou_pontos: null, assistencias: null, ordem: 1, ativo: true, created_at: '2026-11-01' };
+
+  it('portrait spotlight shows first atleta name', () => {
+    const { container } = render(<AtletasDestaques destaques={[destaque]} />);
+    expect(container.querySelector('.atleta-sobre')).toBeInTheDocument();
+    expect(screen.getByText('Gabriel')).toBeInTheDocument();
+  });
+
+  it('link para /atletasdestaques', () => {
+    render(<AtletasDestaques destaques={[destaque]} />);
+    const link = screen.getByRole('link', { name: /ver todos/i });
+    expect(link).toHaveAttribute('href', '/atletasdestaques');
+  });
+
+  it('sem destaques: mensagem vazio', () => {
+    render(<AtletasDestaques destaques={[]} />);
+    expect(screen.getByText(/em breve/i)).toBeInTheDocument();
   });
 });
 
