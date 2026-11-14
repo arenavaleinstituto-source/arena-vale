@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import type { Modalidade } from '@/lib/midia/modalidades';
 import { buscarModalidades } from '@/lib/midia/modalidades-busca';
+import { ModalidadesOrbita } from './ModalidadesOrbita';
 
 /** Os cartões de modalidade (as cadastradas pela coordenação). */
 export function CartoesModalidades({ lista }: { lista: Modalidade[] }) {
@@ -19,15 +20,14 @@ export function CartoesModalidades({ lista }: { lista: Modalidade[] }) {
 export async function Modalidades() {
   const lista = await buscarModalidades();
   return (
-    <section className="faixa alt" id="modalidades">
+    <section className="faixa" id="modalidades" style={{ background: 'var(--grafite)' }}>
       <div className="dentro">
         <div className="cab">
-          <div>
-            <h2>Modalidades</h2>
-            <p>Campeonatos, agenda e notícias de cada esporte.</p>
-          </div>
+          <span className="eyebrow">Modalidades</span>
+          <h2>Todo esporte tem <em className="accent">seu palco.</em></h2>
+          <p>Campeonatos, agenda e notícias de cada esporte, do campo à quadra.</p>
         </div>
-        <CartoesModalidades lista={lista} />
+        <ModalidadesOrbita lista={lista} />
       </div>
     </section>
   );

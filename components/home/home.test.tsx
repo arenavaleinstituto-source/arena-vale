@@ -184,11 +184,17 @@ describe('UltimosVideos', () => {
 });
 
 describe('Modalidades', () => {
-  it('um cartão por modalidade cadastrada, inclusive as novas', async () => {
+  it('um botão por modalidade cadastrada, inclusive as novas', async () => {
     render(await Modalidades());
-    const hrefs = screen.getAllByRole('link').map((a) => a.getAttribute('href'));
-    expect(hrefs).toEqual(['/modalidades/futsal', '/modalidades/futebol7', '/modalidades/basquete', '/modalidades/volei', '/modalidades/beach-tennis']);
-    expect(screen.getByText('O palco do beach tennis é aqui.')).toBeInTheDocument();
+    const botoes = screen.getAllByRole('button').map((b) => b.textContent);
+    expect(botoes.some((t) => t?.includes('Beach Tennis'))).toBe(true);
+    expect(botoes.some((t) => t?.includes('Futsal'))).toBe(true);
+  });
+
+  it('exibe a frase da primeira modalidade no painel', async () => {
+    render(await Modalidades());
+    const primeiraMod = MODALIDADES_SITE[0];
+    expect(screen.getByText(primeiraMod.frase)).toBeInTheDocument();
   });
 });
 

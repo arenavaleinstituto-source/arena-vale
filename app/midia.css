@@ -181,6 +181,19 @@
 .atleta-info h3 { font-family: var(--display); font-weight: 800; font-size: clamp(28px, 4vw, 48px); text-transform: uppercase; line-height: .95; margin: 0; }
 @media (max-width: 700px) { .atleta-sobre { grid-template-columns: 1fr; } }
 
+/* ===== Modalidades Órbita ===== */
+.orbita { display: grid; grid-template-columns: 1fr 1.4fr; gap: 24px; align-items: start; }
+.orbita-botoes { display: grid; gap: 8px; }
+.orbita-btn { display: flex; align-items: center; gap: 14px; padding: 16px 20px; border-radius: 16px; border: 1px solid var(--linha); background: transparent; color: var(--branco); cursor: pointer; text-align: left; font: inherit; transition: background .18s, border-color .18s; }
+.orbita-btn:hover { background: rgba(229,9,20,.08); border-color: var(--vermelho); }
+.orbita-btn.ativo { background: rgba(229,9,20,.14); border-color: var(--vermelho); }
+.orbita-num { font-family: var(--rotulo); font-weight: 700; letter-spacing: .12em; font-size: 11px; color: var(--vermelho-claro); min-width: 24px; }
+.orbita-painel { background: var(--grafite-2); border: 1px solid var(--linha); border-radius: 20px; padding: 32px; display: grid; gap: 12px; align-content: start; min-height: 200px; }
+.orbita-conta { font-family: var(--rotulo); font-weight: 700; letter-spacing: .12em; font-size: 11px; color: var(--cinza); }
+.orbita-painel h3 { font-family: var(--display); font-weight: 800; font-size: clamp(28px, 4vw, 44px); text-transform: uppercase; margin: 0; }
+.orbita-painel p { color: var(--cinza); font-size: 16px; }
+@media (max-width: 700px) { .orbita { grid-template-columns: 1fr; } }
+
 /* vídeos */
 .videos { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
 @media (max-width: 960px) { .videos { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
