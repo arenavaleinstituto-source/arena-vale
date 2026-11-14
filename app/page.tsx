@@ -16,7 +16,8 @@ import { AgoraNaArena, EsporteMundial } from '@/components/home/NoticiasHome';
 import { buscarNoticiasPublicadas } from '@/lib/midia/noticias-busca';
 import { buscarPatrocinadores } from '@/lib/midia/patrocinadores';
 import { lerConfigSite, linkAssistirAoVivo } from '@/lib/midia/config';
-import { buscarCortesYT, buscarVideosYT, embedAoVivo, estaAoVivo } from '@/lib/midia/youtube';
+import { buscarVideosYT, embedAoVivo, estaAoVivo } from '@/lib/midia/youtube';
+import { buscarCortesVisiveis } from '@/lib/midia/cortes-visiveis';
 import { buscarAgenda, buscarHojeNaArena, resumoAgenda } from '@/lib/midia/agenda';
 import { buscarVideosExternos } from '@/lib/midia/videos-externos-busca';
 import { buscarDestaques } from '@/lib/content/destaques';
@@ -40,7 +41,7 @@ export default async function Home() {
     seguro(estaAoVivo(config.youtubeChannelId), false),
     seguro(buscarAgenda(30), []),
     seguro(buscarHojeNaArena(), { hoje: [], proximos: [] }),
-    seguro(buscarCortesYT(config.youtubeChannelId), []),
+    seguro(buscarCortesVisiveis(config.youtubeChannelId), []),
     seguro(buscarAlbuns(8), []),
     seguro(albunsDosJogos(), {}),
     seguro(buscarVideosYT(config.youtubeChannelId), []),
@@ -59,7 +60,7 @@ export default async function Home() {
 
   return (
     <main id="topo" className="w-full overflow-x-clip bg-av-preto text-av-branco">
-      <Banner capaUrl={config.capaUrl} />
+      <Banner capaUrl={config.capaUrl} whatsapp={config.whatsapp} linkAssistir={linkAssistirAoVivo(config)} />
       <AoVivo aoVivo={aoVivo} embed={embedAoVivo(config.youtubeChannelId)} linkAssistir={linkAssistirAoVivo(config)} proxima={proxima} />
       <AgoraNaArena noticias={arena} />
       <EsporteMundial noticias={mundo} />

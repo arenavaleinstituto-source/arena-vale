@@ -30,20 +30,24 @@ const JOGO: ItemAgenda = {
 };
 
 describe('Banner', () => {
-  it('frase com ESPORTE em vermelho, sem botões', () => {
-    const { container } = render(<Banner capaUrl="/fundo-arena.jpg" />);
+  it('frase com ESPORTE em vermelho', () => {
+    render(<Banner capaUrl="/fundo-arena.jpg" whatsapp="5547988444404" linkAssistir="https://youtube.com" />);
     const h1 = screen.getByRole('heading', { level: 1 });
     expect(h1.textContent).toMatch(/O palco do\s*esporte\s*é aqui\./i);
     const vermelho = h1.querySelector('.text-av-vermelho');
     expect(vermelho?.textContent).toMatch(/esporte/i);
     expect(screen.getByText('Mídia Esportiva')).toBeInTheDocument();
-    expect(container.textContent).toContain('histórias de quem vive o esporte.');
-    expect(container.querySelector('button, a')).toBeNull();
   });
 
   it('usa a capa do site_config como fundo', () => {
-    const { container } = render(<Banner capaUrl="https://x.supabase.co/capa.jpg" />);
+    const { container } = render(<Banner capaUrl="https://x.supabase.co/capa.jpg" whatsapp="5547988444404" linkAssistir="https://youtube.com" />);
     expect((container.querySelector('.hero') as HTMLElement).style.getPropertyValue('--capa-img')).toContain('https://x.supabase.co/capa.jpg');
+  });
+
+  it('Banner shows WhatsApp CTA and stats bullets', () => {
+    render(<Banner capaUrl="" whatsapp="5547988444404" linkAssistir="https://youtube.com" />);
+    expect(screen.getByRole('link', { name: /falar com a arena vale/i })).toBeInTheDocument();
+    expect(screen.getByText(/\+1\.200/i)).toBeInTheDocument();
   });
 });
 

@@ -79,6 +79,9 @@
 .hero h1 em { font-style: normal; color: var(--vermelho); }
 .hero p { margin: 0; max-width: 56ch; color: #cfcfd6; font-size: 18px; }
 .botoes { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; justify-content: center; }
+.hero-acoes { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 8px; }
+.hero-stats { list-style: none; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 22px; margin-top: 12px; font-size: 14px; color: var(--tinta-suave, #b4a7a8); }
+.hero-stats b { color: var(--branco); font-weight: 700; }
 .av-btn { display: inline-flex; align-items: center; gap: 10px; font-family: var(--rotulo); font-weight: 700; letter-spacing: .1em; text-transform: uppercase; font-size: 15px; border-radius: 999px; padding: 13px 24px; }
 .av-btn.forte { background: var(--vermelho); box-shadow: 0 12px 30px rgba(229,9,20,.35); }
 .av-btn.leve { border: 1px solid #3a3a41; }
