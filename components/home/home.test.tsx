@@ -10,7 +10,9 @@ import { Modalidades } from './Modalidades';
 import { ParaMarcas } from './ParaMarcas';
 import { AtletasDestaques } from './AtletasDestaques';
 import { ProjetoSocialHome } from './ProjetoSocialHome';
+import { EsporteMundial } from './NoticiasHome';
 import type { ItemAgenda } from '@/lib/midia/agenda';
+import type { NoticiaMidia } from '@/lib/midia/noticias';
 import { MODALIDADES_SITE } from '@/lib/midia/modalidades';
 
 vi.mock('@/lib/midia/modalidades-busca', () => ({
@@ -82,6 +84,27 @@ describe('AoVivo', () => {
     const tela = container.querySelector('.av-tela');
     expect(tela).toBeInTheDocument();
     expect(tela).toHaveAttribute('href', 'https://youtube.com/live');
+  });
+});
+
+const makeNoticia = (id: string, titulo: string): NoticiaMidia => ({
+  id, titulo, descricao: 'x', categoria: 'esporte', imagem_url: null, enquadramento: null,
+  aba: 'mundo', destaque: false, tipo_midia: 'foto', video_url: null, video_expira_em: null,
+  video_link: null, video_servico: null, status: 'publicado', publicado_em: new Date().toISOString(),
+  fonte: null, origem: 'manual', modalidade: null, created_at: new Date().toISOString(),
+});
+
+describe('EsporteMundial', () => {
+  it('mosaico shows big card for first news item', () => {
+    const noticias = [makeNoticia('1', 'Titulo principal'), makeNoticia('2', 'Secundaria')];
+    const { container } = render(<EsporteMundial noticias={noticias} />);
+    expect(container.querySelector('.mosaico-grade')).toBeInTheDocument();
+    expect(container.querySelector('.mosaico-cartao.grande')).toBeInTheDocument();
+  });
+
+  it('sem noticias: mensagem vazio', () => {
+    render(<EsporteMundial noticias={[]} />);
+    expect(screen.getByText(/em breve/i)).toBeInTheDocument();
   });
 });
 
