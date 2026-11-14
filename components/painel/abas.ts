@@ -5,6 +5,7 @@ export const ABAS_COORD = [
   { id: 'noticias', rotulo: 'Notícias' },
   { id: 'galeria', rotulo: 'Galeria' },
   { id: 'videos', rotulo: 'Vídeos' },
+  { id: 'cortes', rotulo: 'Cortes' },
   { id: 'jogos', rotulo: 'Agenda e jogos' },
   { id: 'campeonatos', rotulo: 'Campeonatos' },
   { id: 'inscricoes', rotulo: 'Inscrições' },
