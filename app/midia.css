@@ -108,6 +108,14 @@
 .ver { font-family: var(--rotulo); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; font-size: 14px; color: var(--vermelho-claro); border: 1px solid #3b1d20; border-radius: 999px; padding: 7px 16px; white-space: nowrap; }
 
 /* ao vivo */
+.av-tela { display: grid; place-items: center; aspect-ratio: 16/7; border-radius: 20px; overflow: hidden; background: radial-gradient(ellipse at 50% 0%, rgba(229,9,20,.4), transparent 60%), linear-gradient(160deg, #1a0f10, #0b0b0c); border: 1px solid var(--linha); position: relative; text-decoration: none; color: var(--branco); }
+.av-tela-play { width: 88px; height: 88px; border-radius: 50%; background: var(--vermelho); box-shadow: 0 0 0 14px rgba(229,9,20,.18), 0 20px 50px -10px rgba(229,9,20,.6); position: relative; flex: none; }
+.av-tela-play::after { content: ''; position: absolute; left: 36px; top: 28px; border-left: 24px solid #fff; border-top: 16px solid transparent; border-bottom: 16px solid transparent; }
+.av-tela:hover .av-tela-play { transform: scale(1.08); transition: transform .25s; }
+.av-tela-status { position: absolute; left: 24px; right: 24px; bottom: 20px; font-family: var(--rotulo); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; font-size: 13px; color: var(--tinta-suave); display: flex; gap: 10px; align-items: center; }
+.av-tela-status i { width: 8px; height: 8px; border-radius: 50%; background: var(--vermelho); flex: none; animation: av-pisca 1.4s infinite; }
+@keyframes av-pisca { 50% { opacity: .25; } }
+@media (max-width: 640px) { .av-tela { aspect-ratio: 4/3; } .av-tela-play { width: 68px; height: 68px; } .av-tela-play::after { left: 28px; top: 21px; border-left-width: 18px; border-top-width: 13px; border-bottom-width: 13px; } }
 .aovivo { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 16px; }
 @media (max-width: 860px) { .aovivo { grid-template-columns: 1fr; } }
 .player { position: relative; aspect-ratio: 16 / 9; max-width: 100%; border-radius: 20px; overflow: hidden; background: radial-gradient(ellipse at 60% 40%, #2a0b0e, #0d0d10 70%); border: 1px solid var(--linha); display: grid; place-items: center; }

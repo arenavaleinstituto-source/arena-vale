@@ -69,11 +69,19 @@ describe('AoVivo', () => {
     expect(screen.getByRole('heading', { name: 'Água Verde × Vila Nova' })).toBeInTheDocument();
   });
 
-  it('botão "▶ Assista ao vivo" abre em nova aba', () => {
+  it('link "Assistir ao vivo" abre em nova aba', () => {
     render(<AoVivo aoVivo={false} embed="x" linkAssistir="https://www.youtube.com/@TVArenaVale/live" proxima={null} />);
-    const a = screen.getByRole('link', { name: '▶ Assista ao vivo' });
-    expect(a).toHaveAttribute('target', '_blank');
-    expect(a).toHaveAttribute('href', 'https://www.youtube.com/@TVArenaVale/live');
+    const links = screen.getAllByRole('link');
+    const assistir = links.find(l => l.getAttribute('href') === 'https://www.youtube.com/@TVArenaVale/live');
+    expect(assistir).toBeDefined();
+    expect(assistir).toHaveAttribute('target', '_blank');
+  });
+
+  it('AoVivo off-air shows av-tela card linking to channel', () => {
+    const { container } = render(<AoVivo aoVivo={false} embed="" linkAssistir="https://youtube.com/live" proxima={null} />);
+    const tela = container.querySelector('.av-tela');
+    expect(tela).toBeInTheDocument();
+    expect(tela).toHaveAttribute('href', 'https://youtube.com/live');
   });
 });
 
