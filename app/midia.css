@@ -161,6 +161,10 @@
 /* agenda */
 .agenda { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
 @media (max-width: 860px) { .agenda { grid-template-columns: 1fr; } }
+/* agenda visual linhas */
+.linhas-agenda.agenda { grid-template-columns: 1fr; gap: 0; border: 1px solid var(--linha); border-radius: 20px; overflow: hidden; }
+.linhas-agenda .jogo { border-radius: 0; border: 0; border-bottom: 1px solid var(--linha); }
+.linhas-agenda .jogo:last-child { border-bottom: 0; }
 .jogo { background: var(--grafite-2); border: 1px solid var(--linha); border-radius: 18px; padding: 18px; display: grid; gap: 10px; }
 .jogo .topo-j { display: flex; justify-content: space-between; gap: 8px; font-family: var(--rotulo); font-weight: 700; letter-spacing: .1em; text-transform: uppercase; font-size: 12px; color: var(--cinza); }
 .jogo .topo-j .mod { color: var(--vermelho-claro); }

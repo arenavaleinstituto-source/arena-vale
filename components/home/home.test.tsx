@@ -127,6 +127,15 @@ describe('Contagem', () => {
   });
 });
 
+describe('HojeNaArena agenda linhas', () => {
+  it('lista de jogos usa classe linhas-agenda', () => {
+    const props = { baseUrl: 'https://www.arenavale.com.br', youtubeHandle: '@TVArenaVale', albuns: {} };
+    const jogo = { id: 'j1', origem: 'agenda' as const, modalidade: 'Futsal', fase: 'Final', casa: 'Água Verde', fora: 'Vila Nova', dataHora: '2099-11-15T19:00:00.000Z', local: 'Ginásio', transmissao: false };
+    const { container } = render(<HojeNaArena hoje={[jogo]} proximos={[]} {...props} />);
+    expect(container.querySelector('.linhas-agenda')).toBeInTheDocument();
+  });
+});
+
 describe('HojeNaArena', () => {
   const props = { baseUrl: 'https://www.arenavale.com.br', youtubeHandle: '@TVArenaVale', albuns: {} };
   const outro = (id: string, casa: string): ItemAgenda => ({ ...JOGO, id, casa });
