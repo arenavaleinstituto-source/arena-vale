@@ -41,6 +41,15 @@ export function ListaAgenda({
               <span>{formatarQuando(j.dataHora)}</span>
               {j.transmissao && <span className="tx">● Transmissão</span>}
             </div>
+            {j.status === 'ao_vivo' && (
+              <div className="ao-vivo-placar">
+                <span className="badge-ao-vivo">🔴 AO VIVO</span>
+                {j.placar && <span className="placar-ao-vivo">{j.placar}</span>}
+              </div>
+            )}
+            {j.status === 'finalizado' && j.placar && (
+              <span className="d">{j.placar}</span>
+            )}
             {j.local && <span className="d">{j.local}</span>}
             <BotoesJogo item={j} baseUrl={baseUrl} youtubeHandle={youtubeHandle} albumId={albuns[chave] ?? null} />
           </article>

@@ -21,7 +21,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   } catch {
     return responder({ ok: false, erro: 'Pedido inválido.' }, 400);
   }
-  if (!corpo.email || !corpo.cargo || !['coordenador', 'moderador', 'capitao'].includes(corpo.cargo)) {
+  if (!corpo.email || !corpo.cargo || !['coordenador', 'moderador', 'capitao', 'delegado'].includes(corpo.cargo)) {
     return responder({ ok: false, erro: 'Informe o e-mail e o cargo.' }, 400);
   }
 

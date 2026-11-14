@@ -21,6 +21,10 @@ describe('decidirRota', () => {
     ['/capitao', 'capitao', false, 'livre'],
     ['/capitao', 'coordenador', false, 'livre'],
     ['/capitao', 'moderador', false, 'negado'],
+    ['/delegado', 'delegado', false, 'livre'],
+    ['/delegado', 'coordenador', false, 'livre'],
+    ['/delegado', 'moderador', false, 'negado'],
+    ['/delegado', 'visitante', false, 'login'],
     ['/noticias', 'visitante', false, 'livre'],
     ['/', 'autenticado', false, 'livre'],
     ['/coordenadores-do-vale', 'visitante', false, 'livre'],
@@ -34,6 +38,7 @@ describe('destinoPorCargo', () => {
     expect(destinoPorCargo('coordenador')).toBe('/coordenador');
     expect(destinoPorCargo('moderador')).toBe('/moderador');
     expect(destinoPorCargo('capitao')).toBe('/capitao');
+    expect(destinoPorCargo('delegado')).toBe('/delegado');
   });
 
   it('sem cargo não tem destino', () => {
@@ -80,6 +85,7 @@ describe('cargoDoBanco', () => {
     expect(cargoDoBanco('proprietario')).toBe('coordenador');
     expect(cargoDoBanco('moderador')).toBe('moderador');
     expect(cargoDoBanco('capitao')).toBe('capitao');
+    expect(cargoDoBanco('delegado')).toBe('delegado');
   });
 });
 

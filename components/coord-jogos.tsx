@@ -9,6 +9,7 @@ export function CoordJogos() {
   const [jogos, setJogos] = useState<any[]>([]);
   const [times, setTimes] = useState<any[]>([]);
   const [campeonatos, setCampeonatos] = useState<any[]>([]);
+  const [delegados, setDelegados] = useState<{ id: string; full_name: string | null; email: string | null }[]>([]);
   const [mensagem, setMensagem] = useState('');
   const [salvando, setSalvando] = useState(false);
 
@@ -23,16 +24,18 @@ export function CoordJogos() {
   }, []);
 
   async function carregar() {
-    const [{ data: jogosData }, { data: timesData }, { data: campeonatosData }] =
+    const [{ data: jogosData }, { data: timesData }, { data: campeonatosData }, { data: delegadosData }] =
       await Promise.all([
-        supabase.from('jogos').select('*').order('data', { ascending: true }),
+        supabase.from('jogos').select('*, delegado_id').order('data', { ascending: true }),
         supabase.from('times').select('id, nome').order('nome'),
         supabase.from('campeonatos').select('id, nome').order('nome'),
+        supabase.from('profiles').select('id, full_name, email').eq('role', 'delegado').order('full_name'),
       ]);
 
     setJogos(jogosData || []);
     setTimes(timesData || []);
     setCampeonatos(campeonatosData || []);
+    setDelegados((delegadosData as typeof delegados) || []);
   }
 
   function nomeTime(id: string) {
@@ -101,6 +104,12 @@ export function CoordJogos() {
         item.id === jogo.id ? { ...item, [campo]: novoValor } : item
       )
     );
+  }
+
+  async function atribuirDelegado(jogoId: string, delegadoId: string | null) {
+    const { error } = await supabase.from('jogos').update({ delegado_id: delegadoId }).eq('id', jogoId);
+    if (error) return setMensagem(`Erro: ${error.message}`);
+    setJogos((prev) => prev.map((j) => j.id === jogoId ? { ...j, delegado_id: delegadoId } : j));
   }
 
   async function finalizarJogo(jogo: any) {
@@ -298,6 +307,20 @@ export function CoordJogos() {
 
                 <strong>{nomeTime(jogo.time_visitante_id)}</strong>
               </div>
+
+              <label className="grid gap-1 text-xs mt-3">
+                Delegado do jogo
+                <select
+                  value={jogo.delegado_id ?? ''}
+                  onChange={(e) => atribuirDelegado(jogo.id, e.target.value || null)}
+                  className="input text-sm"
+                >
+                  <option value="">— sem delegado —</option>
+                  {delegados.map((d) => (
+                    <option key={d.id} value={d.id}>{d.full_name ?? d.email}</option>
+                  ))}
+                </select>
+              </label>
 
               {jogo.status !== 'finalizado' && (
                 <button

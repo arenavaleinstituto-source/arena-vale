@@ -10,6 +10,7 @@ export const ABAS_COORD = [
   { id: 'inscricoes', rotulo: 'Inscrições' },
   { id: 'sumulas', rotulo: 'Súmulas' },
   { id: 'moderadores', rotulo: 'Moderadores' },
+  { id: 'delegados', rotulo: 'Delegados' },
   { id: 'capitaes', rotulo: 'Capitães' },
   { id: 'patrocinadores', rotulo: 'Patrocinadores' },
   { id: 'destaques', rotulo: 'Atletas destaque' },

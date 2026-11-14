@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { ABAS_COORD, abaValida } from './abas';
 
 describe('abas do painel da coordenação', () => {
-  it('14 abas, nesta ordem', () => {
+  it('15 abas, nesta ordem', () => {
     expect(ABAS_COORD.map((a) => a.id)).toEqual([
       'visao',
       'aovivo',
@@ -14,6 +14,7 @@ describe('abas do painel da coordenação', () => {
       'inscricoes',
       'sumulas',
       'moderadores',
+      'delegados',
       'capitaes',
       'patrocinadores',
       'destaques',
@@ -30,6 +31,7 @@ describe('abas do painel da coordenação', () => {
       'Inscrições',
       'Súmulas',
       'Moderadores',
+      'Delegados',
       'Capitães',
       'Patrocinadores',
       'Atletas destaque',

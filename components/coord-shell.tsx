@@ -7,6 +7,7 @@ import { createClient } from '@/lib/supabase/client';
 import type { Profile, Patrocinador } from '@/lib/supabase/types';
 import { CoordSumulas } from './coord-sumulas';
 import { CoordModeradores } from './coord-moderadores';
+import { CoordDelegados } from './coord-delegados';
 import { CoordCapitaes } from './coord-capitaes';
 import { CoordConfig } from './coord-config';
 import { CoordJogos } from './coord-jogos';
@@ -266,6 +267,7 @@ export function CoordShell({ user, stats, inscricoes: initialInsc, patrocinadore
         )}
         {tab === 'sumulas' && <CoordSumulas userId={user.id} />}
         {tab === 'moderadores' && <CoordModeradores />}
+        {tab === 'delegados' && <CoordDelegados />}
         {tab === 'capitaes' && <CoordCapitaes />}
         {tab === 'patrocinadores' && (
           <div className="grid gap-5">
