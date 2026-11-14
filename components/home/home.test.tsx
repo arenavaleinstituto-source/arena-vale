@@ -205,6 +205,12 @@ describe('ParaMarcas', () => {
     expect(screen.getByRole('link', { name: 'Falar com a ARENA VALE' }).getAttribute('href')).toMatch(/^https:\/\/wa\.me\/5547988444404/);
     expect(container.textContent).not.toContain('Naming da transmissão');
   });
+
+  it('ParaMarcas renders as a citacao blockquote', () => {
+    const { container } = render(<ParaMarcas whatsapp="5547988444404" />);
+    expect(container.querySelector('.citacao blockquote')).toBeInTheDocument();
+    expect(screen.getByText(/palco do esporte/i)).toBeInTheDocument();
+  });
 });
 
 describe('AtletasDestaques', () => {
