@@ -19,6 +19,7 @@ import { lerConfigSite, linkAssistirAoVivo } from '@/lib/midia/config';
 import { buscarVideosYT, embedAoVivo, estaAoVivo } from '@/lib/midia/youtube';
 import { buscarCortesVisiveis } from '@/lib/midia/cortes-visiveis';
 import { ModalidadesCorre } from '@/components/home/ModalidadesCorre';
+import { CoberturaCards } from '@/components/home/CoberturaCards';
 import { buscarAgenda, buscarHojeNaArena, resumoAgenda } from '@/lib/midia/agenda';
 import { buscarVideosExternos } from '@/lib/midia/videos-externos-busca';
 import { buscarDestaques } from '@/lib/content/destaques';
@@ -63,6 +64,7 @@ export default async function Home() {
     <main id="topo" className="w-full overflow-x-clip bg-av-preto text-av-branco">
       <Banner capaUrl={config.capaUrl} whatsapp={config.whatsapp} linkAssistir={linkAssistirAoVivo(config)} />
       <ModalidadesCorre />
+      <CoberturaCards />
       <AoVivo aoVivo={aoVivo} embed={embedAoVivo(config.youtubeChannelId)} linkAssistir={linkAssistirAoVivo(config)} proxima={proxima} />
       <AgoraNaArena noticias={arena} />
       <EsporteMundial noticias={mundo} />
