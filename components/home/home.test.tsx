@@ -88,7 +88,7 @@ describe('AoVivo', () => {
 });
 
 const makeNoticia = (id: string, titulo: string): NoticiaMidia => ({
-  id, titulo, descricao: 'x', categoria: 'esporte', imagem_url: null, enquadramento: null,
+  id, titulo, descricao: 'x', categoria: 'geral', imagem_url: null, enquadramento: null,
   aba: 'mundo', destaque: false, tipo_midia: 'foto', video_url: null, video_expira_em: null,
   video_link: null, video_servico: null, status: 'publicado', publicado_em: new Date().toISOString(),
   fonte: null, origem: 'manual', modalidade: null, created_at: new Date().toISOString(),
