@@ -235,6 +235,12 @@ describe('ProjetoSocialHome', () => {
     botoes.forEach((b) => expect(b.className).toContain('forte'));
     expect(botoes[2]).toHaveAttribute('href', '/inscricao');
   });
+
+  it('ProjetoSocialHome shows numeros impacto strip', () => {
+    const { container } = render(<ProjetoSocialHome whatsapp="5547988444404" />);
+    expect(container.querySelector('.numeros-impacto')).toBeInTheDocument();
+    expect(screen.getByText('+1.200')).toBeInTheDocument();
+  });
 });
 
 describe('SeuCampeonato', () => {
