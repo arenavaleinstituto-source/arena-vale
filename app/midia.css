@@ -1,5 +1,12 @@
 /* Visual da mídia esportiva — portado 1:1 da prévia aprovada
    (docs/superpowers/specs/2026-11-09-fase-3-previa-home.html). */
+
+/* Tokens extras do redesign (warm-dark, da paleta da proposta aprovada) */
+:root {
+  --papel: #1e1718;        /* superfície quente — cartões e fundos alternados */
+  --tinta-suave: #b4a7a8;  /* texto secundário sobre fundo quente */
+}
+
 .faixa { padding-block: 44px; }
 .faixa > .dentro, .topo .dentro, .rodape .dentro { max-width: 1240px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
 .faixa.alt, .faixa-alt { background: var(--grafite); border-block: 1px solid #1a1a1f; }
