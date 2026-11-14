@@ -38,6 +38,21 @@ export function SeuCampeonato({ whatsapp, alt = false }: { whatsapp: string; alt
               <li key={r}>{r}</li>
             ))}
           </ul>
+          <div className="anel-grafico" aria-hidden="true">
+            <svg viewBox="0 0 100 100">
+              <circle className="anel-trilho" cx="50" cy="50" r="41" />
+              <circle
+                className="anel-arco"
+                cx="50" cy="50" r="41"
+                pathLength="1"
+                strokeDasharray={`${RECURSOS.length / 6} 1`}
+              />
+            </svg>
+            <div className="anel-miolo">
+              <b>{RECURSOS.length}</b>
+              <span>recursos</span>
+            </div>
+          </div>
         </div>
       </div>
     </section>

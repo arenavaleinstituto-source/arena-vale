@@ -20,33 +20,39 @@ export function AgoraNaArena({ noticias }: { noticias: NoticiaMidia[] }) {
   );
 }
 
-/** "Esporte Mundial" (bloco 4 da página inicial), com o caminho da notícia. */
+/** "Esporte Mundial" (bloco 4 da página inicial) — layout mosaico. */
 export function EsporteMundial({ noticias }: { noticias: NoticiaMidia[] }) {
+  const quatro = noticias.slice(0, 4);
   return (
-    <Faixa
-      id="mundo"
-      titulo="Esporte Mundial"
-      subtitulo="Notícias do esporte pelo mundo — garimpadas pelo bot e publicadas pela coordenação."
-      verTodos={{ href: '/noticias?aba=mundo', rotulo: 'Todas do Esporte Mundial →' }}
-    >
-      {noticias.length === 0 ? (
-        <p className="vazio">Em breve as primeiras notícias.</p>
-      ) : (
-        <Fileira rotulo="Esporte Mundial" girar>
-          {noticias.map((n) => (
-            <CartazNoticia key={n.id} n={n} />
-          ))}
-        </Fileira>
-      )}
-      <div className="fluxo" aria-label="Como a notícia chega">
-        <span>Grupo do Telegram</span>
-        <i>→</i>
-        <span>Bot da ARENA VALE</span>
-        <i>→</i>
-        <span>Rascunho no painel</span>
-        <i>→</i>
-        <span>Coordenação edita e publica</span>
+    <section className="faixa" id="mundo">
+      <div className="dentro">
+        <div className="cab">
+          <span className="eyebrow">Esporte mundial</span>
+          <h2>As notícias que <em className="accent">movem o esporte.</em></h2>
+          <p>Notícias do esporte pelo mundo, selecionadas e publicadas pela coordenação da ARENA VALE.</p>
+        </div>
+        {quatro.length === 0 ? (
+          <p className="vazio">Em breve as primeiras notícias.</p>
+        ) : (
+          <div className="mosaico-grade" data-n={quatro.length}>
+            {quatro.map((n, i) => (
+              <a key={n.id} className={`mosaico-cartao${i === 0 ? ' grande' : ''}`} href={`/noticias/${n.id}`}>
+                <div className="mosaico-foto">
+                  {n.imagem_url && <img src={n.imagem_url} alt={n.titulo} loading="lazy" />}
+                </div>
+                <div className="mosaico-corpo">
+                  <span className="mosaico-num">0{i + 1}</span>
+                  <h3>{n.titulo}</h3>
+                  {i === 0 && n.descricao && <p>{n.descricao}</p>}
+                </div>
+              </a>
+            ))}
+          </div>
+        )}
+        <a href="/noticias?aba=mundo" className="ver" style={{ display: 'block', width: 'fit-content', margin: '16px auto 0' }}>
+          Todas do Esporte Mundial →
+        </a>
       </div>
-    </Faixa>
+    </section>
   );
 }

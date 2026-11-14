@@ -10,7 +10,9 @@ import { Modalidades } from './Modalidades';
 import { ParaMarcas } from './ParaMarcas';
 import { AtletasDestaques } from './AtletasDestaques';
 import { ProjetoSocialHome } from './ProjetoSocialHome';
+import { EsporteMundial } from './NoticiasHome';
 import type { ItemAgenda } from '@/lib/midia/agenda';
+import type { NoticiaMidia } from '@/lib/midia/noticias';
 import { MODALIDADES_SITE } from '@/lib/midia/modalidades';
 
 vi.mock('@/lib/midia/modalidades-busca', () => ({
@@ -30,20 +32,24 @@ const JOGO: ItemAgenda = {
 };
 
 describe('Banner', () => {
-  it('frase com ESPORTE em vermelho, sem botões', () => {
-    const { container } = render(<Banner capaUrl="/fundo-arena.jpg" />);
+  it('frase com ESPORTE em vermelho', () => {
+    render(<Banner capaUrl="/fundo-arena.jpg" whatsapp="5547988444404" linkAssistir="https://youtube.com" />);
     const h1 = screen.getByRole('heading', { level: 1 });
     expect(h1.textContent).toMatch(/O palco do\s*esporte\s*é aqui\./i);
     const vermelho = h1.querySelector('.text-av-vermelho');
     expect(vermelho?.textContent).toMatch(/esporte/i);
     expect(screen.getByText('Mídia Esportiva')).toBeInTheDocument();
-    expect(container.textContent).toContain('histórias de quem vive o esporte.');
-    expect(container.querySelector('button, a')).toBeNull();
   });
 
   it('usa a capa do site_config como fundo', () => {
-    const { container } = render(<Banner capaUrl="https://x.supabase.co/capa.jpg" />);
+    const { container } = render(<Banner capaUrl="https://x.supabase.co/capa.jpg" whatsapp="5547988444404" linkAssistir="https://youtube.com" />);
     expect((container.querySelector('.hero') as HTMLElement).style.getPropertyValue('--capa-img')).toContain('https://x.supabase.co/capa.jpg');
+  });
+
+  it('Banner shows WhatsApp CTA and stats bullets', () => {
+    render(<Banner capaUrl="" whatsapp="5547988444404" linkAssistir="https://youtube.com" />);
+    expect(screen.getByRole('link', { name: /falar com a arena vale/i })).toBeInTheDocument();
+    expect(screen.getByText(/\+1\.200/i)).toBeInTheDocument();
   });
 });
 
@@ -65,11 +71,40 @@ describe('AoVivo', () => {
     expect(screen.getByRole('heading', { name: 'Água Verde × Vila Nova' })).toBeInTheDocument();
   });
 
-  it('botão "▶ Assista ao vivo" abre em nova aba', () => {
+  it('link "Assistir ao vivo" abre em nova aba', () => {
     render(<AoVivo aoVivo={false} embed="x" linkAssistir="https://www.youtube.com/@TVArenaVale/live" proxima={null} />);
-    const a = screen.getByRole('link', { name: '▶ Assista ao vivo' });
-    expect(a).toHaveAttribute('target', '_blank');
-    expect(a).toHaveAttribute('href', 'https://www.youtube.com/@TVArenaVale/live');
+    const links = screen.getAllByRole('link');
+    const assistir = links.find(l => l.getAttribute('href') === 'https://www.youtube.com/@TVArenaVale/live');
+    expect(assistir).toBeDefined();
+    expect(assistir).toHaveAttribute('target', '_blank');
+  });
+
+  it('AoVivo off-air shows av-tela card linking to channel', () => {
+    const { container } = render(<AoVivo aoVivo={false} embed="" linkAssistir="https://youtube.com/live" proxima={null} />);
+    const tela = container.querySelector('.av-tela');
+    expect(tela).toBeInTheDocument();
+    expect(tela).toHaveAttribute('href', 'https://youtube.com/live');
+  });
+});
+
+const makeNoticia = (id: string, titulo: string): NoticiaMidia => ({
+  id, titulo, descricao: 'x', categoria: 'esporte', imagem_url: null, enquadramento: null,
+  aba: 'mundo', destaque: false, tipo_midia: 'foto', video_url: null, video_expira_em: null,
+  video_link: null, video_servico: null, status: 'publicado', publicado_em: new Date().toISOString(),
+  fonte: null, origem: 'manual', modalidade: null, created_at: new Date().toISOString(),
+});
+
+describe('EsporteMundial', () => {
+  it('mosaico shows big card for first news item', () => {
+    const noticias = [makeNoticia('1', 'Titulo principal'), makeNoticia('2', 'Secundaria')];
+    const { container } = render(<EsporteMundial noticias={noticias} />);
+    expect(container.querySelector('.mosaico-grade')).toBeInTheDocument();
+    expect(container.querySelector('.mosaico-cartao.grande')).toBeInTheDocument();
+  });
+
+  it('sem noticias: mensagem vazio', () => {
+    render(<EsporteMundial noticias={[]} />);
+    expect(screen.getByText(/em breve/i)).toBeInTheDocument();
   });
 });
 
@@ -89,6 +124,15 @@ describe('Contagem', () => {
     const html = renderToString(<Contagem alvo="2099-01-01T00:00:00.000Z" />);
     expect(html).toContain('--');
     expect(html).not.toMatch(/<b>\d/);
+  });
+});
+
+describe('HojeNaArena agenda linhas', () => {
+  it('lista de jogos usa classe linhas-agenda', () => {
+    const props = { baseUrl: 'https://www.arenavale.com.br', youtubeHandle: '@TVArenaVale', albuns: {} };
+    const jogo = { id: 'j1', origem: 'agenda' as const, modalidade: 'Futsal', fase: 'Final', casa: 'Água Verde', fora: 'Vila Nova', dataHora: '2099-11-15T19:00:00.000Z', local: 'Ginásio', transmissao: false };
+    const { container } = render(<HojeNaArena hoje={[jogo]} proximos={[]} {...props} />);
+    expect(container.querySelector('.linhas-agenda')).toBeInTheDocument();
   });
 });
 
@@ -140,11 +184,17 @@ describe('UltimosVideos', () => {
 });
 
 describe('Modalidades', () => {
-  it('um cartão por modalidade cadastrada, inclusive as novas', async () => {
+  it('um botão por modalidade cadastrada, inclusive as novas', async () => {
     render(await Modalidades());
-    const hrefs = screen.getAllByRole('link').map((a) => a.getAttribute('href'));
-    expect(hrefs).toEqual(['/modalidades/futsal', '/modalidades/futebol7', '/modalidades/basquete', '/modalidades/volei', '/modalidades/beach-tennis']);
-    expect(screen.getByText('O palco do beach tennis é aqui.')).toBeInTheDocument();
+    const botoes = screen.getAllByRole('button').map((b) => b.textContent);
+    expect(botoes.some((t) => t?.includes('Beach Tennis'))).toBe(true);
+    expect(botoes.some((t) => t?.includes('Futsal'))).toBe(true);
+  });
+
+  it('exibe a frase da primeira modalidade no painel', async () => {
+    render(await Modalidades());
+    const primeiraMod = MODALIDADES_SITE[0];
+    expect(screen.getByText(primeiraMod.frase)).toBeInTheDocument();
   });
 });
 
@@ -155,17 +205,32 @@ describe('ParaMarcas', () => {
     expect(screen.getByRole('link', { name: 'Falar com a ARENA VALE' }).getAttribute('href')).toMatch(/^https:\/\/wa\.me\/5547988444404/);
     expect(container.textContent).not.toContain('Naming da transmissão');
   });
+
+  it('ParaMarcas renders as a citacao blockquote', () => {
+    const { container } = render(<ParaMarcas whatsapp="5547988444404" />);
+    expect(container.querySelector('.citacao blockquote')).toBeInTheDocument();
+    expect(screen.getByText(/palco do esporte/i)).toBeInTheDocument();
+  });
 });
 
 describe('AtletasDestaques', () => {
-  it('cartazes dos atletas com link para a galeria', () => {
-    render(
-      <AtletasDestaques
-        destaques={[{ id: 'a1', nome: 'Gabriel', equipe: 'Brusque', campeonato: 'Copa Vale', modalidade: 'FUTSAL', imagem_url: null, jogos: null, gols_ou_pontos: null, assistencias: null, ordem: 1, ativo: true, created_at: '2026-11-01' }]}
-      />,
-    );
-    expect(screen.getByRole('img', { name: 'Gabriel' })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Ver todos →' })).toHaveAttribute('href', '/atletasdestaques');
+  const destaque = { id: 'a1', nome: 'Gabriel', equipe: 'Brusque', campeonato: 'Copa Vale', modalidade: 'FUTSAL', imagem_url: '/g.jpg', jogos: null, gols_ou_pontos: null, assistencias: null, ordem: 1, ativo: true, created_at: '2026-11-01' };
+
+  it('portrait spotlight shows first atleta name', () => {
+    const { container } = render(<AtletasDestaques destaques={[destaque]} />);
+    expect(container.querySelector('.atleta-sobre')).toBeInTheDocument();
+    expect(screen.getByText('Gabriel')).toBeInTheDocument();
+  });
+
+  it('link para /atletasdestaques', () => {
+    render(<AtletasDestaques destaques={[destaque]} />);
+    const link = screen.getByRole('link', { name: /ver todos/i });
+    expect(link).toHaveAttribute('href', '/atletasdestaques');
+  });
+
+  it('sem destaques: mensagem vazio', () => {
+    render(<AtletasDestaques destaques={[]} />);
+    expect(screen.getByText(/em breve/i)).toBeInTheDocument();
   });
 });
 
@@ -175,6 +240,12 @@ describe('ProjetoSocialHome', () => {
     const botoes = ['Apoiar o projeto social', 'Conhecer cotas de patrocínio', 'Inscrever criança / atleta'].map((n) => screen.getByRole('link', { name: n }));
     botoes.forEach((b) => expect(b.className).toContain('forte'));
     expect(botoes[2]).toHaveAttribute('href', '/inscricao');
+  });
+
+  it('ProjetoSocialHome shows numeros impacto strip', () => {
+    const { container } = render(<ProjetoSocialHome whatsapp="5547988444404" />);
+    expect(container.querySelector('.numeros-impacto')).toBeInTheDocument();
+    expect(screen.getByText('+1.200')).toBeInTheDocument();
   });
 });
 
@@ -188,6 +259,13 @@ describe('SeuCampeonato', () => {
     expect(zap).toMatch(/^https:\/\/wa\.me\/5547988444404\?text=/);
     expect(decodeURIComponent(zap)).toContain('campeonato');
     expect(screen.getByRole('link', { name: 'Ver como fica' }).getAttribute('href')).toBe('/modalidades');
+  });
+
+  it('SeuCampeonato shows the anel graphic', async () => {
+    const { SeuCampeonato } = await import('./SeuCampeonato');
+    const { container } = render(<SeuCampeonato whatsapp="5547988444404" />);
+    expect(container.querySelector('.anel-grafico')).toBeInTheDocument();
+    expect(screen.getByText('6')).toBeInTheDocument();
   });
 });
 

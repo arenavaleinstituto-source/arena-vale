@@ -28,14 +28,14 @@ export function ProjetoSocialHome({ whatsapp, resultados, titulo = 'h2', id = 'p
           <Titulo>Projeto Social ARENA VALE</Titulo>
           <p>O esporte como ferramenta de transformação social, apoio à formação de jovens talentos e integração comunitária no Vale.</p>
         </div>
-        <div className="impacto">
+        <ul className="numeros-impacto">
           {IMPACTO_SOCIAL.map((i) => (
-            <div key={i.rotulo}>
+            <li key={i.rotulo}>
               <b>{i.valor}</b>
               <span>{i.rotulo}</span>
-            </div>
+            </li>
           ))}
-        </div>
+        </ul>
         {completo && (
           <div className="cab">
             <div>

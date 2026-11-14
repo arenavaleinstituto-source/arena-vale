@@ -20,7 +20,7 @@ export function ListaAgenda({
 }) {
   if (itens.length === 0) return <p className="vazio">Nenhum jogo agendado — volte em breve.</p>;
   return (
-    <div className="agenda">
+    <div className="agenda linhas-agenda">
       {itens.map((j) => {
         const chave = `${j.origem}-${j.id}`;
         return (

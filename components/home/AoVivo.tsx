@@ -30,12 +30,21 @@ export function AoVivo({ aoVivo, embed, linkAssistir, proxima, id = 'aovivo' }: 
               />
             </div>
           ) : (
-            <div className="player" role="img" aria-label="Transmissão fora do ar">
-              <span className="tag">Fora do ar agora</span>
-              <span className="play" aria-hidden="true">
-                ▶
+            <a
+              className="av-tela"
+              href={linkAssistir}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Assistir ao vivo no canal TV Arena Vale"
+            >
+              <span className="av-tela-play" aria-hidden="true" />
+              <span className="av-tela-status">
+                <i aria-hidden="true" />
+                {proxima
+                  ? `Próxima: ${proxima.casa} × ${proxima.fora} · ${proxima.modalidade}`
+                  : 'Aguardando próxima transmissão'}
               </span>
-            </div>
+            </a>
           )}
           <div className="proxima">
             <span className="rot">● Próxima transmissão</span>

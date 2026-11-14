@@ -17,6 +17,7 @@ import { AbaAoVivo } from './painel/AbaAoVivo';
 import { AbaNoticias } from './painel/AbaNoticias';
 import { AbaGaleria } from './painel/AbaGaleria';
 import { AbaVideos } from './painel/AbaVideos';
+import { AbaCortes } from './painel/AbaCortes';
 import { ABAS_COORD, abaValida, type IdAba } from './painel/abas';
 import GestaoAtletasClient from '@/app/(coord)/coordenador/atletasdestaques/gestao-atletas-client';
 
@@ -239,6 +240,7 @@ export function CoordShell({ user, stats, inscricoes: initialInsc, patrocinadore
         {tab === 'noticias' && <AbaNoticias />}
         {tab === 'galeria' && <AbaGaleria />}
         {tab === 'videos' && <AbaVideos />}
+        {tab === 'cortes' && <AbaCortes />}
         {tab === 'jogos' && <CoordJogos />}
         {tab === 'campeonatos' && (
           <div className="grid gap-6">
