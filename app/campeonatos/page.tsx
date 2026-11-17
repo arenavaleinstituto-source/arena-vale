@@ -65,7 +65,12 @@ export default async function CampeonatosPage({ searchParams }: Props) {
           </div>
         )}
       </Faixa>
-      <SeuCampeonato whatsapp={config.whatsapp} alt />
+      <Faixa id="destaques" titulo="Atletas Destaques" subtitulo="Os atletas que mais brilharam nos campeonatos da ARENA VALE." alt>
+        <Link href="/atletasdestaques" className="av-btn forte">
+          Ver os Atletas Destaques
+        </Link>
+      </Faixa>
+      <SeuCampeonato whatsapp={config.whatsapp} />
     </main>
   );
 }

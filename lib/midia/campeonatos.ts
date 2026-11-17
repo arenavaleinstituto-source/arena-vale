@@ -1,4 +1,4 @@
-import { createPublicClient } from '@/lib/supabase/server';
+import { buscarCampeonatosPublicos, type ResumoCampeonato } from '@/lib/campeonatos/busca';
 import type { ItemAgenda } from './agenda';
 import { slugDoNome, type SlugModalidade } from './modalidades';
 
@@ -34,32 +34,8 @@ export type LinhaClassificacao = {
   pontos: number;
 };
 
-export type CampeonatoComTabela = { id: string; nome: string; ano: number; categoria: string | null; classificacao: LinhaClassificacao[] };
-
-/** Campeonatos da modalidade, cada um com a classificação calculada (v_classificacao). */
-export async function buscarCampeonatosDaModalidade(slug: string): Promise<CampeonatoComTabela[]> {
-  try {
-    const sb = createPublicClient();
-    const { data: camps, error } = await sb.from('campeonatos').select('id,nome,ano,categoria').eq('modalidade', slug).order('ano', { ascending: false });
-    if (error || !camps?.length) return [];
-    const { data: linhas } = await sb
-      .from('v_classificacao')
-      .select('campeonato_id,time_id,time_nome,time_sigla,jogos,vitorias,empates,derrotas,gols_pro,gols_contra,saldo,pontos')
-      .in(
-        'campeonato_id',
-        camps.map((c) => c.id),
-      );
-    const porCamp = new Map<string, LinhaClassificacao[]>();
-    for (const l of (linhas ?? []) as (LinhaClassificacao & { campeonato_id: string })[]) {
-      const lista = porCamp.get(l.campeonato_id) ?? [];
-      lista.push(l);
-      porCamp.set(l.campeonato_id, lista);
-    }
-    return camps.map((c) => ({
-      ...(c as { id: string; nome: string; ano: number; categoria: string | null }),
-      classificacao: (porCamp.get(c.id) ?? []).sort((a, b) => b.pontos - a.pontos || b.saldo - a.saldo || b.gols_pro - a.gols_pro),
-    }));
-  } catch {
-    return [];
-  }
+/** Campeonatos liberados da modalidade, para os cartões da página da modalidade. */
+export async function buscarCampeonatosDaModalidade(slug: string): Promise<ResumoCampeonato[]> {
+  const todos = await buscarCampeonatosPublicos();
+  return todos.filter((c) => c.modalidade === slug);
 }

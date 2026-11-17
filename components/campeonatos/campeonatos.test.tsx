@@ -68,6 +68,11 @@ describe('/campeonatos', () => {
     expect(screen.getByText('Liga Velha')).toBeInTheDocument();
     expect(screen.queryByText('Copa Viva')).toBeNull();
   });
+  it('tem a entrada para os Atletas Destaques', async () => {
+    lista = [];
+    render(await Pagina({ searchParams: Promise.resolve({}) }));
+    expect(screen.getByRole('link', { name: /Atletas Destaques/ })).toHaveAttribute('href', '/atletasdestaques');
+  });
   it('filtra por modalidade', async () => {
     lista = [resumo({ id: 'a', nome: 'Copa Futsal' }), resumo({ id: 'b', nome: 'Copa Vôlei', modalidade: 'volei' })];
     render(await Pagina({ searchParams: Promise.resolve({ modalidade: 'volei' }) }));

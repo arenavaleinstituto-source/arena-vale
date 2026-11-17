@@ -445,3 +445,14 @@
 .ao-vivo-placar { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
 .badge-ao-vivo { font-size: 11px; font-weight: 800; letter-spacing: .05em; color: #e50914; }
 .placar-ao-vivo { font-family: var(--display); font-weight: 900; font-size: 15px; }
+
+/* "Ao Vivo" ao lado da logo, sempre visível (computador e celular) */
+.ao-vivo-topo { flex: none; display: inline-flex; align-items: center; gap: 7px; font-family: var(--rotulo); font-weight: 700; text-transform: uppercase; letter-spacing: .08em; font-size: 14px; color: var(--branco); padding: 7px 12px; border: 1px solid rgba(229,9,20,.55); border-radius: 999px; background: rgba(229,9,20,.12); }
+.ao-vivo-topo::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--vermelho); box-shadow: 0 0 8px var(--vermelho); animation: vivo-topo 2s ease-in-out infinite; }
+@keyframes vivo-topo { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+.ao-vivo-topo:hover, .ao-vivo-topo.on { background: var(--vermelho); border-color: var(--vermelho); }
+@media (prefers-reduced-motion: reduce) { .ao-vivo-topo::before { animation: none; } }
+@media (max-width: 760px) {
+  .topo .logo-topo { margin-right: 0; }
+  .ao-vivo-topo { font-size: 12px; padding: 6px 10px; margin-right: auto; }
+}

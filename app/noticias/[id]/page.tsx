@@ -33,7 +33,7 @@ export default async function NoticiaPage({ params }: Props) {
     <main className="w-full overflow-x-clip bg-av-preto text-av-branco">
       <article className="faixa">
         <div className="dentro grid gap-6">
-          <Link href={n.aba === 'mundo' ? '/noticias?aba=mundo' : '/noticias'} className="ver w-fit justify-self-center">
+          <Link href={n.aba === 'mundo' ? '/noticias#mundo' : '/noticias#vale'} className="ver w-fit justify-self-center">
             ← {n.aba === 'mundo' ? 'Esporte Mundial' : 'Notícias do Vale'}
           </Link>
           <div className="mx-auto grid max-w-4xl gap-3 text-center">

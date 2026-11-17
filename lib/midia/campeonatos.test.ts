@@ -33,14 +33,17 @@ describe('modalidades', () => {
 });
 
 describe('rotas antigas', () => {
-  it('/tv, /campeonatos e /atletas redirecionam (308)', async () => {
+  it('/tv e /atletas redirecionam (308)', async () => {
     const r = await nextConfig.redirects!();
     expect(r).toEqual(
       expect.arrayContaining([
         { source: '/tv', destination: '/ao-vivo', permanent: true },
-        { source: '/campeonatos', destination: '/modalidades', permanent: true },
         { source: '/atletas', destination: '/atletasdestaques', permanent: true },
       ]),
     );
+  });
+  it('/campeonatos voltou a ser página (não redireciona mais)', async () => {
+    const r = await nextConfig.redirects!();
+    expect(r.find((x) => x.source === '/campeonatos')).toBeUndefined();
   });
 });

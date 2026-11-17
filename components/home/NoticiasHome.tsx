@@ -27,7 +27,7 @@ export function EsporteMundial({ noticias }: { noticias: NoticiaMidia[] }) {
       id="mundo"
       titulo="Esporte Mundial"
       subtitulo="Notícias do esporte pelo mundo — garimpadas pelo bot e publicadas pela coordenação."
-      verTodos={{ href: '/noticias?aba=mundo', rotulo: 'Todas do Esporte Mundial →' }}
+      verTodos={{ href: '/noticias#mundo', rotulo: 'Todas do Esporte Mundial →' }}
     >
       {noticias.length === 0 ? (
         <p className="vazio">Em breve as primeiras notícias.</p>

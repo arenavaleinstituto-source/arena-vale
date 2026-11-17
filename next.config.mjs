@@ -17,7 +17,7 @@ const nextConfig = {
   },
   // O robô do Telegram lê a logo do disco para carimbar as fotos.
   outputFileTracingIncludes: { '/api/telegram': ['./public/logo.png'] },
-  // Rotas antigas: /tv e /campeonatos viraram Ao Vivo e Modalidades; o painel virou abas de /coordenador (spec Fase 3).
+  // Rotas antigas: /tv virou Ao Vivo (/campeonatos voltou a ser página na Entrega 1 dos campeonatos); o painel virou abas de /coordenador (spec Fase 3).
   async headers() {
     const csp = [
       "default-src 'self'",
@@ -52,7 +52,6 @@ const nextConfig = {
   async redirects() {
     return [
       { source: '/tv', destination: '/ao-vivo', permanent: true },
-      { source: '/campeonatos', destination: '/modalidades', permanent: true },
       { source: '/atletas', destination: '/atletasdestaques', permanent: true },
       { source: '/painel/noticias', destination: '/coordenador?aba=noticias', permanent: true },
       { source: '/painel/tv', destination: '/coordenador?aba=aovivo', permanent: true },

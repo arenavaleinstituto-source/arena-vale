@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import { TopoPagina } from '@/components/midia/TopoPagina';
 import { Faixa } from '@/components/midia/Faixa';
 import { ListaAgenda } from '@/components/home/AgendaArena';
-import { TabelaClassificacao } from '@/components/midia/TabelaClassificacao';
+import { CartaoCampeonato } from '@/components/campeonatos/CartaoCampeonato';
 import { MODALIDADES_SITE, modalidadePorSlug } from '@/lib/midia/modalidades';
 import { buscarModalidades } from '@/lib/midia/modalidades-busca';
 import { buscarAgenda } from '@/lib/midia/agenda';
@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   return m ? { title: `${m.nome} | ARENA VALE`, description: m.frase } : {};
 }
 
-/** Página de uma modalidade (spec Fase 3, seção 8): próximos jogos e campeonatos com a classificação. */
+/** Página de uma modalidade: próximos jogos, cartões dos campeonatos (cada um leva à sua página) e notícias. */
 export default async function ModalidadePage({ params }: Params) {
   const m = modalidadePorSlug((await params).slug, await buscarModalidades());
   if (!m) notFound();
@@ -60,15 +60,9 @@ export default async function ModalidadePage({ params }: Params) {
         {campeonatos.length === 0 ? (
           <p className="vazio">Nenhum campeonato de {m.nome.toLowerCase()} cadastrado ainda.</p>
         ) : (
-          <div className="grid gap-6">
+          <div className="grid gap-4" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))' }}>
             {campeonatos.map((c) => (
-              <article key={c.id} className="rounded-[18px] border border-av-linha bg-av-grafite-2 p-5">
-                <h3 className="font-display text-xl font-extrabold uppercase">
-                  {c.nome} <span className="text-av-cinza">· {c.ano}</span>
-                </h3>
-                {c.categoria && <p className="text-sm text-av-cinza">{c.categoria}</p>}
-                <TabelaClassificacao linhas={c.classificacao} />
-              </article>
+              <CartaoCampeonato key={c.id} c={c} nomeModalidade={m.nome} />
             ))}
           </div>
         )}
