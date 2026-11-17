@@ -35,7 +35,7 @@
 
 ---
 
-### Tarefa 1: Tipos e regulamento padrão
+### Task 1 (Tarefa 1): Tipos e regulamento padrão
 
 **Arquivos:**
 - Criar: `lib/campeonatos/tipos.ts`, `lib/campeonatos/regulamento.ts`
@@ -107,7 +107,7 @@ export type Sorteios = Record<string, string[]>;            // chave 'geral' | '
 - [ ] **Passo 4: Rodar e ver passar** (mesmo comando). Esperado: tudo PASSA, saída `0`.
 - [ ] **Passo 5: Commit** — `git add lib/campeonatos && git commit -m "feat(campeonatos): tipos e regulamento padrão"`
 
-### Tarefa 2: Rodízio (pontos corridos e grupos)
+### Task 2 (Tarefa 2): Rodízio (pontos corridos e grupos)
 
 **Arquivos:**
 - Criar: `lib/campeonatos/rodizio.ts`
@@ -127,7 +127,7 @@ export type Sorteios = Record<string, string[]>;            // chave 'geral' | '
 - [ ] **Passo 4: Rodar e ver passar.**
 - [ ] **Passo 5: Commit** — `feat(campeonatos): rodízio round-robin`
 
-### Tarefa 3: Chave do mata-mata e cruzamento olímpico
+### Task 3 (Tarefa 3): Chave do mata-mata e cruzamento olímpico
 
 **Arquivos:**
 - Criar: `lib/campeonatos/chave.ts`
@@ -153,7 +153,7 @@ export type Sorteios = Record<string, string[]>;            // chave 'geral' | '
 - [ ] **Passo 4: Rodar e ver passar.**
 - [ ] **Passo 5: Commit** — `feat(campeonatos): chave do mata-mata e cruzamento olímpico`
 
-### Tarefa 4: Geração completa por forma de disputa
+### Task 4 (Tarefa 4): Geração completa por forma de disputa
 
 **Arquivos:**
 - Criar: `lib/campeonatos/gerar.ts`
@@ -176,7 +176,7 @@ export type Sorteios = Record<string, string[]>;            // chave 'geral' | '
 - [ ] **Passo 4: Rodar e ver passar.**
 - [ ] **Passo 5: Commit** — `feat(campeonatos): geração dos jogos por forma de disputa`
 
-### Tarefa 5: Pontuação e classificação
+### Task 5 (Tarefa 5): Pontuação e classificação
 
 **Arquivos:**
 - Criar: `lib/campeonatos/classificacao.ts`
@@ -210,7 +210,7 @@ export function classificar(times: string[], jogos: JogoCalc[], r: Regulamento, 
 - [ ] **Passo 4: Rodar e ver passar.**
 - [ ] **Passo 5: Commit** — `feat(campeonatos): classificação com critérios do regulamento`
 
-### Tarefa 6: Resolução de confrontos e vagas
+### Task 6 (Tarefa 6): Resolução de confrontos e vagas
 
 **Arquivos:**
 - Criar: `lib/campeonatos/vagas.ts`
@@ -250,7 +250,7 @@ export function rotuloDaVaga(v: Vaga, jogosPorOrdem: Map<number, { fase: string 
 - [ ] **Passo 4: Rodar e ver passar.**
 - [ ] **Passo 5: Commit** — `feat(campeonatos): avanço automático das vagas`
 
-### Tarefa 7: Trava por fase e geração de novo
+### Task 7 (Tarefa 7): Trava por fase e geração de novo
 
 **Arquivos:**
 - Criar: `lib/campeonatos/trava.ts`
@@ -275,7 +275,7 @@ export function rotuloDaVaga(v: Vaga, jogosPorOrdem: Map<number, { fase: string 
 - [ ] **Passo 4: Rodar e ver passar.**
 - [ ] **Passo 5: Commit** — `feat(campeonatos): trava por fase`
 
-### Tarefa 8: Regulamento em texto, endereço (slug) e escudo desenhado
+### Task 8 (Tarefa 8): Regulamento em texto, endereço (slug) e escudo desenhado
 
 **Arquivos:**
 - Criar: `lib/campeonatos/texto.ts`, `lib/campeonatos/escudo-svg.ts`, `lib/ui/recorte.ts`
@@ -300,7 +300,7 @@ export function rotuloDaVaga(v: Vaga, jogosPorOrdem: Map<number, { fase: string 
 - [ ] **Passo 4: Rodar e ver passar.**
 - [ ] **Passo 5: Commit** — `feat(campeonatos): regulamento em texto, slug e escudo desenhado`
 
-### Tarefa 9: Tratamento do escudo no servidor
+### Task 9 (Tarefa 9): Tratamento do escudo no servidor
 
 **Arquivos:**
 - Criar: `lib/imagem/escudo.ts`
@@ -315,7 +315,7 @@ export function rotuloDaVaga(v: Vaga, jogosPorOrdem: Map<number, { fase: string 
 - [ ] **Passo 4: Rodar e ver passar.**
 - [ ] **Passo 5: Commit** — `feat(imagem): escudo padronizado 512 px`
 
-### Tarefa 10: Migração 0023 e testes de permissão
+### Task 10 (Tarefa 10): Migração 0023 e testes de permissão
 
 **Arquivos:**
 - Criar: `supabase/migrations/0023_campeonatos.sql`, `tests/db/campeonatos.test.ts`
@@ -382,7 +382,7 @@ export function rotuloDaVaga(v: Vaga, jogosPorOrdem: Map<number, { fase: string 
 - [ ] **Passo 4: Rodar e ver passar:** `npm run test:db`. Esperado: todos PASSAM, incluindo `delegado.test.ts` e o reaplicar da 0010.
 - [ ] **Passo 5: Commit** — `feat(db): 0023 campeonatos, elenco por campeonato e escudo do time`
 
-### Tarefa 11: Serviço, portas e rotas de gerar e recalcular
+### Task 11 (Tarefa 11): Serviço, portas e rotas de gerar e recalcular
 
 **Arquivos:**
 - Criar: `lib/campeonatos/portas.ts`, `lib/campeonatos/servico.ts`, `app/api/campeonatos/[id]/gerar/route.ts`, `app/api/campeonatos/[id]/recalcular/route.ts`
@@ -422,7 +422,7 @@ export async function gerar(id: string, p: PortasCampeonato, o: { forma: FormaDi
 - [ ] **Passo 4: Rodar e ver passar.**
 - [ ] **Passo 5: Commit** — `feat(campeonatos): gerar jogos e recalcular vagas no servidor`
 
-### Tarefa 12: Rotas de envio de escudo
+### Task 12 (Tarefa 12): Rotas de envio de escudo
 
 **Arquivos:**
 - Criar: `app/api/campeonatos/[id]/escudo/route.ts`, `app/api/times/[id]/escudo/route.ts`
@@ -441,7 +441,7 @@ export async function gerar(id: string, p: PortasCampeonato, o: { forma: FormaDi
 - [ ] **Passo 4: Rodar e ver passar.**
 - [ ] **Passo 5: Commit** — `feat(campeonatos): envio do escudo do campeonato e do time`
 
-### Tarefa 13: Jogos "a definir" em todas as telas que já existem
+### Task 13 (Tarefa 13): Jogos "a definir" em todas as telas que já existem
 
 **Arquivos:**
 - Modificar: `lib/midia/agenda.ts` (`buscarItens`, `buscarItemAgenda`, `deJogos`), `lib/supabase/queries.ts` (`getJogos`), `app/(public)/sumula/page.tsx`, `app/(public)/sumula/[id]/page.tsx`, `app/(coord)/delegado/page.tsx`, `components/delegado/MesaDoJogo.tsx`, `components/coord-jogos.tsx`, `components/coord-sumulas.tsx`
@@ -461,7 +461,7 @@ export async function gerar(id: string, p: PortasCampeonato, o: { forma: FormaDi
 - [ ] **Passo 4: Rodar tudo:** `npx vitest run --maxWorkers=2` e `npm run typecheck`. Esperado: saída `0` nos dois.
 - [ ] **Passo 5: Commit** — `fix: jogos a definir não aparecem como null nas telas`
 
-### Tarefa 14: Escudos na tela, busca pública e lista /campeonatos
+### Task 14 (Tarefa 14): Escudos na tela, busca pública e lista /campeonatos
 
 **Arquivos:**
 - Criar: `components/campeonatos/EscudoTime.tsx`, `components/campeonatos/EscudoCampeonato.tsx`, `components/campeonatos/CartaoCampeonato.tsx`, `lib/campeonatos/busca.ts`, `app/campeonatos/page.tsx`
@@ -485,7 +485,7 @@ export async function gerar(id: string, p: PortasCampeonato, o: { forma: FormaDi
 - [ ] **Passo 4: Rodar e ver passar.**
 - [ ] **Passo 5: Commit** — `feat(campeonatos): lista pública de campeonatos`
 
-### Tarefa 15: Página do campeonato
+### Task 15 (Tarefa 15): Página do campeonato
 
 **Arquivos:**
 - Criar: `app/campeonatos/[slug]/page.tsx`, `components/campeonatos/TabelaGrupo.tsx`, `components/campeonatos/Chave.tsx`, `components/campeonatos/ListaJogos.tsx`, `components/campeonatos/TextoRegulamento.tsx`
@@ -514,7 +514,7 @@ export async function gerar(id: string, p: PortasCampeonato, o: { forma: FormaDi
 - [ ] **Passo 4: Rodar e ver passar.**
 - [ ] **Passo 5: Commit** — `feat(campeonatos): página do campeonato com classificação, chave, jogos e regulamento`
 
-### Tarefa 16: Menu, modalidades e faixa "Seu campeonato"
+### Task 16 (Tarefa 16): Menu, modalidades e faixa "Seu campeonato"
 
 **Arquivos:**
 - Modificar: `lib/midia/menu.ts`, `components/SiteHeader.test.tsx`, `app/modalidades/[slug]/page.tsx`, `lib/midia/campeonatos.ts` (`buscarCampeonatosDaModalidade` passa a devolver `ResumoCampeonato[]`), `components/home/SeuCampeonato.tsx`, `app/sitemap.ts` (incluir `/campeonatos` e cada `/campeonatos/<slug>` visível)
@@ -532,7 +532,7 @@ export async function gerar(id: string, p: PortasCampeonato, o: { forma: FormaDi
 - [ ] **Passo 5: Conferir a largura do menu:** subir o site (`npm run dev`) e abrir a home com 1024 px de largura (Playwright `browser_resize` 1024×800 e `browser_take_screenshot`). Se o menu quebrar em duas linhas ou cortar algum item, **parar e perguntar ao dono qual item vai para o ☰** (como foi feito com a Galeria), antes de fazer o commit.
 - [ ] **Passo 6: Commit** — `feat(menu): aba Campeonatos no cabeçalho; modalidades levam aos campeonatos`
 
-### Tarefa 17: Editores de forma de disputa e de regulamento
+### Task 17 (Tarefa 17): Editores de forma de disputa e de regulamento
 
 **Arquivos:**
 - Criar: `components/campeonatos/painel/EditorFormaDisputa.tsx`, `components/campeonatos/painel/EditorRegulamento.tsx`
@@ -560,7 +560,7 @@ export async function gerar(id: string, p: PortasCampeonato, o: { forma: FormaDi
 - [ ] **Passo 4: Rodar e ver passar.**
 - [ ] **Passo 5: Commit** — `feat(painel): editores de forma de disputa e regulamento`
 
-### Tarefa 18: Meus campeonatos e assistente "Novo campeonato" (moderador)
+### Task 18 (Tarefa 18): Meus campeonatos e assistente "Novo campeonato" (moderador)
 
 **Arquivos:**
 - Criar: `components/campeonatos/painel/MeusCampeonatos.tsx`, `components/campeonatos/painel/NovoCampeonato.tsx`, `components/campeonatos/painel/EnquadrarImagem.tsx`
@@ -590,7 +590,7 @@ export async function gerar(id: string, p: PortasCampeonato, o: { forma: FormaDi
 - [ ] **Passo 4: Rodar e ver passar.**
 - [ ] **Passo 5: Commit** — `feat(painel): meus campeonatos e assistente de novo campeonato`
 
-### Tarefa 19: Gerenciar campeonato — aba Jogos
+### Task 19 (Tarefa 19): Gerenciar campeonato — aba Jogos
 
 **Arquivos:**
 - Criar: `components/campeonatos/painel/GerenciarCampeonato.tsx`, `components/campeonatos/painel/AbaJogosCampeonato.tsx`
@@ -625,7 +625,7 @@ export async function gerar(id: string, p: PortasCampeonato, o: { forma: FormaDi
 - [ ] **Passo 4: Rodar e ver passar** (incluindo o `ResultadosCampeonato.test.tsx`, que já existe).
 - [ ] **Passo 5: Commit** — `feat(painel): jogos do campeonato com W.O., pênaltis, vagas e sorteio`
 
-### Tarefa 20: Gerenciar campeonato — Times, Forma de disputa, Regulamento e Dados e escudo
+### Task 20 (Tarefa 20): Gerenciar campeonato — Times, Forma de disputa, Regulamento e Dados e escudo
 
 **Arquivos:**
 - Criar: `components/campeonatos/painel/AbaTimesCampeonato.tsx`, `components/campeonatos/painel/AbaDadosCampeonato.tsx`
@@ -647,7 +647,7 @@ export async function gerar(id: string, p: PortasCampeonato, o: { forma: FormaDi
 - [ ] **Passo 4: Rodar e ver passar.**
 - [ ] **Passo 5: Commit** — `feat(painel): times, forma de disputa, regulamento e dados do campeonato`
 
-### Tarefa 21: Coordenação — aba Campeonatos
+### Task 21 (Tarefa 21): Coordenação — aba Campeonatos
 
 **Arquivos:**
 - Modificar: `components/coord-campeonatos.tsx` (vira o `MeusCampeonatos` com `ehCoordenacao`, a lista `'Aguardando liberação'` no topo e o `GerenciarCampeonato` ao abrir um campeonato)
@@ -673,7 +673,7 @@ export async function gerar(id: string, p: PortasCampeonato, o: { forma: FormaDi
 - [ ] **Passo 4: Rodar e ver passar.**
 - [ ] **Passo 5: Commit** — `feat(painel): liberação, endereço, trava e moderadores pela coordenação`
 
-### Tarefa 22: Capitão — elenco por campeonato e escudo do time
+### Task 22 (Tarefa 22): Capitão — elenco por campeonato e escudo do time
 
 **Arquivos:**
 - Modificar: `components/capitao/MinhaEquipe.tsx`, `components/capitao-elenco.tsx`, `app/(coord)/capitao/page.tsx` (carregar a inscrição do campeonato do convite e o elenco de `inscricao_atletas` com os jogadores)
@@ -702,7 +702,7 @@ export async function gerar(id: string, p: PortasCampeonato, o: { forma: FormaDi
 - [ ] **Passo 4: Rodar e ver passar.**
 - [ ] **Passo 5: Commit** — `feat(capitao): elenco por campeonato e escudo do time`
 
-### Tarefa 23: Conferência final e publicação
+### Task 23 (Tarefa 23): Conferência final e publicação
 
 - [ ] **Passo 1: Rodar tudo:** `npx vitest run --maxWorkers=2`, `npm run typecheck`, `npm run lint` e `npm run test:db`. Esperado: saída `0` em todos.
 - [ ] **Passo 2: Build:** `npm run build`. Se cair por cache, `rm -rf .next` e repetir.
