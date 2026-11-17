@@ -124,7 +124,8 @@ export function resolverVagas(
         g === 'geral' ? j.fase === 'Pontos corridos' : j.fase === 'Fase de grupos' && j.grupo === g);
       const sorteio = sorteios[g === 'geral' ? 'geral' : `grupo:${g}`];
       x = {
-        completo: doGrupo.every((j) => j.status === 'finalizado'),
+        // jogo cancelado não conta na tabela e não segura o grupo
+        completo: doGrupo.every((j) => j.status === 'finalizado' || j.status === 'cancelado'),
         tabela: classificar(timesPorGrupo[g] ?? [], doGrupo, r, sorteio),
       };
       grupos.set(g, x);
@@ -226,7 +227,7 @@ export function resolverVagas(
     const visitante = alvo(atual.vaga_visitante, atual.visitante);
 
     if (casa.time !== atual.casa || visitante.time !== atual.visitante) {
-      if (atual.status === 'finalizado') {
+      if (atual.status === 'finalizado' || atual.status === 'ao_vivo') { // já em disputa: não troca os times
         res.avisos.push(`Este ajuste mudaria o classificado de um jogo já disputado (Jogo ${atual.ordem ?? '?'}).`);
       } else {
         atual.casa = casa.time;

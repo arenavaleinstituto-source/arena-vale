@@ -81,6 +81,27 @@ describe('resolverVagas: vagas de grupo', () => {
     expect(res.provaveis).toEqual({});
   });
 
+  it('jogo cancelado não segura o grupo: a vaga é preenchida', () => {
+    const jogos = copa({ g3: { status: 'cancelado', placar_casa: null, placar_visitante: null } }); // a2 × a3 cancelado
+    const res = resolverVagas(jogos, regGrupos(), timesCopa, {});
+    // A sem o jogo cancelado: a1 6, a3 0 (saldo −1), a2 0 (saldo −2)
+    expect(upd(res, 's7')).toEqual({ id: 's7', casa: 'a1', visitante: 'b2' });
+    expect(upd(res, 's8')).toEqual({ id: 's8', casa: 'b1', visitante: 'a3' });
+    expect(res.provaveis).toEqual({});
+  });
+
+  it("jogo cancelado também não segura a tabela 'geral'", () => {
+    const r = regulamentoPadrao('gols', { tipo: 'pontos_corridos', ida_volta: false, final_entre: 2, mata: mata() });
+    const jogos = [
+      jg('p1', 1, { fase: 'Pontos corridos', casa: 'x', visitante: 'y', ...fin(0, 1) }),
+      jg('p2', 2, { fase: 'Pontos corridos', casa: 'x', visitante: 'z', ...fin(0, 2) }),
+      jg('p3', 3, { fase: 'Pontos corridos', casa: 'y', visitante: 'z', status: 'cancelado' }),
+      jg('f4', 4, { fase: 'Final', vaga_casa: g('geral', 1), vaga_visitante: g('geral', 2) }),
+    ];
+    const res = resolverVagas(jogos, r, { geral: ['x', 'y', 'z'] }, {});
+    expect(upd(res, 'f4')).toEqual({ id: 'f4', casa: 'z', visitante: 'y' });
+  });
+
   it('vaga já gravada e igual ao calculado não entra em atualizar', () => {
     const res = resolverVagas(
       copa({ s7: { casa: 'a1', visitante: 'b2' }, s8: { casa: 'b1', visitante: 'a2' } }), regGrupos(), timesCopa, {},
@@ -323,6 +344,18 @@ describe('resolverVagas: mata-mata', () => {
     expect(upd(res, 'f10')).toBeUndefined();
     expect(res.avisos).toEqual(['Este ajuste mudaria o classificado de um jogo já disputado (Jogo 10).']);
     expect(upd(res, 't9')).toEqual({ id: 't9', casa: 'a1', visitante: 'b1' }); // o 3º lugar ainda não jogou
+  });
+
+  it('jogo seguinte ao vivo: não troca os times e gera o aviso', () => {
+    const jogos = copa({
+      ...semis(fin(1, 2)),
+      t9: { casa: 'b2', visitante: 'b1' },
+      f10: { casa: 'a1', visitante: 'a2', status: 'ao_vivo', placar_casa: 1, placar_visitante: 0 },
+    });
+    const res = resolverVagas(jogos, regGrupos(), timesCopa, {});
+    expect(upd(res, 'f10')).toBeUndefined();
+    expect(res.avisos).toEqual(['Este ajuste mudaria o classificado de um jogo já disputado (Jogo 10).']);
+    expect(upd(res, 't9')).toEqual({ id: 't9', casa: 'a1', visitante: 'b1' });
   });
 
   it('vaga manual é preservada', () => {
