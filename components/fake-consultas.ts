@@ -12,7 +12,7 @@ export function fakeConsultas(tabelas: Record<string, unknown[]> = {}, rpcRespos
     const registro = op === 'select' ? null : { tabela, op, payload, filtros };
     if (registro) escritas.push(registro);
     const c: Record<string, unknown> = {};
-    for (const m of ['select', 'eq', 'in', 'order', 'neq', 'is', 'limit']) {
+    for (const m of ['select', 'eq', 'in', 'order', 'neq', 'is', 'limit', 'ilike', 'not']) {
       c[m] = (...args: unknown[]) => { filtros.push([m, ...args]); return c; };
     }
     c.maybeSingle = () => Promise.resolve({ data: (tabelas[tabela] ?? [])[0] ?? null, error: null });
