@@ -1,4 +1,8 @@
+import type { SupabaseClient } from '@supabase/supabase-js';
 import { createPublicClient } from '@/lib/supabase/server';
+import { gruposDosJogos, paraJogoCalc } from './portas';
+import { lerRegulamento } from './regulamento';
+import type { JogoCalc, Regulamento, Sorteios } from './tipos';
 
 export type ResumoCampeonato = {
   id: string;
@@ -51,5 +55,58 @@ export async function buscarCampeonatosPublicos(): Promise<ResumoCampeonato[]> {
     return (data as Record<string, unknown>[]).map(paraResumo);
   } catch {
     return [];
+  }
+}
+
+export type TimeDaPagina = { nome: string; sigla: string | null; escudo_url: string | null; escudo_cor: string | null };
+export type JogoDaPagina = JogoCalc & { data: string | null; local: string | null };
+export type PaginaCampeonato = {
+  campeonato: ResumoCampeonato & { regulamento: Regulamento; visivel: boolean };
+  times: Record<string, TimeDaPagina>;
+  jogos: JogoDaPagina[];
+  grupos: Record<string, string[]>;
+  sorteios: Sorteios;
+};
+
+const COLUNAS_PAGINA =
+  'id,slug,nome,ano,categoria,modalidade,logo_url,status,formato,regulamento,visivel,ordem_sorteio,' +
+  'inscricoes(status,time:times(id,nome,sigla,escudo_url,escudo_cor)),' +
+  'jogos(id,ordem,fase,grupo,rodada,data,local,time_casa_id,time_visitante_id,status,placar_casa,placar_visitante,penaltis_casa,penaltis_visitante,wo,parciais,vaga_casa,vaga_visitante,vaga_manual,jogo_volta_de,' +
+  'casa:times!jogos_time_casa_id_fkey(id,nome,sigla,escudo_url,escudo_cor),fora:times!jogos_time_visitante_id_fkey(id,nome,sigla,escudo_url,escudo_cor))';
+
+type TimeLinha = TimeDaPagina & { id: string };
+
+/** Tudo o que a página do campeonato mostra. Com o cliente público só acha os liberados; com o da sessão, também os da equipe. */
+export async function buscarCampeonatoPorSlug(slug: string, sb?: SupabaseClient): Promise<PaginaCampeonato | null> {
+  try {
+    const { data, error } = await (sb ?? createPublicClient()).from('campeonatos').select(COLUNAS_PAGINA).eq('slug', slug).maybeSingle();
+    if (error || !data) return null;
+    const c = data as unknown as Record<string, unknown>;
+    const times: Record<string, TimeDaPagina> = {};
+    const guardar = (t: TimeLinha | null | undefined) => {
+      if (t?.id) times[t.id] = { nome: t.nome, sigla: t.sigla, escudo_url: t.escudo_url, escudo_cor: t.escudo_cor };
+    };
+    for (const i of (c.inscricoes as { status: string; time: TimeLinha | null }[] | null) ?? []) if (i.status === 'aprovada') guardar(i.time);
+    const linhas = ((c.jogos as (Record<string, unknown> & { casa?: TimeLinha | null; fora?: TimeLinha | null })[] | null) ?? []);
+    for (const l of linhas) {
+      guardar(l.casa);
+      guardar(l.fora);
+    }
+    const jogos: JogoDaPagina[] = linhas
+      .map((l) => ({ ...paraJogoCalc(l as never), data: (l.data as string | null) ?? null, local: (l.local as string | null) ?? null }))
+      .sort((a, b) => (a.ordem ?? Number.MAX_SAFE_INTEGER) - (b.ordem ?? Number.MAX_SAFE_INTEGER) || String(a.data ?? '').localeCompare(String(b.data ?? '')));
+    return {
+      campeonato: {
+        ...paraResumo({ ...c, jogos }),
+        regulamento: lerRegulamento(c.regulamento, { formatoAntigo: (c.formato as string | null) ?? null, modalidade: (c.modalidade as string | null) ?? null }),
+        visivel: c.visivel === true,
+      },
+      times,
+      jogos,
+      grupos: gruposDosJogos(jogos),
+      sorteios: (c.ordem_sorteio as Sorteios | null) ?? {},
+    };
+  } catch {
+    return null;
   }
 }
