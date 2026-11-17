@@ -59,7 +59,7 @@ export function EditorNoticia({ noticia, modo, diasVideo = 30, onSalvo, onFechar
   const [ocupado, setOcupado] = useState(false);
   const storyPostado = noticia?.story_status === 'publicado';
   // Vídeo guardado no site vai para o Story sozinho; foto, só se marcar.
-  const [postarStory, setPostarStory] = useState(() => Boolean(noticia?.video_url) && !storyPostado);
+  const [postarStory, setPostarStory] = useState(() => !storyPostado && (noticia?.aba === 'mundo' || Boolean(noticia?.video_url)));
   const videoRef = useRef<HTMLVideoElement>(null);
   const publicada = noticia?.status === 'publicado';
   const [posX, posY] = f.enquadramento.split(' ').map((v) => parseInt(v, 10) || 50);
@@ -209,7 +209,15 @@ export function EditorNoticia({ noticia, modo, diasVideo = 30, onSalvo, onFechar
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <label className={ROTULO}>
             Aba
-            <select className={CAMPO} value={f.aba} onChange={(e) => muda('aba', e.target.value as Form['aba'])}>
+            <select
+              className={CAMPO}
+              value={f.aba}
+              onChange={(e) => {
+                const aba = e.target.value as Form['aba'];
+                muda('aba', aba);
+                if (!storyPostado) setPostarStory(aba === 'mundo' || Boolean(f.video_url));
+              }}
+            >
               <option value="arena">Notícias do Vale</option>
               <option value="mundo">Esporte Mundial</option>
             </select>
@@ -328,6 +336,8 @@ export function EditorNoticia({ noticia, modo, diasVideo = 30, onSalvo, onFechar
 
         {storyPostado ? (
           <p className="text-sm text-av-cinza">✓ Story já postado no Instagram.</p>
+        ) : f.aba === 'mundo' ? (
+          <p className="text-sm text-av-cinza">📲 Story do Instagram será postado automaticamente ao publicar.</p>
         ) : (
           <label className="flex items-center gap-3 text-sm text-av-branco">
             <input type="checkbox" className="h-5 w-5 accent-[#e50914]" checked={postarStory} onChange={(e) => setPostarStory(e.target.checked)} />
