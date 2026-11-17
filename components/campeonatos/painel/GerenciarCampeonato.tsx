@@ -6,6 +6,10 @@ import { lerRegulamento } from '@/lib/campeonatos/regulamento';
 import { gruposDosJogos, paraJogoCalc } from '@/lib/campeonatos/portas';
 import type { Regulamento, Sorteios } from '@/lib/campeonatos/tipos';
 import { AbaJogosCampeonato, type JogoDoPainel } from './AbaJogosCampeonato';
+import { AbaTimesCampeonato } from './AbaTimesCampeonato';
+import { AbaFormaCampeonato } from './AbaFormaCampeonato';
+import { AbaRegulamentoCampeonato } from './AbaRegulamentoCampeonato';
+import { AbaDadosCampeonato } from './AbaDadosCampeonato';
 import type { TimeInscrito } from './TimesDoCampeonato';
 
 export type CampeonatoDoPainel = {
@@ -99,6 +103,9 @@ export function GerenciarCampeonato({ id, ehCoordenacao }: Props) {
   if (!dados) return <p className="panel text-av-cinza">Carregando…</p>;
   const c = dados.campeonato;
   const nomes = Object.fromEntries(dados.times.map((t) => [t.id, { nome: t.nome }]));
+  const temJogos = dados.jogos.length > 0;
+  const travada = dados.jogos.some((j) => j.status === 'finalizado' || j.status === 'ao_vivo');
+  const mudou = () => void recarregar();
 
   return (
     <div className="grid gap-5">
@@ -129,7 +136,7 @@ export function GerenciarCampeonato({ id, ehCoordenacao }: Props) {
         </nav>
       </div>
       <div className="panel">
-        {aba === 'jogos' ? (
+        {aba === 'jogos' && (
           <AbaJogosCampeonato
             campeonato={c}
             jogos={dados.jogos}
@@ -137,11 +144,17 @@ export function GerenciarCampeonato({ id, ehCoordenacao }: Props) {
             grupos={gruposDosJogos(dados.jogos)}
             ehCoordenacao={ehCoordenacao}
             delegados={dados.delegados}
-            onMudou={() => void recarregar()}
+            onMudou={mudou}
           />
-        ) : (
-          <p className="text-av-cinza">Em breve.</p>
         )}
+        {aba === 'times' && (
+          <AbaTimesCampeonato campeonatoId={c.id} times={dados.times} temJogos={temJogos} ehCoordenacao={ehCoordenacao} onMudou={mudou} onTimesMudaram={() => setAba('forma')} />
+        )}
+        {aba === 'forma' && (
+          <AbaFormaCampeonato key={JSON.stringify(c.regulamento.forma)} campeonatoId={c.id} regulamento={c.regulamento} times={dados.times} temJogos={temJogos} travada={travada} onMudou={mudou} />
+        )}
+        {aba === 'regulamento' && <AbaRegulamentoCampeonato campeonatoId={c.id} regulamento={c.regulamento} onMudou={mudou} />}
+        {aba === 'dados' && <AbaDadosCampeonato campeonato={c} onMudou={mudou} />}
       </div>
     </div>
   );
