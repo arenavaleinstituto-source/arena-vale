@@ -323,8 +323,9 @@ export function rotuloDaVaga(v: Vaga, jogosPorOrdem: Map<number, { fase: string 
 
 **Conteúdo da migração** (começar com `set lock_timeout = '5s';`):
 1. **`campeonatos`:** `slug text`, `regulamento jsonb`, `visivel boolean not null default false`, `ordem_sorteio jsonb not null default '{}'` e `fases_destravadas text[] not null default '{}'`. Os campeonatos que já existem ficam com `visivel = true` e recebem o `slug` (só na primeira aplicação: `where slug is null`). O slug segue a mesma regra do `slugCampeonato`: minúsculas, sem acento por `translate()`, hífens, `-<ano>` no fim e `-2`, `-3`… se repetir. Depois, índice único `campeonatos_slug_key`. O `regulamento` fica `null` nos antigos (o código lê pelo `formato`, Tarefa 1).
-2. **`jogos`:** `time_casa_id`, `time_visitante_id` e `data` passam a aceitar vazio (`drop not null`). Colunas novas: `grupo text`, `ordem int`, `vaga_casa jsonb`, `vaga_visitante jsonb`, `vaga_manual boolean not null default false`, `jogo_volta_de uuid references public.jogos(id) on delete set null`, `penaltis_casa int`, `penaltis_visitante int`, `wo text check (wo in ('casa','visitante'))`, `parciais jsonb`, `corrigido_por uuid references public.profiles(id)` e `corrigido_em timestamptz`. Índice único `(campeonato_id, ordem) where ordem is not null`.
+2. **`jogos`:** `time_casa_id`, `time_visitante_id` e `data` passam a aceitar vazio (`drop not null`). Colunas novas: `grupo text`, `ordem int`, `vaga_casa jsonb`, `vaga_visitante jsonb`, `vaga_manual boolean not null default false`, `jogo_volta_de uuid references public.jogos(id) on delete set null`, `penaltis_casa int`, `penaltis_visitante int`, `wo text check (wo in ('casa','visitante'))` e `parciais jsonb`. Índice único `(campeonato_id, ordem) where ordem is not null`.
 3. **`times`:** `cadastrado_por uuid references public.profiles(id) default auth.uid()`.
+3a. **`correcoes_jogo`:** `id uuid pk`, `jogo_id uuid not null references jogos on delete cascade`, `corrigido_por uuid references profiles`, `corrigido_em timestamptz not null default now()`, `antes jsonb not null` e `depois jsonb not null`. RLS ligado, com uma única política `for select using (is_staff())`. Sem política de escrita: só o trigger `marcar_correcao` grava (`security definer`). Os jogos são de leitura pública, por isso a correção fica numa tabela à parte, e nem o público nem o moderador sabem que houve correção.
 4. **`inscricao_atletas`:** `id uuid pk`, `inscricao_id uuid not null references inscricoes on delete cascade`, `campeonato_id uuid not null references campeonatos on delete cascade`, `jogador_id uuid not null references jogadores on delete cascade`, `numero_camisa int`, `posicao text`, `created_at timestamptz default now()` e `unique (campeonato_id, jogador_id)`. Um trigger `before insert or update` preenche `campeonato_id` a partir da inscrição. RLS: leitura pública. A inclusão é só pelas funções abaixo. Apagar e editar o número e a posição: staff, moderador do campeonato ou capitão do time da inscrição.
 5. **Funções `security definer`** (com `revoke all … from public, anon` e `grant execute … to authenticated`):
    - `campeonato_publico(c uuid) returns boolean`;
@@ -344,7 +345,7 @@ export function rotuloDaVaga(v: Vaga, jogosPorOrdem: Map<number, { fase: string 
 7. **Triggers:**
    - `proteger_campeonato` (before update): quem não é staff nem service role não muda `visivel`, `slug`, `fases_destravadas` nem `created_by`. Mensagem: `'Só a ARENA VALE muda isso.'`;
    - `moderador_so_resultado` (substitui a da 0021): o moderador do campeonato do jogo muda tudo, menos `delegado_id` e `campeonato_id`. O delegado continua só com o placar e o status, com a mesma mensagem de hoje (`'Apenas a coordenação altera dados estruturais do jogo.'`);
-   - `marcar_correcao` (before update em `jogos`): se `old.status = 'finalizado'` e mudou `placar_casa`, `placar_visitante`, `penaltis_*`, `wo` ou `parciais`, grava `corrigido_por = auth.uid()` e `corrigido_em = now()`. O delegado não corrige, porque já perdeu o acesso ao finalizar;
+   - `marcar_correcao` (after update em `jogos`, `security definer`): se `old.status = 'finalizado'` e mudou `placar_casa`, `placar_visitante`, `penaltis_*`, `wo` ou `parciais`, insere em `correcoes_jogo` o `auth.uid()`, o `antes` e o `depois` (só esses campos, em JSON). O delegado não corrige, porque já perdeu o acesso ao finalizar;
    - `proteger_escudo_time` (before insert or update em `times`): no update, quem não é service role nem capitão do time não muda `escudo_url` nem `escudo_cor` (`'Só o capitão do time troca o escudo.'`); no insert, quem não é service role nem capitão grava `escudo_url = null`.
 8. **`v_classificacao`:** `alter view public.v_classificacao set (security_invoker = true)`, para não mostrar os jogos de campeonato escondido.
 9. **Bucket `campeonatos`:** público, até 5 MB, `image/png`, `image/jpeg` e `image/webp`, e sem política de escrita (só a service role grava).
@@ -356,7 +357,9 @@ export function rotuloDaVaga(v: Vaga, jogosPorOrdem: Map<number, { fase: string 
 - moderador A não lê o campeonato escondido de B nem o edita (update sem efeito);
 - moderador não muda `visivel` (erro `Só a ARENA VALE muda isso.`) nem o `delegado_id` de um jogo;
 - moderador muda `data` e `local` de um jogo do seu campeonato;
-- coordenação muda o placar de um jogo `finalizado` → `corrigido_por` fica com o id dela e `corrigido_em` preenchido, e o status continua `finalizado`; o delegado do jogo, já rebaixado, não consegue mudar o placar;
+- coordenação muda o placar de um jogo `finalizado` de 1x0 para 2x2 → `correcoes_jogo` ganha uma linha com o id dela, `antes.placar_casa = 1` e `depois.placar_casa = 2`, e o status continua `finalizado`;
+- **só a coordenação lê a correção:** o visitante, o moderador do campeonato e o delegado recebem lista vazia ao ler `correcoes_jogo`;
+- o delegado do jogo, já rebaixado, não consegue mudar o placar;
 - visitante não lê o campeonato escondido nem os jogos dele (**ponto de atenção 4**);
 - `inscrever_atleta` com o CPF `'529.982.247-25'` no time A e depois `'52998224725'` no time B do mesmo campeonato → o segundo dá erro com `'pelo time '` e o nome do time A, e o atleta continua no A (**ponto de atenção 5**);
 - o mesmo CPF entra normalmente em outro campeonato;
@@ -599,14 +602,15 @@ export async function gerar(id: string, p: PortasCampeonato, o: { forma: FormaDi
     - **corrigir súmula** (só com `ehCoordenacao`, só em jogo `finalizado`):
       - o botão "Corrigir súmula" abre o `FormResultado` com placar, pênaltis/set de ouro e W.O. já preenchidos, e o aviso `'Correção de jogo encerrado: o delegado não volta a ter acesso.'`;
       - salvar não mexe no `status` e chama o recálculo, mostrando os avisos;
-      - o jogo corrigido mostra `'Corrigido em dd/mm às hh:mm'` a partir de `corrigido_em`.
+      - só para a coordenação, o jogo corrigido mostra `'Corrigido em dd/mm às hh:mm'`, com a última linha de `correcoes_jogo` (carregada só quando `ehCoordenacao`). Ao tocar, abre o histórico (quem, quando, antes → depois). Nenhuma tela pública nem do moderador lê essa tabela.
 
 - [ ] **Passo 1: Escrever os testes que falham:**
   - salvar um resultado chama `/api/campeonatos/c1/recalcular` e mostra o aviso devolvido;
   - "Aplicar esta data à rodada inteira" faz o `update` com `.eq('campeonato_id', 'c1').eq('rodada', 2)`;
   - marcar W.O. do visitante num jogo de gols grava `wo: 'visitante'`, `placar_casa: 3`, `placar_visitante: 0` e `status: 'finalizado'`;
   - o moderador (`ehCoordenacao` falso) não vê o seletor de delegado;
-  - a coordenação, num jogo finalizado, clica em "Corrigir súmula", muda o placar para 2x2 e salva: o `update` não traz `status` e o recálculo é chamado; o moderador não vê o botão.
+  - a coordenação, num jogo finalizado, clica em "Corrigir súmula", muda o placar para 2x2 e salva: o `update` não traz `status` e o recálculo é chamado; o moderador não vê o botão;
+  - a coordenação vê `'Corrigido em 17/11 às 21:30'` num jogo com correção; o moderador, no mesmo jogo, não vê o texto e o componente nem consulta `correcoes_jogo`.
 - [ ] **Passo 2: Rodar e ver falhar:** `npx vitest run --maxWorkers=2 components/campeonatos/painel/jogos.test.tsx components/moderador`.
 - [ ] **Passo 3: Implementar.**
 - [ ] **Passo 4: Rodar e ver passar** (incluindo o `ResultadosCampeonato.test.tsx`, que já existe).
