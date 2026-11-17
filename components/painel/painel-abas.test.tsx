@@ -29,6 +29,7 @@ function consulta(tabela: string) {
   return q;
 }
 vi.mock('@/lib/supabase/client', () => ({ createClient: () => ({ from: consulta }) }));
+vi.mock('next/navigation', () => ({ useRouter: () => ({ push: vi.fn(), refresh: vi.fn() }) }));
 
 import { AbaAoVivo } from './AbaAoVivo';
 import { CoordCampeonatos } from '../coord-campeonatos';
@@ -68,25 +69,18 @@ describe('CoordCampeonatos', () => {
     chamadas.length = 0;
   });
 
-  it('modalidade tem as 4 opções e "—"', async () => {
+  it('cria pelo assistente: a modalidade tem as 4 opções', async () => {
     render(<CoordCampeonatos />);
+    await userEvent.setup().click(await screen.findByRole('button', { name: '+ Novo campeonato' }));
     const select = await screen.findByLabelText('Modalidade');
-    expect(Array.from((select as HTMLSelectElement).options).map((o) => o.textContent)).toEqual(['—', 'Futsal', 'Futebol 7', 'Basquete', 'Vôlei']);
-  });
-
-  it('cria campeonato com a modalidade escolhida', async () => {
-    render(<CoordCampeonatos />);
-    const u = userEvent.setup();
-    await u.type(await screen.findByLabelText('Nome do campeonato'), 'Copa Futsal 2027');
-    await u.selectOptions(screen.getByLabelText('Modalidade'), 'futsal');
-    await u.click(screen.getByRole('button', { name: 'Criar campeonato' }));
-    await waitFor(() => expect(chamadas[0]).toMatchObject({ tabela: 'campeonatos', op: 'insert', valor: expect.objectContaining({ nome: 'Copa Futsal 2027', modalidade: 'futsal' }) }));
+    expect(Array.from((select as HTMLSelectElement).options).map((o) => o.textContent)).toEqual(['Escolha', 'Futsal', 'Futebol 7', 'Basquete', 'Vôlei']);
   });
 
   it('nome vazio não cria', async () => {
     render(<CoordCampeonatos />);
     const u = userEvent.setup();
-    await u.click(await screen.findByRole('button', { name: 'Criar campeonato' }));
+    await u.click(await screen.findByRole('button', { name: '+ Novo campeonato' }));
+    await u.click(screen.getByRole('button', { name: 'Continuar' }));
     expect(await screen.findByText('Informe o nome do campeonato.')).toBeInTheDocument();
     expect(chamadas).toEqual([]);
   });
