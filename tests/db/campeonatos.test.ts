@@ -189,7 +189,7 @@ describe('campeonatos (0023)', () => {
       expect((await jogo(c.jogoA)).status).toBe('finalizado');
       const { data } = await admin().from('correcoes_jogo').select('*').eq('jogo_id', c.jogoA);
       expect(data).toHaveLength(1);
-      const linha = (data as Record<string, any>[])[0];
+      const linha = (data as { corrigido_por: string; antes: { placar_casa: number }; depois: { placar_casa: number } }[])[0];
       expect(linha.corrigido_por).toBe(coord.id);
       expect(linha.antes.placar_casa).toBe(1);
       expect(linha.depois.placar_casa).toBe(2);

@@ -38,7 +38,8 @@ export function CoordJogos() {
     setDelegados((delegadosData as typeof delegados) || []);
   }
 
-  function nomeTime(id: string) {
+  function nomeTime(id: string | null) {
+    if (!id) return 'A definir';
     return times.find((time) => time.id === id)?.nome || 'Time';
   }
 
@@ -232,7 +233,7 @@ export function CoordJogos() {
                   </strong>
 
                   <p className="text-xs text-[var(--text-mute)] mt-1">
-                    {new Date(jogo.data).toLocaleString('pt-BR')} ·{' '}
+                    {jogo.data ? new Date(jogo.data).toLocaleString('pt-BR') : 'A definir'} ·{' '}
                     {jogo.local || 'Local não informado'}
                   </p>
                 </div>

@@ -15,7 +15,7 @@ export default async function DelegadoPage() {
 
   let q = supabase
     .from('jogos')
-    .select('id, data, local, status, placar_casa, placar_visitante, nome_casa_custom, nome_visitante_custom, casa:times!jogos_time_casa_id_fkey(id, nome), fora:times!jogos_time_visitante_id_fkey(id, nome)')
+    .select('id, campeonato_id, data, local, status, placar_casa, placar_visitante, nome_casa_custom, nome_visitante_custom, casa:times!jogos_time_casa_id_fkey(id, nome), fora:times!jogos_time_visitante_id_fkey(id, nome)')
     .order('data', { ascending: true });
   if (cargo === 'delegado') q = (q as typeof q).eq('delegado_id', userId).not('status', 'in', '("finalizado","cancelado","adiado")');
   const { data: jogos } = await q;

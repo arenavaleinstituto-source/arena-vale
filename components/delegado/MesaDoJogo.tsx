@@ -5,16 +5,19 @@ import { createClient } from '@/lib/supabase/client';
 
 export type JogoDelegado = {
   id: string;
-  data: string;
+  campeonato_id: string | null;
+  data: string | null;
   local: string | null;
   status: string;
   placar_casa: number;
   placar_visitante: number;
   nome_casa_custom: string | null;
   nome_visitante_custom: string | null;
-  casa: { id: string; nome: string };
-  fora: { id: string; nome: string };
+  casa: { id: string; nome: string } | null;
+  fora: { id: string; nome: string } | null;
 };
+
+const A_DEFINIR = 'A definir';
 
 function CartaoJogo({ jogo: inicial, ehCoordenador }: { jogo: JogoDelegado; ehCoordenador: boolean }) {
   const supabase = createClient();
@@ -22,8 +25,8 @@ function CartaoJogo({ jogo: inicial, ehCoordenador }: { jogo: JogoDelegado; ehCo
   const [msg, setMsg] = useState('');
   const [editandoCasa, setEditandoCasa] = useState(false);
   const [editandoFora, setEditandoFora] = useState(false);
-  const [nomeCasa, setNomeCasa] = useState(jogo.nome_casa_custom ?? jogo.casa.nome);
-  const [nomeFora, setNomeFora] = useState(jogo.nome_visitante_custom ?? jogo.fora.nome);
+  const [nomeCasa, setNomeCasa] = useState(jogo.nome_casa_custom ?? jogo.casa?.nome ?? '');
+  const [nomeFora, setNomeFora] = useState(jogo.nome_visitante_custom ?? jogo.fora?.nome ?? '');
   const [ultimoGol, setUltimoGol] = useState<'casa' | 'fora' | null>(null);
 
   async function salvarNome(campo: 'nome_casa_custom' | 'nome_visitante_custom', valor: string) {
@@ -58,16 +61,20 @@ function CartaoJogo({ jogo: inicial, ehCoordenador }: { jogo: JogoDelegado; ehCo
     if (error) { setMsg(`Erro: ${error.message}`); return; }
     setJogo((j) => ({ ...j, status: novoStatus }));
     setMsg(novoStatus === 'ao_vivo' ? 'Jogo iniciado!' : 'Jogo finalizado!');
+    // Com o jogo encerrado, a classificação e a chave do campeonato se atualizam. Uma falha aqui não trava a mesa.
+    if (novoStatus === 'finalizado' && jogo.campeonato_id) {
+      fetch(`/api/campeonatos/${jogo.campeonato_id}/recalcular`, { method: 'POST' }).catch(() => undefined);
+    }
   }
 
-  const exibirCasa = jogo.nome_casa_custom || jogo.casa.nome;
-  const exibirFora = jogo.nome_visitante_custom || jogo.fora.nome;
+  const exibirCasa = jogo.nome_casa_custom || jogo.casa?.nome || A_DEFINIR;
+  const exibirFora = jogo.nome_visitante_custom || jogo.fora?.nome || A_DEFINIR;
   const finalizado = jogo.status === 'finalizado';
 
   return (
     <div className="panel grid gap-6">
       <div className="text-center text-xs text-[var(--text-dim)]">
-        {new Date(jogo.data).toLocaleString('pt-BR')} · {jogo.local || 'Local não informado'}
+        {jogo.data ? new Date(jogo.data).toLocaleString('pt-BR') : A_DEFINIR} · {jogo.local || 'Local não informado'}
         <span className={`ml-2 inline-block rounded-full px-2 py-0.5 text-[10px] font-bold uppercase ${jogo.status === 'ao_vivo' ? 'bg-red-600 text-white' : 'bg-white/10'}`}>
           {jogo.status === 'ao_vivo' ? '🔴 AO VIVO' : jogo.status}
         </span>
@@ -179,7 +186,8 @@ export function MesaDoJogo({ jogos, ehCoordenador }: { jogos: JogoDelegado[]; eh
         >
           {jogos.map((j) => (
             <option key={j.id} value={j.id}>
-              {j.casa.nome} × {j.fora.nome} — {new Date(j.data).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}
+              {j.casa?.nome ?? A_DEFINIR} × {j.fora?.nome ?? A_DEFINIR} —{' '}
+              {j.data ? new Date(j.data).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) : A_DEFINIR}
             </option>
           ))}
         </select>
