@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   poweredByHeader: false,
+  experimental: {
+    agentUpgrade: 'security',
+  },
   typescript: {
     // ⚠️ Antes: `ignoreBuildErrors: true`.
     // Essa flag escondia erros REAIS de compilação — foi o que permitiu que

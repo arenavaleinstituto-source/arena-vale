@@ -10,7 +10,7 @@ npm run build        # production build
 npm run typecheck    # tsc --noEmit (full type check; build won't catch everything)
 npm run lint         # ESLint
 npm run test         # unit + component tests (Vitest + jsdom)
-npm run test:db      # integration tests against Supabase test DB (requires .env.local)
+npm run test:db      # recreates the TESTES Supabase project and tests RLS per role (credentials in .env.test.local; refuses to run against the production DB)
 npm run db:seed      # seed the DB (requires .env.local)
 npm run db:teste:resetar  # wipe + recreate test DB schema
 ```
@@ -22,7 +22,9 @@ npx vitest run lib/midia/youtube.test.ts
 
 ## Architecture
 
-**Next.js 16 App Router**, React 19, TypeScript, Tailwind CSS, Supabase, deployed on Vercel (auto-deploy from push to main).
+**Next.js 16 App Router**, React 19, TypeScript, Tailwind CSS, Supabase, deployed on Vercel (push to `main` = production at arenavale.com.br; other branches get preview URLs).
+
+**Next.js 16 has breaking changes vs. training data** (see [AGENTS.md](AGENTS.md)): read the relevant guide in `node_modules/next/dist/docs/` before writing Next-specific code. `next dev` re-adds that block to AGENTS.md — commit it rather than reverting it.
 
 ### Naming convention
 All code and UI copy is in **Portuguese**. Component names, variables, and DB column names follow Portuguese vocabulary (`Faixa`, `Fileira`, `Cartaz`, `Cargo`, `noticia`, `jogo`, etc.).
@@ -34,8 +36,11 @@ All code and UI copy is in **Portuguese**. Component names, variables, and DB co
 ```
 lib/
   auth/       — cargo system, invite links, route guards
+  atletas/    — athlete records, roster (elenco), CPF validation
+  content/    — static site copy and vocabulary
   midia/      — config, news, championships, agenda, YouTube
   telegram/   — bot message processing, gallery, linking
+  whatsapp/   — WhatsApp Business bot (mirrors telegram/: extrair → processar → portas)
   instagram/  — Story publishing via Graph API
   imagem/     — image stamping (marca), story compositing, gallery processing
   supabase/   — client/server clients + typed queries
@@ -60,8 +65,18 @@ app/
   api/
     cron/videos — Vercel cron, runs daily at 06:00 UTC (vercel.json)
     telegram/   — webhook for the Telegram bot
+    whatsapp/   — webhook for the WhatsApp Business bot (GET = Meta verification, POST = HMAC-verified events)
     instagram/story — posts Story to Instagram Graph API
+    galeria/, convites/, inscricoes/, lembrete/, patrocinadores/
 ```
+
+### News bots (Telegram / WhatsApp)
+
+Both bots turn incoming messages into **drafts** (`noticias.status = 'rascunho'`, `origem = 'telegram' | 'whatsapp'`) — nothing is auto-published; the coordenador reviews in the painel's Notícias tab. Only `coordenador` profiles may create drafts. A user links their account by generating an 8-char code in the painel (RPC `gerar_codigo_telegram` / `gerar_codigo_whatsapp`, valid 10 min) and sending `/vincular <code>` to the bot; 5 wrong codes block for 1 h. Dedup is by a unique message-ref column (`telegram_message_ref` / `whatsapp_message_ref`). Telegram drafts go to aba `mundo` (or `arena` in "parceiro" mode); WhatsApp drafts always go to aba `arena` (Notícias do Vale). Webhooks always return 200 after signature checks so the platform doesn't retry.
+
+### Database migrations
+
+`supabase/migrations/NNNN_*.sql`, numbered sequentially. They are applied **manually** in the Supabase SQL Editor to both the production project (ARENA VALE) and the TESTES project, so every migration must be idempotent (`if not exists`, `drop constraint if exists`, `create or replace`). Permissions live in RLS + `security definer` RPCs; pages only repeat the check.
 
 ### Ports pattern
 
@@ -78,7 +93,7 @@ The API route instantiates `portasBot(adminClient)` / `portasStory(adminClient)`
 
 - `lib/supabase/server.ts` — `createClient()` (uses cookies, server-only), `createPublicClient()` (anon, no auth)
 - `lib/supabase/client.ts` — browser client for client components
-- Service-role (admin) client is built inline in API routes using env vars
+- `createAdminClient()` in `lib/supabase/server.ts` — service-role client, used only in API routes / webhooks
 
 ### Styling
 
@@ -90,7 +105,10 @@ The full design system — palette, typography, components, animations, and do/d
 
 | Integration | Env vars | Notes |
 |------------|----------|-------|
-| Telegram bot | `TELEGRAM_BOT_TOKEN`, `TELEGRAM_SECRET` | Webhook at `/api/telegram`; `scripts/telegram/configurar.mjs` registers it |
+| Supabase | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` | Service role is server-only |
+| Site URL | `NEXT_PUBLIC_BASE_URL` | Used for links the bots send back, sitemap, robots |
+| Vercel cron | `CRON_SECRET` | Protects `/api/cron/videos` (deletes expired videos, renews Instagram token) |
+| Telegram bot | `TELEGRAM_BOT_TOKEN`, `TELEGRAM_WEBHOOK_SECRET` | Webhook at `/api/telegram`; `scripts/telegram/configurar.mjs` registers it |
 | Instagram Graph API | `INSTAGRAM_ACCESS_TOKEN`, `INSTAGRAM_USER_ID` | Token auto-renews every 7 days; stored in `instagram_conta` table |
 | YouTube | `YOUTUBE_API_KEY` | Optional — falls back to public RSS if absent |
 | Resend | (DNS only) | SPF includes `resend.com`; no SDK used in app code |

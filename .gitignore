@@ -36,3 +36,6 @@ Thumbs.db
 
 # Testes
 coverage/
+
+# Superpowers scratch workspace
+.superpowers/
