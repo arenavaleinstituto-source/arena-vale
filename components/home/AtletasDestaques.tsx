@@ -22,7 +22,7 @@ export function AtletasDestaques({ destaques }: { destaques: Destaque[] }) {
               href="/atletasdestaques"
               titulo={d.nome}
               imagem={d.imagem_url}
-              selo="ATLETA DESTAQUE"
+              selo="Destaque"
               chapeu={[d.modalidade, d.equipe].filter(Boolean).join(' · ')}
             />
           ))}

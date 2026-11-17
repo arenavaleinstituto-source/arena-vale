@@ -32,7 +32,7 @@ export function EsporteMundial({ noticias }: { noticias: NoticiaMidia[] }) {
       {noticias.length === 0 ? (
         <p className="vazio">Em breve as primeiras notícias.</p>
       ) : (
-        <Fileira rotulo="Esporte Mundial" girar>
+        <Fileira rotulo="Esporte Mundial">
           {noticias.map((n) => (
             <CartazNoticia key={n.id} n={n} />
           ))}
