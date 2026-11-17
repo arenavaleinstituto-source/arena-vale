@@ -33,7 +33,7 @@ export type NoticiaMidia = {
   status: 'rascunho' | 'publicado';
   publicado_em: string | null;
   fonte: string | null;
-  origem: 'manual' | 'telegram';
+  origem: 'manual' | 'telegram' | 'whatsapp';
   modalidade: string | null;
   created_at: string;
   /** Times do jogo para o cabeçalho dos vídeos (0017), ex.: "FLAMENGO x PALMEIRAS". */
@@ -78,7 +78,7 @@ export function mapearNoticiaMidia(row: Record<string, unknown>): NoticiaMidia {
     status,
     publicado_em: texto(row.publicado_em) ?? (status === 'publicado' && !temStatus ? created : null),
     fonte: texto(row.fonte),
-    origem: row.origem === 'telegram' ? 'telegram' : 'manual',
+    origem: row.origem === 'telegram' || row.origem === 'whatsapp' ? row.origem : 'manual',
     modalidade: texto(row.modalidade),
     created_at: created,
     ...(texto(row.confronto) ? { confronto: texto(row.confronto) } : {}),

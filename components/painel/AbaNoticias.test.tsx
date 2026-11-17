@@ -5,6 +5,7 @@ import { describe, expect, it, vi } from 'vitest';
 const LINHAS = [
   { id: 'a', titulo: 'Final da Copa', status: 'publicado', aba: 'arena', origem: 'manual', created_at: '2026-11-03T00:00:00Z', imagem_url: 'https://x/a.jpg' },
   { id: 'b', titulo: 'Golaço na Itália', status: 'rascunho', aba: 'mundo', origem: 'telegram', created_at: '2026-11-02T00:00:00Z', imagem_url: null },
+  { id: 'w', titulo: 'Gol no Vale', status: 'rascunho', aba: 'arena', origem: 'whatsapp', created_at: '2026-11-01T12:00:00Z', imagem_url: null },
   { id: 'c', titulo: 'Rascunho manual', status: 'rascunho', aba: 'arena', origem: 'manual', created_at: '2026-11-01T00:00:00Z', imagem_url: null },
 ];
 let falhar = false;
@@ -25,14 +26,17 @@ vi.mock('next/navigation', () => ({ useRouter: () => ({ replace }), usePathname:
 import { AbaNoticias } from './AbaNoticias';
 
 describe('AbaNoticias', () => {
-  it('lista todas e destaca os rascunhos do Telegram', async () => {
+  it('lista todas e destaca os rascunhos do Telegram e do WhatsApp', async () => {
     busca = new URLSearchParams('aba=noticias');
     render(<AbaNoticias />);
     expect(await screen.findByText('Final da Copa')).toBeInTheDocument();
-    const botao = screen.getByRole('button', { name: 'Rascunhos do Telegram (1)' });
+    const botao = screen.getByRole('button', { name: 'Rascunhos do Telegram/WhatsApp (2)' });
     await userEvent.setup().click(botao);
     const lista = screen.getByRole('list', { name: 'Notícias' });
-    expect(within(lista).getAllByRole('listitem').map((li) => li.textContent)).toEqual([expect.stringContaining('Golaço na Itália')]);
+    expect(within(lista).getAllByRole('listitem').map((li) => li.textContent)).toEqual([
+      expect.stringContaining('Golaço na Itália'),
+      expect.stringMatching(/Gol no Vale.*· WhatsApp/),
+    ]);
   });
 
   it('?editar=<id> abre o editor daquela notícia', async () => {

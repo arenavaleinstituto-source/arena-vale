@@ -129,7 +129,7 @@ async function criarRascunho(
     descricao: r.descricao,
     status: 'rascunho',
     origem: 'whatsapp',
-    aba: 'mundo',
+    aba: 'arena', // WhatsApp sempre cai em "Notícias do Vale"
     tipo_midia: r.tipo_midia,
     imagem_url,
     video_url,

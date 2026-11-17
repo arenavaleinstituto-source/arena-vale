@@ -27,6 +27,7 @@ vi.mock('@/lib/supabase/client', () => ({
 import { EditorNoticia } from './EditorNoticia';
 import { AbaVideos } from './AbaVideos';
 import { VincularTelegram } from './VincularTelegram';
+import { VincularWhatsApp } from './VincularWhatsApp';
 
 const n = (p: Record<string, unknown> = {}) => mapearNoticiaMidia({ id: 'n1', titulo: 'Golaço', imagem_url: 'https://x/c.jpg', status: 'rascunho', ...p });
 
@@ -140,5 +141,28 @@ describe('VincularTelegram', () => {
     await userEvent.setup().click(screen.getByRole('button', { name: 'Vincular Telegram' }));
     expect(await screen.findByText('/vincular 482913')).toBeInTheDocument();
     expect(rpc).toHaveBeenCalledWith('gerar_codigo_telegram');
+  });
+});
+
+describe('VincularWhatsApp', () => {
+  it('gera o código e mostra a instrução', async () => {
+    rpc.mockResolvedValueOnce({ data: 'AB23CD45', error: null });
+    render(<VincularWhatsApp />);
+    await userEvent.setup().click(screen.getByRole('button', { name: 'Vincular WhatsApp' }));
+    expect(await screen.findByText('/vincular AB23CD45')).toBeInTheDocument();
+    expect(rpc).toHaveBeenCalledWith('gerar_codigo_whatsapp');
+  });
+
+  it('desvincular chama a função do banco e confirma', async () => {
+    rpc.mockResolvedValueOnce({ data: null, error: null });
+    render(<VincularWhatsApp />);
+    await userEvent.setup().click(screen.getByRole('button', { name: 'Desvincular' }));
+    expect(await screen.findByText('WhatsApp desvinculado.')).toBeInTheDocument();
+    expect(rpc).toHaveBeenCalledWith('desvincular_whatsapp');
+  });
+
+  it('rascunho do WhatsApp mostra o lembrete de direitos', () => {
+    render(<EditorNoticia noticia={n({ origem: 'whatsapp' })} modo="guardar_arquivo" onSalvo={vi.fn()} onFechar={vi.fn()} />);
+    expect(screen.getByText('Reescreva com suas palavras.')).toBeInTheDocument();
   });
 });

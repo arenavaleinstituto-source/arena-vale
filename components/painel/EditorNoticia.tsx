@@ -193,7 +193,7 @@ export function EditorNoticia({ noticia, modo, diasVideo = 30, onSalvo, onFechar
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h2 className="font-display text-2xl font-extrabold uppercase">{noticia ? 'Editar notícia' : 'Nova notícia'}</h2>
         </div>
-        {noticia?.origem === 'telegram' && (
+        {(noticia?.origem === 'telegram' || noticia?.origem === 'whatsapp') && (
           <p className="rounded-2xl border border-av-amarelo/40 bg-av-amarelo/10 px-4 py-3 text-sm text-av-amarelo">Reescreva com suas palavras.</p>
         )}
 

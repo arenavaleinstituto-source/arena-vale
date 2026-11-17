@@ -6,6 +6,7 @@ import { createClient } from '@/lib/supabase/client';
 import { CATEGORIAS_MIDIA, mapearNoticiaMidia, type ModoVideo, type NoticiaMidia } from '@/lib/midia/noticias';
 import { EditorNoticia } from './EditorNoticia';
 import { VincularTelegram } from './VincularTelegram';
+import { VincularWhatsApp } from './VincularWhatsApp';
 
 type Filtro = { aba: '' | 'arena' | 'mundo'; categoria: string; status: '' | 'rascunho' | 'publicado'; telegram: boolean };
 const SEM_FILTRO: Filtro = { aba: '', categoria: '', status: '', telegram: false };
@@ -50,7 +51,8 @@ export function AbaNoticias() {
     router.replace(id && id !== 'nova' ? `${pathname}?aba=noticias&editar=${id}` : `${pathname}?aba=noticias`, { scroll: false });
   }
 
-  const doTelegram = lista.filter((n) => n.origem === 'telegram' && n.status === 'rascunho').length;
+  const doRobo = (n: NoticiaMidia) => (n.origem === 'telegram' || n.origem === 'whatsapp') && n.status === 'rascunho';
+  const dosRobos = lista.filter(doRobo).length;
   const visiveis = useMemo(
     () =>
       lista.filter(
@@ -58,7 +60,7 @@ export function AbaNoticias() {
           (!filtro.aba || n.aba === filtro.aba) &&
           (!filtro.categoria || n.categoria === filtro.categoria) &&
           (!filtro.status || n.status === filtro.status) &&
-          (!filtro.telegram || (n.origem === 'telegram' && n.status === 'rascunho')),
+          (!filtro.telegram || doRobo(n)),
       ),
     [lista, filtro],
   );
@@ -89,6 +91,7 @@ export function AbaNoticias() {
   return (
     <div className="grid gap-5">
       <VincularTelegram />
+      <VincularWhatsApp />
       <div className="panel grid gap-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h2 className="font-display text-2xl font-extrabold uppercase">Notícias</h2>
@@ -103,7 +106,7 @@ export function AbaNoticias() {
             onClick={() => setFiltro((f) => ({ ...SEM_FILTRO, telegram: !f.telegram }))}
             className={`rounded-full border px-4 py-2 font-rotulo text-sm font-bold uppercase tracking-wider ${filtro.telegram ? 'border-av-amarelo bg-av-amarelo text-black' : 'border-av-amarelo/50 text-av-amarelo'}`}
           >
-            Rascunhos do Telegram ({doTelegram})
+            Rascunhos do Telegram/WhatsApp ({dosRobos})
           </button>
           <select aria-label="Filtrar por aba" className={CAMPO} value={filtro.aba} onChange={(e) => setFiltro((f) => ({ ...f, telegram: false, aba: e.target.value as Filtro['aba'] }))}>
             <option value="">Todas as abas</option>
@@ -144,7 +147,7 @@ export function AbaNoticias() {
                     <strong className="block truncate">{n.titulo || 'Sem título'}</strong>
                     <small className="text-xs text-av-cinza">
                       {n.aba === 'mundo' ? 'Esporte Mundial' : 'Notícias do Vale'} · {CATEGORIAS_MIDIA.find((c) => c.valor === n.categoria)?.rotulo}
-                      {n.origem === 'telegram' ? ' · Telegram' : ''}
+                      {n.origem === 'telegram' ? ' · Telegram' : n.origem === 'whatsapp' ? ' · WhatsApp' : ''}
                     </small>
                   </span>
                   <span
