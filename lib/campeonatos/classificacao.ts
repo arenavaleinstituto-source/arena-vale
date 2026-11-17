@@ -198,6 +198,17 @@ function desempatar(grupo: string[], ctx: Ctx): Bloco[] {
   return grupo.map((id) => ({ ids: [id], aguardando: false }));
 }
 
+/**
+ * Compara duas campanhas pelo aproveitamento e depois pelos critérios numéricos do regulamento,
+ * na ordem dele (sem confronto direto nem sorteio). Negativo: `a` é melhor; 0: empate.
+ * Usado nos melhores extras e na "melhor campanha" do mata-mata.
+ */
+export function compararCampanhas(a: LinhaTabela, b: LinhaTabela, r: Regulamento): number {
+  const criterios = r.criterios.filter((c) => c !== 'confronto_direto' && c !== 'sorteio');
+  const chave = (l: LinhaTabela) => [l.aproveitamento, ...criterios.map((c) => valor(c, l))];
+  return compararChaves(chave(a), chave(b));
+}
+
 // ---- tabela ----
 
 export function classificar(
