@@ -38,15 +38,6 @@ export function EsporteMundial({ noticias }: { noticias: NoticiaMidia[] }) {
           ))}
         </Fileira>
       )}
-      <div className="fluxo" aria-label="Como a notícia chega">
-        <span>Grupo do Telegram</span>
-        <i>→</i>
-        <span>Bot da ARENA VALE</span>
-        <i>→</i>
-        <span>Rascunho no painel</span>
-        <i>→</i>
-        <span>Coordenação edita e publica</span>
-      </div>
     </Faixa>
   );
 }
