@@ -26,14 +26,13 @@ describe('políticas por cargo (0010)', () => {
     expect((await jogo(c.jogoB)).placar_casa).toBe(0);
   });
 
-  it('moderador muda placar + data na mesma requisição → nada é gravado', async () => {
-    const antes = await jogo(c.jogoA);
+  it('moderador do campeonato muda placar + data na mesma requisição (0023)', async () => {
     const m = await clienteComo(c.moderador);
-    const { error } = await m.from('jogos').update({ placar_casa: 5, data: '2030-01-01T10:00:00Z' }).eq('id', c.jogoA);
-    expect(error?.message).toMatch(/Moderador só lança resultados/);
+    const { error } = await m.from('jogos').update({ placar_casa: 5, data: '2030-01-01T10:00:00' }).eq('id', c.jogoA);
+    expect(error).toBeNull();
     const depois = await jogo(c.jogoA);
-    expect(depois.placar_casa).toBe(0);
-    expect(depois.data).toBe(antes.data);
+    expect(depois.placar_casa).toBe(5);
+    expect(String(depois.data)).toMatch(/^2030-01-01T10:00:00/);
   });
 
   it('moderador lança evento (gol) e cria súmula do seu campeonato', async () => {
