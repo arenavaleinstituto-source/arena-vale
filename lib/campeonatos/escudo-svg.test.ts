@@ -41,11 +41,11 @@ describe('desenharEscudo', () => {
   it('cor do texto pelo contraste', () => {
     expect(desenharEscudo({ ...base, cor1: '#000000' })).toMatch(/<text[^>]*fill="#ffffff"/);
     expect(desenharEscudo({ ...base, cor1: '#ffffff' })).toMatch(/<text[^>]*fill="#0b0b0d"/);
-    expect(desenharEscudo({ ...base, cor1: '#c9a338' })).toMatch(/<text[^>]*fill="#0b0b0d"/);
+    expect(desenharEscudo({ ...base, cor1: '#f2c94c' })).toMatch(/<text[^>]*fill="#0b0b0d"/);
   });
   it('cor inválida cai no padrão', () => {
     const s = desenharEscudo({ ...base, cor1: 'red', cor2: '"><script>', detalhe: 'faixa' });
-    expect(s).toContain('#c9a338');
+    expect(s).toContain('#e50914');
     expect(s).toContain('#ffffff');
     expect(s).not.toContain('script');
   });
@@ -56,8 +56,8 @@ describe('desenharEscudo', () => {
 });
 
 describe('escudoPadrao', () => {
-  it('usa a cor ou o dourado', () => {
+  it('usa a cor ou o vermelho da marca', () => {
     expect(escudoPadrao('ABC', '#112233')).toBe(desenharEscudo({ ...base, texto: 'ABC' }));
-    expect(escudoPadrao('ABC', null)).toContain('#c9a338');
+    expect(escudoPadrao('ABC', null)).toContain('#e50914');
   });
 });

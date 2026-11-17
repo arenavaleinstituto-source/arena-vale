@@ -6,9 +6,8 @@ export type OpcoesEscudo = {
   detalhe: 'nenhum' | 'faixa' | 'listras' | 'estrela';
 };
 
-// Dourado padrão de time sem cor (valor do spec). Montado em partes para não acionar tests/marca.test.ts,
-// que veta o dourado antigo da marca no código do site.
-const COR1_PADRAO = '#c9' + 'a338';
+// Time sem cor usa o vermelho da marca (av-vermelho); o dourado antigo não é mais usado no site.
+const COR1_PADRAO = '#e50914';
 const COR2_PADRAO = '#ffffff';
 const ESCURO = '#0b0b0d';
 const CLARO = '#ffffff';
