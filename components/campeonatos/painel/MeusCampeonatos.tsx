@@ -8,7 +8,7 @@ import { NovoCampeonato } from './NovoCampeonato';
 export type CampeonatoDaLista = { id: string; nome: string; ano: number; slug: string; visivel: boolean; modalidade: string | null };
 
 /** Lista de campeonatos do painel (os do moderador, ou todos para a coordenação) e o assistente de criação. */
-export function MeusCampeonatos({ campeonatos, ehCoordenacao }: { campeonatos: CampeonatoDaLista[]; ehCoordenacao: boolean }) {
+export function MeusCampeonatos({ campeonatos, ehCoordenacao, onAbrir }: { campeonatos: CampeonatoDaLista[]; ehCoordenacao: boolean; onAbrir?: (id: string) => void }) {
   const router = useRouter();
   const [criando, setCriando] = useState(false);
 
@@ -24,6 +24,7 @@ export function MeusCampeonatos({ campeonatos, ehCoordenacao }: { campeonatos: C
         <NovoCampeonato
           onCriado={(id) => {
             setCriando(false);
+            if (onAbrir) return onAbrir(id);
             router.push(`?campeonato=${id}`);
             router.refresh();
           }}
@@ -59,9 +60,15 @@ export function MeusCampeonatos({ campeonatos, ehCoordenacao }: { campeonatos: C
               <Link href={`/campeonatos/${c.slug}`} target="_blank" className="btn-leve">
                 Pré-visualizar
               </Link>
-              <Link href={`?campeonato=${c.id}`} className="btn-forte">
-                Abrir
-              </Link>
+              {onAbrir ? (
+                <button type="button" className="btn-forte" onClick={() => onAbrir(c.id)}>
+                  Abrir
+                </button>
+              ) : (
+                <Link href={`?campeonato=${c.id}`} className="btn-forte">
+                  Abrir
+                </Link>
+              )}
             </li>
           ))}
         </ul>

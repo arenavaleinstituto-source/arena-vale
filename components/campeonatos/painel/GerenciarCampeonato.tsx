@@ -10,6 +10,8 @@ import { AbaTimesCampeonato } from './AbaTimesCampeonato';
 import { AbaFormaCampeonato } from './AbaFormaCampeonato';
 import { AbaRegulamentoCampeonato } from './AbaRegulamentoCampeonato';
 import { AbaDadosCampeonato } from './AbaDadosCampeonato';
+import { ControlesCoordenacao } from './ControlesCoordenacao';
+import { fasesComResultado } from '@/lib/campeonatos/trava';
 import type { TimeInscrito } from './TimesDoCampeonato';
 
 export type CampeonatoDoPainel = {
@@ -71,10 +73,10 @@ export async function carregarPainel(id: string, ehCoordenacao: boolean): Promis
   };
 }
 
-type Props = { id: string; ehCoordenacao: boolean };
+type Props = { id: string; ehCoordenacao: boolean; onApagado?: () => void };
 
 /** Gerenciador de um campeonato no painel (moderador do campeonato ou coordenação). */
-export function GerenciarCampeonato({ id, ehCoordenacao }: Props) {
+export function GerenciarCampeonato({ id, ehCoordenacao, onApagado }: Props) {
   const [dados, setDados] = useState<DadosDoPainel | null>(null);
   const [erro, setErro] = useState(false);
   const [aba, setAba] = useState<Aba>('jogos');
@@ -121,6 +123,9 @@ export function GerenciarCampeonato({ id, ehCoordenacao }: Props) {
             Pré-visualizar
           </a>
         </div>
+        {ehCoordenacao && (
+          <ControlesCoordenacao campeonato={c} fasesComResultado={[...fasesComResultado(dados.jogos)]} onMudou={mudou} onApagado={onApagado} />
+        )}
         <nav aria-label="Abas do campeonato" className="flex flex-wrap gap-2">
           {ABAS.map(([a, rotulo]) => (
             <button
