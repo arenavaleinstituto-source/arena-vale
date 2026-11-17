@@ -232,9 +232,11 @@ CAMPEONATOS
 - o recálculo das vagas também roda quando o delegado finaliza um jogo na Mesa do Jogo, não só quando o moderador lança um resultado.
 
 **Permissões (RLS + funções `security definer`):**
-- **moderador** pode **criar** campeonato; ao criar, fica ligado a ele automaticamente (`campeonato_moderadores`);
+- **no máximo 3 moderadores por campeonato** (decisão do dono), contando quem criou. O banco recusa o 4º com "Este campeonato já tem 3 moderadores." Se algum campeonato antigo já tiver mais de 3, ninguém é tirado: a migração lista o caso para a coordenação resolver, e novos vínculos ficam bloqueados até baixar de 3;
+- o moderador **só tem poder nos campeonatos em que está cadastrado como moderador** (decisão do dono). Em qualquer outro campeonato, ele é como um visitante, mesmo que seja moderador de vários;
+- **moderador** pode **criar** campeonato; ao criar, fica ligado a ele automaticamente (`campeonato_moderadores`), ocupando uma das 3 vagas;
 - moderador **edita** só os campeonatos ligados a ele: dados, escudo, regulamento, inscrições de times e a estrutura dos jogos (datas, local, times das vagas, fase, rodada, grupo). Continua **sem poder** mudar `delegado_id`, `visivel` e o destrave da forma de disputa;
-- moderador pode **cadastrar times** e editar os times que ele cadastrou; times de outros só podem ser escolhidos, não editados;
+- moderador pode **cadastrar times** e editar nome e sigla dos times que ele cadastrou, **desde que esse time só esteja inscrito em campeonatos dele**; se o time também joga um campeonato de outro moderador, ele só pode ser escolhido, não editado (*minha decisão*, para seguir a regra acima). Times de outros só podem ser escolhidos;
 - o gatilho `moderador_so_resultado` passa a permitir mudanças estruturais pelo moderador **do campeonato daquele jogo**, mantendo `delegado_id` exclusivo da coordenação;
 - a geração e o recálculo das vagas rodam no servidor (rota ou ação do servidor que confere o cargo antes), nunca confiando no navegador;
 - leitura pública: só campeonatos `visivel = true` (e os jogos deles) aparecem nas páginas públicas; a equipe vê todos.

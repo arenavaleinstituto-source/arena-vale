@@ -341,20 +341,28 @@ export function rotuloDaVaga(v: Vaga, jogosPorOrdem: Map<number, { fase: string 
    - `jogos` select: `campeonato_publico(campeonato_id) or pode_editar_campeonato(campeonato_id) or delegado_id = auth.uid()`;
    - insert e delete de `jogos`: staff ou moderador do campeonato;
    - `inscricoes` insert, update e delete: staff ou moderador do campeonato;
-   - `times` insert: staff ou `cargo_atual() = 'moderador'`; `times` update: staff, ou capitão do time, ou `cadastrado_por = auth.uid()`.
+   - `times` insert: staff ou `cargo_atual() = 'moderador'`;
+   - `times` update: staff, ou capitão do time, ou `pode_editar_time_cadastrado(id)` — nova função `security definer`: `cadastrado_por = auth.uid()`, `cargo_atual() = 'moderador'` e nenhuma inscrição do time em campeonato onde ele não é moderador;
+   - **o moderador só age nos campeonatos em que está cadastrado:** todas as políticas e funções de escrita do moderador passam por `is_moderador_do_campeonato(c)` (vínculo e cargo, como já é hoje). Nenhuma política nova dá ao moderador poder geral.
 7. **Triggers:**
    - `proteger_campeonato` (before update): quem não é staff nem service role não muda `visivel`, `slug`, `fases_destravadas` nem `created_by`. Mensagem: `'Só a ARENA VALE muda isso.'`;
    - `moderador_so_resultado` (substitui a da 0021): o moderador do campeonato do jogo muda tudo, menos `delegado_id` e `campeonato_id`. O delegado continua só com o placar e o status, com a mesma mensagem de hoje (`'Apenas a coordenação altera dados estruturais do jogo.'`);
+   - `limite_moderadores` (before insert em `campeonato_moderadores`): trava a linha do campeonato (`select … for update` em `campeonatos`) e, se já houver 3 vínculos, dá erro `'Este campeonato já tem 3 moderadores.'`. Vale para todos, inclusive staff e `criar_campeonato`, porque é regra do produto;
    - `marcar_correcao` (after update em `jogos`, `security definer`): se `old.status = 'finalizado'` e mudou `placar_casa`, `placar_visitante`, `penaltis_*`, `wo` ou `parciais`, insere em `correcoes_jogo` o `auth.uid()`, o `antes` e o `depois` (só esses campos, em JSON). O delegado não corrige, porque já perdeu o acesso ao finalizar;
    - `proteger_escudo_time` (before insert or update em `times`): no update, quem não é service role nem capitão do time não muda `escudo_url` nem `escudo_cor` (`'Só o capitão do time troca o escudo.'`); no insert, quem não é service role nem capitão grava `escudo_url = null`.
 8. **`v_classificacao`:** `alter view public.v_classificacao set (security_invoker = true)`, para não mostrar os jogos de campeonato escondido.
 9. **Bucket `campeonatos`:** público, até 5 MB, `image/png`, `image/jpeg` e `image/webp`, e sem política de escrita (só a service role grava).
-10. **Elenco dos que já existem:** inserir em `inscricao_atletas` os jogadores de `jogadores.time_id` de cada inscrição, em ordem de `inscricoes.submitted_at`, com `on conflict (campeonato_id, jogador_id) do nothing`. No fim, um `select` lista os casos em que o mesmo atleta estava em dois times do mesmo campeonato (campeonato, atleta, time mantido e time que ficou sem ele), para a coordenação conferir.
+10. **Elenco dos que já existem:** inserir em `inscricao_atletas` os jogadores de `jogadores.time_id` de cada inscrição, em ordem de `inscricoes.submitted_at`, com `on conflict (campeonato_id, jogador_id) do nothing`. No fim, um `select` lista os casos para a coordenação conferir, numa só tabela com a coluna `caso`:
+   - `'atleta em dois times'`: campeonato, atleta, time mantido e time que ficou sem ele;
+   - `'mais de 3 moderadores'`: campeonato e quantos moderadores tem.
 11. Terminar com `notify pgrst, 'reload schema';`.
 
 **Testes (`tests/db/campeonatos.test.ts`, usando `montarCenario` e `criarUsuario`):**
 - moderador cria campeonato por `criar_campeonato` → nasce `visivel = false` e ligado a ele;
 - moderador A não lê o campeonato escondido de B nem o edita (update sem efeito);
+- **só no campeonato cadastrado:** moderador ligado a A e a C muda jogos e inscrições de A e de C, mas não de B (update, insert e delete sem efeito ou com erro de permissão);
+- **3 moderadores no máximo:** com 3 vínculos em A, um 4º `insert` em `campeonato_moderadores`, feito pela coordenação, dá `'Este campeonato já tem 3 moderadores.'`; um moderador que já tem 2 colegas cria um campeonato novo normalmente (o limite é por campeonato);
+- moderador edita o nome de um time que ele cadastrou e que só joga em A; depois que esse time é inscrito em B (campeonato de outro moderador), a mesma edição não tem efeito;
 - moderador não muda `visivel` (erro `Só a ARENA VALE muda isso.`) nem o `delegado_id` de um jogo;
 - moderador muda `data` e `local` de um jogo do seu campeonato;
 - coordenação muda o placar de um jogo `finalizado` de 1x0 para 2x2 → `correcoes_jogo` ganha uma linha com o id dela, `antes.placar_casa = 1` e `depois.placar_casa = 2`, e o status continua `finalizado`;
@@ -625,13 +633,13 @@ export async function gerar(id: string, p: PortasCampeonato, o: { forma: FormaDi
 - Teste: `components/campeonatos/painel/abas.test.tsx`
 
 **Regras:**
-- **Times:** inscrever (existente ou novo, com nome e sigla), tirar a inscrição e editar o nome e a sigla só dos times com `cadastrado_por` igual ao usuário. O escudo aparece, mas não é editável.
+- **Times:** inscrever (existente ou novo, com nome e sigla), tirar a inscrição e editar o nome e a sigla só dos times em que `rpc('pode_editar_time_cadastrado', { t })` for verdadeiro (ou de qualquer time, para a coordenação). O escudo aparece, mas não é editável.
 - **Mudanças que mexem nos jogos:** uma mudança de times, forma de disputa ou regulamento, com os jogos já gerados, pede a confirmação `'Recriar os jogos que ainda não foram disputados?'`. Depois chama `gerar` com `formaMudou` conforme o tipo mudou, e mostra o `erro` (trava) ou os `avisos`.
 - **Forma de disputa e Regulamento:** reaproveitam os editores da Tarefa 17. `travada` = há algum resultado. "Salvar regulamento" grava `campeonatos.regulamento`.
 - **Dados e escudo:** nome, ano, categoria, modalidade, status e o escudo do campeonato (pelo `EnquadrarImagem` e pela rota da Tarefa 12).
 
 - [ ] **Passo 1: Escrever os testes que falham:**
-  - um time de outro `cadastrado_por` não tem o botão "Editar";
+  - um time com `pode_editar_time_cadastrado` falso não tem o botão "Editar";
   - salvar a forma de disputa com jogos já gerados pergunta e, ao confirmar, chama `/gerar` com `formaMudou: true`;
   - um `erro` de trava devolvido pela rota aparece na tela.
 - [ ] **Passo 2: Rodar e ver falhar:** `npx vitest run --maxWorkers=2 components/campeonatos/painel/abas.test.tsx`.
@@ -651,14 +659,15 @@ export async function gerar(id: string, p: PortasCampeonato, o: { forma: FormaDi
   - a chave "Visível no site" (`update visivel`);
   - o campo do endereço (`slug`), validado pela mesma regra do `slugDoNome`, com o erro `'Este endereço já é de outro campeonato.'` no `23505`;
   - "Destravar fase", uma caixa por fase com resultado, gravando em `fases_destravadas`;
-  - "Moderadores do campeonato": ligar e desligar, reaproveitando a lógica de `coord-moderadores.tsx` (insert e delete em `campeonato_moderadores`);
+  - "Moderadores do campeonato": ligar e desligar, reaproveitando a lógica de `coord-moderadores.tsx` (insert e delete em `campeonato_moderadores`). Mostra `'<n> de 3 moderadores'` e esconde o "Adicionar" ao chegar em 3; se o banco recusar, mostra a mensagem dele;
   - "Apagar campeonato", com confirmação digitando o nome.
 
 - [ ] **Passo 1: Escrever os testes que falham:**
   - a lista `'Aguardando liberação'` mostra só os escondidos;
   - ligar "Visível no site" faz `update({ visivel: true })`;
   - o slug repetido (`23505`) mostra a mensagem;
-  - "Apagar campeonato" só fica habilitado com o nome digitado igual.
+  - "Apagar campeonato" só fica habilitado com o nome digitado igual;
+  - com 3 moderadores ligados, aparece `'3 de 3 moderadores'` e não há botão "Adicionar".
 - [ ] **Passo 2: Rodar e ver falhar:** `npx vitest run --maxWorkers=2 components/campeonatos/painel/coordenacao.test.tsx`.
 - [ ] **Passo 3: Implementar.**
 - [ ] **Passo 4: Rodar e ver passar.**
