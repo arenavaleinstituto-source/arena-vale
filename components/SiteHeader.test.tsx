@@ -38,7 +38,6 @@ describe('SiteHeader', () => {
       'Modalidades',
       'Projeto Social',
       'Atletas Destaques',
-      'Galeria',
     ]);
     expect(links.map((a) => a.getAttribute('href'))).toEqual([
       '/',
@@ -49,7 +48,6 @@ describe('SiteHeader', () => {
       '/modalidades',
       '/projetosocial',
       '/atletasdestaques',
-      '/galeria',
     ]);
   });
 
@@ -88,6 +86,19 @@ describe('SiteHeader', () => {
     expect(textos).toEqual(['Início', 'Ao Vivo', 'Notícias do Vale', 'Esporte Mundial', 'Agenda', 'Modalidades', 'Projeto Social', 'Atletas Destaques', 'Galeria', 'Anuncie']);
     expect(screen.getByRole('button', { name: 'Fechar menu' })).toHaveAttribute('aria-expanded', 'true');
     expect(document.body.style.overflow).toBe('hidden');
+  });
+
+  it('Galeria fica fora da barra do topo e aparece só no menu ☰', async () => {
+    const u = userEvent.setup();
+    render(<SiteHeader />);
+    const menu = screen.getByRole('navigation', { name: 'Menu principal' });
+    expect(menu.querySelector('a[href="/galeria"]')).toBeNull();
+    await u.click(screen.getByRole('button', { name: 'Abrir menu' }));
+    const cel = screen.getByRole('navigation', { name: 'Menu do celular' });
+    const galeria = cel.querySelector('a[href="/galeria"]');
+    expect(galeria).not.toBeNull();
+    expect(galeria?.className ?? '').not.toMatch(/tambem-no-topo/);
+    expect(cel.querySelector('a[href="/agenda"]')?.className).toMatch(/tambem-no-topo/);
   });
 
   it('celular: tocar numa página, no X ou apertar Esc fecha o menu', async () => {

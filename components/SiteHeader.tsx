@@ -14,24 +14,28 @@ function itemAtivo(href: string, pathname: string, aba: string | null): boolean 
   return pathname === caminho || pathname.startsWith(`${caminho}/`);
 }
 
-type PropsMenu = { pathname: string; aoEscolher?: () => void };
+/** `noTopo`: barra do topo (sem os itens do ☰). Sem ele: menu ☰, com todos os itens. */
+type PropsMenu = { pathname: string; aoEscolher?: () => void; noTopo?: boolean };
 
-function MenuPrincipal({ pathname, aoEscolher }: PropsMenu) {
+function MenuPrincipal({ pathname, aoEscolher, noTopo }: PropsMenu) {
   const params = useSearchParams();
   const aba = params?.get('aba') ?? null;
-  return <ItensMenu pathname={pathname} aba={aba} aoEscolher={aoEscolher} />;
+  return <ItensMenu pathname={pathname} aba={aba} aoEscolher={aoEscolher} noTopo={noTopo} />;
 }
 
-function ItensMenu({ pathname, aba, aoEscolher }: PropsMenu & { aba: string | null }) {
+function ItensMenu({ pathname, aba, aoEscolher, noTopo }: PropsMenu & { aba: string | null }) {
+  const itens = noTopo ? MENU_PRINCIPAL.filter((i) => !i.soNoHamburguer) : MENU_PRINCIPAL;
   return (
     <>
-      {MENU_PRINCIPAL.map((item) => {
+      {itens.map((item) => {
         const ativo = itemAtivo(item.href, pathname, aba);
+        // No ☰ do computador só aparecem os itens que não estão na barra do topo.
+        const tambemNoTopo = !noTopo && !item.soNoHamburguer;
         return (
           <Link
             key={item.href}
             href={item.href}
-            className={[item.vivo ? 'vivo' : '', ativo ? 'on' : ''].join(' ').trim() || undefined}
+            className={[item.vivo ? 'vivo' : '', ativo ? 'on' : '', tambemNoTopo ? 'tambem-no-topo' : ''].join(' ').trim() || undefined}
             aria-current={ativo ? 'page' : undefined}
             onClick={aoEscolher}
           >
@@ -45,8 +49,9 @@ function ItensMenu({ pathname, aba, aoEscolher }: PropsMenu & { aba: string | nu
 
 /**
  * Cabeçalho único do site, preso no topo (spec Fase 3, seção 4): logo à esquerda,
- * menu no meio, Anuncie + Entrar à direita, tudo numa linha. No celular (até 760px)
- * o menu vira o botão ☰, que abre a lista de páginas logo abaixo do cabeçalho. Nenhum ancestral pode ter `overflow: hidden/auto`, senão o
+ * menu no meio, Anuncie + Entrar + ☰ à direita, tudo numa linha. No computador o ☰ abre
+ * só os itens que não estão na barra (ex.: Galeria). No celular (até 760px) a barra some
+ * e o ☰ abre a lista com todas as páginas logo abaixo do cabeçalho. Nenhum ancestral pode ter `overflow: hidden/auto`, senão o
  * sticky para de funcionar — use `overflow-x-clip`.
  */
 function IconeMenu({ aberto }: { aberto: boolean }) {
@@ -89,8 +94,8 @@ export function SiteHeader() {
       <div className="dentro">
         <LogoSecreto className="logo-topo" imgClassName="logo-topo-img" />
         <nav className="menu" aria-label="Menu principal">
-          <Suspense fallback={<ItensMenu pathname={pathname} aba={null} />}>
-            <MenuPrincipal pathname={pathname} />
+          <Suspense fallback={<ItensMenu pathname={pathname} aba={null} noTopo />}>
+            <MenuPrincipal pathname={pathname} noTopo />
           </Suspense>
         </nav>
         <Link href="/patrocinio" className="anuncie">

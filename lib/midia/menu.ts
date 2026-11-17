@@ -1,5 +1,8 @@
-/** Menu principal do site (spec Fase 3, seção 4). */
-export const MENU_PRINCIPAL: { rotulo: string; href: string; vivo?: boolean }[] = [
+/**
+ * Menu principal do site (spec Fase 3, seção 4). Itens com `soNoHamburguer` ficam fora
+ * da barra do topo e aparecem só no menu ☰ (no computador e no celular).
+ */
+export const MENU_PRINCIPAL: { rotulo: string; href: string; vivo?: boolean; soNoHamburguer?: boolean }[] = [
   { rotulo: 'Início', href: '/' },
   { rotulo: 'Ao Vivo', href: '/ao-vivo', vivo: true },
   { rotulo: 'Notícias do Vale', href: '/noticias' },
@@ -8,7 +11,7 @@ export const MENU_PRINCIPAL: { rotulo: string; href: string; vivo?: boolean }[] 
   { rotulo: 'Modalidades', href: '/modalidades' },
   { rotulo: 'Projeto Social', href: '/projetosocial' },
   { rotulo: 'Atletas Destaques', href: '/atletasdestaques' },
-  { rotulo: 'Galeria', href: '/galeria' },
+  { rotulo: 'Galeria', href: '/galeria', soNoHamburguer: true },
 ];
 
 /** Opções do botão "Entrar". O rótulo é só visual: o destino vem do cargo no banco. */
