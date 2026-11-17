@@ -37,7 +37,8 @@ As entregas 2 e 3 estão descritas aqui no nível de produto, com as regras que 
 - **Súmula pelo delegado** (entrega 2): gols com o autor, cartões amarelos e vermelhos com o jogador, goleiro que jogou, troca de goleiro e gols sofridos por cada goleiro. No site, ao clicar num jogo, aparece "Súmula do jogo".
 - **Estatísticas** (entrega 3): artilharia e goleiro menos vazado automáticos; **suspensão automática** por cartões, com o jogador **bloqueado na súmula seguinte**; atletas destaques como opção em cada campeonato.
 - **Construção em três entregas**, cada uma publicada e funcionando (caminho 2).
-- **Elenco por campeonato:** cada time monta um elenco para cada campeonato (§4.6).
+- **Elenco por campeonato:** cada time monta um elenco para cada campeonato (§4.6). O mesmo CPF não entra em dois times do mesmo campeonato; vale quem inscreveu primeiro.
+- **Escudo do time:** o site ajuda a enviar e enquadrar o escudo que o time já tem, ou a montar um escudo novo. **Só o capitão troca** (§4.6a).
 - **Campeonato novo nasce escondido** e só aparece no site quando a coordenação liberar.
 
 ## 3. Caminhos considerados
@@ -194,7 +195,7 @@ CAMPEONATOS
 
 **Moderador (`/moderador`)** passa a ser "Meus campeonatos":
 - lista dos campeonatos dele e o botão **Novo campeonato**. O campeonato nasce **escondido** e aparece com o selo "Aguardando liberação da ARENA VALE" até a coordenação liberar. Enquanto isso, o moderador monta tudo e gera os jogos normalmente, e pode ver a página como o público vai ver ("pré-visualizar");
-- criação em passos: **1** nome, modalidade, ano, categoria e escudo → **2** times (escolher existentes ou cadastrar: nome, sigla, escudo) → **3** forma de disputa → **4** regulamento → **5** revisar e **gerar os jogos** (mostra a lista de jogos antes de confirmar);
+- criação em passos: **1** nome, modalidade, ano, categoria e escudo do campeonato → **2** times (escolher existentes ou cadastrar: nome e sigla; o escudo do time é sempre do capitão, §4.6a) → **3** forma de disputa → **4** regulamento → **5** revisar e **gerar os jogos** (mostra a lista de jogos antes de confirmar);
 - dentro de um campeonato: abas **Jogos** (datas, local, resultados, W.O., pênaltis, ajuste manual de vagas, registro de sorteio), **Times**, **Forma de disputa**, **Regulamento**, **Dados e escudo**;
 - o lançamento de resultados que existe hoje (`ResultadosCampeonato`) é reaproveitado dentro da aba Jogos.
 
@@ -207,16 +208,17 @@ CAMPEONATOS
 ### 4.6 Dados e permissões
 
 **Mudanças no banco** (migração `0023_campeonatos.sql`, idempotente, aplicada à mão no banco TESTES e no oficial):
-- `campeonatos`: `slug` (único), `regulamento jsonb`, `visivel boolean default false` (campeonato novo nasce **escondido**, decisão do dono; a migração marca os que já existem como visíveis), `modalidade` já existe, `logo_url` já existe (passa a ser o escudo), `ordem_sorteio jsonb` (desempates por sorteio registrados), `formato_travado boolean`;
+- `campeonatos`: `slug` (único), `regulamento jsonb`, `visivel boolean default false` (campeonato novo nasce **escondido**, decisão do dono; a migração marca os que já existem como visíveis), `modalidade` já existe, `logo_url` já existe (passa a ser o escudo), `ordem_sorteio jsonb` (desempates por sorteio registrados), `fases_destravadas text[]` (fases já começadas que a coordenação destravou; a trava em si é calculada pelos resultados);
 - `jogos`:
   - `time_casa_id` e `time_visitante_id` passam a aceitar vazio (vaga ainda não decidida) e `data` também (jogo "a definir"); a regra "casa diferente de visitante" continua valendo quando os dois existem;
   - novos: `grupo text`, `ordem int` (número do jogo na chave), `vaga_casa jsonb` e `vaga_visitante jsonb` (de onde vem o time: grupo/posição, vencedor ou perdedor de outro jogo, melhor colocado extra), `vaga_manual boolean`, `jogo_volta_de uuid` (liga ida e volta), `penaltis_casa int`, `penaltis_visitante int`, `wo text` (`casa` | `visitante` | vazio), `parciais jsonb` (pontos de cada set);
 - **elenco por campeonato** (decisão do dono): nova tabela `inscricao_atletas` (`inscricao_id`, `jogador_id`, número da camisa e posição naquele campeonato), ligando a pessoa (`jogadores`, CPF único) ao time **naquele campeonato**:
-  - o mesmo atleta não pode estar em dois times do mesmo campeonato;
+  - o mesmo atleta não pode estar em dois times do mesmo campeonato. O controle é **pelo CPF** (decisão do dono): como cada CPF é uma única pessoa em `jogadores`, a tabela guarda também o `campeonato_id` e tem uma regra única (`campeonato_id`, `jogador_id`) no banco, que vale mesmo se dois times salvarem ao mesmo tempo;
+  - **vale quem inscreveu primeiro** (decisão do dono): se outro time tentar inscrever o mesmo CPF, o site recusa com o aviso "Este atleta já está inscrito neste campeonato pelo time X". Só o moderador do campeonato ou a coordenação pode tirar o atleta do primeiro time, e aí ele fica livre para o outro;
   - pode estar em times diferentes em campeonatos diferentes;
   - `jogadores.time_id` continua existindo como "time atual", mas súmula, artilharia e suspensões (entregas 2 e 3) usam só o elenco do campeonato;
   - quem monta o elenco: o capitão do time naquele campeonato (o vínculo `time_capitaes.campeonato_id` já existe), o moderador do campeonato e a coordenação. Há um botão "copiar elenco de outro campeonato do mesmo time";
-  - inscrições que já existem: o elenco é preenchido com os jogadores atuais do time (`jogadores.time_id`);
+  - inscrições que já existem: o elenco é preenchido com os jogadores atuais do time (`jogadores.time_id`). Se o mesmo CPF aparecer em dois times do mesmo campeonato, fica no time inscrito primeiro (`inscricoes.submitted_at`), e a migração lista os casos para a coordenação conferir;
   - a tela do capitão (`/capitao`, `MinhaEquipe`) passa a editar o elenco do campeonato ao qual ele está ligado;
 - bucket `campeonatos` (leitura pública) para os escudos; escudo tratado no servidor com `sharp` (quadrado, 512 px, fundo transparente preservado), como a galeria já faz;
 - campeonatos que já existem (*minha decisão*):
@@ -235,7 +237,36 @@ CAMPEONATOS
 - a geração e o recálculo das vagas rodam no servidor (rota ou ação do servidor que confere o cargo antes), nunca confiando no navegador;
 - leitura pública: só campeonatos `visivel = true` (e os jogos deles) aparecem nas páginas públicas; a equipe vê todos.
 
-**Testes de permissão** (`npm run test:db`): moderador A não lê o rascunho nem edita o campeonato de B; moderador não muda `delegado_id` nem `visivel`; público não vê campeonato escondido.
+**Testes de permissão** (`npm run test:db`): moderador A não lê o rascunho nem edita o campeonato de B; moderador não muda `delegado_id` nem `visivel`; público não vê campeonato escondido; o mesmo CPF não entra em dois times do mesmo campeonato (o segundo é recusado, o primeiro continua) e entra normalmente em outro campeonato.
+
+### 4.6a Escudo do time
+
+Cada time tem o seu escudo, mostrado na classificação, na chave, nos jogos, na agenda e na página do time. O site ajuda a fazer a imagem de dois jeitos (decisão do dono: os dois):
+
+**1. Enviar o escudo que o time já tem**
+- o capitão sobe a foto ou o arquivo (JPG, PNG ou WEBP);
+- uma tela de enquadramento: recortar em quadrado, aproximar/afastar e arrastar para centralizar, com uma prévia ao vivo de como fica na tabela (pequeno) e no cartão (grande);
+- o servidor padroniza com `sharp`: quadrado, 512 px, fundo transparente preservado, no bucket `campeonatos` (pasta dos times).
+
+**2. Montar um escudo no site** (para quem não tem)
+```
+FORMATO   [🛡 clássico] [⬤ redondo] [◆ losango] [⬟ moderno]
+CORES     principal [■]   secundária [■]
+TEXTO     sigla (até 4 letras) ou iniciais
+DETALHE   [nenhum] [faixa] [listras] [estrela]
+          ┌────────┐
+ prévia → │ ESCUDO │  [Usar este escudo]
+          └────────┘
+```
+- desenhado no navegador como imagem (SVG convertido em PNG) e guardado igual ao enviado;
+- a cor principal também passa a ser a `escudo_cor` do time, usada nas faixas da tabela.
+
+**Regras**
+- **só o capitão do time troca o escudo** (decisão do dono). Moderador e coordenação veem, mas não mudam. Qualquer capitão ligado àquele time (em qualquer campeonato) pode trocar, porque o escudo é do time, não do campeonato (*minha decisão*);
+- time sem escudo (ex.: cadastrado pelo moderador e ainda sem capitão) aparece com um escudo padrão desenhado sozinho com a sigla e a `escudo_cor`, nunca com espaço vazio;
+- a troca vale na hora em todos os campeonatos do time;
+- no banco: o `times.escudo_url` já existe; uma função `security definer` `trocar_escudo_time(time, url)` confere que quem chama é capitão daquele time. O envio da imagem passa por uma rota no servidor que confere o mesmo antes de guardar. A política de `times` impede o moderador e a coordenação de mudar `escudo_url` diretamente;
+- teste de permissão: capitão troca o escudo do próprio time; capitão de outro time, moderador e coordenação não conseguem.
 
 ### 4.7 Testes da lógica (funções puras)
 
@@ -297,4 +328,5 @@ CAMPEONATOS
 - o formato exato do JSON do regulamento e das vagas (com campo de versão);
 - se o recálculo das vagas roda numa ação do servidor ou numa rota de API;
 - o desenho da chave no computador e no celular, dentro do `DESIGN.md`;
-- o escudo padrão para campeonato sem foto.
+- o escudo padrão para campeonato sem foto;
+- o desenho exato dos formatos e detalhes do montador de escudo, dentro do `DESIGN.md`.
