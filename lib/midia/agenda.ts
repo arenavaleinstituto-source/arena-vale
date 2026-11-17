@@ -19,8 +19,9 @@ export type ItemAgenda = {
   dataHora: string;
   local: string | null;
   transmissao: boolean;
-  /** "Casa 3 x 1 Fora", só de jogo finalizado. */
+  /** "Casa 3 x 1 Fora", só de jogo finalizado ou ao vivo. */
   placar?: string | null;
+  status?: string | null;
 };
 
 type Nome = { nome?: string | null } | null | undefined;
@@ -80,8 +81,9 @@ export function deJogos(row: LinhaJogo): ItemAgenda {
     dataHora: comFusoBrasilia(row.data),
     local: corrigirLocal(row.local),
     transmissao: (row.transmissoes?.length ?? 0) > 0,
+    status: row.status ?? null,
     placar:
-      row.status === 'finalizado' && row.placar_casa != null && row.placar_visitante != null
+      (row.status === 'finalizado' || row.status === 'ao_vivo') && row.placar_casa != null && row.placar_visitante != null
         ? `${row.casa?.nome ?? 'A definir'} ${row.placar_casa} x ${row.placar_visitante} ${row.fora?.nome ?? 'A definir'}`
         : null,
   };

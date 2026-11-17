@@ -434,3 +434,8 @@
 .topo-album .placar-album { font-family: var(--display); font-weight: 800; text-transform: uppercase; font-size: clamp(22px, 4vw, 34px); color: var(--amarelo); max-width: none; }
 .topo-album .descricao-album { font-size: 16px; color: #b9b9c2; }
 .topo-album .credito-album { font-family: var(--rotulo); font-weight: 700; letter-spacing: .1em; text-transform: uppercase; font-size: 13px; color: var(--cinza); }
+
+/* Mesa do Jogo: badge AO VIVO na agenda da home */
+.ao-vivo-placar { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
+.badge-ao-vivo { font-size: 11px; font-weight: 800; letter-spacing: .05em; color: #e50914; }
+.placar-ao-vivo { font-family: var(--display); font-weight: 900; font-size: 15px; }

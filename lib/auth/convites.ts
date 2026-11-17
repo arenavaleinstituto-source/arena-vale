@@ -2,7 +2,7 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Cargo } from './rotas';
 import { ROTULO_CARGO } from './mensagens';
 
-export type CargoConvite = 'coordenador' | 'moderador' | 'capitao';
+export type CargoConvite = 'coordenador' | 'moderador' | 'capitao' | 'delegado';
 export type EntradaConvite = { email: string; cargo: CargoConvite; campeonatoId?: string | null; senha?: string | null; nome?: string | null };
 export type ResultadoConvite =
   | { ok: true; jaTinhaConta: boolean }
@@ -36,7 +36,7 @@ export async function convidar(entrada: EntradaConvite, deps: Deps): Promise<Res
   const email = entrada.email.trim().toLowerCase();
   if (!EMAIL.test(email)) return { ok: false, status: 400, erro: 'E-mail inválido.' };
   const campeonatoId = entrada.campeonatoId ?? null;
-  if (entrada.cargo !== 'coordenador' && !campeonatoId) return { ok: false, status: 400, erro: 'Escolha o campeonato.' };
+  if (entrada.cargo !== 'coordenador' && entrada.cargo !== 'delegado' && !campeonatoId) return { ok: false, status: 400, erro: 'Escolha o campeonato.' };
   const senha = entrada.senha ?? null;
   if (senha !== null && senha.length < 8) return { ok: false, status: 400, erro: 'A senha precisa ter pelo menos 8 caracteres.' };
   const nome = (entrada.nome ?? '').trim().replace(/\s+/g, ' ').slice(0, 120);
@@ -58,8 +58,8 @@ export async function convidar(entrada: EntradaConvite, deps: Deps): Promise<Res
     const erroCargo = await deps.definirCargo(id, entrada.cargo);
     if (erroCargo) return { ok: false, status: 400, erro: erroCargo };
   }
-  if (entrada.cargo !== 'coordenador') {
-    const erroVinculo = await deps.vincular(entrada.cargo, id, campeonatoId!);
+  if (entrada.cargo !== 'coordenador' && entrada.cargo !== 'delegado') {
+    const erroVinculo = await deps.vincular(entrada.cargo as 'moderador' | 'capitao', id, campeonatoId!);
     if (erroVinculo) return { ok: false, status: 400, erro: erroVinculo };
   }
   return { ok: true, jaTinhaConta: Boolean(existente) };

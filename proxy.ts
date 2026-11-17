@@ -53,5 +53,6 @@ export const config = {
     '/proprietario/:path*',
     '/moderador/:path*',
     '/capitao/:path*',
+    '/delegado/:path*',
   ],
 };
