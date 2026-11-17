@@ -201,7 +201,7 @@ CAMPEONATOS
 
 **Coordenação (painel, aba Campeonatos):**
 - as mesmas telas do moderador, para **todos** os campeonatos;
-- **corrigir a súmula depois que o jogo acabou** (decisão do dono, para erros do delegado): em jogo já finalizado, a coordenação abre "Corrigir súmula" e muda placar, pênaltis/set de ouro e W.O.; o jogo continua finalizado, o delegado não volta a ter acesso, o site registra quem corrigiu, quando e o que mudou (visível **só para a coordenação**, decisão do dono; o público e o moderador não veem que houve correção), e o recálculo das vagas roda na hora (com o mesmo aviso se a correção mudar o classificado de um jogo já disputado). Na entrega 2, a mesma tela corrige também gols com autor, cartões e goleiros (§5);
+- **corrigir a súmula depois que o jogo acabou** (decisão do dono, para erros do delegado): em jogo já finalizado, a coordenação (em qualquer campeonato) e o moderador (só nos campeonatos dele, decisão do dono) abrem "Corrigir súmula" e muda placar, pênaltis/set de ouro e W.O.; o jogo continua finalizado, o delegado não volta a ter acesso, o site registra quem corrigiu, quando e o que mudou (visível **só para a coordenação**, decisão do dono; o público e o moderador não veem que houve correção), e o recálculo das vagas roda na hora (com o mesmo aviso se a correção mudar o classificado de um jogo já disputado). Na entrega 2, a mesma tela corrige também gols com autor, cartões e goleiros (§5);
 - a mais: **visível no site** (liga/desliga), com uma lista "Aguardando liberação" no topo da aba, **ligar/desligar moderadores** ao campeonato, destravar a forma de disputa, editar o endereço (`slug`), escolher o **delegado** de cada jogo (continua só da coordenação).
 
 **Delegado:** sem mudança nesta entrega. A Mesa do Jogo continua com +GOL/-GOL; nos campeonatos de sets, o resultado é lançado pelo moderador.
@@ -287,7 +287,7 @@ DETALHE   [nenhum] [faixa] [listras] [estrela]
   - lança **cartão amarelo** e **cartão vermelho** com o jogador e o minuto;
   - lança **troca de goleiro**: quem saiu, quem entrou, minuto;
   - confere e **finaliza**. Ao finalizar, o delegado perde o acesso, como hoje.
-- **Correção pela coordenação depois do jogo** (decisão do dono): a coordenação corrige qualquer lançamento do delegado num jogo finalizado: incluir, apagar ou mudar gol (autor, minuto, gol contra), cartão, goleiro titular e troca de goleiro. Cada correção fica registrada (quem, quando, o que era e o que ficou), e esse registro só aparece para a coordenação; a súmula pública mostra apenas a versão corrigida, sem aviso. Artilharia, goleiro menos vazado e suspensões (entrega 3) são recalculados a partir da súmula corrigida.
+- **Correção depois do jogo** (decisão do dono): a coordenação, e o moderador nos campeonatos dele, corrigem qualquer lançamento do delegado num jogo finalizado: incluir, apagar ou mudar gol (autor, minuto, gol contra), cartão, goleiro titular e troca de goleiro. Cada correção fica registrada (quem, quando, o que era e o que ficou), e esse registro só aparece para a coordenação; a súmula pública mostra apenas a versão corrigida, sem aviso. Artilharia, goleiro menos vazado e suspensões (entrega 3) são recalculados a partir da súmula corrigida.
 - **Gols sofridos por goleiro:** calculados pelo minuto de cada gol em relação às trocas.
 - Público: ao clicar num jogo, botão **"Súmula do jogo"**, abrindo a súmula (a página `/sumula/[id]` já existe e ganha essas informações).
 - Gols já lançados antes desta entrega, sem o autor, contam no placar mas não na artilharia.

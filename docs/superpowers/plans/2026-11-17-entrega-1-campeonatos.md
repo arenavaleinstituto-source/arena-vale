@@ -358,6 +358,7 @@ export function rotuloDaVaga(v: Vaga, jogosPorOrdem: Map<number, { fase: string 
 - moderador não muda `visivel` (erro `Só a ARENA VALE muda isso.`) nem o `delegado_id` de um jogo;
 - moderador muda `data` e `local` de um jogo do seu campeonato;
 - coordenação muda o placar de um jogo `finalizado` de 1x0 para 2x2 → `correcoes_jogo` ganha uma linha com o id dela, `antes.placar_casa = 1` e `depois.placar_casa = 2`, e o status continua `finalizado`;
+- moderador corrige o placar de um jogo `finalizado` do seu campeonato → a correção é gravada e `correcoes_jogo` ganha a linha com o id dele; num jogo finalizado de outro campeonato, o update não tem efeito;
 - **só a coordenação lê a correção:** o visitante, o moderador do campeonato e o delegado recebem lista vazia ao ler `correcoes_jogo`;
 - o delegado do jogo, já rebaixado, não consegue mudar o placar;
 - visitante não lê o campeonato escondido nem os jogos dele (**ponto de atenção 4**);
@@ -599,7 +600,7 @@ export async function gerar(id: string, p: PortasCampeonato, o: { forma: FormaDi
     - **registrar sorteio:** para cada empate pendente, ordenar os times e salvar em `campeonatos.ordem_sorteio[chave]`;
     - **recálculo:** depois de cada gravação, chama o recálculo e mostra os `avisos` devolvidos;
     - **delegado:** só a coordenação vê e escolhe o delegado de cada jogo (reaproveitar a lista de `coord-jogos.tsx`);
-    - **corrigir súmula** (só com `ehCoordenacao`, só em jogo `finalizado`):
+    - **corrigir súmula** (coordenação e moderador do campeonato, só em jogo `finalizado`; o registro de quem corrigiu continua só para a coordenação):
       - o botão "Corrigir súmula" abre o `FormResultado` com placar, pênaltis/set de ouro e W.O. já preenchidos, e o aviso `'Correção de jogo encerrado: o delegado não volta a ter acesso.'`;
       - salvar não mexe no `status` e chama o recálculo, mostrando os avisos;
       - só para a coordenação, o jogo corrigido mostra `'Corrigido em dd/mm às hh:mm'`, com a última linha de `correcoes_jogo` (carregada só quando `ehCoordenacao`). Ao tocar, abre o histórico (quem, quando, antes → depois). Nenhuma tela pública nem do moderador lê essa tabela.
@@ -609,7 +610,7 @@ export async function gerar(id: string, p: PortasCampeonato, o: { forma: FormaDi
   - "Aplicar esta data à rodada inteira" faz o `update` com `.eq('campeonato_id', 'c1').eq('rodada', 2)`;
   - marcar W.O. do visitante num jogo de gols grava `wo: 'visitante'`, `placar_casa: 3`, `placar_visitante: 0` e `status: 'finalizado'`;
   - o moderador (`ehCoordenacao` falso) não vê o seletor de delegado;
-  - a coordenação, num jogo finalizado, clica em "Corrigir súmula", muda o placar para 2x2 e salva: o `update` não traz `status` e o recálculo é chamado; o moderador não vê o botão;
+  - a coordenação, num jogo finalizado, clica em "Corrigir súmula", muda o placar para 2x2 e salva: o `update` não traz `status` e o recálculo é chamado; o moderador (`ehCoordenacao` falso) também vê o botão e corrige do mesmo jeito;
   - a coordenação vê `'Corrigido em 17/11 às 21:30'` num jogo com correção; o moderador, no mesmo jogo, não vê o texto e o componente nem consulta `correcoes_jogo`.
 - [ ] **Passo 2: Rodar e ver falhar:** `npx vitest run --maxWorkers=2 components/campeonatos/painel/jogos.test.tsx components/moderador`.
 - [ ] **Passo 3: Implementar.**
