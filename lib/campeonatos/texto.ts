@@ -12,7 +12,7 @@ type Secao = { titulo: string; paragrafos: string[] };
 
 const pontos = (n: number) => `${n} ${n === 1 ? 'ponto' : 'pontos'}`;
 
-function fraseCriterio(c: Criterio, u: string): string {
+export function fraseCriterio(c: Criterio, u: string): string {
   switch (c) {
     case 'vitorias': return 'mais vitórias';
     case 'saldo': return `melhor saldo de ${u}`;
