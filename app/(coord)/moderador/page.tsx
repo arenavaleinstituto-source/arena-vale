@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase/server';
 import { lerCargo } from '@/lib/auth/cargo';
 import { CabecalhoEquipe } from '@/components/painel/CabecalhoEquipe';
 import { MeusCampeonatos, type CampeonatoDaLista } from '@/components/campeonatos/painel/MeusCampeonatos';
-import { ResultadosCampeonato, type CampeonatoDoModerador, type JogoDoModerador, type LinhaClassificacao } from '@/components/moderador/ResultadosCampeonato';
+import { GerenciarCampeonato } from '@/components/campeonatos/painel/GerenciarCampeonato';
 
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Meus campeonatos | ARENA VALE', robots: { index: false, follow: false } };
@@ -31,29 +31,16 @@ export default async function ModeradorPage({ searchParams }: Props) {
   const aberto = (await searchParams).campeonato;
   const escolhido = aberto ? lista.find((c) => c.id === aberto) : undefined;
 
-  let resultados: CampeonatoDoModerador | null = null;
-  if (escolhido) {
-    const [{ data: jogos }, { data: tabela }] = await Promise.all([
-      supabase
-        .from('jogos')
-        .select('id, data, local, status, placar_casa, placar_visitante, placar_casa_1t, placar_visitante_1t, casa:times!jogos_time_casa_id_fkey(id, nome), fora:times!jogos_time_visitante_id_fkey(id, nome)')
-        .eq('campeonato_id', escolhido.id)
-        .order('ordem', { ascending: true, nullsFirst: false }),
-      supabase.from('v_classificacao').select('*').eq('campeonato_id', escolhido.id).order('pontos', { ascending: false }),
-    ]);
-    resultados = { id: escolhido.id, nome: escolhido.nome, jogos: (jogos ?? []) as unknown as JogoDoModerador[], classificacao: (tabela ?? []) as LinhaClassificacao[] };
-  }
-
   return (
     <>
       <CabecalhoEquipe titulo="Meus campeonatos" subtitulo="Moderação de campeonatos" />
       <main className="mx-auto grid w-full max-w-6xl gap-5 px-5 py-8">
-        {escolhido && resultados ? (
+        {escolhido ? (
           <>
             <Link href="/moderador" className="btn-leve w-fit">
               ← Meus campeonatos
             </Link>
-            <ResultadosCampeonato campeonatos={[resultados]} />
+            <GerenciarCampeonato id={escolhido.id} ehCoordenacao={cargo === 'coordenador'} />
           </>
         ) : (
           <MeusCampeonatos campeonatos={lista} ehCoordenacao={cargo === 'coordenador'} />
