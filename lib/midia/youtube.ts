@@ -92,9 +92,43 @@ export async function buscarListaYT(playlistId: string, limite: number, f: typeo
   }
 }
 
-/** Cortes (Shorts) do canal, mais novos primeiro. */
+function parsearDuracao(iso: string): number {
+  const m = iso.match(/^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/);
+  if (!m) return 0;
+  return Number(m[1] ?? 0) * 3600 + Number(m[2] ?? 0) * 60 + Number(m[3] ?? 0);
+}
+
+async function buscarDuracoes(ids: string[], chave: string, f: typeof fetch): Promise<Map<string, number>> {
+  if (ids.length === 0) return new Map();
+  try {
+    const url =
+      `https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${ids.join(',')}` +
+      `&key=${encodeURIComponent(chave)}`;
+    const r = await (f as FetchComCache)(url, { next: { revalidate: 1800 }, signal: AbortSignal.timeout(4000) });
+    if (!r.ok) return new Map();
+    const json = (await r.json()) as { items?: Array<{ id: string; contentDetails?: { duration?: string } }> };
+    const mapa = new Map<string, number>();
+    for (const item of json.items ?? []) {
+      if (item.contentDetails?.duration) mapa.set(item.id, parsearDuracao(item.contentDetails.duration));
+    }
+    return mapa;
+  } catch {
+    return new Map();
+  }
+}
+
+/** Cortes (Shorts) do canal — filtra vídeos com duração acima de 3 min (não são Shorts). */
 export async function buscarCortesYT(channelId: string, limite = 12, f: typeof fetch = fetch): Promise<VideoYT[]> {
-  return buscarListaYT(playlistsDoCanal(channelId).shorts, limite, f);
+  const chave = process.env.YOUTUBE_API_KEY;
+  if (!chave) return [];
+  const candidatos = await buscarListaYT(playlistsDoCanal(channelId).shorts, limite + 8, f);
+  const duracoes = await buscarDuracoes(candidatos.map((v) => v.id), chave, f);
+  return candidatos
+    .filter((v) => {
+      const dur = duracoes.get(v.id);
+      return dur === undefined || dur <= 180;
+    })
+    .slice(0, limite);
 }
 
 /** Últimos vídeos: com chave, vídeos + lives pela API; sem chave, o RSS público. */
