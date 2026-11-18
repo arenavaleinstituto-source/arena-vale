@@ -45,7 +45,7 @@ Outras variáveis (cadastradas na Vercel; no computador, em `.env.local`):
 
 ## Banco de dados
 
-As migrações ficam em `supabase/migrations/` (`0001` a `0019`) e devem ser aplicadas em ordem. Há duas formas:
+As migrações ficam em `supabase/migrations/` (`0001` a `0023`) e devem ser aplicadas em ordem. Há duas formas:
 
 **A) Pelo terminal (Supabase CLI)**
 ```bash
