@@ -98,3 +98,15 @@ describe('regulamentoEmTexto', () => {
     expect(titulos({ ...r, regras_adicionais: '   ' })).not.toContain('Regras adicionais');
   });
 });
+
+describe('regulamento em texto com ida e volta por fase', () => {
+  it('diz quais fases são em ida e volta', () => {
+    const r = regulamentoPadrao('gols', { tipo: 'mata_mata', mata: { ...mata, ida_volta_fases: ['Semifinal', 'Final'] } });
+    const texto = JSON.stringify(regulamentoEmTexto(r, 'Futsal'));
+    expect(texto).toContain('Em ida e volta: Semifinal e Final. As demais fases são em jogo único.');
+  });
+  it('nenhuma fase marcada: tudo em jogo único', () => {
+    const r = regulamentoPadrao('gols', { tipo: 'mata_mata', mata: { ...mata, ida_volta_fases: [] } });
+    expect(JSON.stringify(regulamentoEmTexto(r, 'Futsal'))).toContain('Todas as fases são em jogo único.');
+  });
+});

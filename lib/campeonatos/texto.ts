@@ -1,5 +1,6 @@
 import { slugDoNome } from '@/lib/midia/modalidades';
 import type { Criterio, OpcoesMataMata, Pontuacao, Regulamento, TipoPlacar } from './tipos';
+import { fasesEmIdaEVolta } from './chave';
 
 export function slugCampeonato(nome: string, ano: number): string {
   const slug = slugDoNome(nome);
@@ -32,6 +33,7 @@ function formaDisputa(r: Regulamento, modalidade: string): string {
     return f.final_entre ? `${base} Os ${f.final_entre} primeiros colocados disputam a fase final.` : base;
   }
   if (f.tipo === 'mata_mata') {
+    if (f.mata.ida_volta_fases) return `O campeonato de ${modalidade} é disputado em mata-mata.`;
     return `O campeonato de ${modalidade} é disputado em mata-mata, em ${f.mata.ida_volta ? 'ida e volta' : 'jogo único'}.`;
   }
   const extras = f.melhores_extras > 0
@@ -59,9 +61,13 @@ function textoPontuacao(p: Pontuacao): string[] {
 
 function textoMata(m: OpcoesMataMata, t: TipoPlacar): string[] {
   const out: string[] = [];
-  const idaVolta = m.ida_volta
-    ? `As fases são em ida e volta${m.final_ida_volta ? ', inclusive a final' : ', exceto a final, que é em jogo único'}.`
-    : `As fases são em jogo único${m.final_ida_volta ? ', exceto a final, que é em ida e volta' : ''}.`;
+  const fases = fasesEmIdaEVolta(m);
+  const lista = fases.length > 1 ? `${fases.slice(0, -1).join(', ')} e ${fases[fases.length - 1]}` : fases[0];
+  const idaVolta = m.ida_volta_fases
+    ? fases.length ? `Em ida e volta: ${lista}. As demais fases são em jogo único.` : 'Todas as fases são em jogo único.'
+    : m.ida_volta
+      ? `As fases são em ida e volta${m.final_ida_volta ? ', inclusive a final' : ', exceto a final, que é em jogo único'}.`
+      : `As fases são em jogo único${m.final_ida_volta ? ', exceto a final, que é em ida e volta' : ''}.`;
   out.push(idaVolta);
   out.push(m.terceiro_lugar ? 'Haverá disputa de 3º lugar.' : 'Não haverá disputa de 3º lugar.');
   if (t === 'sets') {
@@ -70,7 +76,7 @@ function textoMata(m: OpcoesMataMata, t: TipoPlacar): string[] {
     const d = m.desempate;
     const regras: string[] = [];
     if (d.prorrogacao) regras.push('prorrogação');
-    if (d.gol_fora && m.ida_volta) regras.push('gol fora de casa como critério');
+    if (d.gol_fora && fases.length > 0) regras.push('gol fora de casa como critério');
     regras.push(d.final === 'penaltis' ? 'pênaltis' : 'melhor campanha');
     out.push(`Em caso de empate, a decisão segue esta ordem: ${regras.join(', depois ')}.`);
   }

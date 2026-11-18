@@ -43,6 +43,17 @@ describe('EditorFormaDisputa', () => {
     expect(screen.getByRole('option', { name: 'Passa quem teve melhor campanha' })).toBeInTheDocument();
   });
 
+  it('cada fase do mata-mata escolhe jogo único ou ida e volta', async () => {
+    const onChange = vi.fn();
+    const semIdaVolta = { ...MATA, ida_volta: false, final_ida_volta: false };
+    render(<EditorFormaDisputa valor={{ tipo: 'mata_mata', mata: semIdaVolta }} tipoPlacar="gols" travada={false} temCampanha onChange={onChange} />);
+    expect(screen.getByLabelText('Final')).toHaveValue('unico');
+    expect(screen.getByLabelText('Oitavas de final')).toBeInTheDocument();
+    expect(screen.queryByText('Ida e volta no mata-mata')).toBeNull();
+    await userEvent.setup().selectOptions(screen.getByLabelText('Semifinal'), 'ida_volta');
+    expect(onChange).toHaveBeenLastCalledWith({ tipo: 'mata_mata', mata: { ...semIdaVolta, ida_volta_fases: ['Semifinal'] } });
+  });
+
   it('mata-mata direto não oferece "melhor campanha"', () => {
     render(<EditorFormaDisputa valor={{ tipo: 'mata_mata', mata: MATA }} tipoPlacar="gols" travada={false} temCampanha onChange={vi.fn()} />);
     expect(screen.queryByRole('option', { name: 'Passa quem teve melhor campanha' })).toBeNull();

@@ -7,6 +7,8 @@ export type Pontuacao =
 export type DesempateMataMata = { prorrogacao: boolean; gol_fora: boolean; final: 'penaltis' | 'melhor_campanha' };
 export type OpcoesMataMata = {
   ida_volta: boolean; final_ida_volta: boolean; terceiro_lugar: boolean;
+  /** Fases jogadas em ida e volta (escolha fase a fase). Quando existe, vale no lugar de ida_volta/final_ida_volta. */
+  ida_volta_fases?: string[];
   chave: 'sorteio' | 'manual'; desempate: DesempateMataMata; sets_melhor_de: 3 | 5;
 };
 export type FormaDisputa =

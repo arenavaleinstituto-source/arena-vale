@@ -116,3 +116,16 @@ describe('validarRegulamento', () => {
     expect(validarRegulamento(r)).toBe('Cada grupo precisa classificar pelo menos 1 time.');
   });
 });
+
+describe('ida e volta por fase no regulamento gravado', () => {
+  it('lerRegulamento guarda a lista de fases em ida e volta e descarta lixo', async () => {
+    const { lerRegulamento, regulamentoPadrao } = await import('./regulamento');
+    const r = regulamentoPadrao('gols', { tipo: 'mata_mata', mata: { ida_volta: false, final_ida_volta: false, terceiro_lugar: false, chave: 'sorteio', desempate: { prorrogacao: false, gol_fora: false, final: 'penaltis' }, sets_melhor_de: 3, ida_volta_fases: ['Semifinal', 'Final'] } });
+    const lido = lerRegulamento(JSON.parse(JSON.stringify(r)), { formatoAntigo: null, modalidade: 'futsal' });
+    expect(lido.forma.tipo === 'mata_mata' && lido.forma.mata.ida_volta_fases).toEqual(['Semifinal', 'Final']);
+    const sujo = JSON.parse(JSON.stringify(r));
+    sujo.forma.mata.ida_volta_fases = [1, 'Final'];
+    const lidoSujo = lerRegulamento(sujo, { formatoAntigo: null, modalidade: 'futsal' });
+    expect(lidoSujo.forma.tipo === 'mata_mata' && lidoSujo.forma.mata.ida_volta_fases).toEqual(['Final']);
+  });
+});

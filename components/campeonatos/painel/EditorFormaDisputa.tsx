@@ -2,6 +2,7 @@
 
 import type { FormaDisputa, OpcoesMataMata, TipoPlacar } from '@/lib/campeonatos/tipos';
 import { CAIXA, CAMPO, CAMPO_CURTO, ROTULO, TITULO_BLOCO } from './estilos';
+import { FASES_DO_MATA, fasesEmIdaEVolta } from '@/lib/campeonatos/chave';
 
 export const MATA_PADRAO: OpcoesMataMata = {
   ida_volta: false, final_ida_volta: false, terceiro_lugar: false, chave: 'sorteio',
@@ -29,17 +30,32 @@ type PropsMata = { mata: OpcoesMataMata; tipoPlacar: TipoPlacar; comChave: boole
 function OpcoesDoMataMata({ mata, tipoPlacar, comChave, temCampanha, onChange }: PropsMata) {
   const muda = (p: Partial<OpcoesMataMata>) => onChange({ ...mata, ...p });
   const des = (p: Partial<OpcoesMataMata['desempate']>) => muda({ desempate: { ...mata.desempate, ...p } });
+  const idaVolta = fasesEmIdaEVolta(mata);
   return (
     <fieldset className="grid gap-3 rounded-xl border border-av-linha p-4">
       <legend className={`px-2 ${TITULO_BLOCO}`}>Mata-mata</legend>
-      <label className={CAIXA}>
-        <input type="checkbox" checked={mata.ida_volta} onChange={(e) => muda({ ida_volta: e.target.checked })} />
-        Ida e volta no mata-mata
-      </label>
-      <label className={CAIXA}>
-        <input type="checkbox" checked={mata.final_ida_volta} onChange={(e) => muda({ final_ida_volta: e.target.checked })} />
-        Final em ida e volta
-      </label>
+      <div className="grid gap-2">
+        <span className={TITULO_BLOCO}>Jogo único ou ida e volta, fase a fase</span>
+        <p className="text-xs text-av-cinza">Só as fases que o campeonato tiver são usadas (depende do número de times).</p>
+        <div className="grid gap-2 sm:grid-cols-2">
+          {FASES_DO_MATA.filter((f) => f !== 'Disputa de 3º lugar' || mata.terceiro_lugar).map((fase) => (
+            <label key={fase} className={ROTULO}>
+              {fase}
+              <select
+                className={CAMPO}
+                value={idaVolta.includes(fase) ? 'ida_volta' : 'unico'}
+                onChange={(e) => {
+                  const marcadas = e.target.value === 'ida_volta' ? [...idaVolta, fase] : idaVolta.filter((f) => f !== fase);
+                  muda({ ida_volta_fases: FASES_DO_MATA.filter((f) => marcadas.includes(f)) });
+                }}
+              >
+                <option value="unico">Jogo único</option>
+                <option value="ida_volta">Ida e volta</option>
+              </select>
+            </label>
+          ))}
+        </div>
+      </div>
       <label className={CAIXA}>
         <input type="checkbox" checked={mata.terceiro_lugar} onChange={(e) => muda({ terceiro_lugar: e.target.checked })} />
         Disputa de 3º lugar
@@ -59,7 +75,7 @@ function OpcoesDoMataMata({ mata, tipoPlacar, comChave, temCampanha, onChange }:
             <input type="checkbox" checked={mata.desempate.prorrogacao} onChange={(e) => des({ prorrogacao: e.target.checked })} />
             Prorrogação no jogo único
           </label>
-          {(mata.ida_volta || mata.final_ida_volta) && (
+          {idaVolta.length > 0 && (
             <label className={CAIXA}>
               <input type="checkbox" checked={mata.desempate.gol_fora} onChange={(e) => des({ gol_fora: e.target.checked })} />
               Gol fora de casa

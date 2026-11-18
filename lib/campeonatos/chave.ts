@@ -11,6 +11,20 @@ const NOMES_DAS_FASES: Record<number, string> = {
   64: '32 avos de final',
 };
 
+/** Todas as fases que um mata-mata pode ter, na ordem em que são jogadas. */
+export const FASES_DO_MATA = [
+  'Fase preliminar', '32 avos de final', '16 avos de final', 'Oitavas de final', 'Quartas de final', 'Semifinal', 'Disputa de 3º lugar', 'Final',
+];
+
+/** Fases em ida e volta: a escolha fase a fase ou, em regulamentos antigos, as duas opções gerais. */
+export function fasesEmIdaEVolta(o: OpcoesMataMata): string[] {
+  const escolhidas = o.ida_volta_fases;
+  if (escolhidas) return FASES_DO_MATA.filter((f) => escolhidas.includes(f));
+  return FASES_DO_MATA.filter((f) => (f === 'Final' || f === 'Disputa de 3º lugar' ? o.final_ida_volta : o.ida_volta));
+}
+
+export const idaEVoltaNaFase = (o: OpcoesMataMata, fase: string) => fasesEmIdaEVolta(o).includes(fase);
+
 export function nomeDaFase(timesNaFase: number): string {
   return NOMES_DAS_FASES[timesNaFase] ?? `Fase de ${timesNaFase}`;
 }
@@ -132,7 +146,7 @@ export function gerarChave(entradas: Entrada[], o: OpcoesMataMata, ordemInicial:
     const diretos = entradas.slice(0, m);
     const vencedoresPre: Entrada[] = [];
     for (let j = 0; j < k; j++) {
-      vencedoresPre.push(vencedor(confronto('Fase preliminar', entradas[m + 2 * j], entradas[m + 2 * j + 1], o.ida_volta)));
+      vencedoresPre.push(vencedor(confronto('Fase preliminar', entradas[m + 2 * j], entradas[m + 2 * j + 1], idaEVoltaNaFase(o, 'Fase preliminar'))));
     }
     vagas = [];
     const comuns = Math.min(diretos.length, vencedoresPre.length);
@@ -144,15 +158,15 @@ export function gerarChave(entradas: Entrada[], o: OpcoesMataMata, ordemInicial:
   while (vagas.length > 2) {
     const fase = nomeDaFase(vagas.length);
     const idas: number[] = [];
-    for (let i = 0; i < vagas.length; i += 2) idas.push(confronto(fase, vagas[i], vagas[i + 1], o.ida_volta));
+    for (let i = 0; i < vagas.length; i += 2) idas.push(confronto(fase, vagas[i], vagas[i + 1], idaEVoltaNaFase(o, fase)));
     if (vagas.length === 4) semifinais = idas;
     vagas = idas.map(vencedor);
   }
 
   if (o.terceiro_lugar && semifinais.length === 2) {
-    confronto('Disputa de 3º lugar', perdedor(semifinais[0]), perdedor(semifinais[1]), o.final_ida_volta);
+    confronto('Disputa de 3º lugar', perdedor(semifinais[0]), perdedor(semifinais[1]), idaEVoltaNaFase(o, 'Disputa de 3º lugar'));
   }
-  confronto('Final', vagas[0], vagas[1], o.final_ida_volta);
+  confronto('Final', vagas[0], vagas[1], idaEVoltaNaFase(o, 'Final'));
 
   return jogos;
 }

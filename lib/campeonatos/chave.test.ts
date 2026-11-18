@@ -224,3 +224,29 @@ describe('gerarChave — ida e volta', () => {
     expect(jogos[2].vaga_visitante).toEqual({ tipo: 'vencedor', jogo: 1 });
   });
 });
+
+describe('ida e volta escolhida fase a fase', () => {
+  const base: OpcoesMataMata = { ida_volta: false, final_ida_volta: false, terceiro_lugar: true, chave: 'sorteio', desempate: { prorrogacao: false, gol_fora: false, final: 'penaltis' }, sets_melhor_de: 3 };
+  const oito: Entrada[] = Array.from({ length: 8 }, (_, i) => ({ time: `t${i}` }));
+  const voltas = (js: JogoGerado[], fase: string) => js.filter((j) => j.fase === fase && j.volta_de !== null).length;
+
+  it('Semifinal em ida e volta, Quartas, 3º lugar e Final em jogo único', () => {
+    const js = gerarChave(oito, { ...base, ida_volta_fases: ['Semifinal'] }, 1);
+    expect(voltas(js, 'Quartas de final')).toBe(0);
+    expect(voltas(js, 'Semifinal')).toBe(2);
+    expect(voltas(js, 'Disputa de 3º lugar')).toBe(0);
+    expect(voltas(js, 'Final')).toBe(0);
+  });
+
+  it('só a Final em ida e volta', () => {
+    const js = gerarChave(oito, { ...base, ida_volta_fases: ['Final'] }, 1);
+    expect(voltas(js, 'Semifinal')).toBe(0);
+    expect(voltas(js, 'Final')).toBe(1);
+  });
+
+  it('sem a escolha por fase, vale o jeito antigo (ida_volta e final_ida_volta)', () => {
+    const js = gerarChave(oito, { ...base, ida_volta: true }, 1);
+    expect(voltas(js, 'Quartas de final')).toBe(4);
+    expect(voltas(js, 'Final')).toBe(0);
+  });
+});

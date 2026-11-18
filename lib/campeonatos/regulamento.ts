@@ -69,10 +69,12 @@ function lerMata(v: unknown): OpcoesMataMata | null {
     (d.final !== 'penaltis' && d.final !== 'melhor_campanha')
   ) return null;
   const desempate: DesempateMataMata = { prorrogacao: d.prorrogacao, gol_fora: d.gol_fora, final: d.final };
-  return {
+  const mata: OpcoesMataMata = {
     ida_volta: v.ida_volta, final_ida_volta: v.final_ida_volta, terceiro_lugar: v.terceiro_lugar,
     chave: v.chave, desempate, sets_melhor_de: v.sets_melhor_de,
   };
+  if (Array.isArray(v.ida_volta_fases)) mata.ida_volta_fases = v.ida_volta_fases.filter((f): f is string => typeof f === 'string');
+  return mata;
 }
 
 function lerForma(v: unknown): FormaDisputa | null {
