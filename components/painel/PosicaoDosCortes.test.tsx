@@ -1,4 +1,4 @@
-import { render, screen, waitFor, within } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { fakeConsultas } from '../fake-consultas';
@@ -33,7 +33,7 @@ describe('PosicaoDosCortes', () => {
     render(<PosicaoDosCortes />);
     const hino = await screen.findByRole('group', { name: 'Hino nacional' });
     await userEvent.setup().selectOptions(within(hino).getByLabelText('Posição'), '-90');
-    await waitFor(() => expect(sb.escritas).toContainEqual({ tabela: 'cortes_posicao', op: 'upsert', payload: { video_id: 'bbb', giro: -90 }, filtros: [] }));
+    await waitFor(() => expect(sb.escritas).toContainEqual({ tabela: 'cortes_posicao', op: 'upsert', payload: { video_id: 'bbb', giro: -90, escondido: false }, filtros: [] }));
     expect(await within(hino).findByText('Salvo.')).toBeInTheDocument();
   });
 
@@ -43,5 +43,29 @@ describe('PosicaoDosCortes', () => {
     const defesa = await screen.findByRole('group', { name: 'Grande defesa' });
     await userEvent.setup().selectOptions(within(defesa).getByLabelText('Posição'), '');
     await waitFor(() => expect(sb.escritas).toContainEqual({ tabela: 'cortes_posicao', op: 'delete', payload: undefined, filtros: [['eq', 'video_id', 'aaa']] }));
+  });
+
+  it('"Esconder do site" grava o corte como escondido', async () => {
+    preparar();
+    render(<PosicaoDosCortes />);
+    const hino = await screen.findByRole('group', { name: 'Hino nacional' });
+    await userEvent.setup().selectOptions(within(hino).getByLabelText('Posição'), 'esconder');
+    await waitFor(() => expect(sb.escritas).toContainEqual({ tabela: 'cortes_posicao', op: 'upsert', payload: { video_id: 'bbb', giro: null, escondido: true }, filtros: [] }));
+  });
+
+  it('corte já escondido aparece com "Esconder do site" escolhido', async () => {
+    preparar([{ video_id: 'aaa', giro: null, escondido: true } as never]);
+    render(<PosicaoDosCortes />);
+    const defesa = await screen.findByRole('group', { name: 'Grande defesa' });
+    expect(within(defesa).getByLabelText('Posição')).toHaveValue('esconder');
+  });
+
+  it('miniatura genérica do YouTube (120×90) troca pela capa comum', async () => {
+    preparar();
+    render(<PosicaoDosCortes />);
+    const img = (await screen.findByRole('group', { name: 'Hino nacional' })).querySelector('img')!;
+    Object.defineProperty(img, 'naturalWidth', { value: 120 });
+    fireEvent.load(img);
+    expect(img).toHaveAttribute('src', 'https://i.ytimg.com/vi/bbb/hqdefault.jpg');
   });
 });

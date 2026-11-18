@@ -21,4 +21,13 @@ describe('cortes deitados', () => {
     const semTabela = { from: () => ({ select: () => Promise.resolve({ data: null, error: { message: 'relation does not exist' } }) }) };
     expect(await buscarGirosDosCortes(semTabela as never)).toEqual({});
   });
+
+  it('corte escondido pela coordenação sai da lista', () => {
+    expect(aplicarGiros([v('a'), v('b'), v('c')], { b: 'esconder', c: 90 }).map((c) => [c.id, c.giro ?? null])).toEqual([['a', null], ['c', 90]]);
+  });
+
+  it('buscarGirosDosCortes lê o escondido', async () => {
+    const ok = { from: () => ({ select: () => Promise.resolve({ data: [{ video_id: 'x', giro: null, escondido: true }, { video_id: 'y', giro: -90, escondido: false }], error: null }) }) };
+    expect(await buscarGirosDosCortes(ok as never)).toEqual({ x: 'esconder', y: -90 });
+  });
 });

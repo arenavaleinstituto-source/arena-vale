@@ -29,4 +29,12 @@ describe('cortes_posicao (0024)', () => {
     const r = await admin().from('cortes_posicao').insert({ video_id: id(), giro: 45 });
     expect(r.error).not.toBeNull();
   });
+
+  it('a coordenação esconde um corte do site (0025)', async () => {
+    const v = id();
+    const coord = await clienteComo(await criarUsuario('coordenador'));
+    expect((await coord.from('cortes_posicao').upsert({ video_id: v, giro: null, escondido: true })).error).toBeNull();
+    const { data } = await visitante().from('cortes_posicao').select('video_id, giro, escondido').eq('video_id', v);
+    expect(data).toEqual([{ video_id: v, giro: null, escondido: true }]);
+  });
 });

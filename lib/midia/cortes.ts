@@ -4,17 +4,27 @@ import type { Giro, VideoYT } from './youtube';
 
 export { capaVertical } from './youtube';
 
-/** Marca nos cortes o giro que a coordenação escolheu (vídeos publicados deitados no YouTube). */
-export function aplicarGiros(cortes: VideoYT[], giros: Record<string, Giro>): VideoYT[] {
-  return cortes.map((c) => (giros[c.id] ? { ...c, giro: giros[c.id] } : c));
+/** O que a coordenação escolheu para um corte: girar (vídeo publicado deitado) ou esconder do site. */
+export type PosicaoCorte = Giro | 'esconder';
+
+/** Tira os cortes escondidos e marca o giro dos que foram publicados deitados. */
+export function aplicarGiros(cortes: VideoYT[], posicoes: Record<string, PosicaoCorte>): VideoYT[] {
+  return cortes.flatMap((c) => {
+    const p = posicoes[c.id];
+    if (p === 'esconder') return [];
+    return [p ? { ...c, giro: p } : c];
+  });
 }
 
-/** video_id → giro, da tabela cortes_posicao (migração 0024). Qualquer falha: nenhum giro. */
-export async function buscarGirosDosCortes(sb?: SupabaseClient): Promise<Record<string, Giro>> {
+/** video_id → giro ou 'esconder', da tabela cortes_posicao (migrações 0024 e 0025). Qualquer falha: nada. */
+export async function buscarGirosDosCortes(sb?: SupabaseClient): Promise<Record<string, PosicaoCorte>> {
   try {
-    const { data, error } = await (sb ?? createPublicClient()).from('cortes_posicao').select('video_id, giro');
+    const { data, error } = await (sb ?? createPublicClient()).from('cortes_posicao').select('*');
     if (error || !data) return {};
-    return Object.fromEntries((data as { video_id: string; giro: Giro }[]).map((l) => [l.video_id, l.giro]));
+    const linhas = data as { video_id: string; giro: Giro | null; escondido?: boolean }[];
+    return Object.fromEntries(
+      linhas.flatMap<[string, PosicaoCorte]>((l) => (l.escondido ? [[l.video_id, 'esconder' as const]] : l.giro ? [[l.video_id, l.giro]] : [])),
+    );
   } catch {
     return {};
   }
