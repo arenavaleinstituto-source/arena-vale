@@ -68,7 +68,7 @@ export function portasCampeonato(admin: SupabaseClient): PortasCampeonato {
       if (!c) return null;
       const camp = c as { id: string; modalidade: string | null; formato: string | null; regulamento: unknown; ordem_sorteio: Sorteios | null; fases_destravadas: string[] | null };
       const [{ data: insc }, { data: linhas }] = await Promise.all([
-        admin.from('inscricoes').select('time_id').eq('campeonato_id', id).eq('status', 'aprovada').order('submitted_at'),
+        admin.from('inscricoes').select('time_id').eq('campeonato_id', id).eq('status', 'aprovada').order('submitted_at').order('time_id'),
         admin.from('jogos').select(COLUNAS_JOGO).eq('campeonato_id', id).order('ordem', { ascending: true, nullsFirst: false }),
       ]);
       const jogos = ((linhas ?? []) as LinhaJogo[]).map(paraJogoCalc);

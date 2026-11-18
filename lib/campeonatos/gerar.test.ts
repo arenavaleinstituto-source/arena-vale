@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { embaralhar, gerarJogos, sortearGrupos } from './gerar';
+import { aleatorioComSemente, embaralhar, gerarJogos, sortearGrupos } from './gerar';
 import type { FormaDisputa, JogoGerado, OpcoesMataMata } from './tipos';
 
 const mata = (o: Partial<OpcoesMataMata> = {}): OpcoesMataMata => ({
@@ -148,5 +148,16 @@ describe('gerarJogos: validações', () => {
     const t = ids(4);
     gerarJogos({ tipo: 'mata_mata', mata: mata() }, t, { aleatorio: Math.random });
     expect(t).toEqual(ids(4));
+  });
+});
+
+describe('aleatorioComSemente', () => {
+  it('a mesma semente dá o mesmo sorteio; outra semente, outro', () => {
+    const t = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+    expect(sortearGrupos(t, 2, [], aleatorioComSemente(42))).toEqual(sortearGrupos(t, 2, [], aleatorioComSemente(42)));
+    const seq = (s: number) => Array.from({ length: 5 }, aleatorioComSemente(s));
+    expect(seq(1)).toEqual(seq(1));
+    expect(seq(1)).not.toEqual(seq(2));
+    expect(seq(7).every((x) => x >= 0 && x < 1)).toBe(true);
   });
 });

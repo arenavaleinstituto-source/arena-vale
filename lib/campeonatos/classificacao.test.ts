@@ -273,6 +273,14 @@ describe('classificar: sorteio', () => {
     ]);
   });
 
+  it('tabela com jogo ainda por disputar não pede sorteio (antes do 1º jogo, todos empatados em 0)', () => {
+    const antes = classificar(['t1', 't2', 't3'], [jogo('t1', 't2', null, null, { status: 'agendado' }), jogo('t2', 't3', null, null, { status: 'agendado' })], reg('gols'), undefined);
+    expect(antes.map((l) => [l.time_id, l.posicao, l.aguardando_sorteio])).toEqual([['t1', 1, false], ['t2', 2, false], ['t3', 3, false]]);
+
+    const meio = classificar(['t1', 't2'], [...jogos, jogo('t1', 't2', null, null, { status: 'ao_vivo' })], reg('gols'), undefined);
+    expect(meio.every((l) => !l.aguardando_sorteio)).toBe(true);
+  });
+
   it('critérios esgotados sem sorteio na lista: mantém a ordem de entrada, posições distintas', () => {
     const t = classificar(['t2', 't1'], jogos, reg('gols', ['vitorias', 'saldo']), undefined);
     expect(t.map((l) => [l.time_id, l.posicao, l.aguardando_sorteio])).toEqual([['t2', 1, false], ['t1', 2, false]]);

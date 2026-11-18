@@ -1,6 +1,6 @@
 import type { FormaDisputa, JogoGerado } from '@/lib/campeonatos/tipos';
 
-export type CorpoGerar = { forma: FormaDisputa; grupos?: Record<string, string[]>; sementes?: string[]; formaMudou?: boolean; simular: boolean };
+export type CorpoGerar = { forma: FormaDisputa; grupos?: Record<string, string[]>; sementes?: string[]; formaMudou?: boolean; simular: boolean; semente?: number };
 export type RespostaGerar = { ok: true; jogos: JogoGerado[]; avisos: string[] } | { ok: false; erro: string };
 
 /** Chama a rota que gera (ou simula) os jogos do campeonato. */

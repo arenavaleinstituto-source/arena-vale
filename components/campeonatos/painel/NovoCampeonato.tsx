@@ -36,7 +36,9 @@ export function NovoCampeonato({ onCriado }: { onCriado: (id: string) => void })
   const [msg, setMsg] = useState('');
   const [ocupado, setOcupado] = useState(false);
 
-  const montagem = () => montagemParaGerar(forma, times, grupos, sementes);
+  // Uma semente por assistente: a prévia revisada e a geração para valer fazem o mesmo sorteio.
+  const [semente] = useState(() => Math.floor(Math.random() * 2 ** 31));
+  const montagem = () => ({ ...montagemParaGerar(forma, times, grupos, sementes), semente });
 
   async function simular(campId: string) {
     setPrevia(null);

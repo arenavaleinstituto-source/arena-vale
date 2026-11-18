@@ -221,6 +221,13 @@ export function classificar(
 
   const blocos = particionar(times, (id) => [(stats.get(id) as Stats).pontos]).flatMap((g) => desempatar(g, ctx));
 
+  // Sorteio só quando a tabela acabou; antes disso o empate ainda pode se desfazer em campo (fica a ordem de entrada).
+  const daTabela = new Set(times);
+  const completa = jogos
+    .filter((j) => (j.casa && daTabela.has(j.casa)) || (j.visitante && daTabela.has(j.visitante)))
+    .every((j) => j.status === 'finalizado' || j.status === 'cancelado');
+  if (!completa) blocos.forEach((b) => (b.aguardando = false));
+
   const linhas: LinhaTabela[] = [];
   for (const b of blocos) {
     const posicao = linhas.length + 1;

@@ -3,6 +3,7 @@ import { createAdminClient, createClient } from '@/lib/supabase/server';
 import { UUID_RE } from '@/lib/midia/galeria';
 import { portasCampeonato } from '@/lib/campeonatos/portas';
 import { gerar } from '@/lib/campeonatos/servico';
+import { aleatorioComSemente } from '@/lib/campeonatos/gerar';
 import type { FormaDisputa } from '@/lib/campeonatos/tipos';
 
 export const dynamic = 'force-dynamic';
@@ -13,6 +14,8 @@ type Corpo = {
   sementes?: string[];
   formaMudou?: boolean;
   simular?: boolean;
+  /** Mesma semente na prévia e na geração = mesmo sorteio. */
+  semente?: number;
 };
 
 function erro(status: number, mensagem: string) {
@@ -40,7 +43,7 @@ export async function POST(req: Request, ctx: { params: Promise<{ id: string }> 
       grupos: corpo.grupos,
       sementes: corpo.sementes,
       formaMudou: corpo.formaMudou === true,
-      aleatorio: Math.random,
+      aleatorio: Number.isSafeInteger(corpo.semente) ? aleatorioComSemente(corpo.semente as number) : Math.random,
       simular: corpo.simular !== false,
     });
     if ('erro' in r) return erro(400, r.erro);

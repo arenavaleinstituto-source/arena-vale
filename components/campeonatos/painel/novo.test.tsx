@@ -65,6 +65,10 @@ describe('NovoCampeonato', () => {
     await u.click(screen.getByRole('button', { name: 'Gerar os jogos' }));
     await waitFor(() => expect(onCriado).toHaveBeenCalledWith('c1'));
     expect(JSON.parse(fetchMock.mock.calls[1][1].body)).toMatchObject({ simular: false });
+    // A prévia e a geração usam o mesmo sorteio (a mesma semente), para sair igual ao que foi revisado.
+    const semente = JSON.parse(fetchMock.mock.calls[0][1].body).semente;
+    expect(Number.isInteger(semente)).toBe(true);
+    expect(JSON.parse(fetchMock.mock.calls[1][1].body).semente).toBe(semente);
   });
 });
 
