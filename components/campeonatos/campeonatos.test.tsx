@@ -43,11 +43,14 @@ describe('EscudoCampeonato', () => {
     expect(src).toContain('CVF');
   });
 
-  it('o escudo padrão não passa faixa por cima das letras (usa a estrela acima delas)', () => {
+  it('o escudo padrão é branco com borda vermelha, taça preta acima das letras e sem faixa', () => {
     render(<EscudoCampeonato campeonato={{ nome: 'Copa Passeio', logo_url: null }} tamanho={96} />);
     const src = decodeURIComponent(screen.getByRole('img', { name: 'Copa Passeio' }).getAttribute('src') ?? '');
     expect(src).not.toContain('rotate(');
-    expect(src).toContain('<polygon');
+    expect(src).not.toContain('<polygon');
+    expect(src).toContain('fill="#ffffff" stroke="#e50914"');
+    expect(src).toContain('data-detalhe="taca"');
+    expect(src).toMatch(/<text[^>]*fill="#0b0b0d"/);
   });
 });
 

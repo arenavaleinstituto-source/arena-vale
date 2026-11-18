@@ -16,6 +16,7 @@ const DETALHES: { valor: OpcoesEscudo['detalhe']; nome: string }[] = [
   { valor: 'faixa', nome: 'Faixa' },
   { valor: 'listras', nome: 'Listras' },
   { valor: 'estrela', nome: 'Estrela' },
+  { valor: 'taca', nome: 'Taça' },
 ];
 
 /** Monta um escudo no site (formato, duas cores, texto e detalhe), com a prévia ao vivo. */

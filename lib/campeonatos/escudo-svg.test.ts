@@ -30,7 +30,7 @@ describe('desenharEscudo', () => {
   });
   it('detalhes em cor2 com recorte', () => {
     const cor2 = '#ff0000';
-    for (const d of ['faixa', 'listras', 'estrela'] as const) {
+    for (const d of ['faixa', 'listras', 'estrela', 'taca'] as const) {
       const s = desenharEscudo({ ...base, cor2, detalhe: d });
       expect(s).toContain(`fill="${cor2}"`);
       expect(s).toContain('clip-path');
@@ -59,5 +59,10 @@ describe('escudoPadrao', () => {
   it('usa a cor ou o vermelho da marca', () => {
     expect(escudoPadrao('ABC', '#112233')).toBe(desenharEscudo({ ...base, texto: 'ABC' }));
     expect(escudoPadrao('ABC', null)).toContain('#e50914');
+  });
+
+  it('borda opcional: contorno na cor pedida; sem ela, sem contorno', () => {
+    expect(desenharEscudo({ ...base, borda: '#e50914' })).toContain('stroke="#e50914"');
+    expect(desenharEscudo(base)).not.toContain('stroke=');
   });
 });

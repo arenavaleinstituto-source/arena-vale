@@ -3,7 +3,9 @@ export type OpcoesEscudo = {
   cor1: string;
   cor2: string;
   texto: string;
-  detalhe: 'nenhum' | 'faixa' | 'listras' | 'estrela';
+  detalhe: 'nenhum' | 'faixa' | 'listras' | 'estrela' | 'taca';
+  /** Contorno do escudo (opcional). */
+  borda?: string;
 };
 
 // Time sem cor usa o vermelho da marca (av-vermelho); o dourado antigo não é mais usado no site.
@@ -56,6 +58,19 @@ function estrela(cx: number, cy: number, r: number): string {
   return pts.join(' ');
 }
 
+/** Taça centrada em (256, 150): copa, alças, haste e base. */
+function taca(cor: string): string {
+  return (
+    `<g data-detalhe="taca" fill="${cor}">` +
+    `<path d="M200 92 H312 V128 C312 162 288 182 256 182 C224 182 200 162 200 128 Z"/>` +
+    `<path d="M200 104 H176 C176 140 192 154 208 156" fill="none" stroke="${cor}" stroke-width="12" stroke-linecap="round"/>` +
+    `<path d="M312 104 H336 C336 140 320 154 304 156" fill="none" stroke="${cor}" stroke-width="12" stroke-linecap="round"/>` +
+    `<rect x="246" y="180" width="20" height="22"/>` +
+    `<rect x="218" y="200" width="76" height="18" rx="4"/>` +
+    `</g>`
+  );
+}
+
 export function desenharEscudo(o: OpcoesEscudo): string {
   const cor1 = corOu(o.cor1, COR1_PADRAO);
   const cor2 = corOu(o.cor2, COR2_PADRAO);
@@ -69,10 +84,16 @@ export function desenharEscudo(o: OpcoesEscudo): string {
     detalhe = [110, 216, 322].map((x) => `<rect x="${x}" y="0" width="80" height="512" fill="${cor2}"/>`).join('');
   } else if (o.detalhe === 'estrela') {
     detalhe = `<polygon points="${estrela(256, 150, 62)}" fill="${cor2}"/>`;
+  } else if (o.detalhe === 'taca') {
+    detalhe = taca(cor2);
   }
 
-  const tamanho = texto.length <= 2 ? 190 : texto.length === 3 ? 150 : 118;
-  const y = o.detalhe === 'estrela' ? 365 : 290;
+  // Com a taça, as letras ficam menores e mais altas para caber dentro do contorno.
+  const comTaca = o.detalhe === 'taca';
+  const tamanho = comTaca
+    ? texto.length <= 2 ? 150 : texto.length === 3 ? 118 : 94
+    : texto.length <= 2 ? 190 : texto.length === 3 ? 150 : 118;
+  const y = comTaca ? 318 : o.detalhe === 'estrela' ? 365 : 290;
   const marcaTexto = texto
     ? `<text x="256" y="${y}" text-anchor="middle" dominant-baseline="central" font-family="${FONTE.replace(/'/g, '&apos;')}" ` +
       `font-weight="800" font-size="${tamanho}" fill="${corDoTexto(cor1)}">${escapar(texto)}</text>`
@@ -81,7 +102,7 @@ export function desenharEscudo(o: OpcoesEscudo): string {
   return (
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">` +
     `<defs><clipPath id="${clipId}">${forma(o.formato, '')}</clipPath></defs>` +
-    forma(o.formato, `fill="${cor1}"`) +
+    forma(o.formato, `fill="${cor1}"` + (o.borda ? ` stroke="${corOu(o.borda, COR1_PADRAO)}" stroke-width="20" stroke-linejoin="round"` : '')) +
     (detalhe ? `<g clip-path="url(#${clipId})">${detalhe}</g>` : '') +
     marcaTexto +
     `</svg>`
