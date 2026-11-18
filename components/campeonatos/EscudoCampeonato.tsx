@@ -18,7 +18,7 @@ export function iniciaisDoCampeonato(nome: string): string {
 export function EscudoCampeonato({ campeonato, tamanho = 96, className = '' }: { campeonato: { nome: string; logo_url: string | null }; tamanho?: number; className?: string }) {
   const src =
     campeonato.logo_url ||
-    svgComoSrc(desenharEscudo({ formato: 'classico', cor1: '#e50914', cor2: '#ffffff', texto: iniciaisDoCampeonato(campeonato.nome), detalhe: 'faixa' }));
+    svgComoSrc(desenharEscudo({ formato: 'classico', cor1: '#e50914', cor2: '#ffffff', texto: iniciaisDoCampeonato(campeonato.nome), detalhe: 'estrela' }));
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img src={src} alt={campeonato.nome} width={tamanho} height={tamanho} className={`shrink-0 object-contain ${className}`} style={{ width: tamanho, height: tamanho }} />

@@ -42,6 +42,13 @@ describe('EscudoCampeonato', () => {
     const src = decodeURIComponent(screen.getByRole('img', { name: 'Copa do Vale Futsal' }).getAttribute('src') ?? '');
     expect(src).toContain('CVF');
   });
+
+  it('o escudo padrão não passa faixa por cima das letras (usa a estrela acima delas)', () => {
+    render(<EscudoCampeonato campeonato={{ nome: 'Copa Passeio', logo_url: null }} tamanho={96} />);
+    const src = decodeURIComponent(screen.getByRole('img', { name: 'Copa Passeio' }).getAttribute('src') ?? '');
+    expect(src).not.toContain('rotate(');
+    expect(src).toContain('<polygon');
+  });
 });
 
 describe('CartaoCampeonato', () => {
