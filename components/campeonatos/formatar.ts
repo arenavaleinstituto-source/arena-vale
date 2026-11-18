@@ -20,7 +20,3 @@ export function placarDoJogo(j: JogoDaPagina): string | null {
   return `${j.placar_casa} x ${j.placar_visitante}${pen}`;
 }
 
-/** Ano para mostrar ao lado do nome; nada quando o nome já traz o ano ("Copa Arena Vale 2026"). */
-export function anoAoLado(nome: string, ano: number): string | null {
-  return new RegExp(`(^|\\D)${ano}(\\D|$)`).test(nome) ? null : String(ano);
-}

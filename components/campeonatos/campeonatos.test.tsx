@@ -88,11 +88,10 @@ describe('/campeonatos', () => {
   });
 });
 
-describe('anoAoLado', () => {
-  it('não repete o ano quando o nome já tem', async () => {
-    const { anoAoLado } = await import('./formatar');
-    expect(anoAoLado('Copa Arena Vale 2026', 2026)).toBeNull();
-    expect(anoAoLado('JASC 2026 - Fase Estadual', 2026)).toBeNull();
-    expect(anoAoLado('Copa Passeio', 2026)).toBe('2026');
+describe('título do campeonato', () => {
+  it('mostra só o nome, sem o ano ao lado', async () => {
+    const { readFileSync } = await import('node:fs');
+    const pagina = readFileSync('app/campeonatos/[slug]/page.tsx', 'utf8');
+    expect(pagina).toMatch(/<h1>\s*\{c\.nome\}\s*<\/h1>/);
   });
 });

@@ -4,7 +4,6 @@ import { useCallback, useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { MeusCampeonatos, type CampeonatoDaLista } from '@/components/campeonatos/painel/MeusCampeonatos';
 import { GerenciarCampeonato } from '@/components/campeonatos/painel/GerenciarCampeonato';
-import { anoAoLado } from '@/components/campeonatos/formatar';
 
 /** Aba "Campeonatos" do painel da coordenação: o que aguarda liberação no topo, todos os campeonatos e o gerenciador. */
 export function CoordCampeonatos() {
@@ -48,7 +47,7 @@ export function CoordCampeonatos() {
             {aguardando.map((c) => (
               <li key={c.id} className="flex flex-wrap items-center gap-3 rounded-xl border border-av-linha bg-av-grafite-2 p-3">
                 <strong className="min-w-0 flex-1 truncate">
-                  {c.nome} {anoAoLado(c.nome, c.ano) && <span className="text-av-cinza">· {c.ano}</span>}
+                  {c.nome}
                 </strong>
                 <button type="button" className="btn-forte" onClick={() => setAberto(c.id)}>
                   Revisar e liberar
