@@ -227,8 +227,13 @@ export function resolverVagas(
     const visitante = alvo(atual.vaga_visitante, atual.visitante);
 
     if (casa.time !== atual.casa || visitante.time !== atual.visitante) {
-      if (atual.status === 'finalizado' || atual.status === 'ao_vivo') { // já em disputa: não troca os times
-        res.avisos.push(`Este ajuste mudaria o classificado de um jogo já disputado (Jogo ${atual.ordem ?? '?'}).`);
+      // Ida e volta são um confronto só: se uma das partidas já está em disputa, nenhuma das duas troca de time.
+      const parId = atual.jogo_volta_de ?? voltaDe.get(id);
+      const par = parId ? trabalho.get(parId) : undefined;
+      const disputado = [atual, par].find((j) => j && (j.status === 'finalizado' || j.status === 'ao_vivo'));
+      if (disputado) {
+        const aviso = `Este ajuste mudaria o classificado de um jogo já disputado (Jogo ${disputado.ordem ?? '?'}).`;
+        if (!res.avisos.includes(aviso)) res.avisos.push(aviso);
       } else {
         atual.casa = casa.time;
         atual.visitante = visitante.time;

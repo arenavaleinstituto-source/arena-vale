@@ -346,6 +346,19 @@ describe('resolverVagas: mata-mata', () => {
     expect(upd(res, 't9')).toEqual({ id: 't9', casa: 'a1', visitante: 'b1' }); // o 3º lugar ainda não jogou
   });
 
+  it('ida e volta: correção com a ida já jogada não troca a volta (o confronto muda junto ou não muda)', () => {
+    const jogos = [
+      jg('s7', 7, { casa: 'a', visitante: 'b', ...fin(1, 2) }), // corrigido: agora b venceu
+      jg('s8', 8, { casa: 'c', visitante: 'd', ...fin(1, 0) }),
+      jg('f10', 10, { casa: 'a', visitante: 'c', vaga_casa: venc(7), vaga_visitante: venc(8), ...fin(1, 0) }),
+      jg('f11', 11, { casa: 'c', visitante: 'a', vaga_casa: venc(8), vaga_visitante: venc(7), jogo_volta_de: 'f10', ...ag }),
+    ];
+    const res = resolverVagas(jogos, regMata('gols', mata()), {}, {});
+    expect(upd(res, 'f10')).toBeUndefined();
+    expect(upd(res, 'f11')).toBeUndefined();
+    expect(res.avisos).toEqual(['Este ajuste mudaria o classificado de um jogo já disputado (Jogo 10).']);
+  });
+
   it('jogo seguinte ao vivo: não troca os times e gera o aviso', () => {
     const jogos = copa({
       ...semis(fin(1, 2)),
