@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { agendaAtiva, deAgendaJogos, deJogos, juntarAgenda, proximaTransmissao, resumoAgenda, separarHoje, buscarHojeNaArena, type ItemAgenda } from './agenda';
+import { agendaAtiva, deAgendaJogos, deJogos, jogoCompleto, juntarAgenda, proximaTransmissao, resumoAgenda, separarHoje, buscarHojeNaArena, type ItemAgenda } from './agenda';
 
 const AGORA = new Date('2026-11-10T12:00:00-03:00');
 
@@ -163,12 +163,15 @@ describe('buscarHojeNaArena', () => {
     const filtros: [string, string, unknown][] = [];
     const q: Record<string, unknown> = {};
     for (const m of ['select', 'gte', 'lte', 'order', 'limit']) q[m] = () => q;
-    for (const m of ['eq', 'neq', 'in']) q[m] = (c: string, v: unknown) => (filtros.push([m, c, v]), q);
+    for (const m of ['eq', 'neq', 'in', 'not']) q[m] = (c: string, v: unknown) => (filtros.push([m, c, v]), q);
     q.then = (ok: (v: unknown) => unknown) => Promise.resolve({ data: [], error: null }).then(ok);
     const sb = { from: () => q } as never;
     await buscarHojeNaArena(sb);
     expect(filtros).toContainEqual(['in', 'status', ['agendado', 'ao_vivo', 'finalizado']]);
     expect(filtros).not.toContainEqual(['eq', 'status', 'agendado']);
+    // jogo com vaga ainda aberta não entra na agenda
+    expect(filtros).toContainEqual(['not', 'time_casa_id', 'is']);
+    expect(filtros).toContainEqual(['not', 'time_visitante_id', 'is']);
   });
 });
 
@@ -183,5 +186,18 @@ describe('placar do jogo', () => {
   });
   it('jogo agendado não tem placar', () => {
     expect(deJogos({ ...linha, status: 'agendado' }).placar ?? null).toBeNull();
+  });
+});
+
+describe('jogoCompleto', () => {
+  const linha = { id: 'j', data: '2026-11-20T19:00:00', fase: null, local: null, casa: { nome: 'A' }, fora: { nome: 'B' }, campeonato: null, transmissoes: [] };
+  it('jogo com data e os dois times entra', () => {
+    expect(jogoCompleto(linha)).toBe(true);
+  });
+  it('jogo sem um dos times (vaga ainda aberta) fica fora', () => {
+    expect(jogoCompleto({ ...linha, casa: null })).toBe(false);
+  });
+  it('jogo sem data ("a definir") fica fora', () => {
+    expect(jogoCompleto({ ...linha, data: null })).toBe(false);
   });
 });

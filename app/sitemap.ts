@@ -1,5 +1,6 @@
 import { MetadataRoute } from 'next';
 import { buscarAlbuns } from '@/lib/midia/galeria-busca';
+import { buscarCampeonatosPublicos } from '@/lib/campeonatos/busca';
 
 /**
  * SITEMAP
@@ -20,6 +21,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: '', changeFrequency: 'daily', priority: 1.0 },
     // Conteúdo editorial — era o que faltava.
     { path: '/noticias', changeFrequency: 'daily', priority: 0.95 },
+    { path: '/campeonatos', changeFrequency: 'daily', priority: 0.9 },
     { path: '/atletasdestaques', changeFrequency: 'weekly', priority: 0.8 },
     { path: '/ao-vivo', changeFrequency: 'daily', priority: 0.9 },
     { path: '/videos', changeFrequency: 'daily', priority: 0.8 },
@@ -39,13 +41,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: '/links', changeFrequency: 'monthly', priority: 0.3 },
   ];
 
-  const albuns = await buscarAlbuns(200).catch(() => []);
+  const [albuns, campeonatos] = await Promise.all([buscarAlbuns(200).catch(() => []), buscarCampeonatosPublicos().catch(() => [])]);
   return [
     ...paginas.map((pagina) => ({
       url: `${baseUrl}${pagina.path}`,
       lastModified: agora,
       changeFrequency: pagina.changeFrequency,
       priority: pagina.priority,
+    })),
+    ...campeonatos.map((c) => ({
+      url: `${baseUrl}/campeonatos/${c.slug}`,
+      lastModified: agora,
+      changeFrequency: (c.encerrado ? 'monthly' : 'daily') as 'monthly' | 'daily',
+      priority: c.encerrado ? 0.5 : 0.8,
     })),
     ...albuns.map((a) => ({
       url: `${baseUrl}/galeria/${a.id}`,

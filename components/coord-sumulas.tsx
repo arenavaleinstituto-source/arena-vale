@@ -37,7 +37,8 @@ export function CoordSumulas({ userId }: Props) {
     carregar();
   }, []);
 
-  function nomeTime(id: string) {
+  function nomeTime(id: string | null) {
+    if (!id) return 'A definir';
     return times.find((time) => time.id === id)?.nome || 'Time';
   }
 
@@ -92,7 +93,7 @@ export function CoordSumulas({ userId }: Props) {
           <option key={jogo.id} value={jogo.id}>
             {nomeTime(jogo.time_casa_id)} x{' '}
             {nomeTime(jogo.time_visitante_id)} —{' '}
-            {new Date(jogo.data).toLocaleDateString('pt-BR')}
+            {jogo.data ? new Date(jogo.data).toLocaleDateString('pt-BR') : 'A definir'}
           </option>
         ))}
       </select>

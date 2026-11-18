@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
+import { recalcularVagas } from '@/components/campeonatos/painel/api';
 
 export function CoordJogos() {
   const supabase = createClient();
@@ -38,7 +39,8 @@ export function CoordJogos() {
     setDelegados((delegadosData as typeof delegados) || []);
   }
 
-  function nomeTime(id: string) {
+  function nomeTime(id: string | null) {
+    if (!id) return 'A definir';
     return times.find((time) => time.id === id)?.nome || 'Time';
   }
 
@@ -103,7 +105,8 @@ export function CoordJogos() {
       atual.map((item) =>
         item.id === jogo.id ? { ...item, [campo]: novoValor } : item
       )
-    );
+    );    // Todo resultado salvo recalcula as vagas dos jogos seguintes (spec 4.3).
+    if (jogo.campeonato_id) void recalcularVagas(jogo.campeonato_id);
   }
 
   async function atribuirDelegado(jogoId: string, delegadoId: string | null) {
@@ -127,7 +130,7 @@ export function CoordJogos() {
       atual.map((item) =>
         item.id === jogo.id ? { ...item, status: 'finalizado' } : item
       )
-    );
+    );    if (jogo.campeonato_id) void recalcularVagas(jogo.campeonato_id);
   }
 
   return (
@@ -232,7 +235,7 @@ export function CoordJogos() {
                   </strong>
 
                   <p className="text-xs text-[var(--text-mute)] mt-1">
-                    {new Date(jogo.data).toLocaleString('pt-BR')} ·{' '}
+                    {jogo.data ? new Date(jogo.data).toLocaleString('pt-BR') : 'A definir'} ·{' '}
                     {jogo.local || 'Local não informado'}
                   </p>
                 </div>

@@ -26,8 +26,8 @@ async function inserir<T>(tabela: string, linha: Record<string, unknown>): Promi
 export async function montarCenario(): Promise<Cenario> {
   n += 1;
   const sufixo = `${Date.now()}-${n}`;
-  const campA = (await inserir<{ id: string }>('campeonatos', { nome: `Camp A ${sufixo}`, ano: 2026 })).id;
-  const campB = (await inserir<{ id: string }>('campeonatos', { nome: `Camp B ${sufixo}`, ano: 2026 })).id;
+  const campA = (await inserir<{ id: string }>('campeonatos', { nome: `Camp A ${sufixo}`, ano: 2026, visivel: true })).id;
+  const campB = (await inserir<{ id: string }>('campeonatos', { nome: `Camp B ${sufixo}`, ano: 2026, visivel: true })).id;
   const casa = (await inserir<{ id: string }>('times', { nome: `Casa ${sufixo}`, sigla: 'CAS' })).id;
   const fora = (await inserir<{ id: string }>('times', { nome: `Fora ${sufixo}`, sigla: 'FOR' })).id;
   await inserir('inscricoes', { campeonato_id: campA, time_id: casa, status: 'aprovada' });

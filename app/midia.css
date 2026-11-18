@@ -366,6 +366,8 @@
 .menu-cel a:hover { color: var(--branco); background: rgba(255,255,255,.06); }
 .menu-cel a.on, .menu-cel a[aria-current="page"] { color: var(--branco); box-shadow: inset 3px 0 0 var(--vermelho); }
 .menu-cel a.tambem-no-topo, .menu-cel .anuncie-cel { display: none; }
+/* O ☰ é só do celular: no computador o menu do topo já mostra as páginas. */
+@media (min-width: 761px) { .hamb, .menu-cel, .fundo-menu-cel { display: none; } }
 @media (max-width: 760px) {
   .topo .menu { display: none; }
   .topo .dentro { justify-content: space-between; position: static; }
@@ -390,8 +392,12 @@
 .menu-lembrar a:hover, .menu-lembrar a:focus-visible { background: rgba(229,9,20,.14); }
 
 /* Cortes (Shorts): cartões 9:16 e player vertical */
-#cortes .trilho { grid-auto-columns: 168px; }
-@media (min-width: 860px) { #cortes .trilho { grid-auto-columns: 200px; } }
+/* Cortes em pé (9:16) e deitados (16:9, mesma altura): cada cartão tem a própria largura. */
+#cortes .trilho { grid-auto-columns: max-content; align-items: center; --corte-larg: 168px; }
+@media (min-width: 860px) { #cortes .trilho { --corte-larg: 200px; } }
+.corte { width: var(--corte-larg, 168px); }
+.corte.deitado { width: min(var(--corte-larg, 168px) * 256 / 81, 100vw - 64px); aspect-ratio: 16 / 9; container-type: size; }
+.corte.deitado img { inset: auto; top: 50%; left: 50%; width: 100cqh; height: 100cqw; }
 .corte { position: relative; display: block; aspect-ratio: 9 / 16; border-radius: 18px; overflow: hidden; border: 1px solid var(--linha); background: var(--grafite-2); padding: 0; cursor: pointer; scroll-snap-align: start; color: var(--branco); text-align: left; }
 .corte img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .corte::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0) 45%, rgba(0,0,0,.85)); }
@@ -401,6 +407,8 @@
 .fundo-corte { position: fixed; inset: 0; background: rgba(0,0,0,.85); z-index: 90; }
 .player-corte { position: fixed; z-index: 91; top: 50%; left: 50%; transform: translate(-50%, -50%); height: min(86dvh, 760px); aspect-ratio: 9 / 16; max-width: calc(100vw - 32px); border-radius: 18px; overflow: hidden; background: #000; }
 .player-corte iframe { width: 100%; height: 100%; border: 0; display: block; }
+.player-corte.deitado { height: auto; aspect-ratio: 16 / 9; width: min(1100px, calc(100vw - 32px), calc(86dvh * 16 / 9)); container-type: size; }
+.player-corte.deitado iframe { position: absolute; top: 50%; left: 50%; width: 100cqh; height: 100cqw; }
 .player-corte .fechar { position: absolute; top: 10px; right: 10px; z-index: 2; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--linha); background: rgba(11,11,12,.85); color: var(--branco); font-size: 18px; cursor: pointer; }
 
 /* Galeria: álbuns, miniaturas e visualizador */
@@ -445,3 +453,14 @@
 .ao-vivo-placar { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
 .badge-ao-vivo { font-size: 11px; font-weight: 800; letter-spacing: .05em; color: #e50914; }
 .placar-ao-vivo { font-family: var(--display); font-weight: 900; font-size: 15px; }
+
+/* "Ao Vivo" ao lado da logo, sempre visível (computador e celular) */
+.ao-vivo-topo { flex: none; display: inline-flex; align-items: center; gap: 7px; font-family: var(--rotulo); font-weight: 700; text-transform: uppercase; letter-spacing: .08em; font-size: 14px; color: var(--branco); padding: 7px 12px; border: 1px solid rgba(229,9,20,.55); border-radius: 999px; background: rgba(229,9,20,.12); }
+.ao-vivo-topo::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--vermelho); box-shadow: 0 0 8px var(--vermelho); animation: vivo-topo 2s ease-in-out infinite; }
+@keyframes vivo-topo { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+.ao-vivo-topo:hover, .ao-vivo-topo.on { background: var(--vermelho); border-color: var(--vermelho); }
+@media (prefers-reduced-motion: reduce) { .ao-vivo-topo::before { animation: none; } }
+@media (max-width: 760px) {
+  .topo .logo-topo { margin-right: 0; }
+  .ao-vivo-topo { font-size: 12px; padding: 6px 10px; margin-right: auto; }
+}

@@ -1,16 +1,15 @@
 /**
- * Menu principal do site (spec Fase 3, seção 4). Itens com `soNoHamburguer` ficam fora
- * da barra do topo e aparecem só no menu ☰ (no computador e no celular).
+ * Menu principal do site. Itens com `soNoHamburguer` ficam fora da barra do topo e aparecem
+ * só no menu ☰. O "Ao Vivo" não está aqui: fica ao lado da logo, sempre visível.
  */
-export const MENU_PRINCIPAL: { rotulo: string; href: string; vivo?: boolean; soNoHamburguer?: boolean }[] = [
+export const MENU_PRINCIPAL: { rotulo: string; href: string; soNoHamburguer?: boolean }[] = [
   { rotulo: 'Início', href: '/' },
-  { rotulo: 'Ao Vivo', href: '/ao-vivo', vivo: true },
-  { rotulo: 'Notícias do Vale', href: '/noticias' },
-  { rotulo: 'Esporte Mundial', href: '/noticias?aba=mundo' },
+  { rotulo: 'Campeonatos', href: '/campeonatos' },
+  { rotulo: 'Notícias', href: '/noticias' },
   { rotulo: 'Agenda', href: '/agenda' },
   { rotulo: 'Modalidades', href: '/modalidades' },
   { rotulo: 'Projeto Social', href: '/projetosocial' },
-  { rotulo: 'Atletas Destaques', href: '/atletasdestaques' },
+  { rotulo: 'Atletas Destaques', href: '/atletasdestaques', soNoHamburguer: true },
   { rotulo: 'Galeria', href: '/galeria', soNoHamburguer: true },
 ];
 

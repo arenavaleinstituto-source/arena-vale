@@ -25,7 +25,7 @@ export function PlayerCorte({ video, aoFechar }: { video: VideoYT; aoFechar: () 
   return createPortal(
     <>
       <div className="fundo-corte" onClick={aoFechar} />
-      <div className="player-corte" role="dialog" aria-modal="true" aria-label={video.titulo}>
+      <div className={video.giro ? 'player-corte deitado' : 'player-corte'} role="dialog" aria-modal="true" aria-label={video.titulo}>
         <button ref={fecharRef} type="button" className="fechar" aria-label="Fechar" onClick={aoFechar}>
           ✕
         </button>
@@ -34,6 +34,8 @@ export function PlayerCorte({ video, aoFechar }: { video: VideoYT; aoFechar: () 
           title={video.titulo}
           allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
           allowFullScreen
+          // Vídeo publicado deitado: o player (em pé) gira dentro de uma moldura horizontal.
+          style={video.giro ? { transform: `translate(-50%, -50%) rotate(${video.giro}deg)` } : undefined}
         />
       </div>
     </>,

@@ -29,26 +29,27 @@ describe('SiteHeader', () => {
     render(<SiteHeader />);
     const menu = screen.getByRole('navigation', { name: 'Menu principal' });
     const links = Array.from(menu.querySelectorAll('a'));
-    expect(links.map((a) => a.textContent?.trim())).toEqual([
-      'Início',
-      'Ao Vivo',
-      'Notícias do Vale',
-      'Esporte Mundial',
-      'Agenda',
-      'Modalidades',
-      'Projeto Social',
-      'Atletas Destaques',
-    ]);
-    expect(links.map((a) => a.getAttribute('href'))).toEqual([
-      '/',
-      '/ao-vivo',
-      '/noticias',
-      '/noticias?aba=mundo',
-      '/agenda',
-      '/modalidades',
-      '/projetosocial',
-      '/atletasdestaques',
-    ]);
+    expect(links.map((a) => a.textContent?.trim())).toEqual(['Início', 'Campeonatos', 'Notícias', 'Agenda', 'Modalidades', 'Projeto Social']);
+    expect(links.map((a) => a.getAttribute('href'))).toEqual(['/', '/campeonatos', '/noticias', '/agenda', '/modalidades', '/projetosocial']);
+  });
+
+  it('Ao Vivo fica ao lado da logo, fora do menu', () => {
+    render(<SiteHeader />);
+    const menu = screen.getByRole('navigation', { name: 'Menu principal' });
+    expect(menu.querySelector('a[href="/ao-vivo"]')).toBeNull();
+    const vivo = screen.getByRole('link', { name: 'Ao Vivo' });
+    expect(vivo).toHaveAttribute('href', '/ao-vivo');
+    const logo = screen.getByRole('button', { name: 'Arena Vale — início' });
+    expect(logo.compareDocumentPosition(vivo) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(vivo.compareDocumentPosition(menu) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+
+  it('Atletas Destaques sai da barra do topo e fica no ☰', async () => {
+    const u = userEvent.setup();
+    render(<SiteHeader />);
+    expect(screen.getByRole('navigation', { name: 'Menu principal' }).querySelector('a[href="/atletasdestaques"]')).toBeNull();
+    await u.click(screen.getByRole('button', { name: 'Abrir menu' }));
+    expect(screen.getByRole('navigation', { name: 'Menu do celular' }).querySelector('a[href="/atletasdestaques"]')).not.toBeNull();
   });
 
   it('sem Vídeos nem Sobre no menu; Anuncie leva ao /patrocinio', () => {
@@ -83,7 +84,7 @@ describe('SiteHeader', () => {
     await u.click(botao);
     const cel = screen.getByRole('navigation', { name: 'Menu do celular' });
     const textos = Array.from(cel.querySelectorAll('a')).map((a) => a.textContent?.trim());
-    expect(textos).toEqual(['Início', 'Ao Vivo', 'Notícias do Vale', 'Esporte Mundial', 'Agenda', 'Modalidades', 'Projeto Social', 'Atletas Destaques', 'Galeria', 'Anuncie']);
+    expect(textos).toEqual(['Início', 'Campeonatos', 'Notícias', 'Agenda', 'Modalidades', 'Projeto Social', 'Atletas Destaques', 'Galeria', 'Anuncie']);
     expect(screen.getByRole('button', { name: 'Fechar menu' })).toHaveAttribute('aria-expanded', 'true');
     expect(document.body.style.overflow).toBe('hidden');
   });

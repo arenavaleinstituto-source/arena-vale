@@ -187,7 +187,7 @@ describe('SeuCampeonato', () => {
     const zap = screen.getByRole('link', { name: 'Quero meu campeonato no site' }).getAttribute('href')!;
     expect(zap).toMatch(/^https:\/\/wa\.me\/5547988444404\?text=/);
     expect(decodeURIComponent(zap)).toContain('campeonato');
-    expect(screen.getByRole('link', { name: 'Ver como fica' }).getAttribute('href')).toBe('/modalidades');
+    expect(screen.getByRole('link', { name: 'Ver como fica' }).getAttribute('href')).toBe('/campeonatos');
   });
 });
 

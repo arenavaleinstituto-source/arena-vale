@@ -28,7 +28,7 @@ export function SeuCampeonato({ whatsapp, alt = false }: { whatsapp: string; alt
               <a href={link} className="av-btn forte" target="_blank" rel="noopener noreferrer">
                 Quero meu campeonato no site
               </a>
-              <Link href="/modalidades" className="av-btn leve">
+              <Link href="/campeonatos" className="av-btn leve">
                 Ver como fica
               </Link>
             </div>

@@ -37,6 +37,7 @@ All code and UI copy is in **Portuguese**. Component names, variables, and DB co
 lib/
   auth/       — cargo system, invite links, route guards
   atletas/    — athlete records, roster (elenco), CPF validation
+  campeonatos/ — championships engine: regulamento, rodízio, chave, classificação, vagas, trava, escudo SVG (servico.ts + portas.ts)
   content/    — static site copy and vocabulary
   midia/      — config, news, championships, agenda, YouTube
   telegram/   — bot message processing, gallery, linking
@@ -67,8 +68,14 @@ app/
     telegram/   — webhook for the Telegram bot
     whatsapp/   — webhook for the WhatsApp Business bot (GET = Meta verification, POST = HMAC-verified events)
     instagram/story — posts Story to Instagram Graph API
+    campeonatos/[id]/ — gerar (create/simulate games; optional `semente` makes preview = real draw), recalcular (fill vagas), escudo
+    times/[id]/escudo — team crest upload (only the team's capitão)
     galeria/, convites/, inscricoes/, lembrete/, patrocinadores/
 ```
+
+### Championships (Campeonatos)
+
+Pure engine in `lib/campeonatos/`; `servico.ts` (`gerar`, `recalcular`) talks to the DB only through `portas.ts`. Games can start with undefined teams: `jogos.vaga_casa/vaga_visitante` describe the slot ("1º do Grupo A", "Vencedor do Jogo 7") and `recalcular` fills `time_casa_id/time_visitante_id` once groups/games finish; screens show "A definir" while null. A draw (sorteio) is only requested when a table is fully played. Migration `0023` adds: `campeonatos.slug/regulamento/visivel` (new championships are born hidden until the coordenação releases them), per-championship rosters in `inscricao_atletas` (one athlete per championship, by CPF — first team wins, RPCs `inscrever_atleta`/`copiar_elenco`), max 3 moderators per championship, moderators limited to their own championships, captain-only crest changes, and `correcoes_jogo` (súmula corrections, visible to staff only). Public pages: `/campeonatos` and `/campeonatos/[slug]`.
 
 ### News bots (Telegram / WhatsApp)
 

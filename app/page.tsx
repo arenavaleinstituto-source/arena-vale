@@ -17,6 +17,7 @@ import { buscarNoticiasPublicadas } from '@/lib/midia/noticias-busca';
 import { buscarPatrocinadores } from '@/lib/midia/patrocinadores';
 import { lerConfigSite, linkAssistirAoVivo } from '@/lib/midia/config';
 import { buscarCortesYT, buscarVideosYT, embedAoVivo, estaAoVivo } from '@/lib/midia/youtube';
+import { aplicarGiros, buscarGirosDosCortes } from '@/lib/midia/cortes';
 import { buscarAgenda, buscarHojeNaArena, resumoAgenda } from '@/lib/midia/agenda';
 import { buscarVideosExternos } from '@/lib/midia/videos-externos-busca';
 import { buscarDestaques } from '@/lib/content/destaques';
@@ -36,11 +37,12 @@ async function seguro<T>(p: Promise<T>, vazio: T): Promise<T> {
 /** Página inicial de mídia esportiva (spec Fase 3, seção 5). */
 export default async function Home() {
   const config = await lerConfigSite();
-  const [aoVivoDetectado, agenda, hojeNaArena, cortes, albunsHome, albunsJogos, videos, externos, destaques, patrocinadores, arena, mundo] = await Promise.all([
+  const [aoVivoDetectado, agenda, hojeNaArena, cortesYT, giros, albunsHome, albunsJogos, videos, externos, destaques, patrocinadores, arena, mundo] = await Promise.all([
     seguro(estaAoVivo(config.youtubeChannelId), false),
     seguro(buscarAgenda(30), []),
     seguro(buscarHojeNaArena(), { hoje: [], proximos: [] }),
     seguro(buscarCortesYT(config.youtubeChannelId), []),
+    seguro(buscarGirosDosCortes(), {}),
     seguro(buscarAlbuns(8), []),
     seguro(albunsDosJogos(), {}),
     seguro(buscarVideosYT(config.youtubeChannelId), []),
@@ -54,6 +56,7 @@ export default async function Home() {
     seguro(buscarNoticiasPublicadas({ aba: 'mundo', limite: 12 }), []),
   ]);
   const aoVivo = config.aoVivoManual || aoVivoDetectado;
+  const cortes = aplicarGiros(cortesYT, giros);
   const { proxima } = resumoAgenda(agenda, 6);
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.arenavale.com.br';
 

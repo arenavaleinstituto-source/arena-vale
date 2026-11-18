@@ -28,7 +28,7 @@ type Nome = { nome?: string | null } | null | undefined;
 
 export type LinhaJogo = {
   id: string;
-  data: string;
+  data: string | null;
   fase: string | null;
   local: string | null;
   casa: Nome;
@@ -70,6 +70,11 @@ function comFusoBrasilia(data: string): string {
   return new Date(temFuso ? data : `${data}-03:00`).toISOString();
 }
 
+/** Jogo com data e os dois times definidos (jogo "a definir" ou com vaga aberta não vai para a agenda). */
+export function jogoCompleto(row: LinhaJogo): boolean {
+  return Boolean(row.data && row.casa?.nome && row.fora?.nome);
+}
+
 export function deJogos(row: LinhaJogo): ItemAgenda {
   return {
     id: row.id,
@@ -78,7 +83,7 @@ export function deJogos(row: LinhaJogo): ItemAgenda {
     fase: row.fase ?? null,
     casa: row.casa?.nome ?? 'A definir',
     fora: row.fora?.nome ?? 'A definir',
-    dataHora: comFusoBrasilia(row.data),
+    dataHora: comFusoBrasilia(row.data ?? ''),
     local: corrigirLocal(row.local),
     transmissao: (row.transmissoes?.length ?? 0) > 0,
     status: row.status ?? null,
@@ -179,7 +184,9 @@ async function buscarItens(
   let qJogos = sb
     .from('jogos')
     .select('id,data,fase,local,status,placar_casa,placar_visitante,casa:time_casa_id(nome),fora:time_visitante_id(nome),campeonato:campeonato_id(modalidade),transmissoes(id)')
-    .gte('data', agoraBrasiliaSemFuso(desde));
+    .gte('data', agoraBrasiliaSemFuso(desde))
+    .not('time_casa_id', 'is', null)
+    .not('time_visitante_id', 'is', null);
   qJogos = o.status ? qJogos.in('status', o.status) : qJogos.eq('status', 'agendado');
   if (o.ate) qJogos = qJogos.lte('data', agoraBrasiliaSemFuso(o.ate));
   let qAgenda = sb
@@ -191,7 +198,7 @@ async function buscarItens(
     qJogos.order('data').limit(50).then((r) => r, () => ({ data: null, error: true })),
     qAgenda.order('data_hora').limit(50).then((r) => r, () => ({ data: null, error: true })),
   ]);
-  const jogos = rJogos.error || !rJogos.data ? [] : (rJogos.data as unknown as LinhaJogo[]).map(deJogos);
+  const jogos = rJogos.error || !rJogos.data ? [] : (rJogos.data as unknown as LinhaJogo[]).filter(jogoCompleto).map(deJogos);
   const agenda = rAgenda.error || !rAgenda.data ? [] : agendaAtiva(rAgenda.data as unknown as LinhaAgendaJogos[]).map(deAgendaJogos);
   return juntarAgenda(jogos, agenda, desde, limite);
 }
@@ -218,7 +225,7 @@ export async function buscarItemAgenda(origem: 'jogos' | 'agenda', id: string): 
       .select('id,data,fase,local,status,placar_casa,placar_visitante,casa:time_casa_id(nome),fora:time_visitante_id(nome),campeonato:campeonato_id(modalidade),transmissoes(id)')
       .eq('id', id)
       .maybeSingle();
-    return error || !data ? null : deJogos(data as unknown as LinhaJogo);
+    return error || !data || !jogoCompleto(data as unknown as LinhaJogo) ? null : deJogos(data as unknown as LinhaJogo);
   }
   const { data, error } = await sb
     .from('agenda_jogos')

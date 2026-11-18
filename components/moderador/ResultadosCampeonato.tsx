@@ -1,8 +1,11 @@
 'use client';
 
-import { useId, useState, type FormEvent } from 'react';
+import { useId, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
+import { FormResultado, STATUS_JOGO, type ValoresResultado } from './FormResultado';
+
+export { FormResultado, STATUS_JOGO };
 
 type Time = { id: string; nome: string };
 export type JogoDoModerador = {
@@ -29,43 +32,25 @@ export type LinhaClassificacao = {
 };
 export type CampeonatoDoModerador = { id: string; nome: string; jogos: JogoDoModerador[]; classificacao: LinhaClassificacao[] };
 
-const STATUS = [
-  ['agendado', 'Agendado'],
-  ['ao_vivo', 'Ao vivo'],
-  ['finalizado', 'Finalizado'],
-  ['adiado', 'Adiado'],
-  ['cancelado', 'Cancelado'],
-] as const;
 const EVENTOS = [
   ['gol', 'Gol'],
   ['cartao_amarelo', 'Cartão amarelo'],
   ['cartao_vermelho', 'Cartão vermelho'],
 ] as const;
 
-const num = (v: string) => (v.trim() === '' ? null : Math.max(0, Number.parseInt(v, 10) || 0));
-
 function CartaoJogo({ jogo }: { jogo: JogoDoModerador }) {
   const router = useRouter();
   const id = useId();
-  const [casa, setCasa] = useState(String(jogo.placar_casa ?? 0));
-  const [fora, setFora] = useState(String(jogo.placar_visitante ?? 0));
-  const [casa1t, setCasa1t] = useState(jogo.placar_casa_1t == null ? '' : String(jogo.placar_casa_1t));
-  const [fora1t, setFora1t] = useState(jogo.placar_visitante_1t == null ? '' : String(jogo.placar_visitante_1t));
-  const [status, setStatus] = useState(jogo.status);
   const [tipo, setTipo] = useState<string>('gol');
   const [minuto, setMinuto] = useState('');
   const [timeEvento, setTimeEvento] = useState(jogo.casa.id);
   const [msg, setMsg] = useState<string | null>(null);
   const titulo = `${jogo.casa.nome} × ${jogo.fora.nome}`;
 
-  async function salvar(e: FormEvent) {
-    e.preventDefault();
+  async function salvar(v: ValoresResultado) {
     setMsg(null);
-    // Só campos de resultado — data, local e times são da coordenação (o banco também barra).
-    const { error } = await createClient()
-      .from('jogos')
-      .update({ placar_casa: num(casa) ?? 0, placar_visitante: num(fora) ?? 0, placar_casa_1t: num(casa1t), placar_visitante_1t: num(fora1t), status })
-      .eq('id', jogo.id);
+    // Só campos de resultado.
+    const { error } = await createClient().from('jogos').update(v).eq('id', jogo.id);
     setMsg(error ? error.message : 'Resultado salvo.');
     if (!error) router.refresh();
   }
@@ -86,18 +71,14 @@ function CartaoJogo({ jogo }: { jogo: JogoDoModerador }) {
       <p className="mb-3 text-xs text-[var(--text-dim)]">
         {new Date(jogo.data).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })} · {jogo.local ?? 'Local a definir'}
       </p>
-      <form onSubmit={salvar} className="flex flex-wrap items-end gap-3">
-        <label htmlFor={`${id}-c`} className="grid gap-1 text-xs">Gols {jogo.casa.nome}<input id={`${id}-c`} type="number" min={0} value={casa} onChange={(e) => setCasa(e.target.value)} className={campo} /></label>
-        <label htmlFor={`${id}-f`} className="grid gap-1 text-xs">Gols {jogo.fora.nome}<input id={`${id}-f`} type="number" min={0} value={fora} onChange={(e) => setFora(e.target.value)} className={campo} /></label>
-        <label htmlFor={`${id}-c1`} className="grid gap-1 text-xs">1º tempo {jogo.casa.nome}<input id={`${id}-c1`} type="number" min={0} value={casa1t} onChange={(e) => setCasa1t(e.target.value)} className={campo} /></label>
-        <label htmlFor={`${id}-f1`} className="grid gap-1 text-xs">1º tempo {jogo.fora.nome}<input id={`${id}-f1`} type="number" min={0} value={fora1t} onChange={(e) => setFora1t(e.target.value)} className={campo} /></label>
-        <label htmlFor={`${id}-s`} className="grid gap-1 text-xs">Status
-          <select id={`${id}-s`} value={status} onChange={(e) => setStatus(e.target.value)} className="input">
-            {STATUS.map(([v, r]) => <option key={v} value={v}>{r}</option>)}
-          </select>
-        </label>
-        <button type="submit" className="btn btn-primary">Salvar resultado</button>
-      </form>
+      <FormResultado
+        nomeCasa={jogo.casa.nome}
+        nomeFora={jogo.fora.nome}
+        inicial={{ placar_casa: jogo.placar_casa ?? 0, placar_visitante: jogo.placar_visitante ?? 0, placar_casa_1t: jogo.placar_casa_1t, placar_visitante_1t: jogo.placar_visitante_1t, status: jogo.status }}
+        comStatus
+        comPrimeiroTempo
+        onSalvar={salvar}
+      />
       <div className="mt-4 flex flex-wrap items-end gap-3 border-t border-white/10 pt-4">
         <label htmlFor={`${id}-t`} className="grid gap-1 text-xs">Tipo de evento
           <select id={`${id}-t`} value={tipo} onChange={(e) => setTipo(e.target.value)} className="input">
