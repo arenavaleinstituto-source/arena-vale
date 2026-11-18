@@ -4,6 +4,7 @@ import { useEffect, useState, type ChangeEvent } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { faltasVideoExterno } from '@/lib/midia/videos-externos';
 import { reduzirImagem } from '@/lib/ui/imagem';
+import { PosicaoDosCortes } from './PosicaoDosCortes';
 
 type Video = { id: string; titulo: string; link: string; capa_url: string; ativo: boolean; publicado_em: string };
 
@@ -70,6 +71,7 @@ export function AbaVideos() {
 
   return (
     <div className="grid gap-6">
+      <PosicaoDosCortes />
       <div className="panel grid gap-4">
         <h2 className="font-display text-2xl font-extrabold uppercase">Vídeos do Instagram</h2>
         <p className="text-sm text-av-cinza">Os vídeos do YouTube entram sozinhos. Aqui você cadastra os do Instagram: eles aparecem em &ldquo;Últimos vídeos&rdquo; e abrem o post numa nova aba.</p>

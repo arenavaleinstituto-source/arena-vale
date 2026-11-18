@@ -26,6 +26,7 @@ export function fakeConsultas(tabelas: Record<string, unknown[]> = {}, rpcRespos
       update: (p: unknown) => cadeia(t, 'update', p),
       insert: (p: unknown) => cadeia(t, 'insert', p),
       delete: () => cadeia(t, 'delete'),
+      upsert: (p: unknown) => cadeia(t, 'upsert', p),
     })),
     rpc: vi.fn().mockResolvedValue({ data: rpcResposta.data ?? null, error: rpcResposta.error ?? null }),
     escritas,

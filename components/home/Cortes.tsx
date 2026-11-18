@@ -3,7 +3,7 @@
 import { useCallback, useRef, useState } from 'react';
 import { Fileira } from '@/components/midia/Fileira';
 import { PlayerCorte } from '@/components/midia/PlayerCorte';
-import type { VideoYT } from '@/lib/midia/youtube';
+import { capaVertical, type VideoYT } from '@/lib/midia/youtube';
 
 /** Home: fileira de cortes (Shorts do canal) que abrem num player vertical. */
 export function Cortes({ cortes }: { cortes: VideoYT[] }) {
@@ -30,14 +30,27 @@ export function Cortes({ cortes }: { cortes: VideoYT[] }) {
             <button
               key={c.id}
               type="button"
-              className="corte"
+              className={c.giro ? 'corte deitado' : 'corte'}
               onClick={(e) => {
                 origem.current = e.currentTarget;
                 setAberto(c);
               }}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={c.capa} alt="" loading="lazy" />
+              <img
+                src={capaVertical(c.id)}
+                alt=""
+                loading="lazy"
+                // Vídeo publicado deitado: a capa gira para ficar em pé dentro do cartão horizontal.
+                style={c.giro ? { transform: `translate(-50%, -50%) rotate(${c.giro}deg)` } : undefined}
+                onError={(e) => {
+                  if (e.currentTarget.src !== c.capa) e.currentTarget.src = c.capa;
+                }}
+                // Sem capa em pé, o YouTube manda uma imagem genérica de 120×90: troca pela capa comum.
+                onLoad={(e) => {
+                  if (e.currentTarget.naturalWidth <= 120 && e.currentTarget.src !== c.capa) e.currentTarget.src = c.capa;
+                }}
+              />
               <span className="play" aria-hidden="true">▶</span>
               <span className="nome">{c.titulo}</span>
             </button>

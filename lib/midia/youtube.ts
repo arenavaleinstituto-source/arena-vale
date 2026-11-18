@@ -5,7 +5,13 @@
  * Qualquer falha devolve "vazio" ou "fora do ar" — o site nunca quebra.
  */
 
-export type VideoYT = { id: string; titulo: string; publicadoEm: string; capa: string; link: string };
+/** Corte publicado deitado no YouTube: quanto girar para ficar em pé (-90 = para a esquerda). */
+export type Giro = -90 | 90;
+
+/** Capa em pé do Short (1080×1920). A `hqdefault` é 4:3 com tarjas e fica cortada num cartão vertical. */
+export const capaVertical = (id: string) => `https://i.ytimg.com/vi/${id}/oardefault.jpg`;
+
+export type VideoYT = { id: string; titulo: string; publicadoEm: string; capa: string; link: string; giro?: Giro };
 
 const ENTIDADES: Record<string, string> = { '&amp;': '&', '&lt;': '<', '&gt;': '>', '&quot;': '"', '&#39;': "'", '&apos;': "'" };
 

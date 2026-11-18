@@ -63,4 +63,33 @@ describe('Cortes', () => {
     fireEvent.click(document.querySelector('.fundo-corte') as Element);
     expect(screen.queryByRole('dialog')).toBeNull();
   });
+
+  it('capa em pé do Short; se ela não existir, volta para a capa comum', () => {
+    render(<Cortes cortes={TRES} />);
+    const img = screen.getByRole('button', { name: /Golaço de bicicleta/ }).querySelector('img')!;
+    expect(img).toHaveAttribute('src', 'https://i.ytimg.com/vi/a1/oardefault.jpg');
+    fireEvent.error(img);
+    expect(img).toHaveAttribute('src', 'https://i.ytimg.com/vi/a1/hqdefault.jpg');
+  });
+
+  it('se o YouTube devolver a imagem genérica (120×90) no lugar da capa em pé, usa a capa comum', () => {
+    render(<Cortes cortes={TRES} />);
+    const img = screen.getByRole('button', { name: /Defesa incrível/ }).querySelector('img')!;
+    Object.defineProperty(img, 'naturalWidth', { value: 120 });
+    fireEvent.load(img);
+    expect(img).toHaveAttribute('src', 'https://i.ytimg.com/vi/b2/hqdefault.jpg');
+  });
+
+  it('corte deitado: cartão horizontal com a capa girada, e o player abre na horizontal', () => {
+    render(<Cortes cortes={[{ ...corte('d4', 'Grande defesa'), giro: -90 }, corte('e5', 'Em pé')]} />);
+    const cartao = screen.getByRole('button', { name: /Grande defesa/ });
+    expect(cartao).toHaveClass('deitado');
+    expect(cartao.querySelector('img')!.style.transform).toContain('rotate(-90deg)');
+    expect(screen.getByRole('button', { name: /Em pé/ })).not.toHaveClass('deitado');
+
+    fireEvent.click(cartao);
+    const dialogo = screen.getByRole('dialog');
+    expect(dialogo).toHaveClass('deitado');
+    expect(dialogo.querySelector('iframe')!.style.transform).toContain('rotate(-90deg)');
+  });
 });
