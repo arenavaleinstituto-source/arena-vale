@@ -19,6 +19,7 @@ export function CoordJogos() {
   const [timeVisitanteId, setTimeVisitanteId] = useState('');
   const [data, setData] = useState('');
   const [local, setLocal] = useState('');
+  const [delegadoId, setDelegadoId] = useState('');
 
   useEffect(() => {
     carregar();
@@ -64,6 +65,7 @@ export function CoordJogos() {
       time_visitante_id: timeVisitanteId,
       data: new Date(data).toISOString(),
       local: local || null,
+      delegado_id: delegadoId || null,
       placar_casa: 0,
       placar_visitante: 0,
       status: 'agendado',
@@ -78,6 +80,7 @@ export function CoordJogos() {
       setTimeVisitanteId('');
       setData('');
       setLocal('');
+      setDelegadoId('');
       await carregar();
     }
 
@@ -191,8 +194,25 @@ export function CoordJogos() {
             value={local}
             onChange={(e) => setLocal(e.target.value)}
             placeholder="Local da partida"
-            className="md:col-span-2 px-3 py-3 rounded-[10px] bg-[#08080a] border border-white/10"
+            className="self-end px-3 py-3 rounded-[10px] bg-[#08080a] border border-white/10"
           />
+
+          {/* O delegado escolhido aqui entra com o próprio login e lança o placar na Mesa do Jogo. */}
+          <label className="grid gap-1 text-sm text-av-cinza">
+            Delegado (opcional)
+            <select
+              value={delegadoId}
+              onChange={(e) => setDelegadoId(e.target.value)}
+              className="px-3 py-3 rounded-[10px] bg-[#08080a] border border-white/10 text-base text-av-branco"
+            >
+              <option value="">{delegados.length ? '— escolher depois —' : 'Nenhum delegado cadastrado: convide na aba Delegados'}</option>
+              {delegados.map((d) => (
+                <option key={d.id} value={d.id}>
+                  {d.full_name || d.email || 'Delegado'}
+                </option>
+              ))}
+            </select>
+          </label>
         </div>
 
         <button
