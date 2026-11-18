@@ -366,6 +366,8 @@
 .menu-cel a:hover { color: var(--branco); background: rgba(255,255,255,.06); }
 .menu-cel a.on, .menu-cel a[aria-current="page"] { color: var(--branco); box-shadow: inset 3px 0 0 var(--vermelho); }
 .menu-cel a.tambem-no-topo, .menu-cel .anuncie-cel { display: none; }
+/* O ☰ é só do celular: no computador o menu do topo já mostra as páginas. */
+@media (min-width: 761px) { .hamb, .menu-cel, .fundo-menu-cel { display: none; } }
 @media (max-width: 760px) {
   .topo .menu { display: none; }
   .topo .dentro { justify-content: space-between; position: static; }
