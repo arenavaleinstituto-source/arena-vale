@@ -56,6 +56,8 @@ describe('AbaJogosCampeonato', () => {
     expect(escrita.payload).toEqual({ data: '2026-11-20T19:30:00' });
     expect(escrita.filtros).toContainEqual(['eq', 'campeonato_id', 'c1']);
     expect(escrita.filtros).toContainEqual(['eq', 'rodada', 2]);
+    // Jogos já disputados (ou em andamento) da rodada mantêm a data em que aconteceram.
+    expect(escrita.filtros).toContainEqual(['not', 'status', 'in', '("finalizado","ao_vivo")']);
   });
 
   it('W.O. do visitante grava o placar padrão e encerra o jogo', async () => {

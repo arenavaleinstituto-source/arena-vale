@@ -207,7 +207,8 @@ function JogoNoPainel({ jogo, jogos, campeonatoId, regulamento: r, nomeCasa, nom
   async function gravar(mudanca: Record<string, unknown>, filtro?: { rodada: number }) {
     setMsg('');
     let q = sb.from('jogos').update(mudanca);
-    q = filtro ? q.eq('campeonato_id', campeonatoId).eq('rodada', filtro.rodada) : q.eq('id', jogo.id);
+    // Na rodada inteira, os jogos já disputados (ou em andamento) mantêm a data em que aconteceram.
+    q = filtro ? q.eq('campeonato_id', campeonatoId).eq('rodada', filtro.rodada).not('status', 'in', '("finalizado","ao_vivo")') : q.eq('id', jogo.id);
     const { error } = await q;
     if (error) {
       setMsg(error.message);
