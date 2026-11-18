@@ -482,6 +482,75 @@ create trigger tr_proteger_escudo_time
   before insert or update on public.times
   for each row execute function public.proteger_escudo_time();
 
+-- ─── 7a) proteções da revisão final ─────────────────────────────────
+-- Só a coordenação escolhe o delegado, também ao criar o jogo (o moderador agora cria jogos).
+create or replace function public.delegado_so_pela_coordenacao()
+returns trigger language plpgsql set search_path = public as $$
+begin
+  if new.delegado_id is not null
+     and not public.is_staff()
+     and current_user not in ('service_role', 'postgres', 'supabase_admin') then
+    raise exception 'Apenas a coordenação escolhe o delegado.';
+  end if;
+  return new;
+end $$;
+drop trigger if exists tr_delegado_so_pela_coordenacao on public.jogos;
+create trigger tr_delegado_so_pela_coordenacao
+  before insert on public.jogos
+  for each row execute function public.delegado_so_pela_coordenacao();
+
+-- Ao finalizar, só perde o cargo quem ainda é delegado (nunca a coordenação ou outro cargo).
+create or replace function public.bloquear_delegado_ao_finalizar()
+returns trigger language plpgsql security definer set search_path = public as $$
+begin
+  if new.status = 'finalizado'
+     and (old.status is distinct from 'finalizado')
+     and new.delegado_id is not null then
+    update public.profiles set role = 'autenticado' where id = new.delegado_id and role = 'delegado';
+  end if;
+  return new;
+end;
+$$;
+
+-- Na linha do elenco, só número e posição mudam; trocar o atleta (ou a inscrição) é com a coordenação.
+create or replace function public.elenco_so_numero_e_posicao()
+returns trigger language plpgsql set search_path = public as $$
+begin
+  if public.is_staff() or current_user in ('service_role', 'postgres', 'supabase_admin') then
+    return new;
+  end if;
+  if new.jogador_id is distinct from old.jogador_id or new.inscricao_id is distinct from old.inscricao_id then
+    raise exception 'Só a coordenação troca o atleta do elenco.';
+  end if;
+  return new;
+end $$;
+drop trigger if exists tr_elenco_so_numero_e_posicao on public.inscricao_atletas;
+create trigger tr_elenco_so_numero_e_posicao
+  before update on public.inscricao_atletas
+  for each row execute function public.elenco_so_numero_e_posicao();
+
+-- O capitão não apaga nem muda um atleta que está no elenco de outro time.
+-- Sem security definer: dentro dele current_user vira o dono e a checagem de quem chama não valeria.
+create or replace function public.proteger_atleta_de_outro_time()
+returns trigger language plpgsql set search_path = public as $$
+begin
+  if public.is_staff() or current_user in ('service_role', 'postgres', 'supabase_admin') then
+    return coalesce(new, old);
+  end if;
+  if exists (
+    select 1 from public.inscricao_atletas ia
+      join public.inscricoes i on i.id = ia.inscricao_id
+     where ia.jogador_id = old.id and i.time_id is distinct from old.time_id
+  ) then
+    raise exception 'Este atleta está no elenco de outro time. Fale com a coordenação.';
+  end if;
+  return coalesce(new, old);
+end $$;
+drop trigger if exists tr_proteger_atleta_de_outro_time on public.jogadores;
+create trigger tr_proteger_atleta_de_outro_time
+  before update or delete on public.jogadores
+  for each row execute function public.proteger_atleta_de_outro_time();
+
 -- ─── 8) classificação antiga respeita quem pode ver cada jogo ───────
 alter view if exists public.v_classificacao set (security_invoker = true);
 

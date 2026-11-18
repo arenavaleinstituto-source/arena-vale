@@ -293,6 +293,50 @@ describe('campeonatos (0023)', () => {
     });
   });
 
+  describe('revisão final', () => {
+    it('moderador não cria jogo com delegado escolhido por ele', async () => {
+      const coord = await criarUsuario('coordenador');
+      const m = await clienteComo(c.moderador);
+      const r = await m.from('jogos').insert({ campeonato_id: c.campA, delegado_id: coord.id, status: 'agendado' });
+      expect(r.error?.message).toMatch(/Apenas a coordenação escolhe o delegado\./);
+      const semDelegado = await m.from('jogos').insert({ campeonato_id: c.campA, status: 'agendado' });
+      expect(semDelegado.error).toBeNull();
+    });
+
+    it('finalizar um jogo só rebaixa quem ainda é delegado', async () => {
+      const coord = await criarUsuario('coordenador');
+      const j = await inserir('jogos', { campeonato_id: c.campA, delegado_id: coord.id, status: 'agendado' });
+      await admin().from('jogos').update({ status: 'finalizado', placar_casa: 1, placar_visitante: 0 }).eq('id', j.id);
+      expect((await admin().from('profiles').select('role').eq('id', coord.id).single()).data?.role).toBe('coordenador');
+    });
+
+    it('capitão não troca o atleta de uma linha do elenco', async () => {
+      const ins = await inscricao(c.campA, c.casa);
+      const a = await inserir('jogadores', { nome: 'Atleta A', cpf: cpfNovo(), time_id: c.casa });
+      const b = await inserir('jogadores', { nome: 'Craque B', cpf: cpfNovo(), time_id: c.fora });
+      const linha = await inserir('inscricao_atletas', { inscricao_id: ins, jogador_id: a.id });
+      const cap = await clienteComo(await capitaoDoTime(c.casa, c.campA));
+      const r = await cap.from('inscricao_atletas').update({ jogador_id: b.id }).eq('id', linha.id);
+      expect(r.error?.message).toMatch(/Só a coordenação troca o atleta do elenco\./);
+      const numero = await cap.from('inscricao_atletas').update({ numero_camisa: 9 }).eq('id', linha.id);
+      expect(numero.error).toBeNull();
+    });
+
+    it('capitão não apaga nem muda atleta que está no elenco de outro time', async () => {
+      const p = await inserir('jogadores', { nome: 'Atleta P', cpf: cpfNovo(), time_id: c.casa });
+      await inserir('inscricao_atletas', { inscricao_id: await inscricao(c.campA, c.fora), jogador_id: p.id });
+      const cap = await clienteComo(await capitaoDoTime(c.casa, c.campA));
+      const apagar = await cap.from('jogadores').delete().eq('id', p.id);
+      expect(apagar.error?.message).toMatch(/Este atleta está no elenco de outro time/);
+      const mudar = await cap.from('jogadores').update({ nome: 'Outro Nome' }).eq('id', p.id);
+      expect(mudar.error?.message).toMatch(/Este atleta está no elenco de outro time/);
+      expect((await admin().from('jogadores').select('nome').eq('id', p.id).single()).data?.nome).toBe('Atleta P');
+
+      const so = await inserir('jogadores', { nome: 'Só Daqui', cpf: cpfNovo(), time_id: c.casa });
+      expect((await cap.from('jogadores').update({ nome: 'Só Daqui Jr' }).eq('id', so.id)).error).toBeNull();
+    });
+  });
+
   it('reaplicar a 0023 duas vezes não dá erro', async () => {
     const env = carregarEnvTeste();
     const cli = new pg.Client({ connectionString: env.databaseUrl, ssl: { rejectUnauthorized: false } });

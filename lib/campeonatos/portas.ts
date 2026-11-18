@@ -34,9 +34,12 @@ type LinhaJogo = {
   vaga_casa: Vaga | null; vaga_visitante: Vaga | null; vaga_manual: boolean | null; jogo_volta_de: string | null;
 };
 
+/** Jogos de antes do site gerar tabelas não têm ordem e ficam com a fase padrão do banco ('fase_grupos') ou vazia: são de pontos corridos. */
+const faseDoJogo = (l: LinhaJogo) => (l.ordem == null && (l.fase == null || l.fase === 'fase_grupos') ? 'Pontos corridos' : l.fase);
+
 export function paraJogoCalc(l: LinhaJogo): JogoCalc {
   return {
-    id: l.id, ordem: l.ordem, fase: l.fase, grupo: l.grupo, rodada: l.rodada,
+    id: l.id, ordem: l.ordem, fase: faseDoJogo(l), grupo: l.grupo, rodada: l.rodada,
     casa: l.time_casa_id, visitante: l.time_visitante_id, status: l.status,
     placar_casa: l.placar_casa, placar_visitante: l.placar_visitante,
     penaltis_casa: l.penaltis_casa, penaltis_visitante: l.penaltis_visitante,

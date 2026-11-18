@@ -25,7 +25,9 @@ export function faseAtual(jogos: JogoResumo[]): string | null {
     .filter((j) => j.status !== 'finalizado' && j.status !== 'cancelado')
     .sort((a, b) => (a.ordem ?? Number.MAX_SAFE_INTEGER) - (b.ordem ?? Number.MAX_SAFE_INTEGER))[0];
   if (!proximo) return null;
-  if (proximo.fase === 'Pontos corridos' || !proximo.fase) return proximo.rodada ? `Rodada ${proximo.rodada}` : proximo.fase;
+  // Jogo antigo (sem ordem) com a fase padrão do banco é de pontos corridos.
+  const tabela = proximo.fase === 'Pontos corridos' || !proximo.fase || (proximo.ordem == null && proximo.fase === 'fase_grupos');
+  if (tabela) return proximo.rodada ? `Rodada ${proximo.rodada}` : null;
   return proximo.fase;
 }
 
