@@ -2,7 +2,7 @@
  * Serviço dos campeonatos: junta as regras puras (gerar, trava, vagas) com o banco pelas portas.
  * Roda só no servidor, depois de a rota conferir quem está pedindo.
  */
-import { gerarJogos } from './gerar';
+import { gerarJogos, sementesDaChave } from './gerar';
 import type { PortasCampeonato } from './portas';
 import { validarRegulamento } from './regulamento';
 import type { FormaDisputa, JogoGerado } from './tipos';
@@ -40,7 +40,13 @@ export async function gerar(
 
   // Ao gerar de novo, os grupos já sorteados continuam os mesmos, a não ser que venham outros.
   const grupos = o.grupos ?? (Object.keys(d.grupos).length ? d.grupos : undefined);
-  const gerado = gerarJogos(o.forma, d.times, { grupos, sementes: o.sementes, aleatorio: o.aleatorio });
+  // Mata-mata sorteado que já tem jogos: refaz o mesmo sorteio a partir deles (a 1ª fase não muda).
+  const sementes =
+    o.sementes ??
+    (o.forma.tipo === 'mata_mata' && d.regulamento.forma.tipo === 'mata_mata' && d.jogos.length
+      ? (sementesDaChave(d.jogos, d.times, d.regulamento.forma.mata) ?? undefined)
+      : undefined);
+  const gerado = gerarJogos(o.forma, d.times, { grupos, sementes, aleatorio: o.aleatorio });
   if ('erro' in gerado) return gerado;
 
   const formaMudou = o.formaMudou || (d.jogos.length > 0 && d.regulamento.forma.tipo !== o.forma.tipo);

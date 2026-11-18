@@ -101,7 +101,8 @@ export function MontagemManual({ forma, times, grupos, sementes, onGrupos, onSem
 
 /** O que mandar para o `gerar`, a partir da montagem à mão. */
 export function montagemParaGerar(forma: FormaDisputa, times: Time[], grupos: Record<string, string[]>, sementes: string[]): { grupos?: Record<string, string[]>; sementes?: string[] } {
-  if (forma.tipo === 'grupos_mata_mata' && forma.montagem === 'manual') return { grupos };
+  // Grupos vazios = ainda não montados aqui: o servidor usa os grupos já gravados nos jogos.
+  if (forma.tipo === 'grupos_mata_mata' && forma.montagem === 'manual') return Object.keys(grupos).length ? { grupos } : {};
   if (forma.tipo === 'grupos_mata_mata' && forma.montagem === 'sorteio_cabecas') return { sementes };
   if (forma.tipo === 'mata_mata' && forma.mata.chave === 'manual') {
     return { sementes: [...sementes.filter((s) => times.some((t) => t.id === s)), ...times.map((t) => t.id).filter((id) => !sementes.includes(id))] };

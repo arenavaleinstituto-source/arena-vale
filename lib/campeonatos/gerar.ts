@@ -1,6 +1,6 @@
 import { gerarChave, cruzamentoOlimpico, type Entrada } from './chave';
 import { gerarRodizio } from './rodizio';
-import type { FormaDisputa, JogoGerado } from './tipos';
+import type { FormaDisputa, JogoCalc, JogoGerado, OpcoesMataMata } from './tipos';
 
 /** Fisher-Yates; devolve uma cópia embaralhada, sem mexer na lista original. */
 /** Sorteio repetível (mulberry32): a mesma semente gera a mesma sequência — a prévia e a geração saem iguais. */
@@ -105,7 +105,11 @@ export function gerarJogos(forma: FormaDisputa, times: string[], o: Opcoes): Res
   } else {
     grupos = sortearGrupos(times, forma.grupos, forma.montagem === 'sorteio_cabecas' ? (o.sementes ?? []) : [], o.aleatorio);
   }
-  const letras = Object.keys(grupos);
+  // Ordem canônica (letra e, dentro do grupo, ordem de inscrição): os mesmos grupos geram sempre os mesmos jogos,
+  // venham do sorteio ou reconstruídos dos jogos já gravados.
+  const posicao = new Map(times.map((t, i) => [t, i]));
+  const letras = Object.keys(grupos).sort();
+  grupos = Object.fromEntries(letras.map((l) => [l, [...grupos[l]].sort((a, b) => (posicao.get(a) ?? 0) - (posicao.get(b) ?? 0))]));
   if (Math.min(...letras.map((l) => grupos[l].length)) < forma.passam_por_grupo) {
     return { erro: 'Um grupo tem menos times do que as vagas para passar.' };
   }
@@ -124,4 +128,26 @@ export function gerarJogos(forma: FormaDisputa, times: string[], o: Opcoes): Res
   const entradas = cruzamentoOlimpico(letras, forma.passam_por_grupo, extras);
   jogos.push(...gerarChave(entradas, forma.mata, jogos.length + 1));
   return { jogos };
+}
+
+/**
+ * Refaz a ordem do sorteio de um mata-mata a partir dos jogos já gravados (gerados com `mata`),
+ * para gerar de novo sem mudar os confrontos. Devolve null se os jogos não batem com a chave.
+ */
+export function sementesDaChave(existentes: JogoCalc[], times: string[], mata: OpcoesMataMata): string[] | null {
+  const marcador = (i: number) => `#${i}`;
+  const modelo = gerarChave(times.map((_, i) => ({ time: marcador(i) })), mata, 1);
+  const posicoes: (string | undefined)[] = new Array(times.length);
+  for (const g of modelo) {
+    if (g.volta_de !== null) continue;
+    const ex = existentes.find((j) => j.ordem === g.ordem && !j.jogo_volta_de);
+    for (const [m, time] of [[g.casa, ex?.casa], [g.visitante, ex?.visitante]] as const) {
+      if (!m?.startsWith('#')) continue;
+      const i = Number(m.slice(1));
+      if (!time || (posicoes[i] && posicoes[i] !== time)) return null;
+      posicoes[i] = time;
+    }
+  }
+  const lista = posicoes.filter((t): t is string => Boolean(t));
+  return lista.length === times.length && mesmoConjunto(lista, times) ? lista : null;
 }

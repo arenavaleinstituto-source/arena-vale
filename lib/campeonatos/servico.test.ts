@@ -1,8 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
 import { regulamentoPadrao } from './regulamento';
 import { gerar, recalcular } from './servico';
-import type { DadosCampeonato, PortasCampeonato } from './portas';
-import type { FormaDisputa, JogoCalc } from './tipos';
+import { gruposDosJogos, type DadosCampeonato, type PortasCampeonato } from './portas';
+import { aleatorioComSemente } from './gerar';
+import type { FormaDisputa, JogoCalc, JogoGerado } from './tipos';
 
 const fixo = () => 0.5;
 
@@ -88,5 +89,49 @@ describe('gerar', () => {
     const p = portasFalsas(dadosBase({ times: ['a'] }));
     const r = await gerar('c1', p, { forma: MATA, formaMudou: false, aleatorio: fixo, simular: true });
     expect(r).toEqual({ erro: 'São necessários pelo menos 2 times.' });
+  });
+});
+
+describe('gerar de novo depois do primeiro resultado (opções de fases futuras)', () => {
+  const T8 = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+  const comTerceiro = <F extends FormaDisputa>(f: F): F => ({ ...f, mata: { ...(f as { mata: MataOpcoes }).mata, terceiro_lugar: true } });
+  type MataOpcoes = Extract<FormaDisputa, { tipo: 'mata_mata' }>['mata'];
+
+  /** Gera para valer e devolve os jogos como estariam no banco, com o 1º jogo já finalizado. */
+  async function gravados(forma: FormaDisputa, semente: number): Promise<JogoCalc[]> {
+    const p = portasFalsas(dadosBase({ times: T8, regulamento: regulamentoPadrao('gols', forma) }));
+    const r = await gerar('c1', p, { forma, formaMudou: false, aleatorio: aleatorioComSemente(semente), simular: true });
+    if (!('jogos' in r)) throw new Error(r.erro);
+    return r.jogos.map((g) =>
+      jogo({
+        id: `g${g.ordem}`, ordem: g.ordem, fase: g.fase, grupo: g.grupo, rodada: g.rodada, casa: g.casa, visitante: g.visitante,
+        vaga_casa: g.vaga_casa, vaga_visitante: g.vaga_visitante, jogo_volta_de: g.volta_de ? `g${g.volta_de}` : null,
+        ...(g.ordem === 1 ? { status: 'finalizado', placar_casa: 1, placar_visitante: 0 } : {}),
+      }),
+    );
+  }
+
+  it('grupos sorteados: ligar o 3º lugar não mexe na fase de grupos', async () => {
+    const forma: FormaDisputa = { ...regulamentoPadrao('gols', { tipo: 'grupos_mata_mata' } as FormaDisputa).forma, tipo: 'grupos_mata_mata', grupos: 2, passam_por_grupo: 2, melhores_extras: 0, montagem: 'sorteio', ida_volta_grupos: false, mata: MATA.mata } as FormaDisputa;
+    const jogos = await gravados(forma, 1);
+    const p = portasFalsas(dadosBase({ times: T8, regulamento: regulamentoPadrao('gols', forma), jogos, grupos: gruposDosJogos(jogos) }));
+    const r = await gerar('c1', p, { forma: comTerceiro(forma), formaMudou: false, aleatorio: aleatorioComSemente(99), simular: false });
+    expect(r).not.toHaveProperty('erro');
+    const [, apagar, inserir] = p.chamadas.substituirJogos[0] as [string, string[], JogoGerado[]];
+    const deGrupo = new Set(jogos.filter((j) => j.fase === 'Fase de grupos').map((j) => j.id));
+    expect(apagar.filter((id) => deGrupo.has(id))).toEqual([]);
+    expect(inserir.filter((j) => j.fase === 'Fase de grupos')).toEqual([]);
+  });
+
+  it('mata-mata sorteado: ligar o 3º lugar mantém os confrontos da 1ª fase', async () => {
+    const forma: FormaDisputa = { tipo: 'mata_mata', mata: { ...MATA.mata, chave: 'sorteio' } };
+    const jogos = await gravados(forma, 1);
+    const p = portasFalsas(dadosBase({ times: T8, regulamento: regulamentoPadrao('gols', forma), jogos }));
+    const r = await gerar('c1', p, { forma: comTerceiro(forma), formaMudou: false, aleatorio: aleatorioComSemente(99), simular: false });
+    expect(r).not.toHaveProperty('erro');
+    const [, apagar, inserir] = p.chamadas.substituirJogos[0] as [string, string[], JogoGerado[]];
+    const quartas = jogos.filter((j) => j.fase === 'Quartas de final');
+    expect(apagar.filter((id) => quartas.some((q) => q.id === id))).toEqual([]);
+    expect(inserir.filter((j) => j.fase === 'Quartas de final')).toEqual([]);
   });
 });
