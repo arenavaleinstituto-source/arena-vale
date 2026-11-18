@@ -28,6 +28,18 @@ describe('NovoCampeonato', () => {
   });
   afterEach(() => vi.unstubAllGlobals());
 
+  it('coordenação gerencia as modalidades ali mesmo, na etapa 1', async () => {
+    render(<NovoCampeonato onCriado={vi.fn()} gerirModalidades />);
+    expect(screen.queryByRole('heading', { name: 'Modalidades' })).toBeNull();
+    await userEvent.setup().click(screen.getByRole('button', { name: 'Gerenciar modalidades' }));
+    expect(screen.getByRole('heading', { name: 'Modalidades' })).toBeInTheDocument();
+  });
+
+  it('moderador não vê o botão de gerenciar modalidades', () => {
+    render(<NovoCampeonato onCriado={vi.fn()} />);
+    expect(screen.queryByRole('button', { name: 'Gerenciar modalidades' })).toBeNull();
+  });
+
   it('passo 1 sem nome avisa e não cria nada', async () => {
     render(<NovoCampeonato onCriado={vi.fn()} />);
     await userEvent.setup().click(screen.getByRole('button', { name: 'Continuar' }));

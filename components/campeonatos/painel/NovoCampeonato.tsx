@@ -13,15 +13,18 @@ import { MontagemManual, montagemParaGerar } from './MontagemManual';
 import { TimesDoCampeonato, type TimeInscrito } from './TimesDoCampeonato';
 import { enviarEscudo, gerarJogos } from './api';
 import { CAMPO, ROTULO } from './estilos';
+import { GestaoModalidades } from '@/components/painel/GestaoModalidades';
 
 const PASSOS = ['Dados e escudo', 'Times', 'Forma de disputa', 'Regulamento', 'Revisar e gerar'];
 const FORMA_INICIAL: FormaDisputa = { tipo: 'pontos_corridos', ida_volta: false, final_entre: null, mata: null };
 
 /** Assistente de criação em 5 passos. O campeonato é criado no fim do passo 1 e nasce escondido. */
-export function NovoCampeonato({ onCriado }: { onCriado: (id: string) => void }) {
+/** `gerirModalidades`: a coordenação cria ou esconde modalidades ali mesmo, na etapa 1. */
+export function NovoCampeonato({ onCriado, gerirModalidades = false }: { onCriado: (id: string) => void; gerirModalidades?: boolean }) {
   const sb = createClient();
   const modalidades = useModalidades();
   const [passo, setPasso] = useState(1);
+  const [vendoModalidades, setVendoModalidades] = useState(false);
   const [id, setId] = useState<string | null>(null);
   const [dados, setDados] = useState({ nome: '', ano: new Date().getFullYear(), modalidade: '', categoria: '' });
   const [arquivo, setArquivo] = useState<File | null>(null);
@@ -142,6 +145,14 @@ export function NovoCampeonato({ onCriado }: { onCriado: (id: string) => void })
               <input className={CAMPO} value={dados.categoria} placeholder="Ex.: Sub-17" onChange={(e) => setDados({ ...dados, categoria: e.target.value })} />
             </label>
           </div>
+          {gerirModalidades && (
+            <div className="grid gap-3">
+              <button type="button" className="btn-leve w-fit" onClick={() => setVendoModalidades((v) => !v)}>
+                {vendoModalidades ? 'Fechar modalidades' : 'Gerenciar modalidades'}
+              </button>
+              {vendoModalidades && <GestaoModalidades />}
+            </div>
+          )}
           <label className={ROTULO}>
             Escudo do campeonato (opcional)
             <input type="file" accept="image/png,image/jpeg,image/webp" className="text-sm" onChange={(e) => (setArquivo(e.target.files?.[0] ?? null), setEscudo(null))} />

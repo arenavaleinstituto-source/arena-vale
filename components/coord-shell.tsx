@@ -12,7 +12,6 @@ import { CoordCapitaes } from './coord-capitaes';
 import { CoordConfig } from './coord-config';
 import { CoordJogos } from './coord-jogos';
 import { CoordCampeonatos } from './coord-campeonatos';
-import { GestaoModalidades } from './painel/GestaoModalidades';
 import { AbaAoVivo } from './painel/AbaAoVivo';
 import { AbaNoticias } from './painel/AbaNoticias';
 import { AbaGaleria } from './painel/AbaGaleria';
@@ -233,12 +232,7 @@ export function CoordShell({ user, stats, inscricoes: initialInsc, patrocinadore
         {tab === 'galeria' && <AbaGaleria />}
         {tab === 'videos' && <AbaVideos />}
         {tab === 'jogos' && <CoordJogos />}
-        {tab === 'campeonatos' && (
-          <div className="grid gap-6">
-            <CoordCampeonatos />
-            <GestaoModalidades />
-          </div>
-        )}
+        {tab === 'campeonatos' && <CoordCampeonatos />}
         {tab === 'inscricoes' && (
           <div className="panel">
             <h2 className="mb-4 font-rotulo text-sm font-bold uppercase tracking-widest text-av-cinza">Times aguardando aprovação · {inscricoes.length}</h2>

@@ -22,6 +22,7 @@ export function MeusCampeonatos({ campeonatos, ehCoordenacao, onAbrir }: { campe
           </button>
         </div>
         <NovoCampeonato
+          gerirModalidades={ehCoordenacao}
           onCriado={(id) => {
             setCriando(false);
             if (onAbrir) return onAbrir(id);
