@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { NovoCampeonato } from './NovoCampeonato';
+import { anoAoLado } from '@/components/campeonatos/formatar';
 
 export type CampeonatoDaLista = { id: string; nome: string; ano: number; slug: string; visivel: boolean; modalidade: string | null };
 
@@ -49,7 +50,7 @@ export function MeusCampeonatos({ campeonatos, ehCoordenacao, onAbrir }: { campe
             <li key={c.id} className="flex flex-wrap items-center gap-3 rounded-xl border border-av-linha bg-av-grafite-2 p-3">
               <span className="min-w-0 flex-1">
                 <strong className="block truncate">
-                  {c.nome} <span className="text-av-cinza">· {c.ano}</span>
+                  {c.nome} {anoAoLado(c.nome, c.ano) && <span className="text-av-cinza">· {c.ano}</span>}
                 </strong>
                 {!c.visivel && (
                   <span className="mt-1 inline-block rounded-full border border-av-amarelo/60 px-3 py-0.5 font-rotulo text-xs font-bold uppercase tracking-wider text-av-amarelo">

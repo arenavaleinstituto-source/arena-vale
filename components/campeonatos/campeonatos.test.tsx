@@ -87,3 +87,12 @@ describe('/campeonatos', () => {
     expect(screen.queryByText('Copa Futsal')).toBeNull();
   });
 });
+
+describe('anoAoLado', () => {
+  it('não repete o ano quando o nome já tem', async () => {
+    const { anoAoLado } = await import('./formatar');
+    expect(anoAoLado('Copa Arena Vale 2026', 2026)).toBeNull();
+    expect(anoAoLado('JASC 2026 - Fase Estadual', 2026)).toBeNull();
+    expect(anoAoLado('Copa Passeio', 2026)).toBe('2026');
+  });
+});

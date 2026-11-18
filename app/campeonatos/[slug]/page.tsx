@@ -12,6 +12,7 @@ import { ListaJogos } from '@/components/campeonatos/ListaJogos';
 import { TextoRegulamento } from '@/components/campeonatos/TextoRegulamento';
 import { nomeDaForma } from '@/components/campeonatos/formatar';
 import { abasDoCampeonato, chaveDoCampeonato, jogosDoCampeonato, ROTULO_ABA, tabelasDoCampeonato, type Aba } from '@/components/campeonatos/montarPagina';
+import { anoAoLado } from '@/components/campeonatos/formatar';
 
 // A pré-visualização lê a sessão de quem está logado: a página é sempre montada na hora.
 export const dynamic = 'force-dynamic';
@@ -54,7 +55,7 @@ export default async function CampeonatoPage({ params, searchParams }: Props) {
           <EscudoCampeonato campeonato={c} tamanho={128} />
           <div className="grid gap-1">
             <h1>
-              {c.nome} <span className="text-av-cinza">{c.ano}</span>
+              {c.nome} {anoAoLado(c.nome, c.ano) && <span className="text-av-cinza">{anoAoLado(c.nome, c.ano)}</span>}
             </h1>
             <p className="font-rotulo font-bold uppercase tracking-wider text-av-cinza">
               {[nomeModalidade, c.categoria, c.regulamento.formato_antigo ? null : nomeDaForma(c.regulamento.forma)].filter(Boolean).join(' · ')}
