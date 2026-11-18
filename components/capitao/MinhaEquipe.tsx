@@ -3,14 +3,20 @@
 import { useId, useState, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
-import { CapitaoElenco } from '@/components/capitao-elenco';
-import type { Jogador } from '@/lib/atletas/colunas';
+import { CapitaoElenco, type AtletaDoElenco, type OutraInscricao } from '@/components/capitao-elenco';
+import { EscudoDoTime } from '@/components/campeonatos/painel/EscudoDoTime';
+
+export type TimeDoCapitao = { id: string; nome: string; sigla: string | null; escudo_url: string | null; escudo_cor: string | null };
 
 export type ConviteCapitao = {
   campeonatoId: string;
   campeonatoNome: string;
-  time: { id: string; nome: string } | null;
-  jogadores: Jogador[];
+  time: TimeDoCapitao | null;
+  /** Inscrição do time neste campeonato (o elenco é por inscrição). */
+  inscricaoId: string | null;
+  /** Outras inscrições do mesmo time, para copiar o elenco. */
+  outrasInscricoes: OutraInscricao[];
+  elenco: AtletaDoElenco[];
 };
 
 function CadastrarEquipe({ convite }: { convite: ConviteCapitao }) {
@@ -69,7 +75,12 @@ export function MinhaEquipe({ convites }: { convites: ConviteCapitao[] }) {
           {c.time ? (
             <>
               <p className="text-sm text-[var(--text-dim)]">Equipe: <strong className="text-white">{c.time.nome}</strong></p>
-              <CapitaoElenco timeId={c.time.id} jogadoresIniciais={c.jogadores} />
+              <EscudoDoTime time={c.time} />
+              {c.inscricaoId ? (
+                <CapitaoElenco timeId={c.time.id} inscricaoId={c.inscricaoId} elencoInicial={c.elenco} outrasInscricoes={c.outrasInscricoes} />
+              ) : (
+                <p className="text-av-cinza">A inscrição da sua equipe neste campeonato ainda não apareceu. Fale com a coordenação.</p>
+              )}
             </>
           ) : (
             <CadastrarEquipe convite={c} />

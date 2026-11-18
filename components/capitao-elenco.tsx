@@ -4,26 +4,29 @@ import { useEffect, useId, useRef, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { cpfValido, formatarCpf, mascararCpf, soDigitos } from '@/lib/atletas/cpf';
 import { reduzirImagem } from '@/lib/ui/imagem';
-import { COLUNAS_JOGADOR, type Jogador } from '@/lib/atletas/colunas';
+import { COLUNAS_ELENCO, paraElenco, type AtletaDoElenco } from '@/lib/atletas/elenco-campeonato';
 
+export type { AtletaDoElenco };
+export type OutraInscricao = { id: string; campeonatoNome: string };
 
-type Props = { timeId: string; jogadoresIniciais: Jogador[] };
+type Props = { timeId: string; inscricaoId: string; elencoInicial: AtletaDoElenco[]; outrasInscricoes: OutraInscricao[] };
 
 const CAMPO = 'w-full rounded-2xl border border-av-linha bg-[#08080a] px-4 py-3 text-base text-av-branco outline-none focus:border-av-vermelho';
 const ROTULO = 'grid gap-1.5 text-sm text-av-cinza';
 
-/** Elenco da equipe do capitão: cadastra atletas com nome, CPF e foto (só na própria equipe). */
-export function CapitaoElenco({ timeId, jogadoresIniciais }: Props) {
+/** Elenco da equipe num campeonato: inscreve atletas pelo CPF (vale o primeiro time que inscrever) e copia o elenco de outro campeonato. */
+export function CapitaoElenco({ timeId, inscricaoId, elencoInicial, outrasInscricoes }: Props) {
   const supabase = createClient();
   const id = useId();
   const fileRef = useRef<HTMLInputElement>(null);
-  const [jogadores, setJogadores] = useState<Jogador[]>(jogadoresIniciais);
+  const [elenco, setElenco] = useState<AtletaDoElenco[]>(elencoInicial);
   const [cpfs, setCpfs] = useState<Record<string, string>>({});
   const [nome, setNome] = useState('');
   const [cpf, setCpf] = useState('');
   const [posicao, setPosicao] = useState('');
   const [numero, setNumero] = useState('');
   const [foto, setFoto] = useState<File | null>(null);
+  const [origem, setOrigem] = useState(outrasInscricoes[0]?.id ?? '');
   const [mensagem, setMensagem] = useState<{ tipo: 'ok' | 'erro'; texto: string } | null>(null);
   const [salvando, setSalvando] = useState(false);
 
@@ -32,7 +35,7 @@ export function CapitaoElenco({ timeId, jogadoresIniciais }: Props) {
     let vivo = true;
     (async () => {
       const { data } = await supabase.rpc('cpfs_do_time', { t: timeId });
-      if (vivo && Array.isArray(data)) setCpfs(Object.fromEntries((data as { id: string; cpf: string }[]).map((x) => [x.id, x.cpf])));
+      if (vivo && Array.isArray(data)) setCpfs((c) => ({ ...Object.fromEntries((data as { id: string; cpf: string }[]).map((x) => [x.id, x.cpf])), ...c }));
     })();
     return () => {
       vivo = false;
@@ -40,7 +43,14 @@ export function CapitaoElenco({ timeId, jogadoresIniciais }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps -- carrega uma vez por equipe
   }, [timeId]);
 
-  async function adicionarJogador() {
+  async function recarregar(): Promise<AtletaDoElenco[]> {
+    const { data } = await supabase.from('inscricao_atletas').select(COLUNAS_ELENCO).eq('inscricao_id', inscricaoId);
+    const lista = paraElenco(data as unknown[] | null);
+    setElenco(lista);
+    return lista;
+  }
+
+  async function adicionarAtleta() {
     setMensagem(null);
     if (!nome.trim()) return setMensagem({ tipo: 'erro', texto: 'Informe o nome completo do atleta.' });
     if (!cpfValido(cpf)) return setMensagem({ tipo: 'erro', texto: 'CPF inválido. Confira os números.' });
@@ -59,19 +69,22 @@ export function CapitaoElenco({ timeId, jogadoresIniciais }: Props) {
     }
 
     const digitos = soDigitos(cpf);
-    const { data, error } = await supabase
-      .from('jogadores')
-      .insert({ nome: nome.trim(), cpf: digitos, posicao: posicao.trim() || null, numero_camisa: numero ? Number(numero) : null, foto_url: fotoUrl, time_id: timeId })
-      .select(COLUNAS_JOGADOR)
-      .single();
-    setSalvando(false);
+    const { data, error } = await supabase.rpc('inscrever_atleta', {
+      p_inscricao: inscricaoId,
+      p_cpf: digitos,
+      p_nome: nome.trim(),
+      p_posicao: posicao.trim() || null,
+      p_numero: numero ? Number(numero) : null,
+      p_foto_url: fotoUrl,
+    });
     if (error) {
-      const texto = error.code === '23505' ? 'Este CPF já está cadastrado em outra equipe. Fale com a coordenação.' : `Erro: ${error.message}`;
-      return setMensagem({ tipo: 'erro', texto });
+      setSalvando(false);
+      return setMensagem({ tipo: 'erro', texto: error.message });
     }
-    const novo = data as unknown as Jogador;
-    setJogadores((l) => [...l, novo]);
-    setCpfs((c) => ({ ...c, [novo.id]: digitos }));
+    const lista = await recarregar();
+    setSalvando(false);
+    const novo = lista.find((a) => a.linha === data);
+    if (novo) setCpfs((c) => ({ ...c, [novo.id]: digitos }));
     setNome('');
     setCpf('');
     setPosicao('');
@@ -81,12 +94,27 @@ export function CapitaoElenco({ timeId, jogadoresIniciais }: Props) {
     setMensagem({ tipo: 'ok', texto: 'Atleta adicionado.' });
   }
 
-  async function excluirJogador(j: Jogador) {
-    if (!confirm(`Excluir ${j.nome} da equipe?`)) return;
-    const { error } = await supabase.from('jogadores').delete().eq('id', j.id);
+  async function copiarElenco() {
+    if (!origem) return;
+    setMensagem(null);
+    setSalvando(true);
+    const { data, error } = await supabase.rpc('copiar_elenco', { p_destino: inscricaoId, p_origem: origem });
+    if (error) {
+      setSalvando(false);
+      return setMensagem({ tipo: 'erro', texto: error.message });
+    }
+    await recarregar();
+    setSalvando(false);
+    const n = Number(data) || 0;
+    setMensagem({ tipo: 'ok', texto: n === 1 ? '1 atleta copiado.' : `${n} atletas copiados.` });
+  }
+
+  async function tirarDoElenco(a: AtletaDoElenco) {
+    if (!confirm(`Tirar ${a.nome} do elenco deste campeonato?`)) return;
+    const { error } = await supabase.from('inscricao_atletas').delete().eq('id', a.linha);
     if (error) return setMensagem({ tipo: 'erro', texto: `Erro: ${error.message}` });
-    setJogadores((l) => l.filter((x) => x.id !== j.id));
-    setMensagem({ tipo: 'ok', texto: 'Atleta excluído.' });
+    setElenco((l) => l.filter((x) => x.linha !== a.linha));
+    setMensagem({ tipo: 'ok', texto: 'Atleta tirado do elenco.' });
   }
 
   return (
@@ -122,10 +150,27 @@ export function CapitaoElenco({ timeId, jogadoresIniciais }: Props) {
             />
           </label>
         </div>
-        <p className="text-xs text-av-cinza">O CPF completo fica guardado e protegido: só a coordenação e você têm acesso. Na lista aparecem apenas os 3 primeiros números.</p>
-        <button type="button" onClick={adicionarJogador} disabled={salvando} className="btn-forte w-fit disabled:opacity-50">
+        <p className="text-xs text-av-cinza">
+          O CPF completo fica guardado e protegido: só a coordenação e você têm acesso. Na lista aparecem apenas os 3 primeiros números. Um atleta só pode estar em um time por campeonato: vale o time que inscrever primeiro.
+        </p>
+        <button type="button" onClick={adicionarAtleta} disabled={salvando} className="btn-forte w-fit disabled:opacity-50">
           {salvando ? 'Salvando...' : '+ Adicionar atleta'}
         </button>
+        {outrasInscricoes.length > 0 && (
+          <div className="flex flex-wrap items-end gap-2 border-t border-av-linha pt-4">
+            {outrasInscricoes.length > 1 && (
+              <label htmlFor={`${id}-origem`} className={`${ROTULO} flex-1`}>
+                Copiar de
+                <select id={`${id}-origem`} value={origem} onChange={(e) => setOrigem(e.target.value)} className={CAMPO}>
+                  {outrasInscricoes.map((o) => <option key={o.id} value={o.id}>{o.campeonatoNome}</option>)}
+                </select>
+              </label>
+            )}
+            <button type="button" onClick={copiarElenco} disabled={salvando} className="btn-leve disabled:opacity-50">
+              Copiar elenco de outro campeonato
+            </button>
+          </div>
+        )}
         {mensagem && (
           <p role={mensagem.tipo === 'erro' ? 'alert' : 'status'} className={`text-sm ${mensagem.tipo === 'erro' ? 'text-[#ff8a8f]' : 'text-av-branco'}`}>
             {mensagem.texto}
@@ -134,28 +179,28 @@ export function CapitaoElenco({ timeId, jogadoresIniciais }: Props) {
       </div>
 
       <div className="panel grid gap-3">
-        <h2 className="font-display text-2xl font-extrabold uppercase">Atletas da equipe · {jogadores.length}</h2>
-        {jogadores.length === 0 && <p className="text-av-cinza">Nenhum atleta cadastrado.</p>}
-        {jogadores.map((j) => (
-          <div key={j.id} className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-av-linha bg-av-grafite-2 p-3">
+        <h2 className="font-display text-2xl font-extrabold uppercase">Elenco neste campeonato · {elenco.length}</h2>
+        {elenco.length === 0 && <p className="text-av-cinza">Nenhum atleta no elenco deste campeonato.</p>}
+        {elenco.map((a) => (
+          <div key={a.linha} className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-av-linha bg-av-grafite-2 p-3">
             <div className="flex items-center gap-3">
-              {j.foto_url ? (
+              {a.foto_url ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={j.foto_url} alt={j.nome} className="h-12 w-12 rounded-full object-cover" />
+                <img src={a.foto_url} alt={a.nome} className="h-12 w-12 rounded-full object-cover" />
               ) : (
-                <div className="grid h-12 w-12 place-items-center rounded-full bg-white/10 font-display font-black">{j.nome.slice(0, 1).toUpperCase()}</div>
+                <div className="grid h-12 w-12 place-items-center rounded-full bg-white/10 font-display font-black">{a.nome.slice(0, 1).toUpperCase()}</div>
               )}
               <div>
-                <strong className="block">{j.nome}</strong>
+                <strong className="block">{a.nome}</strong>
                 <small className="text-av-cinza">
-                  {j.numero_camisa != null ? `Camisa ${j.numero_camisa} · ` : ''}
-                  {j.posicao || 'Posição não informada'}
+                  {a.numero_camisa != null ? `Camisa ${a.numero_camisa} · ` : ''}
+                  {a.posicao || 'Posição não informada'}
                 </small>
-                <small className="block text-av-cinza">CPF {mascararCpf(cpfs[j.id])}</small>
+                <small className="block text-av-cinza">CPF {mascararCpf(cpfs[a.id])}</small>
               </div>
             </div>
-            <button type="button" onClick={() => excluirJogador(j)} className="btn-leve !py-1.5 !text-xs">
-              Excluir
+            <button type="button" onClick={() => tirarDoElenco(a)} className="btn-leve !py-1.5 !text-xs">
+              Tirar do elenco
             </button>
           </div>
         ))}
