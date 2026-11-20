@@ -17,7 +17,7 @@ import { AbaNoticias } from './painel/AbaNoticias';
 import { AbaGaleria } from './painel/AbaGaleria';
 import { AbaVideos } from './painel/AbaVideos';
 import { ABAS_COORD, abaValida, type IdAba } from './painel/abas';
-import GestaoAtletasClient from '@/app/(coord)/coordenador/atletasdestaques/gestao-atletas-client';
+import { CoordDestaques } from './coord-destaques';
 
 export type StatsPainel = {
   campeonatos: number;
@@ -289,7 +289,7 @@ export function CoordShell({ user, stats, inscricoes: initialInsc, patrocinadore
             </div>
           </div>
         )}
-        {tab === 'destaques' && <GestaoAtletasClient />}
+        {tab === 'destaques' && <CoordDestaques userId={user.id} />}
         {tab === 'config' && <CoordConfig />}
       </div>
 
