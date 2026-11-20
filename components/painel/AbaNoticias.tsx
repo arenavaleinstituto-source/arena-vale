@@ -148,6 +148,7 @@ export function AbaNoticias() {
                     <small className="text-xs text-av-cinza">
                       {n.aba === 'mundo' ? 'Esporte Mundial' : 'Notícias do Vale'} · {CATEGORIAS_MIDIA.find((c) => c.valor === n.categoria)?.rotulo}
                       {n.origem === 'telegram' ? ' · Telegram' : n.origem === 'whatsapp' ? ' · WhatsApp' : ''}
+                      {n.destaque && n.status === 'publicado' ? ' · ★ Tela inicial' : ''}
                     </small>
                   </span>
                   <span

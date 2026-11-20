@@ -17,11 +17,10 @@ export function Cortes({ cortes }: { cortes: VideoYT[] }) {
 
   if (cortes.length === 0) return null;
   return (
-    <section className="faixa" id="cortes">
+    <section className="faixa" id="cortes" aria-label="Os melhores lances em vídeos curtos">
       <div className="dentro">
         <div className="cab">
           <div>
-            <h2>Cortes</h2>
             <p>Os melhores lances em vídeos curtos.</p>
           </div>
         </div>

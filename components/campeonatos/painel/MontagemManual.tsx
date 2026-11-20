@@ -35,7 +35,7 @@ export function MontagemManual({ forma, times, grupos, sementes, onGrupos, onSem
           <label key={t.id} className="flex items-center gap-3 text-sm">
             <span className="flex-1">{t.nome}</span>
             <select aria-label={`Grupo de ${t.nome}`} className={`${CAMPO} w-32`} value={grupoDe(t.id)} onChange={(e) => colocar(t.id, e.target.value)}>
-              <option value="">—</option>
+              <option value="">-</option>
               {ls.map((l) => (
                 <option key={l} value={l}>
                   Grupo {l}

@@ -3,9 +3,10 @@ import type { Metadata } from 'next';
 import { Barlow, Barlow_Condensed, Saira } from 'next/font/google';
 import './globals.css';
 import './midia.css';
+import './premium.css';
 import { SiteHeader } from '@/components/SiteHeader';
 import { SiteFooter } from '@/components/SiteFooter';
-import { lerConfigSite } from '@/lib/midia/config';
+import { EfeitosDaPagina } from '@/components/EfeitosDaPagina';
 
 /**
  * METADADOS GLOBAIS
@@ -56,18 +57,18 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const config = await lerConfigSite();
   return (
     <html lang="pt-BR" className={`${saira.variable} ${barlow.variable} ${barlowCondensed.variable}`}>
       <body className="bg-av-preto text-white font-sans antialiased selection:bg-[#e50914] selection:text-white overflow-x-clip">
         <SiteHeader />
         {children}
-        <SiteFooter whatsapp={config.whatsapp} instagramUrl={config.instagramUrl} />
+        <EfeitosDaPagina />
+        <SiteFooter />
       </body>
     </html>
   );

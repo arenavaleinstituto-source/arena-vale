@@ -34,7 +34,7 @@ export function UltimosVideos({ videos, externos, channelUrl }: Props) {
         <div className="cab">
           <div>
             <h2>Últimos vídeos</h2>
-            <p>Direto do canal TV Arena Vale — atualiza sozinho.</p>
+            <p>Direto do canal TV Arena Vale.</p>
           </div>
           <Link href="/videos" className="ver">
             Ver todos →

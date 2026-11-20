@@ -186,7 +186,7 @@ export function MesaDoJogo({ jogos, ehCoordenador }: { jogos: JogoDelegado[]; eh
         >
           {jogos.map((j) => (
             <option key={j.id} value={j.id}>
-              {j.casa?.nome ?? A_DEFINIR} × {j.fora?.nome ?? A_DEFINIR} —{' '}
+              {j.casa?.nome ?? A_DEFINIR} × {j.fora?.nome ?? A_DEFINIR} ·{' '}
               {j.data ? new Date(j.data).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) : A_DEFINIR}
             </option>
           ))}

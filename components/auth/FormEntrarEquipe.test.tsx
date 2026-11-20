@@ -82,7 +82,7 @@ describe('FormEntrarEquipe', () => {
     const u = userEvent.setup();
     await u.type(screen.getByLabelText('E-mail'), 'pessoa@exemplo.com');
     await u.click(screen.getByRole('button', { name: 'Receber link de acesso por e-mail' }));
-    expect(await screen.findByText('Link enviado — confira seu e-mail')).toBeInTheDocument();
+    expect(await screen.findByText('Link enviado. Confira seu e-mail')).toBeInTheDocument();
     expect(sb.auth.signInWithOtp).toHaveBeenCalledWith(expect.objectContaining({ email: 'pessoa@exemplo.com' }));
   });
 

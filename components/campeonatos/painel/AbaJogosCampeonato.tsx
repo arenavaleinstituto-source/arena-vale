@@ -88,7 +88,7 @@ export function AbaJogosCampeonato({ campeonato, jogos, times, grupos, ehCoorden
   // Blocos por rodada (tabela) ou por fase (mata-mata).
   const blocos: { titulo: string; jogos: JogoDoPainel[] }[] = [];
   for (const j of jogos) {
-    const titulo = j.fase && DE_TABELA.has(j.fase) ? `Rodada ${j.rodada ?? '—'}` : (j.fase ?? 'Jogos');
+    const titulo = j.fase && DE_TABELA.has(j.fase) ? `Rodada ${j.rodada ?? '-'}` : (j.fase ?? 'Jogos');
     let b = blocos.find((x) => x.titulo === titulo);
     if (!b) blocos.push((b = { titulo, jogos: [] }));
     b.jogos.push(j);
@@ -141,7 +141,7 @@ function RegistrarSorteio({ titulo, ids, times, onSalvar }: { titulo: string; id
   const mover = (i: number, d: -1 | 1) => setOrdem((l) => { const n = [...l]; [n[i], n[i + d]] = [n[i + d], n[i]]; return n; });
   return (
     <div className="grid gap-2 rounded-xl border border-av-amarelo/40 p-4">
-      <span className={TITULO_BLOCO}>Empate aguardando sorteio — {titulo}</span>
+      <span className={TITULO_BLOCO}>Empate aguardando sorteio: {titulo}</span>
       <p className="text-xs text-av-cinza">Faça o sorteio e deixe os times na ordem sorteada (o primeiro fica à frente).</p>
       <ol className="grid gap-1">
         {ordem.map((id, i) => (
@@ -268,7 +268,7 @@ function JogoNoPainel({ jogo, jogos, campeonatoId, regulamento: r, nomeCasa, nom
               <label className={ROTULO}>
                 Trocar o time da casa
                 <select className={CAMPO} value={trocaCasa} onChange={(e) => setTrocaCasa(e.target.value)}>
-                  <option value="">—</option>
+                  <option value="">-</option>
                   {listaTimes.map(([id, t]) => <option key={id} value={id}>{t.nome}</option>)}
                 </select>
               </label>
@@ -277,7 +277,7 @@ function JogoNoPainel({ jogo, jogos, campeonatoId, regulamento: r, nomeCasa, nom
               <label className={ROTULO}>
                 Trocar o time visitante
                 <select className={CAMPO} value={trocaFora} onChange={(e) => setTrocaFora(e.target.value)}>
-                  <option value="">—</option>
+                  <option value="">-</option>
                   {listaTimes.map(([id, t]) => <option key={id} value={id}>{t.nome}</option>)}
                 </select>
               </label>
@@ -361,7 +361,7 @@ function JogoNoPainel({ jogo, jogos, campeonatoId, regulamento: r, nomeCasa, nom
         <label className={`${ROTULO} max-w-sm`}>
           Delegado do jogo
           <select className={CAMPO} value={jogo.delegado_id ?? ''} onChange={(e) => void gravar({ delegado_id: e.target.value || null })}>
-            <option value="">— sem delegado —</option>
+            <option value="">Sem delegado</option>
             {delegados.map((d) => <option key={d.id} value={d.id}>{d.nome}</option>)}
           </select>
         </label>

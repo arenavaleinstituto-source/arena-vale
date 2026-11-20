@@ -64,7 +64,7 @@ export function AbaDadosCampeonato({ campeonato, onMudou }: { campeonato: Campeo
         <label className={ROTULO}>
           Modalidade
           <select className={CAMPO} value={f.modalidade} onChange={(e) => setF({ ...f, modalidade: e.target.value })}>
-            <option value="">—</option>
+            <option value="">-</option>
             {modalidades.map((m) => (
               <option key={m.slug} value={m.slug}>
                 {m.nome}

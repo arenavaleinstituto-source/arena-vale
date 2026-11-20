@@ -97,7 +97,7 @@ describe('página do campeonato', () => {
   it('escondido, visto pela equipe do campeonato: mostra a faixa de pré-visualização', async () => {
     sessao = pagina({ tipo: 'mata_mata', mata: MATA }, [], { visivel: false });
     render(await abrir());
-    expect(screen.getByText('Pré-visualização — ainda não está no site')).toBeInTheDocument();
+    expect(screen.getByText('Pré-visualização: ainda não está no site')).toBeInTheDocument();
   });
 
   it('tabela dos pontos corridos e jogo a definir', async () => {

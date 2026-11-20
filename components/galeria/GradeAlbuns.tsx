@@ -28,7 +28,7 @@ export function CartaoAlbum({ album }: { album: AlbumGaleria }) {
 
 /** Grade de álbuns da página /galeria. */
 export function GradeAlbuns({ albuns }: { albuns: AlbumGaleria[] }) {
-  if (albuns.length === 0) return <p className="vazio">Ainda não há fotos — volte depois dos próximos jogos.</p>;
+  if (albuns.length === 0) return <p className="vazio">Ainda não há fotos. Volte depois dos próximos jogos.</p>;
   return (
     <div className="grade-albuns">
       {albuns.map((a) => (

@@ -37,4 +37,20 @@ describe('CoordJogos', () => {
     await u.click(screen.getByRole('button', { name: '+ Criar jogo' }));
     await waitFor(() => expect(sb.escritas.find((e) => e.tabela === 'jogos' && e.op === 'insert')?.payload).toMatchObject({ campeonato_id: 'c1', delegado_id: 'd1' }));
   });
+
+  it('marcar "Terá transmissão" num jogo cadastrado grava em transmissoes', async () => {
+    render(<CoordJogos />);
+    await userEvent.setup().click(await screen.findByRole('checkbox', { name: /📺 Terá transmissão$/ }));
+    await waitFor(() => expect(sb.escritas.find((e) => e.tabela === 'transmissoes' && e.op === 'insert')?.payload).toMatchObject({ jogo_id: 'j1', plataforma: 'youtube' }));
+  });
+
+  it('transmissão avulsa: cadastra na agenda_jogos', async () => {
+    render(<CoordJogos />);
+    const u = userEvent.setup();
+    await u.type(await screen.findByLabelText('Equipe da casa'), 'Real Blumenau');
+    await u.type(screen.getByLabelText('Equipe visitante'), 'Sede');
+    fireEvent.change(screen.getByLabelText('Data e hora'), { target: { value: '2026-11-20T12:30' } });
+    await u.click(screen.getByRole('button', { name: '+ Adicionar transmissão' }));
+    await waitFor(() => expect(sb.escritas.find((e) => e.tabela === 'agenda_jogos' && e.op === 'insert')?.payload).toMatchObject({ equipe_casa: 'Real Blumenau', equipe_fora: 'Sede', status: 'Agendado' }));
+  });
 });

@@ -62,6 +62,6 @@ describe('ResultadosCampeonato', () => {
 
   it('mostra a classificação calculada', () => {
     render(<ResultadosCampeonato campeonatos={[CAMP]} />);
-    expect(screen.getByRole('table', { name: 'Classificação — Copa Arena Vale' })).toBeInTheDocument();
+    expect(screen.getByRole('table', { name: 'Classificação: Copa Arena Vale' })).toBeInTheDocument();
   });
 });

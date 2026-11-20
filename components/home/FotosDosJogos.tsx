@@ -12,7 +12,7 @@ export function FotosDosJogos({ albuns }: { albuns: AlbumGaleria[] }) {
         <div className="cab">
           <div>
             <h2>Fotos dos jogos</h2>
-            <p>As melhores imagens da Arena — baixe e compartilhe.</p>
+            <p>As melhores imagens da Arena. Baixe e compartilhe.</p>
           </div>
           <Link href="/galeria" className="ver">
             Ver galeria →

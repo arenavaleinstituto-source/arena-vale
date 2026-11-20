@@ -59,7 +59,7 @@ describe('CoordShell', () => {
 
   it('Visão geral mostra os números da arena só para a equipe', () => {
     montar();
-    expect(screen.getByText('Para conhecimento da equipe — não aparece no site.')).toBeInTheDocument();
+    expect(screen.getByText('Para conhecimento da equipe: não aparece no site.')).toBeInTheDocument();
     expect(screen.getByText('Vídeos no canal')).toBeInTheDocument();
     expect(screen.getByText('15')).toBeInTheDocument();
   });

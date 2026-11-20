@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -39,7 +39,7 @@ describe('SiteHeader', () => {
     expect(menu.querySelector('a[href="/ao-vivo"]')).toBeNull();
     const vivo = screen.getByRole('link', { name: 'Ao Vivo' });
     expect(vivo).toHaveAttribute('href', '/ao-vivo');
-    const logo = screen.getByRole('button', { name: 'Arena Vale — início' });
+    const logo = screen.getByRole('button', { name: 'Arena Vale: início' });
     expect(logo.compareDocumentPosition(vivo) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(vivo.compareDocumentPosition(menu) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
@@ -59,6 +59,38 @@ describe('SiteHeader', () => {
     expect(screen.getByRole('link', { name: 'Anuncie' })).toHaveAttribute('href', '/patrocinio');
   });
 
+  it('sem botão Contato no cabeçalho (o contato fica no fim da página inicial)', async () => {
+    const u = userEvent.setup();
+    render(<SiteHeader />);
+    expect(screen.queryByRole('link', { name: 'Contato' })).toBeNull();
+    await u.click(screen.getByRole('button', { name: 'Abrir menu' }));
+    expect(screen.queryByRole('link', { name: 'Contato' })).toBeNull();
+  });
+
+  it('logo do cabeçalho é a versão sem fundo, com o efeito 3D', () => {
+    render(<SiteHeader />);
+    const img = screen.getByRole('button', { name: 'Arena Vale: início' }).querySelector('img');
+    expect(img).toHaveAttribute('src', '/logo-3d.png');
+    expect(img).toHaveAttribute('alt', 'ARENA VALE');
+    expect(img?.closest('.logo-3d')).not.toBeNull();
+  });
+
+  it('ao rolar a página, o cabeçalho ganha o fundo de vidro mais forte', () => {
+    render(<SiteHeader />);
+    const header = screen.getByRole('banner');
+    expect(header.className).not.toMatch(/\brolou\b/);
+    act(() => {
+      Object.defineProperty(window, 'scrollY', { value: 120, configurable: true });
+      window.dispatchEvent(new Event('scroll'));
+    });
+    expect(header.className).toMatch(/\brolou\b/);
+    act(() => {
+      Object.defineProperty(window, 'scrollY', { value: 0, configurable: true });
+      window.dispatchEvent(new Event('scroll'));
+    });
+    expect(header.className).not.toMatch(/\brolou\b/);
+  });
+
   it('a marca nunca aparece com "Sports"', () => {
     render(<SiteHeader />);
     expect(document.body.textContent ?? '').not.toMatch(/sports?\b/i);
@@ -66,7 +98,7 @@ describe('SiteHeader', () => {
 
   it('tem o logo com toque triplo', () => {
     render(<SiteHeader />);
-    expect(screen.getByRole('button', { name: 'Arena Vale — início' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Arena Vale: início' })).toBeInTheDocument();
   });
 
   it('tem o botão "Entrar" da equipe no lugar do "Painel"', async () => {

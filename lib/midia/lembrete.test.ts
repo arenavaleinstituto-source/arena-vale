@@ -25,7 +25,7 @@ describe('gerarIcs', () => {
   });
 
   it('escapa vírgula, ponto e vírgula e barra no título', () => {
-    expect(ics).toContain('SUMMARY:São José\\, B\\; C x Vila\\\\Nova — ARENA VALE');
+    expect(ics).toContain('SUMMARY:São José\\, B\\; C x Vila\\\\Nova | ARENA VALE');
   });
 
   it('início e fim em UTC com 2 h de duração', () => {
@@ -59,7 +59,7 @@ describe('linkGoogleAgenda', () => {
     expect(link.startsWith('https://calendar.google.com/calendar/render?action=TEMPLATE')).toBe(true);
     const u = new URL(link);
     expect(u.searchParams.get('dates')).toBe('20261115T223000Z/20261116T003000Z');
-    expect(u.searchParams.get('text')).toBe('São José, B; C x Vila\\Nova — ARENA VALE');
+    expect(u.searchParams.get('text')).toBe('São José, B; C x Vila\\Nova | ARENA VALE');
     expect(link).toContain('text=S%C3%A3o');
   });
 });

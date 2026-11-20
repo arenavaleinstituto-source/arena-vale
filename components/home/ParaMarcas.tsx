@@ -9,7 +9,7 @@ export function ParaMarcas({ whatsapp }: { whatsapp: string }) {
             <h2>
               Coloque sua marca no <em>palco do esporte.</em>
             </h2>
-            <p>Presença antes, durante e depois do jogo — para uma audiência que não apenas assiste ao esporte, vive o esporte.</p>
+            <p>Presença antes, durante e depois do jogo, para uma audiência que não apenas assiste ao esporte, vive o esporte.</p>
             <div className="botoes">
               <a href={link} className="av-btn forte" target="_blank" rel="noopener noreferrer">
                 Falar com a ARENA VALE

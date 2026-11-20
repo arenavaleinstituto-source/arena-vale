@@ -18,7 +18,7 @@ export default function PatrocinioPage() {
             Por que patrocinar a <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#e50914] via-[#e50914] to-[#e50914]">Arena Vale</span>
           </h1>
           <p className="text-sm sm:text-base text-[#d4d4d8] leading-relaxed uppercase pt-2">
-            A Arena Vale conecta sua marca a um público engajado e apaixonado por esporte na região do Vale. Visibilidade garantida em transmissões ao vivo em alta definição, placares eletrônicos, redes sociais oficiais e backdrops de campo — em futsal, futebol 7, basquete e vôlei, o ano inteiro.
+            A Arena Vale conecta sua marca a um público engajado e apaixonado por esporte na região do Vale. Visibilidade garantida em transmissões ao vivo em alta definição, placares eletrônicos, redes sociais oficiais e backdrops de campo, em futsal, futebol 7, basquete e vôlei, o ano inteiro.
           </p>
         </div>
 

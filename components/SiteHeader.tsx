@@ -62,7 +62,16 @@ export function SiteHeader() {
   const pathname = usePathname() ?? '/';
   const idMenuCel = useId();
   const [aberto, setAberto] = useState(false);
+  const [rolou, setRolou] = useState(false);
   const fechar = () => setAberto(false);
+
+  // Depois de rolar um pouco, o vidro do cabeçalho fica mais escuro e ele encolhe (ver premium.css).
+  useEffect(() => {
+    const aoRolar = () => setRolou(window.scrollY > 24);
+    aoRolar();
+    window.addEventListener('scroll', aoRolar, { passive: true });
+    return () => window.removeEventListener('scroll', aoRolar);
+  }, []);
 
   // Menu do celular aberto: Esc fecha e a página de trás não rola.
   useEffect(() => {
@@ -82,9 +91,14 @@ export function SiteHeader() {
   if (ehRotaDaEquipe(pathname)) return null;
 
   return (
-    <header className="topo sticky top-0">
+    <header className={`topo sticky top-0${rolou ? ' rolou' : ''}`}>
       <div className="dentro">
-        <LogoSecreto className="logo-topo" imgClassName="logo-topo-img" />
+        {/* Logo oficial sem fundo, com volume (3D) e brilho que passa por cima — ver .logo-3d no premium.css. */}
+        <LogoSecreto className="logo-topo logo-3d">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo-3d.png" alt="ARENA VALE" className="logo-topo-img" />
+          <span className="logo-3d-brilho" aria-hidden="true" />
+        </LogoSecreto>
         <Link href="/ao-vivo" className={`ao-vivo-topo${itemAtivo('/ao-vivo', pathname) ? ' on' : ''}`} aria-current={itemAtivo('/ao-vivo', pathname) ? 'page' : undefined}>
           Ao Vivo
         </Link>

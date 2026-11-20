@@ -20,7 +20,7 @@ export default function PrivacidadePage() {
         </div>
 
         <div className="space-y-8 text-sm sm:text-base leading-relaxed text-[#c3c3cb]">
-          <p>A Arena Vale, inscrita sob o CNPJ 40.694.741/0001-34, respeita a privacidade dos usuários do site, do aplicativo e dos canais de atendimento (incluindo WhatsApp) relacionados aos nossos campeonatos, transmissões e serviços esportivos. Esta Política de Privacidade explica como coletamos, usamos, armazenamos e protegemos os dados pessoais, em conformidade com a Lei Geral de Proteção de Dados (Lei nº 13.709/2018 — LGPD).</p>
+          <p>A Arena Vale, inscrita sob o CNPJ 40.694.741/0001-34, respeita a privacidade dos usuários do site, do aplicativo e dos canais de atendimento (incluindo WhatsApp) relacionados aos nossos campeonatos, transmissões e serviços esportivos. Esta Política de Privacidade explica como coletamos, usamos, armazenamos e protegemos os dados pessoais, em conformidade com a Lei Geral de Proteção de Dados (Lei nº 13.709/2018, LGPD).</p>
           <p>Ao utilizar nosso site, aplicativo ou entrar em contato pelos nossos canais, você concorda com os termos descritos nesta política.</p>
 
           <section>
@@ -80,7 +80,7 @@ export default function PrivacidadePage() {
 
           <section>
             <h2 className="text-xl font-black uppercase text-white mb-3 mt-8 flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-[#e50914]" /> 6. Direito de imagem</h2>
-            <p>O uso da imagem de atletas, técnicos, torcedores e demais pessoas retratadas em fotos, vídeos e transmissões da Arena Vale (cobertura de jogos, redes sociais e material de divulgação) pressupõe autorização prévia dessas pessoas. A responsabilidade por obter o consentimento de uso de imagem de cada atleta — ou de seu responsável legal, no caso de menores de idade — é da equipe/clube ao qual o atleta está vinculado, no momento da inscrição na competição.</p>
+            <p>O uso da imagem de atletas, técnicos, torcedores e demais pessoas retratadas em fotos, vídeos e transmissões da Arena Vale (cobertura de jogos, redes sociais e material de divulgação) pressupõe autorização prévia dessas pessoas. A responsabilidade por obter o consentimento de uso de imagem de cada atleta (ou de seu responsável legal, no caso de menores de idade) é da equipe/clube ao qual o atleta está vinculado, no momento da inscrição na competição.</p>
             <p className="mt-2">Caso algum atleta, responsável ou pessoa retratada deseje solicitar a remoção de uma imagem específica, pode entrar em contato pelos canais indicados na seção 12.</p>
           </section>
 

@@ -37,7 +37,7 @@ export function HojeNaArena({
             {hoje.length > 0 ? (
               <ListaAgenda itens={hoje} hoje {...comum} />
             ) : (
-              <p className="vazio">Hoje não tem jogo na Arena — veja os próximos</p>
+              <p className="vazio">Hoje não tem jogo na Arena, veja os próximos</p>
             )}
             {proximos.length > 0 && (
               <>

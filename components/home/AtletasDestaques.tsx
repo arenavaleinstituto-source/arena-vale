@@ -9,7 +9,7 @@ export function AtletasDestaques({ destaques }: { destaques: Destaque[] }) {
     <Faixa
       id="atletas"
       titulo="Atletas Destaques"
-      subtitulo="Quem brilhou em quadra e no campo — o jogo não termina no placar."
+      subtitulo="Quem brilhou em quadra e no campo. O jogo não termina no placar."
       verTodos={{ href: '/atletasdestaques' }}
     >
       {destaques.length === 0 ? (

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { TopoPagina } from '@/components/midia/TopoPagina';
 import { Faixa } from '@/components/midia/Faixa';
 import { lerConfigSite } from '@/lib/midia/config';
+import { Contato } from '@/components/home/Contato';
 
 export const metadata: Metadata = {
   title: 'Sobre | ARENA VALE',
@@ -9,10 +10,10 @@ export const metadata: Metadata = {
 };
 
 const PILARES = [
-  { titulo: 'Ao vivo', texto: 'Transmissões com narração, placar e replay — o jogo inteiro, de onde você estiver.' },
+  { titulo: 'Ao vivo', texto: 'Transmissões com narração, placar e replay: o jogo inteiro, de onde você estiver.' },
   { titulo: 'Informação', texto: 'Notícias, agenda e resultados apurados, com a velocidade que o esporte pede.' },
   { titulo: 'Análise', texto: 'O que aconteceu, por que aconteceu e o que vem por aí, com olhar de quem entende.' },
-  { titulo: 'Histórias', texto: 'Personagens, trajetórias e bastidores — o jogo não termina no placar.' },
+  { titulo: 'Histórias', texto: 'Personagens, trajetórias e bastidores. O jogo não termina no placar.' },
   { titulo: 'Comunidade', texto: 'Atletas, equipes, torcedores e marcas no mesmo palco, perto de quem faz o esporte acontecer.' },
 ];
 
@@ -40,8 +41,7 @@ export default async function SobrePage() {
       <Faixa id="essencia" titulo="Nossa essência" subtitulo="Dar palco ao esporte.">
         <div className="mx-auto grid max-w-3xl gap-4 text-center text-lg text-[#d4d4da]">
           <p>
-            Cada atleta, cada equipe e cada jogo merecem ser vistos. A ARENA VALE existe para colocar o esporte no centro do palco — com energia de
-            arquibancada e cabeça de jornalista.
+            Cada atleta, cada equipe e cada jogo merecem ser vistos. A ARENA VALE existe para colocar o esporte no centro do palco.
           </p>
           <p>Nossa missão é levar o esporte a mais gente, com transmissões, informação de qualidade e histórias que valorizam quem está em campo.</p>
         </div>
@@ -69,19 +69,7 @@ export default async function SobrePage() {
         </div>
       </Faixa>
 
-      <Faixa id="contato" titulo="Fale com a ARENA VALE" alt>
-        <div className="redes">
-          <a href={`https://wa.me/${config.whatsapp}`} target="_blank" rel="noopener noreferrer">
-            <span>WhatsApp</span>
-          </a>
-          <a href={config.instagramUrl} target="_blank" rel="noopener noreferrer">
-            <span>Instagram</span>
-          </a>
-          <a href={`https://www.youtube.com/${config.youtubeHandle}`} target="_blank" rel="noopener noreferrer">
-            <span>YouTube</span>
-          </a>
-        </div>
-      </Faixa>
+      <Contato whatsapp={config.whatsapp} instagramUrl={config.instagramUrl} youtubeHandle={config.youtubeHandle} />
     </main>
   );
 }

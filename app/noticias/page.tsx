@@ -26,7 +26,7 @@ function Secao({ id, titulo, aba, noticias, alt }: { id: string; titulo: string;
             {montarFileiras(noticias, aba).map((f) => (
               <div key={f.titulo}>
                 <h3 className="fileira-titulo">{f.titulo}</h3>
-                <Fileira rotulo={`${titulo} — ${f.titulo}`}>
+                <Fileira rotulo={`${titulo}: ${f.titulo}`}>
                   {f.itens.map((n) => (
                     <CartazNoticia key={n.id} n={n} />
                   ))}

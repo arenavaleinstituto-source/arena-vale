@@ -27,5 +27,5 @@ export function formatarCpf(v: string): string {
 /** Na lista, só os 3 primeiros dígitos e reticências (o CPF completo fica guardado no banco). */
 export function mascararCpf(v: string | null | undefined): string {
   const d = soDigitos(v ?? '');
-  return d.length === 11 ? `${d.slice(0, 3)}...` : '—';
+  return d.length === 11 ? `${d.slice(0, 3)}...` : '-';
 }

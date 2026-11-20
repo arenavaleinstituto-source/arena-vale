@@ -91,7 +91,7 @@ export default async function SumulasIndexPage() {
                         className="w-9 h-9 shrink-0 rounded-full grid place-items-center text-[11px] font-black text-white"
                         style={{ background: jogo.time_casa?.escudo_cor ?? '#e50914' }}
                       >
-                        {jogo.time_casa?.sigla ?? '—'}
+                        {jogo.time_casa?.sigla ?? '-'}
                       </span>
                       <span className="text-xs font-bold uppercase truncate">
                         {jogo.time_casa?.nome ?? 'Casa'}
@@ -110,7 +110,7 @@ export default async function SumulasIndexPage() {
                         className="w-9 h-9 shrink-0 rounded-full grid place-items-center text-[11px] font-black text-white"
                         style={{ background: jogo.time_visitante?.escudo_cor ?? '#e50914' }}
                       >
-                        {jogo.time_visitante?.sigla ?? '—'}
+                        {jogo.time_visitante?.sigla ?? '-'}
                       </span>
                     </div>
                   </div>
@@ -120,7 +120,7 @@ export default async function SumulasIndexPage() {
                     <span>
                       {dataJogo && !Number.isNaN(dataJogo.getTime())
                         ? dataJogo.toLocaleDateString('pt-BR')
-                        : '—'}
+                        : '-'}
                     </span>
                   </div>
                 </Link>

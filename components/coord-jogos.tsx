@@ -3,6 +3,13 @@
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { recalcularVagas } from '@/components/campeonatos/painel/api';
+import { AgendaTransmissoes } from '@/components/painel/AgendaTransmissoes';
+import { mapearConfig } from '@/lib/midia/config-padrao';
+
+/** `transmissoes` vem como objeto único (jogo_id é único) ou lista, conforme a consulta. */
+function temTransmissao(t: unknown): boolean {
+  return Array.isArray(t) ? t.length > 0 : Boolean(t);
+}
 
 export function CoordJogos() {
   const supabase = createClient();
@@ -20,6 +27,7 @@ export function CoordJogos() {
   const [data, setData] = useState('');
   const [local, setLocal] = useState('');
   const [delegadoId, setDelegadoId] = useState('');
+  const [comTransmissao, setComTransmissao] = useState(false);
 
   useEffect(() => {
     carregar();
@@ -28,7 +36,7 @@ export function CoordJogos() {
   async function carregar() {
     const [{ data: jogosData }, { data: timesData }, { data: campeonatosData }, { data: delegadosData }] =
       await Promise.all([
-        supabase.from('jogos').select('*, delegado_id').order('data', { ascending: true }),
+        supabase.from('jogos').select('*, delegado_id, transmissoes(id)').order('data', { ascending: true }),
         supabase.from('times').select('id, nome').order('nome'),
         supabase.from('campeonatos').select('id, nome').order('nome'),
         supabase.from('profiles').select('id, full_name, email').eq('role', 'delegado').order('full_name'),
@@ -45,6 +53,25 @@ export function CoordJogos() {
     return times.find((time) => time.id === id)?.nome || 'Time';
   }
 
+  /** Link do canal para a linha de `transmissoes` (o player do site segue o canal do YouTube). */
+  async function linkDoCanal(): Promise<string> {
+    const { data: cfg } = await supabase.from('site_config').select('*').eq('id', 'main').maybeSingle();
+    return `https://www.youtube.com/${mapearConfig(cfg as Record<string, unknown> | null).youtubeHandle}`;
+  }
+
+  /** Liga ou desliga a transmissão de um jogo de campeonato (tabela `transmissoes`). */
+  async function marcarTransmissao(jogoId: string, ligar: boolean): Promise<boolean> {
+    const { error } = ligar
+      ? await supabase.from('transmissoes').insert({ jogo_id: jogoId, plataforma: 'youtube', url: await linkDoCanal() })
+      : await supabase.from('transmissoes').delete().eq('jogo_id', jogoId);
+    if (error) {
+      setMensagem(`Erro: ${error.message}`);
+      return false;
+    }
+    setJogos((prev) => prev.map((j) => (j.id === jogoId ? { ...j, transmissoes: ligar ? { id: 'nova' } : null } : j)));
+    return true;
+  }
+
   async function criarJogo() {
     if (!campeonatoId || !timeCasaId || !timeVisitanteId || !data) {
       setMensagem('Preencha campeonato, times e data.');
@@ -59,7 +86,7 @@ export function CoordJogos() {
     setSalvando(true);
     setMensagem('');
 
-    const { error } = await supabase.from('jogos').insert({
+    const { data: criado, error } = await supabase.from('jogos').insert({
       campeonato_id: campeonatoId,
       time_casa_id: timeCasaId,
       time_visitante_id: timeVisitanteId,
@@ -69,18 +96,24 @@ export function CoordJogos() {
       placar_casa: 0,
       placar_visitante: 0,
       status: 'agendado',
-    });
+    }).select('id').single();
+
+    if (!error && comTransmissao && criado) {
+      const { error: errT } = await supabase.from('transmissoes').insert({ jogo_id: (criado as { id: string }).id, plataforma: 'youtube', url: await linkDoCanal() });
+      if (errT) setMensagem(`Jogo criado, mas a transmissão não foi marcada: ${errT.message}`);
+    }
 
     if (error) {
       setMensagem(`Erro: ${error.message}`);
     } else {
-      setMensagem('Jogo criado.');
+      setMensagem((m) => m || 'Jogo criado.');
       setCampeonatoId('');
       setTimeCasaId('');
       setTimeVisitanteId('');
       setData('');
       setLocal('');
       setDelegadoId('');
+      setComTransmissao(false);
       await carregar();
     }
 
@@ -205,7 +238,7 @@ export function CoordJogos() {
               onChange={(e) => setDelegadoId(e.target.value)}
               className="px-3 py-3 rounded-[10px] bg-[#08080a] border border-white/10 text-base text-av-branco"
             >
-              <option value="">{delegados.length ? '— escolher depois —' : 'Nenhum delegado cadastrado: convide na aba Delegados'}</option>
+              <option value="">{delegados.length ? 'Escolher depois' : 'Nenhum delegado cadastrado: convide na aba Delegados'}</option>
               {delegados.map((d) => (
                 <option key={d.id} value={d.id}>
                   {d.full_name || d.email || 'Delegado'}
@@ -214,6 +247,11 @@ export function CoordJogos() {
             </select>
           </label>
         </div>
+
+        <label className="mt-4 flex items-center gap-3 text-av-branco">
+          <input type="checkbox" checked={comTransmissao} onChange={(e) => setComTransmissao(e.target.checked)} className="h-5 w-5 accent-[#e50914]" />
+          📺 Terá transmissão (entra no cartão &quot;Próxima transmissão&quot; da página inicial)
+        </label>
 
         <button
           onClick={criarJogo}
@@ -229,6 +267,8 @@ export function CoordJogos() {
           </p>
         )}
       </div>
+
+      <AgendaTransmissoes />
 
       <div className="panel">
         <h2 className="font-serif text-xl font-bold mb-5">
@@ -338,11 +378,21 @@ export function CoordJogos() {
                   onChange={(e) => atribuirDelegado(jogo.id, e.target.value || null)}
                   className="input text-sm"
                 >
-                  <option value="">— sem delegado —</option>
+                  <option value="">Sem delegado</option>
                   {delegados.map((d) => (
                     <option key={d.id} value={d.id}>{d.full_name ?? d.email}</option>
                   ))}
                 </select>
+              </label>
+
+              <label className="mt-3 flex items-center gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  checked={temTransmissao(jogo.transmissoes)}
+                  onChange={(e) => void marcarTransmissao(jogo.id, e.target.checked)}
+                  className="h-4 w-4 accent-[#e50914]"
+                />
+                📺 Terá transmissão
               </label>
 
               {jogo.status !== 'finalizado' && (

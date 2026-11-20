@@ -19,7 +19,7 @@ export default async function VideosPage() {
   const videos = juntarVideos(yt, externos, 100);
   return (
     <main className="w-full overflow-x-clip bg-av-preto text-av-branco">
-      <TopoPagina chapeu="TV Arena Vale" titulo="Vídeos" subtitulo="Jogos, melhores momentos e bastidores — direto do YouTube e do Instagram." />
+      <TopoPagina chapeu="TV Arena Vale" titulo="Vídeos" subtitulo="Jogos, melhores momentos e bastidores, direto do YouTube e do Instagram." />
       <section className="faixa">
         <div className="dentro">
           {videos.length === 0 ? (

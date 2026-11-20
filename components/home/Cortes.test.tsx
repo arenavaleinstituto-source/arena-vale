@@ -22,9 +22,11 @@ describe('Cortes', () => {
     expect(container).toBeEmptyDOMElement();
   });
 
-  it('mostra o título e um botão por corte', () => {
+  it('sem o título "Cortes": só a frase, e um botão por corte', () => {
     render(<Cortes cortes={TRES} />);
-    expect(screen.getByRole('heading', { name: 'Cortes' })).toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: 'Cortes' })).toBeNull();
+    expect(screen.getByText('Os melhores lances em vídeos curtos.')).toBeInTheDocument();
+    expect(screen.getByRole('region', { name: 'Os melhores lances em vídeos curtos' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Golaço de bicicleta/ })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Defesa incrível/ })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Virada no fim/ })).toBeInTheDocument();

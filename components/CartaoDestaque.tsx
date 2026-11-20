@@ -63,18 +63,18 @@ export default function CartaoDestaque({ destaque, className = '' }: CartaoDesta
       {temEstatisticas && (
         <div className="relative z-10 mt-8 pt-6 border-t border-white/10 grid grid-cols-3 gap-2 text-center">
           <div className="rounded-xl bg-black/40 border border-white/5 p-3">
-            <span className="block text-base font-black text-white">{destaque.jogos || '—'}</span>
+            <span className="block text-base font-black text-white">{destaque.jogos || '-'}</span>
             <span className="text-[9px] font-black text-[#a1a1aa] uppercase tracking-wider">Jogos</span>
           </div>
           <div className="rounded-xl bg-black/40 border border-white/5 p-3">
             <span className="block text-base font-black text-[#e50914]">
-              {destaque.gols_ou_pontos || '—'}
+              {destaque.gols_ou_pontos || '-'}
             </span>
             <span className="text-[9px] font-black text-[#a1a1aa] uppercase tracking-wider">Gols/Pts</span>
           </div>
           <div className="rounded-xl bg-black/40 border border-white/5 p-3">
             <span className="block text-base font-black text-white">
-              {destaque.assistencias || '—'}
+              {destaque.assistencias || '-'}
             </span>
             <span className="text-[9px] font-black text-[#a1a1aa] uppercase tracking-wider">Assist.</span>
           </div>

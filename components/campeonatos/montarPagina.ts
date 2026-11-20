@@ -101,7 +101,7 @@ export function jogosDoCampeonato(p: PaginaCampeonato): BlocoDeJogos[] {
   }
   const blocos: BlocoDeJogos[] = [];
   for (const j of p.jogos) {
-    const titulo = j.fase && DE_TABELA.has(j.fase) ? `Rodada ${j.rodada ?? '—'}` : (j.fase ?? 'Jogos');
+    const titulo = j.fase && DE_TABELA.has(j.fase) ? `Rodada ${j.rodada ?? '-'}` : (j.fase ?? 'Jogos');
     let b = blocos.find((x) => x.titulo === titulo);
     if (!b) blocos.push((b = { titulo, jogos: [] }));
     b.jogos.push(itemDaLista(p, j, j.grupo ? `Grupo ${j.grupo}` : null, ordens));

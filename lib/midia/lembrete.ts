@@ -13,7 +13,7 @@ function escapar(texto: string): string {
 }
 
 function titulo(item: ItemAgenda): string {
-  return `${item.casa} x ${item.fora} — ARENA VALE`;
+  return `${item.casa} x ${item.fora} | ARENA VALE`;
 }
 
 function descricao(item: ItemAgenda, baseUrl: string): string {

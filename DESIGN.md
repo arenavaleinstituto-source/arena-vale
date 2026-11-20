@@ -9,7 +9,7 @@
 Arena Vale é uma plataforma de mídia esportiva brasileira. O visual é dark e tenso como o placar de um jogo decisivo — sem leveza gratuita, sem branco de fundo. Cada tela entrega informação esportiva com impacto visual. O vermelho sangue é o único acento de cor; todo o resto é escuro ou neutro.
 
 **Voz visual**: bold, condensed, uppercase, vermelho quando importa.  
-**Anti-padrões**: branco de fundo, fontes leves, gradientes suaves, cores pastel, cantos muito arredondados em cartões de conteúdo.
+**Anti-padrões**: branco de fundo, fontes leves, cores pastel, gradientes com cores fora da marca.
 
 ---
 
@@ -207,6 +207,19 @@ input:focus {
 ```
 
 ---
+
+## Camada premium (redesign de 18/11/2026)
+
+`app/premium.css` é importado por último (`layout.tsx`) e dá ao site inteiro o visual "premium esportivo + futurista": vidro, profundidade e movimento leve, **só com as cores da logo** (preto, `--vermelho` e variações dele, branco/prata).
+
+- **Tokens**: `--vidro` (fundo translúcido dos cartões), `--vidro-borda`, `--vidro-reflexo` (linha de luz no topo), `--sombra-funda`, `--brilho-vermelho` (hover), `--prata` (texto metálico, como na logo), `--vermelho-escuro` (`#b20710`), `--ease`, `--altura-topo`.
+- **Vidro de verdade** (`backdrop-filter`) só onde há algo atrás para desfocar: cabeçalho, menus, cartões flutuantes do banner (`.cartao-vidro`). Nos cartões de conteúdo, vidro "falso" (translúcido + reflexo), para não pesar no celular.
+- **Ordem do desfoque**: escreva sempre `-webkit-backdrop-filter` ANTES de `backdrop-filter`. Na ordem inversa, o compilador de CSS do Next guarda só a versão `-webkit-` e o Chrome fica sem o desfoque.
+- **Botões**: `.av-btn.forte` (gradiente vermelho com brilho que varre no hover), `.av-btn.leve` e `.av-btn.vidro` (vidro com borda clara).
+- **Seções**: `.chapeu-secao` (rótulo vermelho com traço) e `.cab-esq` (título à esquerda). Algumas faixas da home (notícias, vídeos, fotos, atletas, patrocinadores) têm título à esquerda no computador, para variar o ritmo.
+- **Banner da home** (`components/home/Banner.tsx`): texto e botões à esquerda; à direita o `.palco` em camadas (foto de capa em perspectiva, logo, cartões de próxima transmissão e última notícia). Cada `.camada` tem `--prof` (profundidade) e se move com a rolagem (`--rolar`) e com o mouse (`--mx`, `--my`).
+- **Revelar ao rolar**: `components/EfeitosDaPagina.tsx` marca os blocos das faixas com `.revela` e adiciona `.visivel` quando entram na tela. Só funciona com a classe `.anima` no `<html>`, que o próprio componente coloca: sem JavaScript ou com movimento reduzido, nada fica escondido.
+- O topo das páginas (`.hero-premium`, `.topo-pagina`) sobe para baixo do cabeçalho de vidro (`margin-top: calc(-1 * var(--altura-topo))`) quando é o primeiro filho do `<main>`.
 
 ## Animações
 

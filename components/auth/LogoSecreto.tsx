@@ -8,7 +8,7 @@ import { OwnerLoginModal } from './OwnerLoginModal';
 
 type Props = { className?: string; imgClassName?: string; children?: ReactNode };
 
-const ROTULO = 'Arena Vale — início';
+const ROTULO = 'Arena Vale: início';
 
 /**
  * Logo do header. 1 ou 2 toques: vai para o início (ou rola ao topo na home).

@@ -138,3 +138,14 @@ export function montarFileiras(ns: NoticiaMidia[], aba: Aba): { titulo: string; 
   ];
   return fileiras.filter((f) => f.itens.length > 0).map((f) => ({ ...f, itens: f.itens.slice(0, 20) }));
 }
+
+/**
+ * Notícia do cartão flutuante do banner da página inicial: a mais recente marcada
+ * "Publicar na tela inicial" (campo `destaque`), de qualquer aba; sem nenhuma marcada,
+ * a mais recente das Notícias do Vale com foto (ou a mais recente, mesmo sem foto).
+ */
+export function noticiaDaTelaInicial(arena: NoticiaMidia[], mundo: NoticiaMidia[] = []): NoticiaMidia | null {
+  const quando = (n: NoticiaMidia) => Date.parse(n.publicado_em ?? n.created_at) || 0;
+  const marcadas = [...arena, ...mundo].filter((n) => n.destaque).sort((a, b) => quando(b) - quando(a));
+  return marcadas[0] ?? arena.find((n) => n.imagem_url) ?? arena[0] ?? null;
+}

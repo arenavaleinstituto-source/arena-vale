@@ -32,7 +32,7 @@ describe('GestaoCoordenadores', () => {
   it('convidar desabilitado no limite', () => {
     render(<GestaoCoordenadores coordenadores={[DONO, ANA, BETO]} limite={3} donoId="dono" />);
     expect(screen.getByRole('button', { name: 'Cadastrar coordenador' })).toBeDisabled();
-    expect(screen.getByText('Limite de 3 coordenadores atingido — aumente o limite para cadastrar mais.')).toBeInTheDocument();
+    expect(screen.getByText('Limite de 3 coordenadores atingido. Aumente o limite para cadastrar mais.')).toBeInTheDocument();
   });
 
   it('cadastra coordenador com e-mail e senha em /api/convites', async () => {

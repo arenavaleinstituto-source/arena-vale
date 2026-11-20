@@ -235,7 +235,7 @@ export function EditorNoticia({ noticia, modo, diasVideo = 30, onSalvo, onFechar
           <label className={ROTULO}>
             Modalidade
             <select className={CAMPO} value={f.modalidade} onChange={(e) => muda('modalidade', e.target.value)}>
-              <option value="">—</option>
+              <option value="">-</option>
               {modalidades.map((m) => (
                 <option key={m.slug} value={m.slug}>
                   {m.nome}
@@ -257,9 +257,12 @@ export function EditorNoticia({ noticia, modo, diasVideo = 30, onSalvo, onFechar
             Fonte (opcional)
             <input className={CAMPO} value={f.fonte} onChange={(e) => muda('fonte', e.target.value)} placeholder="Ex.: nome do canal de origem" />
           </label>
-          <label className="flex items-center gap-3 self-end pb-3 text-av-branco">
-            <input type="checkbox" checked={f.destaque} onChange={(e) => muda('destaque', e.target.checked)} className="h-5 w-5 accent-[#e50914]" />
-            Destaque (aparece no banner grande)
+          <label className="flex items-start gap-3 self-end pb-3 text-av-branco">
+            <input type="checkbox" checked={f.destaque} onChange={(e) => muda('destaque', e.target.checked)} className="mt-0.5 h-5 w-5 shrink-0 accent-[#e50914]" />
+            <span className="grid gap-0.5">
+              Publicar na tela inicial
+              <small className="text-xs text-av-cinza">Vai para o cartão do banner da página inicial e para o destaque da página Notícias. Se houver mais de uma marcada, vale a mais recente.</small>
+            </span>
           </label>
         </div>
 

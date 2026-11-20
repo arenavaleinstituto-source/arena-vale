@@ -40,7 +40,7 @@ export default function TermosDeUsoPage() {
 
           <section>
             <h2 className="text-xl font-black uppercase text-white mb-3 mt-8 flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-[#e50914]" /> 3. Direito de imagem</h2>
-            <p>A responsabilidade por obter o consentimento de uso de imagem de cada atleta — ou de seu responsável legal, no caso de menores de idade — é da equipe/clube ao qual o atleta está vinculado, no momento da inscrição. Ao inscrever um atleta, a equipe declara possuir essa autorização e isenta a Arena Vale de responsabilidade por eventual uso indevido decorrente da ausência desse consentimento. Mais detalhes na nossa Política de Privacidade.</p>
+            <p>A responsabilidade por obter o consentimento de uso de imagem de cada atleta (ou de seu responsável legal, no caso de menores de idade) é da equipe/clube ao qual o atleta está vinculado, no momento da inscrição. Ao inscrever um atleta, a equipe declara possuir essa autorização e isenta a Arena Vale de responsabilidade por eventual uso indevido decorrente da ausência desse consentimento. Mais detalhes na nossa Política de Privacidade.</p>
           </section>
 
           <section>

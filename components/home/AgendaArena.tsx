@@ -18,7 +18,7 @@ export function ListaAgenda({
   albuns?: Record<string, string>;
   hoje?: boolean;
 }) {
-  if (itens.length === 0) return <p className="vazio">Nenhum jogo agendado — volte em breve.</p>;
+  if (itens.length === 0) return <p className="vazio">Nenhum jogo agendado. Volte em breve.</p>;
   return (
     <div className="agenda">
       {itens.map((j) => {

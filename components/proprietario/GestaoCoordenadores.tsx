@@ -178,7 +178,7 @@ export function GestaoCoordenadores({ coordenadores, limite, donoId }: Props) {
           />
           <button type="submit" disabled={noLimite || ocupado} className={`${botao} bg-[#e50914] text-white`}>Cadastrar coordenador</button>
         </form>
-        {noLimite && <p className="mt-3 text-sm text-[#ff3b44]">Limite de {limite} coordenadores atingido — aumente o limite para cadastrar mais.</p>}
+        {noLimite && <p className="mt-3 text-sm text-[#ff3b44]">Limite de {limite} coordenadores atingido. Aumente o limite para cadastrar mais.</p>}
       </section>
 
       <section className={cartao}>

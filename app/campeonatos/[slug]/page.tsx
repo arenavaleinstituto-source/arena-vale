@@ -46,7 +46,7 @@ export default async function CampeonatoPage({ params, searchParams }: Props) {
     <main className="w-full overflow-x-clip bg-av-preto text-av-branco">
       {previa && (
         <p role="status" className="bg-av-amarelo px-4 py-2 text-center font-rotulo text-sm font-bold uppercase tracking-wider text-black">
-          Pré-visualização — ainda não está no site
+          Pré-visualização: ainda não está no site
         </p>
       )}
       <section className="topo-pagina">

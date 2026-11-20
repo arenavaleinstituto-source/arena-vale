@@ -34,7 +34,8 @@ export type LinhaJogo = {
   casa: Nome;
   fora: Nome;
   campeonato: { modalidade?: string | null } | null | undefined;
-  transmissoes: unknown[] | null | undefined;
+  /** Como `transmissoes.jogo_id` é único, o Supabase devolve um objeto (ou null), não uma lista. */
+  transmissoes: unknown[] | Record<string, unknown> | null | undefined;
   status?: string | null;
   placar_casa?: number | null;
   placar_visitante?: number | null;
@@ -75,6 +76,11 @@ export function jogoCompleto(row: LinhaJogo): boolean {
   return Boolean(row.data && row.casa?.nome && row.fora?.nome);
 }
 
+/** O jogo tem transmissão cadastrada? Aceita a lista e o objeto único que o Supabase devolve. */
+export function temTransmissao(t: unknown): boolean {
+  return Array.isArray(t) ? t.length > 0 : Boolean(t);
+}
+
 export function deJogos(row: LinhaJogo): ItemAgenda {
   return {
     id: row.id,
@@ -85,7 +91,7 @@ export function deJogos(row: LinhaJogo): ItemAgenda {
     fora: row.fora?.nome ?? 'A definir',
     dataHora: comFusoBrasilia(row.data ?? ''),
     local: corrigirLocal(row.local),
-    transmissao: (row.transmissoes?.length ?? 0) > 0,
+    transmissao: temTransmissao(row.transmissoes),
     status: row.status ?? null,
     placar:
       (row.status === 'finalizado' || row.status === 'ao_vivo') && row.placar_casa != null && row.placar_visitante != null

@@ -12,8 +12,11 @@ import { ParaMarcas } from '@/components/home/ParaMarcas';
 import { SeuCampeonato } from '@/components/home/SeuCampeonato';
 import { BannerTorneio } from '@/components/home/BannerTorneio';
 import { Patrocinadores } from '@/components/home/Patrocinadores';
+import { QuemSomos } from '@/components/home/QuemSomos';
+import { Contato } from '@/components/home/Contato';
 import { AgoraNaArena, EsporteMundial } from '@/components/home/NoticiasHome';
 import { buscarNoticiasPublicadas } from '@/lib/midia/noticias-busca';
+import { noticiaDaTelaInicial } from '@/lib/midia/noticias';
 import { buscarPatrocinadores } from '@/lib/midia/patrocinadores';
 import { lerConfigSite, linkAssistirAoVivo } from '@/lib/midia/config';
 import { buscarCortesYT, buscarVideosYT, embedAoVivo, estaAoVivo } from '@/lib/midia/youtube';
@@ -58,12 +61,16 @@ export default async function Home() {
   const aoVivo = config.aoVivoManual || aoVivoDetectado;
   const cortes = aplicarGiros(cortesYT, giros);
   const { proxima } = resumoAgenda(agenda, 6);
+  // Fotos reais da Arena para os cartões do "O que fazemos": capas dos álbuns mais novos.
+  const fotosServicos = albunsHome.map((a) => a.capaUrl).filter((u): u is string => Boolean(u)).slice(0, 4);
+  const noticiaBanner = noticiaDaTelaInicial(arena, mundo);
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.arenavale.com.br';
 
   return (
     <main id="topo" className="w-full overflow-x-clip bg-av-preto text-av-branco">
-      <Banner capaUrl={config.capaUrl} />
+      <Banner capaUrl={config.capaUrl} whatsapp={config.whatsapp} proxima={proxima} noticia={noticiaBanner} />
       <AoVivo aoVivo={aoVivo} embed={embedAoVivo(config.youtubeChannelId)} linkAssistir={linkAssistirAoVivo(config)} proxima={proxima} />
+      <QuemSomos fotos={fotosServicos} />
       <AgoraNaArena noticias={arena} />
       <EsporteMundial noticias={mundo} />
       <HojeNaArena hoje={hojeNaArena.hoje} proximos={hojeNaArena.proximos} baseUrl={baseUrl} youtubeHandle={config.youtubeHandle} albuns={albunsJogos} />
@@ -77,6 +84,7 @@ export default async function Home() {
       <AtletasDestaques destaques={destaques} />
       <Patrocinadores patrocinadores={patrocinadores} />
       <ParaMarcas whatsapp={config.whatsapp} />
+      <Contato whatsapp={config.whatsapp} instagramUrl={config.instagramUrl} youtubeHandle={config.youtubeHandle} />
     </main>
   );
 }

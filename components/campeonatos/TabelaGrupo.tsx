@@ -17,7 +17,7 @@ export function TabelaGrupo({ titulo, linhas, times, tipoPlacar, classificam }: 
       {titulo && <h3 className="font-display text-xl font-extrabold uppercase">{titulo}</h3>}
       <div className="overflow-x-auto rounded-xl border border-av-linha">
         <table className="w-full min-w-[520px] text-sm tabular-nums">
-          <caption className="sr-only">{titulo ? `Classificação — ${titulo}` : 'Classificação'}</caption>
+          <caption className="sr-only">{titulo ? `Classificação: ${titulo}` : 'Classificação'}</caption>
           <thead className="bg-av-grafite font-rotulo text-xs uppercase tracking-wider text-av-cinza">
             <tr>
               <th scope="col" className="px-3 py-2 text-left">#</th>
@@ -62,7 +62,7 @@ export function TabelaGrupo({ titulo, linhas, times, tipoPlacar, classificam }: 
           </tbody>
         </table>
       </div>
-      {pendente && <p className="text-xs text-av-amarelo">* Empate — aguardando sorteio</p>}
+      {pendente && <p className="text-xs text-av-amarelo">* Empate, aguardando sorteio</p>}
     </div>
   );
 }

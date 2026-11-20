@@ -205,7 +205,7 @@ export function CoordShell({ user, stats, inscricoes: initialInsc, patrocinadore
         {tab === 'visao' && (
           <div className="panel grid gap-4">
             <h2 className="titulo-secao !text-left !text-2xl">Números da Arena</h2>
-            <p className="text-sm text-av-cinza">Para conhecimento da equipe — não aparece no site.</p>
+            <p className="text-sm text-av-cinza">Para conhecimento da equipe: não aparece no site.</p>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
               {[
                 { rotulo: 'Campeonatos', valor: stats.campeonatos },
@@ -240,7 +240,7 @@ export function CoordShell({ user, stats, inscricoes: initialInsc, patrocinadore
             {inscricoes.map((i) => (
               <div key={i.id} className="flex items-center justify-between gap-3 border-b border-white/5 py-3.5 last:border-0">
                 <div>
-                  <strong className="block text-sm font-bold">{i.time?.nome ?? '—'}</strong>
+                  <strong className="block text-sm font-bold">{i.time?.nome ?? '-'}</strong>
                   <p className="text-xs text-av-cinza">
                     {i.campeonato?.nome} · {i.categoria}
                   </p>

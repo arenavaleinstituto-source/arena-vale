@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ehNova, faltasParaPublicar, mapearNoticiaMidia, modoReproducao, montarFileiras, type NoticiaMidia } from './noticias';
+import { ehNova, faltasParaPublicar, mapearNoticiaMidia, modoReproducao, montarFileiras, noticiaDaTelaInicial, type NoticiaMidia } from './noticias';
 import { faltasVideoExterno } from './videos-externos';
 
 function n(p: Partial<NoticiaMidia> = {}): NoticiaMidia {
@@ -85,5 +85,22 @@ describe('faltasVideoExterno', () => {
       'Falta a capa.',
     ]);
     expect(faltasVideoExterno({ link: 'https://www.instagram.com/reel/a/', titulo: 'Gol', capa_url: 'https://x/c.jpg' })).toEqual([]);
+  });
+});
+
+describe('noticiaDaTelaInicial', () => {
+  it('a marcada "Publicar na tela inicial" mais recente vence, de qualquer aba', () => {
+    const velha = n({ titulo: 'Velha marcada', destaque: true, publicado_em: '2026-11-01T00:00:00Z' });
+    const nova = n({ titulo: 'Mundo marcada', aba: 'mundo', destaque: true, publicado_em: '2026-11-10T00:00:00Z' });
+    const comum = n({ titulo: 'Comum', publicado_em: '2026-11-15T00:00:00Z' });
+    expect(noticiaDaTelaInicial([comum, velha], [nova])?.titulo).toBe('Mundo marcada');
+  });
+
+  it('sem marcada: a mais recente do Vale com foto, senão a mais recente', () => {
+    const semFoto = n({ titulo: 'Sem foto', imagem_url: null });
+    const comFoto = n({ titulo: 'Com foto' });
+    expect(noticiaDaTelaInicial([semFoto, comFoto])?.titulo).toBe('Com foto');
+    expect(noticiaDaTelaInicial([semFoto])?.titulo).toBe('Sem foto');
+    expect(noticiaDaTelaInicial([], [])).toBeNull();
   });
 });

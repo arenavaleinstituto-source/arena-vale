@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { agendaAtiva, deAgendaJogos, deJogos, jogoCompleto, juntarAgenda, proximaTransmissao, resumoAgenda, separarHoje, buscarHojeNaArena, type ItemAgenda } from './agenda';
+import { agendaAtiva, deAgendaJogos, deJogos, jogoCompleto, juntarAgenda, proximaTransmissao, resumoAgenda, separarHoje, buscarHojeNaArena, temTransmissao, type ItemAgenda } from './agenda';
 
 const AGORA = new Date('2026-11-10T12:00:00-03:00');
 
@@ -199,5 +199,15 @@ describe('jogoCompleto', () => {
   });
   it('jogo sem data ("a definir") fica fora', () => {
     expect(jogoCompleto({ ...linha, data: null })).toBe(false);
+  });
+});
+
+describe('temTransmissao', () => {
+  it('aceita a lista e o objeto único que o Supabase devolve', () => {
+    expect(temTransmissao([{ id: 't' }])).toBe(true);
+    expect(temTransmissao({ id: 't' })).toBe(true);
+    expect(temTransmissao([])).toBe(false);
+    expect(temTransmissao(null)).toBe(false);
+    expect(temTransmissao(undefined)).toBe(false);
   });
 });

@@ -3,7 +3,7 @@ export const MSG = {
   naoConfirmado: 'Confirme seu e-mail antes de entrar.',
   conexao: 'Não foi possível entrar. Verifique sua conexão e tente de novo.',
   semCargo: 'Sua conta ainda não tem acesso à área da equipe. Fale com a coordenação.',
-  linkEnviado: 'Link enviado — confira seu e-mail',
+  linkEnviado: 'Link enviado. Confira seu e-mail',
   resetEnviado: 'Enviamos um e-mail para redefinir a senha.',
   informeEmail: 'Informe seu e-mail.',
 } as const;

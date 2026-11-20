@@ -112,7 +112,7 @@ export function ResultadosCampeonato({ campeonatos }: { campeonatos: CampeonatoD
           {c.jogos.length === 0 && <p className="text-sm text-[var(--text-dim)]">A coordenação ainda não montou a tabela de jogos.</p>}
           {c.jogos.map((j) => <CartaoJogo key={j.id} jogo={j} />)}
           <div className="overflow-x-auto">
-            <table aria-label={`Classificação — ${c.nome}`} className="w-full min-w-[420px] text-sm">
+            <table aria-label={`Classificação: ${c.nome}`} className="w-full min-w-[420px] text-sm">
               <thead><tr className="text-left text-xs uppercase text-[var(--text-dim)]"><th>Time</th><th>P</th><th>J</th><th>V</th><th>E</th><th>D</th><th>SG</th></tr></thead>
               <tbody>
                 {c.classificacao.map((l) => (

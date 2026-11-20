@@ -92,7 +92,7 @@ export function CoordSumulas({ userId }: Props) {
         {jogos.map((jogo) => (
           <option key={jogo.id} value={jogo.id}>
             {nomeTime(jogo.time_casa_id)} x{' '}
-            {nomeTime(jogo.time_visitante_id)} —{' '}
+            {nomeTime(jogo.time_visitante_id)} ·{' '}
             {jogo.data ? new Date(jogo.data).toLocaleDateString('pt-BR') : 'A definir'}
           </option>
         ))}

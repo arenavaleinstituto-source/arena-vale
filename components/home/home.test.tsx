@@ -30,20 +30,42 @@ const JOGO: ItemAgenda = {
 };
 
 describe('Banner', () => {
-  it('frase com ESPORTE em vermelho, sem botões', () => {
-    const { container } = render(<Banner capaUrl="/fundo-arena.jpg" />);
+  it('frase com ESPORTE em vermelho e texto de apresentação, sem marca, pilares nem ícone de rolar', () => {
+    const { container } = render(<Banner capaUrl="/fundo-arena.jpg" whatsapp="5547988444404" />);
     const h1 = screen.getByRole('heading', { level: 1 });
     expect(h1.textContent).toMatch(/O palco do\s*esporte\s*é aqui\./i);
     const vermelho = h1.querySelector('.text-av-vermelho');
     expect(vermelho?.textContent).toMatch(/esporte/i);
-    expect(screen.getByText('Mídia Esportiva')).toBeInTheDocument();
+    expect(screen.queryByText('Mídia Esportiva')).toBeNull();
+    expect(container.querySelector('.hero-pilares, .rolar-abaixo')).toBeNull();
     expect(container.textContent).toContain('histórias de quem vive o esporte.');
-    expect(container.querySelector('button, a')).toBeNull();
   });
 
-  it('usa a capa do site_config como fundo', () => {
-    const { container } = render(<Banner capaUrl="https://x.supabase.co/capa.jpg" />);
+  it('botões de ação: ao vivo, campeonatos e WhatsApp', () => {
+    render(<Banner capaUrl="/fundo-arena.jpg" whatsapp="5547988444404" />);
+    expect(screen.getByRole('link', { name: /Assista ao vivo/ })).toHaveAttribute('href', '/ao-vivo');
+    expect(screen.getByRole('link', { name: /Ver campeonatos/ })).toHaveAttribute('href', '/campeonatos');
+    const zap = screen.getByRole('link', { name: /Fale com a gente/ });
+    expect(zap.getAttribute('href')).toMatch(/^https:\/\/wa\.me\/5547988444404/);
+    expect(zap).toHaveAttribute('target', '_blank');
+  });
+
+  it('usa a capa do site_config como fundo e na foto em destaque', () => {
+    const { container } = render(<Banner capaUrl="https://x.supabase.co/capa.jpg" whatsapp="5547988444404" />);
     expect((container.querySelector('.hero') as HTMLElement).style.getPropertyValue('--capa-img')).toContain('https://x.supabase.co/capa.jpg');
+    expect(container.querySelector('.palco-foto img')?.getAttribute('src')).toBe('https://x.supabase.co/capa.jpg');
+  });
+
+  it('cartões flutuantes: próxima transmissão e última notícia', () => {
+    const noticia = { id: 'n1', titulo: 'Final do Regional', imagem_url: 'https://x/n1.jpg' };
+    render(<Banner capaUrl="/fundo-arena.jpg" whatsapp="5547988444404" proxima={JOGO} noticia={noticia} />);
+    expect(screen.getByText('Água Verde × Vila Nova')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /Final do Regional/ })).toHaveAttribute('href', '/noticias/n1');
+  });
+
+  it('sem próxima nem notícia, os cartões flutuantes não quebram', () => {
+    render(<Banner capaUrl="/fundo-arena.jpg" whatsapp="5547988444404" proxima={null} noticia={null} />);
+    expect(screen.getByText('Próxima transmissão a definir')).toBeInTheDocument();
   });
 });
 
@@ -98,7 +120,7 @@ describe('HojeNaArena', () => {
 
   it('vazia: mensagem curta', () => {
     render(<HojeNaArena hoje={[]} proximos={[]} {...props} />);
-    expect(screen.getByText('Nenhum jogo agendado — volte em breve.')).toBeInTheDocument();
+    expect(screen.getByText('Nenhum jogo agendado. Volte em breve.')).toBeInTheDocument();
   });
 
   it('jogo de hoje com selo HOJE e próximos dias', () => {
@@ -112,7 +134,7 @@ describe('HojeNaArena', () => {
 
   it('sem jogo hoje: avisa e mostra os próximos', () => {
     render(<HojeNaArena hoje={[]} proximos={[outro('j2', 'Real')]} {...props} />);
-    expect(screen.getByText('Hoje não tem jogo na Arena — veja os próximos')).toBeInTheDocument();
+    expect(screen.getByText('Hoje não tem jogo na Arena, veja os próximos')).toBeInTheDocument();
     expect(screen.getByText(/Real/)).toBeInTheDocument();
   });
 });

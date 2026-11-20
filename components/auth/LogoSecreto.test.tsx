@@ -24,16 +24,16 @@ describe('LogoSecreto', () => {
   });
   afterEach(() => { vi.useRealTimers(); });
 
-  it('tem aria-label "Arena Vale — início" e touch-action manipulation', () => {
+  it('tem aria-label "Arena Vale: início" e touch-action manipulation', () => {
     render(<LogoSecreto />);
-    const botao = screen.getByRole('button', { name: 'Arena Vale — início' });
-    expect(botao).toHaveAttribute('title', 'Arena Vale — início');
+    const botao = screen.getByRole('button', { name: 'Arena Vale: início' });
+    expect(botao).toHaveAttribute('title', 'Arena Vale: início');
     expect(botao.style.touchAction).toBe('manipulation');
   });
 
   it('3 cliques rápidos abrem o diálogo "Acesso restrito"', async () => {
     render(<LogoSecreto />);
-    const botao = screen.getByRole('button', { name: 'Arena Vale — início' });
+    const botao = screen.getByRole('button', { name: 'Arena Vale: início' });
     fireEvent.click(botao);
     act(() => { vi.advanceTimersByTime(150); });
     fireEvent.click(botao);
@@ -51,7 +51,7 @@ describe('LogoSecreto', () => {
         <LogoSecreto />
       </header>,
     );
-    const botao = screen.getByRole('button', { name: 'Arena Vale — início' });
+    const botao = screen.getByRole('button', { name: 'Arena Vale: início' });
     fireEvent.click(botao);
     fireEvent.click(botao);
     fireEvent.click(botao);
@@ -62,7 +62,7 @@ describe('LogoSecreto', () => {
 
   it('um 4º toque logo depois de abrir não fecha o diálogo', async () => {
     render(<LogoSecreto />);
-    const botao = screen.getByRole('button', { name: 'Arena Vale — início' });
+    const botao = screen.getByRole('button', { name: 'Arena Vale: início' });
     fireEvent.click(botao);
     fireEvent.click(botao);
     fireEvent.click(botao);
@@ -79,7 +79,7 @@ describe('LogoSecreto', () => {
   it('dono já logado: 3 toques vão direto para /proprietario, sem diálogo', async () => {
     sb = fakeSupabase({ role: 'coordenador', userId: 'dono', dono: true });
     render(<LogoSecreto />);
-    const botao = screen.getByRole('button', { name: 'Arena Vale — início' });
+    const botao = screen.getByRole('button', { name: 'Arena Vale: início' });
     fireEvent.click(botao);
     fireEvent.click(botao);
     fireEvent.click(botao);
@@ -94,14 +94,14 @@ describe('LogoSecreto', () => {
         <span>SÚMULAS DIGITAIS</span>
       </LogoSecreto>,
     );
-    const botao = screen.getByRole('button', { name: 'Arena Vale — início' });
+    const botao = screen.getByRole('button', { name: 'Arena Vale: início' });
     expect(botao).toHaveTextContent('SÚMULAS DIGITAIS');
     expect(botao.querySelector('img')).toBeNull();
   });
 
   it('1 clique navega para / depois de 500 ms', () => {
     render(<LogoSecreto />);
-    fireEvent.click(screen.getByRole('button', { name: 'Arena Vale — início' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Arena Vale: início' }));
     act(() => { vi.advanceTimersByTime(499); });
     expect(push).not.toHaveBeenCalled();
     act(() => { vi.advanceTimersByTime(1); });

@@ -109,15 +109,15 @@ export default async function SumulaPage(props: { params: Promise<{ id: string }
   const dataJogo = jogo.data ? new Date(jogo.data) : null;
 
   const dados = [
-    { rotulo: 'Campeonato', valor: jogo.campeonato?.nome ?? '—' },
-    { rotulo: 'Fase', valor: (jogo.fase ?? '—').toString().replace(/_/g, ' ') },
-    { rotulo: 'Rodada', valor: jogo.rodada ? `${jogo.rodada}ª` : '—' },
-    { rotulo: 'Local', valor: jogo.local ?? '—' },
+    { rotulo: 'Campeonato', valor: jogo.campeonato?.nome ?? '-' },
+    { rotulo: 'Fase', valor: (jogo.fase ?? '-').toString().replace(/_/g, ' ') },
+    { rotulo: 'Rodada', valor: jogo.rodada ? `${jogo.rodada}ª` : '-' },
+    { rotulo: 'Local', valor: jogo.local ?? '-' },
     {
       rotulo: 'Data',
-      valor: dataJogo && !Number.isNaN(dataJogo.getTime()) ? dataJogo.toLocaleString('pt-BR') : '—',
+      valor: dataJogo && !Number.isNaN(dataJogo.getTime()) ? dataJogo.toLocaleString('pt-BR') : '-',
     },
-    { rotulo: 'Árbitro', valor: linha?.arbitro_nome ?? jogo.arbitro ?? '—' },
+    { rotulo: 'Árbitro', valor: linha?.arbitro_nome ?? jogo.arbitro ?? '-' },
   ];
 
   return (
@@ -139,7 +139,7 @@ export default async function SumulaPage(props: { params: Promise<{ id: string }
                 className="w-16 h-16 sm:w-20 sm:h-20 rounded-full grid place-items-center text-white font-black text-lg sm:text-xl border border-white/10"
                 style={{ background: jogo.time_casa?.escudo_cor ?? '#e50914' }}
               >
-                {jogo.time_casa?.sigla ?? '—'}
+                {jogo.time_casa?.sigla ?? '-'}
               </div>
               <strong className="text-sm sm:text-base uppercase">{jogo.time_casa?.nome ?? 'Time da casa'}</strong>
             </div>
@@ -155,7 +155,7 @@ export default async function SumulaPage(props: { params: Promise<{ id: string }
                 className="w-16 h-16 sm:w-20 sm:h-20 rounded-full grid place-items-center text-white font-black text-lg sm:text-xl border border-white/10"
                 style={{ background: jogo.time_visitante?.escudo_cor ?? '#e50914' }}
               >
-                {jogo.time_visitante?.sigla ?? '—'}
+                {jogo.time_visitante?.sigla ?? '-'}
               </div>
               <strong className="text-sm sm:text-base uppercase">
                 {jogo.time_visitante?.nome ?? 'Time visitante'}

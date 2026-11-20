@@ -94,8 +94,8 @@ export function PosicaoDosCortes() {
                 Posição
                 <select className={CAMPO} value={posicao ? String(posicao) : ''} onChange={(e) => void mudar(c.id, e.target.value)}>
                   <option value="">Em pé (normal)</option>
-                  <option value="-90">Deitado — girar para a esquerda</option>
-                  <option value="90">Deitado — girar para a direita</option>
+                  <option value="-90">Deitado, girar para a esquerda</option>
+                  <option value="90">Deitado, girar para a direita</option>
                   <option value="esconder">Esconder do site</option>
                 </select>
               </label>

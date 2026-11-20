@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!r) return { title: 'Galeria | ARENA VALE' };
   const partes = [r.album.competicao, r.album.placar, dataAlbum(r.album.data)].filter(Boolean).join(' · ');
   return {
-    title: `${r.album.titulo} — Fotos | ARENA VALE`,
+    title: `${r.album.titulo} | Fotos | ARENA VALE`,
     description: r.album.descricao ?? `${textoFotos(r.fotos.length)} de ${r.album.titulo} (${partes}) na ARENA VALE.`,
     openGraph: r.album.capaUrl ? { images: [r.album.capaUrl] } : undefined,
   };
